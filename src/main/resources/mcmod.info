@@ -1,0 +1,16 @@
+[
+{
+  "modid": "tesitems",
+  "name": "TESItems",
+  "description": "TESItems",
+  "version": "beta",
+  "mcversion": "1.9.4",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["IamMaxim"],
+  "credits": "IamMaxim",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
