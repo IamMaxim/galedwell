@@ -7,6 +7,9 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -14,10 +17,7 @@ import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.Inventory.InventoryItemStack;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by maxim on 7/26/16 at 5:24 PM.
@@ -35,17 +35,14 @@ public class GuiInventoryItemList {
     private final Minecraft client;
     private int mouseX;
     private int mouseY;
-    private int selectedIndex = -1;
-    protected boolean captureMouse = true;
+    //    protected boolean captureMouse = true;
     private Inventory inv;
-    private int selectedItemIndex = -1;
     private int scrollUpActionId;
     private int scrollDownActionId;
     private float initialMouseClickY = -2.0F;
     private float scrollFactor;
     private float scrollDistance;
     private long lastClickTime = 0L;
-    private boolean highlightSelected = true;
     private boolean hasHeader;
     private int headerHeight;
     private int scrollBarWidth = 6;
@@ -64,6 +61,8 @@ public class GuiInventoryItemList {
         this.screenWidth = res.getScaledWidth();
         this.screenHeight = res.getScaledHeight();
         this.inv = inv;
+
+        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
     }
 
     protected void setHeaderInfo(boolean hasHeader, int headerHeight) {
@@ -76,12 +75,21 @@ public class GuiInventoryItemList {
         return stacks.size();
     }
 
-    private void elementClicked(int index, boolean doubleClick) {
-        selectedItemIndex = index;
+    private void elementLeftClicked(int index) {
+        ItemStack is = stacks.get(index).stack;
+        index = inv.getItemList().indexOf(is);
+        if (is.getItem() instanceof ItemArmor) {
+            ItemArmor armor = (ItemArmor) is.getItem();
+            inv.equip(armor.getEquipmentSlot(), index);
+        } else {
+            inv.equip(EntityEquipmentSlot.MAINHAND, index);
+        }
     }
 
-    private boolean isSelected(int index) {
-        return index == selectedItemIndex;
+    private void elementRightClicked(int index) {
+        ItemStack is = stacks.get(index).stack;
+        index = inv.getItemList().indexOf(is);
+        inv.equip(EntityEquipmentSlot.OFFHAND, index);
     }
 
     private void drawBackground() {
@@ -193,8 +201,7 @@ public class GuiInventoryItemList {
                     int slotIndex = mouseListY / this.slotHeight;
 
                     if (mouseX >= entryLeft && mouseX <= entryRight && slotIndex >= 0 && mouseListY >= 0 && slotIndex < listLength) {
-                        this.elementClicked(slotIndex, slotIndex == this.selectedIndex && System.currentTimeMillis() - this.lastClickTime < 250L);
-                        this.selectedIndex = slotIndex;
+                        this.elementLeftClicked(slotIndex);
                         this.lastClickTime = System.currentTimeMillis();
                     }
 
@@ -222,6 +229,13 @@ public class GuiInventoryItemList {
                 this.scrollDistance -= ((float) mouseY - this.initialMouseClickY) * this.scrollFactor;
                 this.initialMouseClickY = (float) mouseY;
             }
+        } else if (Mouse.isButtonDown(1)) {
+            if (this.initialMouseClickY == -1.0F) {
+                int mouseListY = mouseY - this.top - this.headerHeight + (int) this.scrollDistance - border;
+                int slotIndex = mouseListY / this.slotHeight;
+                elementRightClicked(slotIndex);
+                this.initialMouseClickY = mouseY;
+            }
         } else {
             this.initialMouseClickY = -1.0F;
         }
@@ -245,6 +259,7 @@ public class GuiInventoryItemList {
             int slotTop = baseY + slotIdx * this.slotHeight + this.headerHeight;
             int slotBuffer = this.slotHeight - border;
             if (slotTop <= this.bottom && slotTop + slotBuffer >= this.top) {
+                /*
                 if (this.highlightSelected && this.isSelected(slotIdx)) {
                     int min = this.left;
                     int max = entryRight;
@@ -262,6 +277,7 @@ public class GuiInventoryItemList {
                     tess.draw();
                     GlStateManager.enableTexture2D();
                 }
+                */
                 this.drawSlot(slotIdx, entryRight, slotTop, slotBuffer, tess);
             }
         }

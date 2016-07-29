@@ -1,10 +1,13 @@
 package ru.iammaxim.tesitems.Inventory;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import ru.iammaxim.tesitems.Networking.EquipMessage;
 import ru.iammaxim.tesitems.Networking.InventoryUpdateMessage;
 import ru.iammaxim.tesitems.TESItems;
 
@@ -50,5 +53,14 @@ public class InventoryServer extends Inventory {
     public boolean removeItem(int index) {
         sendMessage(new InventoryUpdateMessage(InventoryUpdateMessage.ACTION_REMOVE_INDEX, index), player);
         return super.removeItem(index);
+    }
+
+    @Override
+    public void equip(EntityEquipmentSlot slot, int index) {
+        if (index == -1)
+            player.setItemStackToSlot(slot, null);
+        else
+            player.setItemStackToSlot(slot, get(index));
+        TESItems.networkWrapper.sendTo(new EquipMessage(slot.toString(), index), (EntityPlayerMP) player);
     }
 }

@@ -22,6 +22,7 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -127,6 +128,8 @@ public class TESItems {
         networkWrapper.registerMessage(InventoryUpdateMessageClientHandler.class, InventoryUpdateMessage.class, 4, Side.CLIENT);
         networkWrapper.registerMessage(InventoryUpdateMessageServerHandler.class, InventoryUpdateMessage.class, 5, Side.SERVER);
         networkWrapper.registerMessage(InventoryMessageHandler.class, InventoryMessage.class, 6, Side.CLIENT);
+        networkWrapper.registerMessage(EquipMessageServerHandler.class, EquipMessage.class, 7, Side.SERVER);
+        networkWrapper.registerMessage(EquipMessageClientHandler.class, EquipMessage.class, 8, Side.CLIENT);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GUIHandler());
         EntityRegistry.registerModEntity(EntityRangedSpellEffect.class, "EntityRangedSpellEffect", 0, instance, 100, 1, false);
@@ -292,6 +295,18 @@ public class TESItems {
                 event.getTarget().attackEntityFrom(DamageSource.causePlayerDamage(event.getEntityPlayer()), multiplier * ((ItemSword) item).getDamageVsEntity());
             event.getEntityPlayer().getHeldItemMainhand().damageItem(1, event.getEntityPlayer());
         }
+    }
+
+    @SubscribeEvent
+    public void onRightClick(PlayerInteractEvent.RightClickItem event) {
+        Inventory inventory = Inventory.getInventory(event.getEntityPlayer());
+        inventory.checkSlot(inventory.getItemList().indexOf(event.getItemStack()));
+    }
+
+    @SubscribeEvent
+    public void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+        Inventory inventory = Inventory.getInventory(event.getEntityPlayer());
+        inventory.checkSlot(inventory.getItemList().indexOf(event.getItemStack());
     }
 
     public float getSkillIncreaseValue(float current) {

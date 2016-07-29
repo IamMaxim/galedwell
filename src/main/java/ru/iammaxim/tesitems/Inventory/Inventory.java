@@ -123,10 +123,6 @@ public class Inventory {
         for (ItemStack is : inventory) {
             NBTTagCompound itemTag = is.serializeNBT();
             tagList.appendTag(itemTag);
-            System.out.println("saving tag: " + itemTag.toString());
-            if (is.getTagCompound() != null)
-                System.out.println("item's tag: " + is.getTagCompound());
-            System.out.println("item's metadata: " + is.getMetadata());
         }
         tag.setTag("items", tagList);
         return tag;
@@ -179,5 +175,9 @@ public class Inventory {
 
     public static Inventory getInventory(EntityPlayer player) {
         return TESItems.getCapatibility(player).getInventory();
+    }
+
+    public void equip(EntityEquipmentSlot slot, int index) {
+        System.out.println("equip");
     }
 }
