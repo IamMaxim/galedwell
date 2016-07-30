@@ -22,13 +22,11 @@ public class Inventory {
     private List<ItemStack> inventory = new ArrayList<>();
     public ItemStack[] armorInventory = new ItemStack[4];
 
-    private int mainHand, offHand;
-
     public ItemStack getMainhandItem() {
-        return inventory.get(mainHand);
+        return null;
     }
     public ItemStack getOffhandItem() {
-        return inventory.get(offHand);
+        return null;
     }
 
     public void setMainHandItem() {

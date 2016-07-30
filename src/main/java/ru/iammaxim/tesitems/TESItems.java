@@ -297,17 +297,17 @@ public class TESItems {
         }
     }
 
-    @SubscribeEvent
+/*    @SubscribeEvent
     public void onRightClick(PlayerInteractEvent.RightClickItem event) {
         Inventory inventory = Inventory.getInventory(event.getEntityPlayer());
         inventory.checkSlot(inventory.getItemList().indexOf(event.getItemStack()));
-    }
+    }*/
 
-    @SubscribeEvent
+/*    @SubscribeEvent
     public void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
         Inventory inventory = Inventory.getInventory(event.getEntityPlayer());
         inventory.checkSlot(inventory.getItemList().indexOf(event.getItemStack());
-    }
+    }*/
 
     public float getSkillIncreaseValue(float current) {
         float f = (1 + current / maxSkillLevel);

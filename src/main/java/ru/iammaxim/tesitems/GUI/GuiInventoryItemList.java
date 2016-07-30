@@ -15,7 +15,9 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.Inventory.InventoryItemStack;
+import ru.iammaxim.tesitems.Items.Weapon;
 
+import javax.swing.text.html.parser.Entity;
 import java.io.IOException;
 import java.util.*;
 
@@ -48,6 +50,7 @@ public class GuiInventoryItemList {
     private int scrollBarWidth = 6;
     private int lastHash = 0;
     private List<InventoryItemStack> stacks = new ArrayList<>();
+    private HashMap<EntityEquipmentSlot, ItemStack> equipped = new HashMap<>();
 
     public GuiInventoryItemList(Inventory inv, Minecraft client) {
         ScaledResolution res = new ScaledResolution(client);
@@ -71,25 +74,41 @@ public class GuiInventoryItemList {
         if (!hasHeader) this.headerHeight = 0;
     }
 
+    public void equip(EntityEquipmentSlot slot, int index) {
+        if (index >= inv.size()) return;
+        ItemStack is = stacks.get(index).stack;
+        index = inv.getItemList().indexOf(is);
+        if (is.getItem() instanceof ItemArmor) {
+            ItemArmor armor = (ItemArmor) is.getItem();
+            if (equipped.get(armor.getEquipmentSlot()) == is) {
+                inv.equip(armor.getEquipmentSlot(), -1);
+                equipped.put(armor.getEquipmentSlot(), null);
+            } else {
+                inv.equip(armor.getEquipmentSlot(), index);
+                equipped.put(armor.getEquipmentSlot(), is);
+            }
+        } else {
+            if (slot == EntityEquipmentSlot.MAINHAND && !(is.getItem() instanceof Weapon)) return;
+            if (equipped.get(slot) == is) {
+                inv.equip(slot, -1);
+                equipped.put(slot, null);
+            } else {
+                inv.equip(slot, index);
+                equipped.put(slot, is);
+            }
+        }
+    }
+
     private int getSize() {
         return stacks.size();
     }
 
     private void elementLeftClicked(int index) {
-        ItemStack is = stacks.get(index).stack;
-        index = inv.getItemList().indexOf(is);
-        if (is.getItem() instanceof ItemArmor) {
-            ItemArmor armor = (ItemArmor) is.getItem();
-            inv.equip(armor.getEquipmentSlot(), index);
-        } else {
-            inv.equip(EntityEquipmentSlot.MAINHAND, index);
-        }
+        equip(EntityEquipmentSlot.MAINHAND, index);
     }
 
     private void elementRightClicked(int index) {
-        ItemStack is = stacks.get(index).stack;
-        index = inv.getItemList().indexOf(is);
-        inv.equip(EntityEquipmentSlot.OFFHAND, index);
+        equip(EntityEquipmentSlot.OFFHAND, index);
     }
 
     private void drawBackground() {

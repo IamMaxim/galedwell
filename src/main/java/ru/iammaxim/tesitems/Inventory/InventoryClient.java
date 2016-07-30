@@ -3,6 +3,7 @@ package ru.iammaxim.tesitems.Inventory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemStack;
 import ru.iammaxim.tesitems.Networking.EquipMessage;
 import ru.iammaxim.tesitems.TESItems;
 
@@ -24,6 +25,16 @@ public class InventoryClient extends Inventory {
     @Override
     public void setOffHandItem() {
         player.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, getOffhandItem());
+    }
+
+    @Override
+    public ItemStack getMainhandItem() {
+        return player.getHeldItemMainhand();
+    }
+
+    @Override
+    public ItemStack getOffhandItem() {
+        return player.getHeldItemOffhand();
     }
 
     @Override
