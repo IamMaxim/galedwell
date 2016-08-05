@@ -1,19 +1,17 @@
 package ru.iammaxim.tesitems.Inventory;
 
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import ru.iammaxim.tesitems.Items.EntityItemNew;
 import ru.iammaxim.tesitems.TESItems;
-import scala.Int;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Maxim on 20.07.2016.
@@ -84,6 +82,7 @@ public class Inventory {
     }
 
     public void checkSlot(int index) {
+        System.out.println("checking slot " + index);
         ItemStack is = inventory.get(index);
         if (is.stackSize <= 0) inventory.remove(index);
     }
@@ -177,5 +176,20 @@ public class Inventory {
 
     public void equip(EntityEquipmentSlot slot, int index) {
         System.out.println("equip");
+    }
+
+    public void drop(Entity entity, int index, int count) {
+        System.out.println("index: " + index);
+        ItemStack is = inventory.get(index);
+        if (count > is.stackSize) {
+            System.out.println("count > is.stackSize. Something goes wrong");
+            return;
+        }
+        ItemStack stack = is.copy();
+        stack.stackSize = count;
+        is.stackSize -= count;
+        checkSlot(index);
+        EntityItemNew e = new EntityItemNew(entity.worldObj, entity.posX, entity.posY, entity.posZ, stack);
+        entity.worldObj.spawnEntityInWorld(e);
     }
 }

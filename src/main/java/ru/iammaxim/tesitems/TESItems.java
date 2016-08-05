@@ -130,6 +130,7 @@ public class TESItems {
         networkWrapper.registerMessage(InventoryMessageHandler.class, InventoryMessage.class, 6, Side.CLIENT);
         networkWrapper.registerMessage(EquipMessageServerHandler.class, EquipMessage.class, 7, Side.SERVER);
         networkWrapper.registerMessage(EquipMessageClientHandler.class, EquipMessage.class, 8, Side.CLIENT);
+        networkWrapper.registerMessage(ItemDropMessageHandlerServer.class, ItemDropMessage.class, 9, Side.SERVER);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GUIHandler());
         EntityRegistry.registerModEntity(EntityRangedSpellEffect.class, "EntityRangedSpellEffect", 0, instance, 100, 1, false);

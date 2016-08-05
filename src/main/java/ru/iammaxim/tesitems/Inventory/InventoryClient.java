@@ -1,17 +1,19 @@
 package ru.iammaxim.tesitems.Inventory;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import ru.iammaxim.tesitems.Networking.EquipMessage;
+import ru.iammaxim.tesitems.Networking.ItemDropMessage;
 import ru.iammaxim.tesitems.TESItems;
 
 /**
  * Created by maxim on 7/28/16 at 10:28 PM.
  */
 public class InventoryClient extends Inventory {
-    private EntityPlayer player;
+    public EntityPlayer player;
 
     public InventoryClient(EntityPlayer player) {
         this.player = player;
@@ -35,6 +37,12 @@ public class InventoryClient extends Inventory {
     @Override
     public ItemStack getOffhandItem() {
         return player.getHeldItemOffhand();
+    }
+
+    @Override
+    public void drop(Entity entity, int index, int count) {
+        //super.drop(entity, index, count);
+        TESItems.networkWrapper.sendToServer(new ItemDropMessage(index, count));
     }
 
     @Override

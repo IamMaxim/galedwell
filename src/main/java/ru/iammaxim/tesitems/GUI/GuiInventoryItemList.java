@@ -15,6 +15,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import ru.iammaxim.tesitems.Inventory.Inventory;
+import ru.iammaxim.tesitems.Inventory.InventoryClient;
 import ru.iammaxim.tesitems.Inventory.InventoryItemStack;
 import ru.iammaxim.tesitems.Items.Weapon;
 
@@ -39,7 +40,7 @@ public class GuiInventoryItemList {
     private int mouseX;
     private int mouseY;
     //    protected boolean captureMouse = true;
-    private Inventory inv;
+    private InventoryClient inv;
     private int scrollUpActionId;
     private int scrollDownActionId;
     private float initialMouseClickY = -2.0F;
@@ -53,7 +54,7 @@ public class GuiInventoryItemList {
     private List<InventoryItemStack> stacks = new ArrayList<>();
     private HashMap<EntityEquipmentSlot, ItemStack> equipped = new HashMap<>();
 
-    public GuiInventoryItemList(Inventory inv, Minecraft client) {
+    public GuiInventoryItemList(InventoryClient inv, Minecraft client) {
         ScaledResolution res = new ScaledResolution(client);
         this.client = client;
         this.listHeight = res.getScaledHeight() - padding_bottom - padding_top;
@@ -71,7 +72,7 @@ public class GuiInventoryItemList {
         while (it.hasNext()) {
             ItemStack is = it.next();
             if (is != null && is.getItem() instanceof ItemArmor)
-                equipped.put(((ItemArmor)is.getItem()).getEquipmentSlot(), is);
+                equipped.put(((ItemArmor) is.getItem()).getEquipmentSlot(), is);
         }
         equipped.put(EntityEquipmentSlot.MAINHAND, player.getHeldItemMainhand());
         equipped.put(EntityEquipmentSlot.OFFHAND, player.getHeldItemOffhand());
@@ -83,32 +84,38 @@ public class GuiInventoryItemList {
         if (!hasHeader) this.headerHeight = 0;
     }
 
-    public void equip(EntityEquipmentSlot slot, int index) {
+    public void clickSlot(EntityEquipmentSlot slot, int index) {
         if (index >= inv.size()) return;
         ItemStack is = stacks.get(index).stack;
+        index = inv.getItemList().indexOf(is);
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             System.out.println("trying to drop");
-            Minecraft.getMinecraft().thePlayer.dropItem(is, false);
+            inv.drop(inv.player, index, 1);
+            //Minecraft.getMinecraft().thePlayer.dropItem(is, false);
         } else {
-            index = inv.getItemList().indexOf(is);
-            if (is.getItem() instanceof ItemArmor) {
-                ItemArmor armor = (ItemArmor) is.getItem();
-                if (equipped.get(armor.getEquipmentSlot()) == is) {
-                    inv.equip(armor.getEquipmentSlot(), -1);
-                    equipped.put(armor.getEquipmentSlot(), null);
-                } else {
-                    inv.equip(armor.getEquipmentSlot(), index);
-                    equipped.put(armor.getEquipmentSlot(), is);
-                }
+            equip(slot, index);
+        }
+        }
+
+    public void equip(EntityEquipmentSlot slot, int index) {
+        ItemStack is = stacks.get(index).stack;
+        if (is.getItem() instanceof ItemArmor) {
+            ItemArmor armor = (ItemArmor) is.getItem();
+            if (equipped.get(armor.getEquipmentSlot()) == is) {
+                inv.equip(armor.getEquipmentSlot(), -1);
+                equipped.put(armor.getEquipmentSlot(), null);
             } else {
-                if (slot == EntityEquipmentSlot.MAINHAND && !(is.getItem() instanceof Weapon)) return;
-                if (equipped.get(slot) == is) {
-                    inv.equip(slot, -1);
-                    equipped.put(slot, null);
-                } else {
-                    inv.equip(slot, index);
-                    equipped.put(slot, is);
-                }
+                inv.equip(armor.getEquipmentSlot(), index);
+                equipped.put(armor.getEquipmentSlot(), is);
+            }
+        } else {
+            if (slot == EntityEquipmentSlot.MAINHAND && !(is.getItem() instanceof Weapon)) return;
+            if (equipped.get(slot) == is) {
+                inv.equip(slot, -1);
+                equipped.put(slot, null);
+            } else {
+                inv.equip(slot, index);
+                equipped.put(slot, is);
             }
         }
     }
@@ -118,11 +125,11 @@ public class GuiInventoryItemList {
     }
 
     private void elementLeftClicked(int index) {
-        equip(EntityEquipmentSlot.MAINHAND, index);
+        clickSlot(EntityEquipmentSlot.MAINHAND, index);
     }
 
     private void elementRightClicked(int index) {
-        equip(EntityEquipmentSlot.OFFHAND, index);
+        clickSlot(EntityEquipmentSlot.OFFHAND, index);
     }
 
     private void drawBackground() {
