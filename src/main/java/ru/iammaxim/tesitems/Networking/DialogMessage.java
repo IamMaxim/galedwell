@@ -6,15 +6,15 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 /**
- * Created by Maxim on 12.07.2016.
+ * Created by maxim on 8/5/16 at 9:18 PM.
  */
-public class QuestUpdateMessage implements IMessage {
+public class DialogMessage implements IMessage {
     public NBTTagCompound tag;
 
-    public QuestUpdateMessage() {}
+    public DialogMessage() {}
 
-    public QuestUpdateMessage(NBTTagCompound nbttag) {
-        tag = nbttag;
+    public DialogMessage(NBTTagCompound tag) {
+        this.tag = tag;
     }
 
     @Override

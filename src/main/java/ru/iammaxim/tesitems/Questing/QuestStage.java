@@ -8,5 +8,6 @@ import java.util.List;
  */
 public class QuestStage {
     public String questLine;
+    public String dialogPhrase;
     public List<QuestTarget> targets = new ArrayList<>();
 }

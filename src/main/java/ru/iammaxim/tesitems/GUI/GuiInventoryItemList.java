@@ -323,28 +323,8 @@ public class GuiInventoryItemList {
         for (int slotIdx = 0; slotIdx < listLength; ++slotIdx) {
             int slotTop = baseY + slotIdx * this.slotHeight + this.headerHeight;
             int slotBuffer = this.slotHeight - border;
-            if (slotTop <= this.bottom && slotTop + slotBuffer >= this.top) {
-                /*
-                if (this.highlightSelected && this.isSelected(slotIdx)) {
-                    int min = this.left;
-                    int max = entryRight;
-                    GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-                    GlStateManager.disableTexture2D();
-                    worldr.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-                    worldr.pos(min, slotTop + slotBuffer + 2, 0).tex(0, 1).color(0x80, 0x80, 0x80, 0xFF).endVertex();
-                    worldr.pos(max, slotTop + slotBuffer + 2, 0).tex(1, 1).color(0x80, 0x80, 0x80, 0xFF).endVertex();
-                    worldr.pos(max, slotTop - 2, 0).tex(1, 0).color(0x80, 0x80, 0x80, 0xFF).endVertex();
-                    worldr.pos(min, slotTop - 2, 0).tex(0, 0).color(0x80, 0x80, 0x80, 0xFF).endVertex();
-                    worldr.pos(min + 1, slotTop + slotBuffer + 1, 0).tex(0, 1).color(0x00, 0x00, 0x00, 0xFF).endVertex();
-                    worldr.pos(max - 1, slotTop + slotBuffer + 1, 0).tex(1, 1).color(0x00, 0x00, 0x00, 0xFF).endVertex();
-                    worldr.pos(max - 1, slotTop - 1, 0).tex(1, 0).color(0x00, 0x00, 0x00, 0xFF).endVertex();
-                    worldr.pos(min + 1, slotTop - 1, 0).tex(0, 0).color(0x00, 0x00, 0x00, 0xFF).endVertex();
-                    tess.draw();
-                    GlStateManager.enableTexture2D();
-                }
-                */
+            if (slotTop <= this.bottom && slotTop + slotBuffer >= this.top)
                 this.drawSlot(slotIdx, entryRight, slotTop, slotBuffer, tess);
-            }
         }
         GlStateManager.disableDepth();
         int extraHeight = (this.getContentHeight() + border) - viewHeight;

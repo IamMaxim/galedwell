@@ -13,12 +13,15 @@ import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import ru.iammaxim.tesitems.Fractions.Faction;
 import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.Inventory.InventoryNPC;
 import ru.iammaxim.tesitems.TESItems;
 import scala.actors.threadpool.Arrays;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Maxim on 19.07.2016.
@@ -27,6 +30,7 @@ public class EntityNPC extends EntityLivingBase {
     private boolean isInvulnerable = false;
     private Inventory inventory = new InventoryNPC(this);
     private EnumHandSide mainHand = EnumHandSide.RIGHT;
+    private List<Faction> factions = new ArrayList<>();
 
     private String name = "NPC";
 
@@ -38,6 +42,10 @@ public class EntityNPC extends EntityLivingBase {
     public boolean attackEntityFrom(DamageSource source, float amount) {
         if (isInvulnerable) return false;
         return super.attackEntityFrom(source, amount);
+    }
+
+    public void addFaction(Faction faction) {
+        factions.add(faction);
     }
 
     public void setInvulnerable(boolean invulnerable) {

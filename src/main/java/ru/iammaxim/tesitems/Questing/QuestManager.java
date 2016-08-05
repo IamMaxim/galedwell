@@ -20,10 +20,14 @@ import java.util.Scanner;
  * Created by Maxim on 20.07.2016.
  */
 public class QuestManager {
-    private static final String FILEPATH = "questSystem/quests.nbt";
     private static final String FILEDIRECTORY = "questSystem";
+    private static final String FILEPATH = FILEDIRECTORY + "/quests.nbt";
     public static HashMap<Integer, Quest> questList = new HashMap<>();
     private static int idGen = Integer.MIN_VALUE;
+
+    public static Quest getByID(int ID) {
+        return questList.get(ID);
+    }
 
     public static int genID() {
         return ++idGen;

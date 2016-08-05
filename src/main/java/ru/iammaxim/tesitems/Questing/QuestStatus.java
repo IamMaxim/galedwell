@@ -5,5 +5,6 @@ package ru.iammaxim.tesitems.Questing;
  */
 public enum QuestStatus {
     COMPLETED,
-    INPROGRESS
+    INPROGRESS,
+    NOTSTARTED
 }
