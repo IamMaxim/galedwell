@@ -22,7 +22,6 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -273,6 +272,7 @@ public class TESItems {
         event.registerServerCommand(new CommandGetSkills());
         event.registerServerCommand(new CommandCreateSpell());
         event.registerServerCommand(new CommandRemoveSpell());
+        event.registerServerCommand(new CommandGiveMe());
     }
 
     @SubscribeEvent

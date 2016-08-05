@@ -60,7 +60,8 @@ public class InventoryServer extends Inventory {
     @Override
     public void drop(Entity entity, int index, int count) {
         super.drop(entity, index, count);
-        TESItems.networkWrapper.sendTo(new ItemDropMessage(index, count), (EntityPlayerMP) player);
+        ItemStack is = get(index);
+        TESItems.networkWrapper.sendTo(new ItemDropMessage(index, is.stackSize - count), (EntityPlayerMP) player);
     }
 
     @Override

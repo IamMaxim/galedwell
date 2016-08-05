@@ -89,7 +89,6 @@ public class GuiInventoryItemList {
         ItemStack is = stacks.get(index).stack;
         index = inv.getItemList().indexOf(is);
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            System.out.println("trying to drop");
             inv.drop(inv.player, index, 1);
             //Minecraft.getMinecraft().thePlayer.dropItem(is, false);
         } else {
