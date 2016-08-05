@@ -232,6 +232,7 @@ public class TESItems {
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
         if (event.getEntity() instanceof EntityPlayer) {
+            ((EntityPlayer) event.getEntity()).inventory.clear();
             IPlayerAttributesCapability cap = event.getEntity().getCapability(TESItems.attributesCapability, null);
             cap.createInventory((EntityPlayer) event.getEntity(), cap.getInventory());
             if (!event.getWorld().isRemote) {

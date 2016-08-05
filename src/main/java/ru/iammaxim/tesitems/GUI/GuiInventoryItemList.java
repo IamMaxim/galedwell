@@ -11,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import ru.iammaxim.tesitems.Inventory.Inventory;
@@ -66,6 +67,14 @@ public class GuiInventoryItemList {
         this.inv = inv;
 
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+        Iterator<ItemStack> it = player.getArmorInventoryList().iterator();
+        while (it.hasNext()) {
+            ItemStack is = it.next();
+            if (is != null && is.getItem() instanceof ItemArmor)
+                equipped.put(((ItemArmor)is.getItem()).getEquipmentSlot(), is);
+        }
+        equipped.put(EntityEquipmentSlot.MAINHAND, player.getHeldItemMainhand());
+        equipped.put(EntityEquipmentSlot.OFFHAND, player.getHeldItemOffhand());
     }
 
     protected void setHeaderInfo(boolean hasHeader, int headerHeight) {
@@ -77,24 +86,29 @@ public class GuiInventoryItemList {
     public void equip(EntityEquipmentSlot slot, int index) {
         if (index >= inv.size()) return;
         ItemStack is = stacks.get(index).stack;
-        index = inv.getItemList().indexOf(is);
-        if (is.getItem() instanceof ItemArmor) {
-            ItemArmor armor = (ItemArmor) is.getItem();
-            if (equipped.get(armor.getEquipmentSlot()) == is) {
-                inv.equip(armor.getEquipmentSlot(), -1);
-                equipped.put(armor.getEquipmentSlot(), null);
-            } else {
-                inv.equip(armor.getEquipmentSlot(), index);
-                equipped.put(armor.getEquipmentSlot(), is);
-            }
+        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+            System.out.println("trying to drop");
+            Minecraft.getMinecraft().thePlayer.dropItem(is, false);
         } else {
-            if (slot == EntityEquipmentSlot.MAINHAND && !(is.getItem() instanceof Weapon)) return;
-            if (equipped.get(slot) == is) {
-                inv.equip(slot, -1);
-                equipped.put(slot, null);
+            index = inv.getItemList().indexOf(is);
+            if (is.getItem() instanceof ItemArmor) {
+                ItemArmor armor = (ItemArmor) is.getItem();
+                if (equipped.get(armor.getEquipmentSlot()) == is) {
+                    inv.equip(armor.getEquipmentSlot(), -1);
+                    equipped.put(armor.getEquipmentSlot(), null);
+                } else {
+                    inv.equip(armor.getEquipmentSlot(), index);
+                    equipped.put(armor.getEquipmentSlot(), is);
+                }
             } else {
-                inv.equip(slot, index);
-                equipped.put(slot, is);
+                if (slot == EntityEquipmentSlot.MAINHAND && !(is.getItem() instanceof Weapon)) return;
+                if (equipped.get(slot) == is) {
+                    inv.equip(slot, -1);
+                    equipped.put(slot, null);
+                } else {
+                    inv.equip(slot, index);
+                    equipped.put(slot, is);
+                }
             }
         }
     }
@@ -114,8 +128,34 @@ public class GuiInventoryItemList {
     private void drawBackground() {
     }
 
+    public boolean isEquipped(ItemStack stack) {
+        return equipped.containsValue(stack);
+    }
+
+    private void drawSlotBackground(int entryRight, int slotTop, int slotBuffer, Tessellator tess) {
+        VertexBuffer vb = tess.getBuffer();
+        int min = this.left;
+        int max = entryRight;
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.disableTexture2D();
+        vb.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+        vb.pos(min, slotTop + slotBuffer + 2, 0).tex(0, 1).color(0x80, 0x80, 0x80, 0xFF).endVertex();
+        vb.pos(max, slotTop + slotBuffer + 2, 0).tex(1, 1).color(0x80, 0x80, 0x80, 0xFF).endVertex();
+        vb.pos(max, slotTop - 2, 0).tex(1, 0).color(0x80, 0x80, 0x80, 0xFF).endVertex();
+        vb.pos(min, slotTop - 2, 0).tex(0, 0).color(0x80, 0x80, 0x80, 0xFF).endVertex();
+        vb.pos(min + 1, slotTop + slotBuffer + 1, 0).tex(0, 1).color(0x00, 0x00, 0x00, 0xFF).endVertex();
+        vb.pos(max - 1, slotTop + slotBuffer + 1, 0).tex(1, 1).color(0x00, 0x00, 0x00, 0xFF).endVertex();
+        vb.pos(max - 1, slotTop - 1, 0).tex(1, 0).color(0x00, 0x00, 0x00, 0xFF).endVertex();
+        vb.pos(min + 1, slotTop - 1, 0).tex(0, 0).color(0x00, 0x00, 0x00, 0xFF).endVertex();
+        tess.draw();
+        GlStateManager.enableTexture2D();
+    }
+
     private void drawSlot(int index, int entryRight, int slotTop, int slotBuffer, Tessellator tess) {
         ItemStack stack = stacks.get(index).stack;
+        if (isEquipped(stack)) {
+            drawSlotBackground(entryRight, slotTop, slotBuffer, tess);
+        }
         String s = client.fontRendererObj.trimStringToWidth(String.format("(%d) %s", stack.stackSize, stack.getDisplayName()), width - 14);
         client.fontRendererObj.drawString(s, left + 4, slotTop + 2, 0xffffffff);
     }
