@@ -54,6 +54,7 @@ public class Inventory {
     }
 
     public void addItem(ItemStack stack) {
+        System.out.println("add item()");
         if (stack.isItemStackDamageable())
             inventory.add(stack);
         else {
@@ -179,8 +180,11 @@ public class Inventory {
     }
 
     public void drop(Entity entity, int index, int count) {
-        System.out.println("index: " + index);
+        if (index < 0 || index > size() - 1) {
+            return;
+        }
         ItemStack is = inventory.get(index);
+        System.out.println("index: " + index + " count: " + count + " stackSize: " + is.stackSize);
         if (count > is.stackSize) {
             System.out.println("count > is.stackSize. Something goes wrong");
             return;
@@ -190,6 +194,7 @@ public class Inventory {
         is.stackSize -= count;
         checkSlot(index);
         EntityItemNew e = new EntityItemNew(entity.worldObj, entity.posX, entity.posY, entity.posZ, stack);
+        e.setDefaultPickupDelay();
         entity.worldObj.spawnEntityInWorld(e);
     }
 }

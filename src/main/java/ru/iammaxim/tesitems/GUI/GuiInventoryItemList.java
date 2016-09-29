@@ -11,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemTool;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -50,7 +51,7 @@ public class GuiInventoryItemList {
     private boolean hasHeader;
     private int headerHeight;
     private int scrollBarWidth = 6;
-    private int lastHash = 0;
+    private int lastHash = 0, lastItemCount = 0;
     private List<InventoryItemStack> stacks = new ArrayList<>();
     private HashMap<EntityEquipmentSlot, ItemStack> equipped = new HashMap<>();
 
@@ -68,9 +69,7 @@ public class GuiInventoryItemList {
         this.inv = inv;
 
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-        Iterator<ItemStack> it = player.getArmorInventoryList().iterator();
-        while (it.hasNext()) {
-            ItemStack is = it.next();
+        for (ItemStack is : player.getArmorInventoryList()) {
             if (is != null && is.getItem() instanceof ItemArmor)
                 equipped.put(((ItemArmor) is.getItem()).getEquipmentSlot(), is);
         }
@@ -88,16 +87,21 @@ public class GuiInventoryItemList {
         if (index >= inv.size()) return;
         ItemStack is = stacks.get(index).stack;
         index = inv.getItemList().indexOf(is);
+        if (index == -1) {
+            System.out.println("index == -1. Something goes wrong");
+            return;
+        }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             inv.drop(inv.player, index, 1);
-            //Minecraft.getMinecraft().thePlayer.dropItem(is, false);
+            //mark list dirty
+            lastHash = 0;
         } else {
             equip(slot, index);
         }
-        }
+    }
 
     public void equip(EntityEquipmentSlot slot, int index) {
-        ItemStack is = stacks.get(index).stack;
+        ItemStack is = inv.get(index);
         if (is.getItem() instanceof ItemArmor) {
             ItemArmor armor = (ItemArmor) is.getItem();
             if (equipped.get(armor.getEquipmentSlot()) == is) {
@@ -108,7 +112,8 @@ public class GuiInventoryItemList {
                 equipped.put(armor.getEquipmentSlot(), is);
             }
         } else {
-            if (slot == EntityEquipmentSlot.MAINHAND && !(is.getItem() instanceof Weapon)) return;
+            if (slot == EntityEquipmentSlot.MAINHAND && !(is.getItem() instanceof Weapon || is.getItem() instanceof ItemTool))
+                return;
             if (equipped.get(slot) == is) {
                 inv.equip(slot, -1);
                 equipped.put(slot, null);
@@ -166,32 +171,6 @@ public class GuiInventoryItemList {
         client.fontRendererObj.drawString(s, left + 4, slotTop + 2, 0xffffffff);
     }
 
-    @Deprecated
-    private void func_27260_a(int entryRight, int relativeY, Tessellator tess) {
-    }
-
-    /**
-     * Draw anything special on the screen. GL_SCISSOR is enabled for anything that
-     * is rendered outside of the view box. Do not mess with SCISSOR unless you support this.
-     */
-    private void drawHeader(int entryRight, int relativeY, Tessellator tess) {
-        func_27260_a(entryRight, relativeY, tess);
-    }
-
-    /**
-     * Draw anything special on the screen. GL_SCISSOR is enabled for anything that
-     * is rendered outside of the view box. Do not mess with SCISSOR unless you support this.
-     */
-    private void drawScreen(int mouseX, int mouseY) {
-
-    }
-
-    // FIXME: is this correct/still needed?
-    public void registerScrollButtons(List<GuiButton> buttons, int upActionID, int downActionID) {
-        this.scrollUpActionId = upActionID;
-        this.scrollDownActionId = downActionID;
-    }
-
     private int getContentHeight() {
         return this.getSize() * this.slotHeight + this.headerHeight;
     }
@@ -226,9 +205,8 @@ public class GuiInventoryItemList {
         }
     }
 
-
     public void handleMouseInput(int mouseX, int mouseY) throws IOException {
-        boolean isHovering = mouseX >= this.left && mouseX <= this.left + this.width && mouseY >= this.top && mouseY <= this.bottom;
+        boolean isHovering = mouseX >= left && mouseX <= left + width && mouseY >= top && mouseY <= bottom;
         if (!isHovering)
             return;
         int scroll = Mouse.getEventDWheel();
@@ -238,8 +216,10 @@ public class GuiInventoryItemList {
     }
 
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        int hash;
-        if ((hash = inv.hashCode()) != lastHash) {
+        int hash = inv.hashCode(), itemCount = inv.size();
+        if ((hash) != lastHash || (itemCount) != lastItemCount) {
+            System.out.println("updating");
+            lastItemCount = itemCount;
             lastHash = hash;
             stacks.clear();
             inv.getItemList().forEach(stack -> stacks.add(new InventoryItemStack(stack)));
@@ -317,9 +297,6 @@ public class GuiInventoryItemList {
         GL11.glScissor((int) (left * scaleW), (int) (client.displayHeight - (bottom * scaleH)), (int) (width * scaleW), (int) (viewHeight * scaleH));
         this.drawGradientRect(this.left, this.top, this.right, this.bottom, 0xC0101010, 0xD0101010);
         int baseY = this.top + border - (int) this.scrollDistance;
-        if (this.hasHeader) {
-            this.drawHeader(entryRight, baseY, tess);
-        }
         for (int slotIdx = 0; slotIdx < listLength; ++slotIdx) {
             int slotTop = baseY + slotIdx * this.slotHeight + this.headerHeight;
             int slotBuffer = this.slotHeight - border;
@@ -357,7 +334,6 @@ public class GuiInventoryItemList {
             worldr.pos(scrollBarLeft, barTop, 0.0D).tex(0.0D, 0.0D).color(0xC0, 0xC0, 0xC0, 0xFF).endVertex();
             tess.draw();
         }
-        this.drawScreen(mouseX, mouseY);
         GlStateManager.enableTexture2D();
         GlStateManager.shadeModel(GL11.GL_FLAT);
         GlStateManager.enableAlpha();

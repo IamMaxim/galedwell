@@ -38,6 +38,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import ru.iammaxim.tesitems.Blocks.mBlocks;
 import ru.iammaxim.tesitems.Commands.*;
 import ru.iammaxim.tesitems.Craft.CraftRecipe;
 import ru.iammaxim.tesitems.Craft.CraftRecipes;
@@ -118,6 +119,7 @@ public class TESItems {
         MinecraftForge.EVENT_BUS.register(this);
         SpellEffectManager.register();
         mItems.register(event.getSide());
+        mBlocks.register(event.getSide());
         mArmor.register();
         networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel("TESItemsChannel");
         networkWrapper.registerMessage(AttributesMessageHandler.class, AttributesMessage.class, 0, Side.CLIENT);
@@ -333,7 +335,7 @@ public class TESItems {
 
     @SubscribeEvent
     public void onRenderNametag(RenderLivingEvent.Specials.Pre event) {
-        if (event.getEntity() instanceof EntityPlayer) event.setCanceled(true);
+        if (event.getEntity() instanceof EntityPlayer || event.getEntity() instanceof EntityNPC) event.setCanceled(true);
     }
 
     @SubscribeEvent
@@ -341,7 +343,7 @@ public class TESItems {
         System.out.println("on item pickup");
         event.setCanceled(true);
         Inventory inv = getCapatibility(event.getEntityPlayer()).getInventory();
-        event.getItem().setDead();
         inv.addItem(event.getItem().getEntityItem());
+        event.getItem().getEntityItem().stackSize = 0;
     }
 }
