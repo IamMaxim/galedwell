@@ -12,15 +12,14 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
-import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.Inventory.InventoryClient;
 import ru.iammaxim.tesitems.Inventory.InventoryItemStack;
 import ru.iammaxim.tesitems.Items.Weapon;
 
-import javax.swing.text.html.parser.Entity;
 import java.io.IOException;
 import java.util.*;
 
@@ -28,7 +27,11 @@ import java.util.*;
  * Created by maxim on 7/26/16 at 5:24 PM.
  */
 public class GuiInventoryItemList {
-    private static final int entry_height = 15, padding_top = 20, padding_bottom = 20, padding_left = 30, width = 200;
+    private static final int entry_height = 15, padding_top = 20, padding_bottom = 20, padding_left = 30, width = 206, scrollBarWidth = 6;
+    private ResourceLocation
+            inv_itemlist_bg = new ResourceLocation("tesitems:textures/gui/inventory/inv_itemlist_bg.png"),
+            inv_entry_bg_selected = new ResourceLocation("tesitems:textures/gui/inventory/inv_entry_bg_selected.png"),
+            inv_entry_bg_hovered = new ResourceLocation("tesitems:textures/gui/inventory/inv_entry_bg_hovered.png");
     private final int listHeight;
     private final int screenWidth;
     private final int screenHeight;
@@ -40,7 +43,6 @@ public class GuiInventoryItemList {
     private final Minecraft client;
     private int mouseX;
     private int mouseY;
-    //    protected boolean captureMouse = true;
     private InventoryClient inv;
     private int scrollUpActionId;
     private int scrollDownActionId;
@@ -50,7 +52,6 @@ public class GuiInventoryItemList {
     private long lastClickTime = 0L;
     private boolean hasHeader;
     private int headerHeight;
-    private int scrollBarWidth = 6;
     private int lastHash = 0, lastItemCount = 0;
     private List<InventoryItemStack> stacks = new ArrayList<>();
     private HashMap<EntityEquipmentSlot, ItemStack> equipped = new HashMap<>();
@@ -136,36 +137,50 @@ public class GuiInventoryItemList {
         clickSlot(EntityEquipmentSlot.OFFHAND, index);
     }
 
-    private void drawBackground() {
+    private void drawBackground(Tessellator tess) {
+        VertexBuffer vb = tess.getBuffer();
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        client.getTextureManager().bindTexture(inv_itemlist_bg);
+        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
+        vb.pos(left, bottom, 0).tex(0, (float)(bottom - top)/width).endVertex();
+        vb.pos(right, bottom, 0).tex(1, (float)(bottom - top)/width).endVertex();
+        vb.pos(right, top, 0).tex(1, 0).endVertex();
+        vb.pos(left, top, 0).tex(0, 0).endVertex();
+        tess.draw();
     }
 
     public boolean isEquipped(ItemStack stack) {
         return equipped.containsValue(stack);
     }
 
-    private void drawSlotBackground(int entryRight, int slotTop, int slotBuffer, Tessellator tess) {
+    private void drawSelectedSlotBackground(int entryRight, int slotTop, int slotBuffer, Tessellator tess) {
         VertexBuffer vb = tess.getBuffer();
-        int min = this.left;
-        int max = entryRight;
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        GlStateManager.disableTexture2D();
-        vb.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-        vb.pos(min, slotTop + slotBuffer + 2, 0).tex(0, 1).color(0x80, 0x80, 0x80, 0xFF).endVertex();
-        vb.pos(max, slotTop + slotBuffer + 2, 0).tex(1, 1).color(0x80, 0x80, 0x80, 0xFF).endVertex();
-        vb.pos(max, slotTop - 2, 0).tex(1, 0).color(0x80, 0x80, 0x80, 0xFF).endVertex();
-        vb.pos(min, slotTop - 2, 0).tex(0, 0).color(0x80, 0x80, 0x80, 0xFF).endVertex();
-        vb.pos(min + 1, slotTop + slotBuffer + 1, 0).tex(0, 1).color(0x00, 0x00, 0x00, 0xFF).endVertex();
-        vb.pos(max - 1, slotTop + slotBuffer + 1, 0).tex(1, 1).color(0x00, 0x00, 0x00, 0xFF).endVertex();
-        vb.pos(max - 1, slotTop - 1, 0).tex(1, 0).color(0x00, 0x00, 0x00, 0xFF).endVertex();
-        vb.pos(min + 1, slotTop - 1, 0).tex(0, 0).color(0x00, 0x00, 0x00, 0xFF).endVertex();
+        client.getTextureManager().bindTexture(inv_entry_bg_selected);
+        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
+        vb.pos(left, slotTop + slotBuffer + 2, 0).tex(0, 1).endVertex();
+        vb.pos(entryRight, slotTop + slotBuffer + 2, 0).tex(1, 1).endVertex();
+        vb.pos(entryRight, slotTop - 2, 0).tex(1, 0).endVertex();
+        vb.pos(left, slotTop - 2, 0).tex(0, 0).endVertex();
         tess.draw();
-        GlStateManager.enableTexture2D();
+    }
+
+    private void drawHoveredSlotBackground(int entryRight, int slotTop, int slotBuffer, Tessellator tess) {
+        VertexBuffer vb = tess.getBuffer();
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        client.getTextureManager().bindTexture(inv_entry_bg_hovered);
+        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
+        vb.pos(left, slotTop + slotBuffer + 2, 0).tex(0, 1).endVertex();
+        vb.pos(entryRight, slotTop + slotBuffer + 2, 0).tex(1, 1).endVertex();
+        vb.pos(entryRight, slotTop - 2, 0).tex(1, 0).endVertex();
+        vb.pos(left, slotTop - 2, 0).tex(0, 0).endVertex();
+        tess.draw();
     }
 
     private void drawSlot(int index, int entryRight, int slotTop, int slotBuffer, Tessellator tess) {
         ItemStack stack = stacks.get(index).stack;
         if (isEquipped(stack)) {
-            drawSlotBackground(entryRight, slotTop, slotBuffer, tess);
+            drawSelectedSlotBackground(entryRight, slotTop, slotBuffer, tess);
         }
         String s = client.fontRendererObj.trimStringToWidth(String.format("(%d) %s", stack.stackSize, stack.getDisplayName()), width - 14);
         client.fontRendererObj.drawString(s, left + 4, slotTop + 2, 0xffffffff);
@@ -215,7 +230,7 @@ public class GuiInventoryItemList {
         }
     }
 
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+    private void checkIfInvUpToDate() {
         int hash = inv.hashCode(), itemCount = inv.size();
         if ((hash) != lastHash || (itemCount) != lastItemCount) {
             lastItemCount = itemCount;
@@ -224,26 +239,42 @@ public class GuiInventoryItemList {
             inv.getItemList().forEach(stack -> stacks.add(new InventoryItemStack(stack)));
             Collections.sort(stacks);
         }
+    }
+
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        checkIfInvUpToDate();
 
         this.mouseX = mouseX;
         this.mouseY = mouseY;
-        this.drawBackground();
 
-        boolean isHovering = mouseX >= this.left && mouseX <= this.left + this.width && mouseY >= this.top && mouseY <= this.bottom;
+        Tessellator tess = Tessellator.getInstance();
+        VertexBuffer worldr = tess.getBuffer();
+
+        drawBackground(tess);
+
+        boolean isHovering = mouseX >= left && mouseX <= left + width && mouseY >= top && mouseY <= bottom;
         int listLength = this.getSize();
-        int scrollBarRight = this.left + this.width;
+        int scrollBarRight = left + width;
         int scrollBarLeft = scrollBarRight - scrollBarWidth;
         int entryLeft = this.left;
         int entryRight = scrollBarLeft - 1;
         int viewHeight = this.bottom - this.top;
         int border = 4;
+        int mouseListY = mouseY - this.top - this.headerHeight + (int) this.scrollDistance - border;
+        int slotIndex = mouseListY / this.slotHeight;
+
+        if (isHovering) {
+            if (mouseX >= entryLeft && mouseX <= entryRight && slotIndex >= 0 && mouseListY >= 0 && slotIndex < listLength) {
+                int baseY = this.top + border - (int) this.scrollDistance;
+                int slotTop = baseY + slotIndex * this.slotHeight + this.headerHeight;
+                int slotBuffer = this.slotHeight - border;
+                drawHoveredSlotBackground(entryRight, slotTop, slotBuffer, tess);
+            }
+        }
 
         if (Mouse.isButtonDown(0)) {
             if (this.initialMouseClickY == -1.0F) {
                 if (isHovering) {
-                    int mouseListY = mouseY - this.top - this.headerHeight + (int) this.scrollDistance - border;
-                    int slotIndex = mouseListY / this.slotHeight;
-
                     if (mouseX >= entryLeft && mouseX <= entryRight && slotIndex >= 0 && mouseListY >= 0 && slotIndex < listLength) {
                         this.elementLeftClicked(slotIndex);
                         this.lastClickTime = System.currentTimeMillis();
@@ -275,8 +306,6 @@ public class GuiInventoryItemList {
             }
         } else if (Mouse.isButtonDown(1)) {
             if (this.initialMouseClickY == -1.0F) {
-                int mouseListY = mouseY - this.top - this.headerHeight + (int) this.scrollDistance - border;
-                int slotIndex = mouseListY / this.slotHeight;
                 elementRightClicked(slotIndex);
                 this.initialMouseClickY = mouseY;
             }
@@ -286,15 +315,11 @@ public class GuiInventoryItemList {
 
         this.applyScrollLimits();
 
-        Tessellator tess = Tessellator.getInstance();
-        VertexBuffer worldr = tess.getBuffer();
-
         ScaledResolution res = new ScaledResolution(client);
         double scaleW = client.displayWidth / res.getScaledWidth_double();
         double scaleH = client.displayHeight / res.getScaledHeight_double();
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         GL11.glScissor((int) (left * scaleW), (int) (client.displayHeight - (bottom * scaleH)), (int) (width * scaleW), (int) (viewHeight * scaleH));
-        this.drawGradientRect(this.left, this.top, this.right, this.bottom, 0xC0101010, 0xD0101010);
         int baseY = this.top + border - (int) this.scrollDistance;
         for (int slotIdx = 0; slotIdx < listLength; ++slotIdx) {
             int slotTop = baseY + slotIdx * this.slotHeight + this.headerHeight;

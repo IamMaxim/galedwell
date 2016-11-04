@@ -26,11 +26,8 @@ public class ItemDropMessageHandlerServer implements IMessageHandler<ItemDropMes
             System.out.println("something went wrong. Trying to drop more items than stack has");
             return null;
         }
-//        ItemStack is = inv.get(message.index).copy();
         ctx.getServerHandler().playerEntity.worldObj.getMinecraftServer().addScheduledTask(() ->
                 inv.drop(player, message.index, message.count));
-        System.out.println("handling drop: " + message.index + " " + message.count);
-//        is.stackSize -= message.count;
         is.stackSize -= message.count;
         if (is.stackSize == 0)
             return new InventoryUpdateMessage(InventoryUpdateMessage.ACTION_REMOVE_INDEX, message.index);

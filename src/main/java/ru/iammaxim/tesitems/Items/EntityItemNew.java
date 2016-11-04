@@ -75,11 +75,8 @@ public class EntityItemNew extends EntityItem {
     public void onCollideWithPlayer(EntityPlayer entityIn) {
         if (delayBeforeCanPickup > 0) return;
         ItemStack is = getEntityItem();
-        System.out.println("on collide; stackSize: " + is.stackSize);
-        //entityIn.onItemPickup(this, is.stackSize);
         Inventory inv = TESItems.getCapatibility(entityIn).getInventory();
         inv.addItem(is.copy());
-        //is.stackSize = 0;
         setDead();
     }
 

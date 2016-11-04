@@ -73,7 +73,6 @@ public class Inventory {
     }
 
     public void setItem(int index, ItemStack stack) {
-        System.out.println("setting item at index " + index + " to " + stack.getDisplayName() + " " + stack.stackSize);
         inventory.set(index, stack);
     }
 
@@ -89,7 +88,6 @@ public class Inventory {
     }
 
     public boolean removeItem(Item item) {
-        System.out.println("removing item " + item);
         int index = getItemIndex(item);
         if (index == -1) {
             System.out.println("item not found in inventory");
@@ -99,7 +97,6 @@ public class Inventory {
     }
 
     public boolean removeItem(int index) {
-        System.out.println("removing item at slot " + index);
         inventory.remove(index);
         return true;
     }
@@ -185,7 +182,6 @@ public class Inventory {
     }
 
     public void drop(Entity entity, int index, int count) {
-        System.out.println("index: " + index);
         ItemStack is = inventory.get(index);
         if (count > is.stackSize) {
             System.out.println("count > is.stackSize. Something goes wrong");

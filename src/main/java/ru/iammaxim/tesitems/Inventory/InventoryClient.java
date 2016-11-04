@@ -41,8 +41,7 @@ public class InventoryClient extends Inventory {
 
     @Override
     public void drop(Entity entity, int index, int count) {
-//        super.drop(entity, index, count);
-        System.out.println("sending drop message: " + index + " " + count);
+//        System.out.println("sending drop message: " + index + " " + count);
         TESItems.networkWrapper.sendToServer(new ItemDropMessage(index, count));
         checkSlot(index);
     }
