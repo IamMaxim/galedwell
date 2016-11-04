@@ -1,0 +1,6 @@
+{
+    "parent": "tesitems:item/handheld",
+    "textures": {
+        "layer0": "tesitems:items/dwarvenSword"
+    }
+}

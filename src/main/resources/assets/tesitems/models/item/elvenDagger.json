@@ -1,0 +1,6 @@
+{
+    "parent": "tesitems:item/dagger",
+    "textures": {
+        "layer0": "tesitems:items/elvenDagger"
+    }
+}
