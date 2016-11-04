@@ -24,7 +24,7 @@ public interface IPlayerAttributesCapability {
     public void loadSpellbook(NBTTagCompound nbttag);
     public void setCurrentSpell(int index);
     public int getCurrentSpell();
-    public NBTTagCompound getSpellbookNBT();
+    public NBTTagCompound saveSpellbook();
     public void setSpellbook(List<SpellBase> spellbook);
     public void addQuest(QuestInstance quest);
     public List<QuestInstance> getQuests();
@@ -35,4 +35,6 @@ public interface IPlayerAttributesCapability {
     public Inventory getInventory();
     public void setInventory(Inventory inventory);
     public void createInventory(EntityPlayer player, Inventory inv);
+    public void loadQuests(NBTTagCompound nbttag);
+    public NBTTagCompound saveQuests();
 }

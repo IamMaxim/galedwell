@@ -11,6 +11,8 @@ import ru.iammaxim.tesitems.Magic.SpellEffectBase;
 import ru.iammaxim.tesitems.Magic.SpellEffectManager;
 import ru.iammaxim.tesitems.NPC.EntityNPC;
 import ru.iammaxim.tesitems.Questing.QuestInstance;
+import ru.iammaxim.tesitems.Questing.QuestManager;
+import ru.iammaxim.tesitems.Questing.QuestStatus;
 import ru.iammaxim.tesitems.ReflectionUtils;
 
 import java.lang.reflect.InvocationTargetException;
@@ -22,11 +24,12 @@ import java.util.List;
  * Created by Maxim on 06.06.2016.
  */
 public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesCapability {
-    private HashMap<String, Float> attributes = new HashMap<String, Float>();
+    private HashMap<String, Float> attributes = new HashMap<>();
     private List<SpellBase> spellbook = new ArrayList<>();
     private int currentSpell = -1;
     private EntityNPC latestNPC;
     private Inventory inventory = new Inventory();
+    private ArrayList<QuestInstance> quests = new ArrayList<>();
 
     public PlayerAttributesCapabilityDefaultImpl() {
     }
@@ -36,6 +39,32 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
             inventory = new InventoryServer(player);
         else inventory = new InventoryClient(Minecraft.getMinecraft().thePlayer);
         inventory.setItemList(inv.getItemList());
+    }
+
+    @Override
+    public void loadQuests(NBTTagCompound nbttag) {
+        quests = new ArrayList<>();
+        NBTTagList nbtList = (NBTTagList) nbttag.getTag("quests");
+        for (int i = 0; i < nbtList.tagCount(); i++) {
+            NBTTagCompound tag = nbtList.getCompoundTagAt(i);
+            quests.add(new QuestInstance(QuestManager.getByID(tag.getInteger("id")), QuestStatus.valueOf(tag.getString("questStatus")), tag.getInteger("stage")));
+        }
+    }
+
+    @Override
+    public NBTTagCompound saveQuests() {
+        NBTTagCompound tag = new NBTTagCompound();
+        NBTTagList nbtlist = new NBTTagList();
+        for (int i = 0; i < quests.size(); i++) {
+            QuestInstance quest = quests.get(i);
+            NBTTagCompound questTag = new NBTTagCompound();
+            questTag.setInteger("id", quest.quest.id);
+            questTag.setInteger("stage", quest.stage);
+            questTag.setString("questStatus", quest.status.toString());
+            nbtlist.appendTag(questTag);
+        }
+        tag.setTag("quests", nbtlist);
+        return tag;
     }
 
     @Override
@@ -105,7 +134,7 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
         }
     }
     @Override
-    public NBTTagCompound getSpellbookNBT() {
+    public NBTTagCompound saveSpellbook() {
         NBTTagCompound tagCompound = new NBTTagCompound();
         NBTTagList list = new NBTTagList();
         for (int i = 0; i < spellbook.size(); i++) {
@@ -138,7 +167,7 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     }
     @Override
     public List<QuestInstance> getQuests() {
-        return null;
+        return quests;
     }
     @Override
     public float getCarryWeight() {
@@ -147,7 +176,11 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
 
     @Override
     public float getMaxCarryweight() {
-        return attributes.get("strength");
+        Float f = attributes.get("strength");
+        if (f != null)
+            return f;
+        else
+            return 0;
     }
 
     @Override

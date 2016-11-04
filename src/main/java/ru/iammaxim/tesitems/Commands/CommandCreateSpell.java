@@ -47,6 +47,6 @@ public class CommandCreateSpell extends CommandBase {
         }
         SpellBase spell = SpellBase.createSpell(spellType, args[0], effects);
         cap.getSpellbook().add(spell);
-        TESItems.networkWrapper.sendTo(new SpellbookMessage(cap.getSpellbookNBT()), (EntityPlayerMP) sender);
+        TESItems.networkWrapper.sendTo(new SpellbookMessage(cap.saveSpellbook()), (EntityPlayerMP) sender);
     }
 }

@@ -36,6 +36,6 @@ public class CommandRemoveSpell extends CommandBase {
         while (it.hasNext()) {
             if (it.next().getName().equals(args[0])) it.remove();
         }
-        TESItems.networkWrapper.sendTo(new SpellbookMessage(cap.getSpellbookNBT()), (EntityPlayerMP) sender);
+        TESItems.networkWrapper.sendTo(new SpellbookMessage(cap.saveSpellbook()), (EntityPlayerMP) sender);
     }
 }

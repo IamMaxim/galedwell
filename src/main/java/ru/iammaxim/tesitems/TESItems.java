@@ -241,9 +241,10 @@ public class TESItems {
             ((EntityPlayer) event.getEntity()).inventory.clear();
             IPlayerAttributesCapability cap = event.getEntity().getCapability(TESItems.attributesCapability, null);
             cap.createInventory((EntityPlayer) event.getEntity(), cap.getInventory());
+            cap.getInventory().calculateCarryweight();
             if (!event.getWorld().isRemote) {
                 networkWrapper.sendTo(new AttributesMessage(cap.getAttributes()), (EntityPlayerMP) event.getEntity());
-                networkWrapper.sendTo(new SpellbookMessage(cap.getSpellbookNBT()), (EntityPlayerMP) event.getEntity());
+                networkWrapper.sendTo(new SpellbookMessage(cap.saveSpellbook()), (EntityPlayerMP) event.getEntity());
                 networkWrapper.sendTo(new InventoryMessage(cap.getInventory().writeToNBT()), (EntityPlayerMP) event.getEntity());
             }
         }
@@ -282,6 +283,7 @@ public class TESItems {
 
         //debug
         event.registerServerCommand(new CommandManageInventory());
+        event.registerServerCommand(new CommandManageQuests());
     }
 
     @SubscribeEvent

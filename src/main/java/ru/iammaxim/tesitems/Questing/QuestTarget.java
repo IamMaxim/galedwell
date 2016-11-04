@@ -24,4 +24,9 @@ public abstract class QuestTarget {
             return new QuestTargetTalk(tag);
         } else return null;
     }
+
+    @Override
+    public String toString() {
+        return "type: " + getType();
+    }
 }
