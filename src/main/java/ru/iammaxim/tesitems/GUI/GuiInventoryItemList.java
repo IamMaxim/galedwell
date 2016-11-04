@@ -33,11 +33,10 @@ public class GuiInventoryItemList {
             padding_bottom = 20,
             padding_left = 30,
             width = 206,
-            scrollBarWidth = 6,
+            scrollBarSize = 6,
     borderSize = 10;
     private ResourceLocation
             inv_itemlist_bg = new ResourceLocation("tesitems:textures/gui/inventory/inv_itemlist_bg.png"),
-            inv_entry_bg_selected = new ResourceLocation("tesitems:textures/gui/inventory/inv_entry_bg_selected.png"),
             inv_itemlist_border_LT = new ResourceLocation("tesitems:textures/gui/inventory/inv_itemlist_border_LT.png"),
             inv_itemlist_border_CT = new ResourceLocation("tesitems:textures/gui/inventory/inv_itemlist_border_CT.png"),
             inv_itemlist_border_RT = new ResourceLocation("tesitems:textures/gui/inventory/inv_itemlist_border_RT.png"),
@@ -46,6 +45,13 @@ public class GuiInventoryItemList {
             inv_itemlist_border_LB = new ResourceLocation("tesitems:textures/gui/inventory/inv_itemlist_border_LB.png"),
             inv_itemlist_border_CB = new ResourceLocation("tesitems:textures/gui/inventory/inv_itemlist_border_CB.png"),
             inv_itemlist_border_RB = new ResourceLocation("tesitems:textures/gui/inventory/inv_itemlist_border_RB.png"),
+            inv_scrollbar_bg_top = new ResourceLocation("tesitems:textures/gui/inventory/inv_scrollbar_bg_top.png"),
+            inv_scrollbar_bg_center = new ResourceLocation("tesitems:textures/gui/inventory/inv_scrollbar_bg_center.png"),
+            inv_scrollbar_bg_bottom = new ResourceLocation("tesitems:textures/gui/inventory/inv_scrollbar_bg_bottom.png"),
+            inv_scrollbar_top = new ResourceLocation("tesitems:textures/gui/inventory/inv_scrollbar_top.png"),
+            inv_scrollbar_center = new ResourceLocation("tesitems:textures/gui/inventory/inv_scrollbar_center.png"),
+            inv_scrollbar_bottom = new ResourceLocation("tesitems:textures/gui/inventory/inv_scrollbar_bottom.png"),
+            inv_entry_bg_selected = new ResourceLocation("tesitems:textures/gui/inventory/inv_entry_bg_selected.png"),
             inv_entry_bg_hovered = new ResourceLocation("tesitems:textures/gui/inventory/inv_entry_bg_hovered.png");
     private final int listHeight;
     private final int screenWidth;
@@ -349,7 +355,7 @@ public class GuiInventoryItemList {
         boolean isHovering = mouseX >= left && mouseX <= left + width && mouseY >= top && mouseY <= bottom;
         int listLength = this.getSize();
         int scrollBarRight = left + width;
-        int scrollBarLeft = scrollBarRight - scrollBarWidth;
+        int scrollBarLeft = scrollBarRight - scrollBarSize;
         int entryLeft = this.left;
         int entryRight = scrollBarLeft - 1;
         int viewHeight = this.bottom - this.top;
@@ -431,6 +437,59 @@ public class GuiInventoryItemList {
             if (barTop < this.top) {
                 barTop = this.top;
             }
+            int barBottom = barTop + height;
+
+            //draw scrollbar
+            client.getTextureManager().bindTexture(inv_scrollbar_bg_top);
+            worldr.begin(7, DefaultVertexFormats.POSITION_TEX);
+            worldr.pos(scrollBarLeft, top + scrollBarSize, 0.0D).tex(0.0D, 1.0D).endVertex();
+            worldr.pos(scrollBarRight, top + scrollBarSize, 0.0D).tex(1.0D, 1.0D).endVertex();
+            worldr.pos(scrollBarRight, top, 0.0D).tex(1.0D, 0.0D).endVertex();
+            worldr.pos(scrollBarLeft, top, 0.0D).tex(0.0D, 0.0D).endVertex();
+            tess.draw();
+
+            client.getTextureManager().bindTexture(inv_scrollbar_bg_center);
+            worldr.begin(7, DefaultVertexFormats.POSITION_TEX);
+            worldr.pos(scrollBarLeft, bottom - scrollBarSize, 0.0D).tex(0.0D, 1.0D).endVertex();
+            worldr.pos(scrollBarRight, bottom - scrollBarSize, 0.0D).tex(1.0D, 1.0D).endVertex();
+            worldr.pos(scrollBarRight, top + scrollBarSize, 0.0D).tex(1.0D, 0.0D).endVertex();
+            worldr.pos(scrollBarLeft, top + scrollBarSize, 0.0D).tex(0.0D, 0.0D).endVertex();
+            tess.draw();
+
+            client.getTextureManager().bindTexture(inv_scrollbar_bg_bottom);
+            worldr.begin(7, DefaultVertexFormats.POSITION_TEX);
+            worldr.pos(scrollBarLeft, bottom, 0.0D).tex(0.0D, 1.0D).endVertex();
+            worldr.pos(scrollBarRight, bottom, 0.0D).tex(1.0D, 1.0D).endVertex();
+            worldr.pos(scrollBarRight, bottom - scrollBarSize, 0.0D).tex(1.0D, 0.0D).endVertex();
+            worldr.pos(scrollBarLeft, bottom - scrollBarSize, 0.0D).tex(0.0D, 0.0D).endVertex();
+            tess.draw();
+
+
+            client.getTextureManager().bindTexture(inv_scrollbar_top);
+            worldr.begin(7, DefaultVertexFormats.POSITION_TEX);
+            worldr.pos(scrollBarLeft, barTop + scrollBarSize, 0.0D).tex(0.0D, 1.0D).endVertex();
+            worldr.pos(scrollBarRight, barTop + scrollBarSize, 0.0D).tex(1.0D, 1.0D).endVertex();
+            worldr.pos(scrollBarRight, barTop, 0.0D).tex(1.0D, 0.0D).endVertex();
+            worldr.pos(scrollBarLeft, barTop, 0.0D).tex(0.0D, 0.0D).endVertex();
+            tess.draw();
+
+            client.getTextureManager().bindTexture(inv_scrollbar_center);
+            worldr.begin(7, DefaultVertexFormats.POSITION_TEX);
+            worldr.pos(scrollBarLeft, barBottom - scrollBarSize, 0.0D).tex(0.0D, 1.0D).endVertex();
+            worldr.pos(scrollBarRight, barBottom - scrollBarSize, 0.0D).tex(1.0D, 1.0D).endVertex();
+            worldr.pos(scrollBarRight, barTop + scrollBarSize, 0.0D).tex(1.0D, 0.0D).endVertex();
+            worldr.pos(scrollBarLeft, barTop + scrollBarSize, 0.0D).tex(0.0D, 0.0D).endVertex();
+            tess.draw();
+
+            client.getTextureManager().bindTexture(inv_scrollbar_bottom);
+            worldr.begin(7, DefaultVertexFormats.POSITION_TEX);
+            worldr.pos(scrollBarLeft, barBottom, 0.0D).tex(0.0D, 1.0D).endVertex();
+            worldr.pos(scrollBarRight, barBottom, 0.0D).tex(1.0D, 1.0D).endVertex();
+            worldr.pos(scrollBarRight, barBottom - scrollBarSize, 0.0D).tex(1.0D, 0.0D).endVertex();
+            worldr.pos(scrollBarLeft, barBottom - scrollBarSize, 0.0D).tex(0.0D, 0.0D).endVertex();
+            tess.draw();
+
+            /*
             GlStateManager.disableTexture2D();
             worldr.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
             worldr.pos(scrollBarLeft, this.bottom, 0.0D).tex(0.0D, 1.0D).color(0x00, 0x00, 0x00, 0xFF).endVertex();
@@ -450,8 +509,10 @@ public class GuiInventoryItemList {
             worldr.pos(scrollBarRight - 1, barTop, 0.0D).tex(1.0D, 0.0D).color(0xC0, 0xC0, 0xC0, 0xFF).endVertex();
             worldr.pos(scrollBarLeft, barTop, 0.0D).tex(0.0D, 0.0D).color(0xC0, 0xC0, 0xC0, 0xFF).endVertex();
             tess.draw();
+            */
+
         }
-        GlStateManager.enableTexture2D();
+        //GlStateManager.enableTexture2D();
         GlStateManager.shadeModel(GL11.GL_FLAT);
         GlStateManager.enableAlpha();
         GlStateManager.disableBlend();
