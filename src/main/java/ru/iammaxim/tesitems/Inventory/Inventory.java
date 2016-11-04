@@ -8,7 +8,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.math.Vec3d;
 import ru.iammaxim.tesitems.Items.EntityItemNew;
+import ru.iammaxim.tesitems.Items.ItemWeightManager;
 import ru.iammaxim.tesitems.TESItems;
 
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ import java.util.List;
 public class Inventory {
     private List<ItemStack> inventory = new ArrayList<>();
     public ItemStack[] armorInventory = new ItemStack[4];
+    public float carryweight;
 
     public ItemStack getMainhandItem() {
         return null;
@@ -70,10 +73,12 @@ public class Inventory {
                 }
             }
         }
+        calculateCarryweight();
     }
 
     public void setItem(int index, ItemStack stack) {
         inventory.set(index, stack);
+        calculateCarryweight();
     }
 
     public void checkInventory() {
@@ -84,7 +89,10 @@ public class Inventory {
 
     public void checkSlot(int index) {
         ItemStack is = inventory.get(index);
-        if (is.stackSize <= 0) inventory.remove(index);
+        if (is.stackSize <= 0) {
+            inventory.remove(index);
+            calculateCarryweight();
+        }
     }
 
     public boolean removeItem(Item item) {
@@ -98,6 +106,7 @@ public class Inventory {
 
     public boolean removeItem(int index) {
         inventory.remove(index);
+        calculateCarryweight();
         return true;
     }
 
@@ -147,7 +156,7 @@ public class Inventory {
         return slots;
     }
 
-    public ItemStack takeItem(Item item, int count) {
+/*    public ItemStack takeItem(Item item, int count) {
         if (item.isDamageable()) {
             List<int[]> slots = getItemIndices(item);
             final int[] total = {0};
@@ -171,7 +180,7 @@ public class Inventory {
             inventory.remove(itemIndex);
             return inventory.get(itemIndex);
         }
-    }
+    }*/
 
     public static Inventory getInventory(EntityPlayer player) {
         return TESItems.getCapatibility(player).getInventory();
@@ -192,8 +201,15 @@ public class Inventory {
         is.stackSize -= count;
         checkSlot(index);
         EntityItemNew e = new EntityItemNew(entity.worldObj, entity.posX, entity.posY, entity.posZ, stack);
+        Vec3d lookVec = entity.getLookVec();
+        e.setVelocity(lookVec.xCoord, lookVec.yCoord, lookVec.zCoord);
         entity.worldObj.spawnEntityInWorld(e);
     }
 
-
+    public void calculateCarryweight() {
+        carryweight = 0;
+        for (ItemStack stack : inventory) {
+            carryweight += ItemWeightManager.getWeight(stack);
+        }
+    }
 }

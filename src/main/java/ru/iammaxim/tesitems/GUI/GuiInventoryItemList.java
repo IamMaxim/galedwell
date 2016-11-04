@@ -3,10 +3,10 @@ package ru.iammaxim.tesitems.GUI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
@@ -19,6 +19,7 @@ import org.lwjgl.opengl.GL11;
 import ru.iammaxim.tesitems.Inventory.InventoryClient;
 import ru.iammaxim.tesitems.Inventory.InventoryItemStack;
 import ru.iammaxim.tesitems.Items.Weapon;
+import ru.iammaxim.tesitems.TESItems;
 
 import java.io.IOException;
 import java.util.*;
@@ -34,8 +35,18 @@ public class GuiInventoryItemList {
             padding_left = 30,
             width = 206,
             scrollBarSize = 6,
-    borderSize = 10;
-    private ResourceLocation
+            borderSize = 10;
+    private final int listHeight;
+    private final int screenWidth;
+    private final int screenHeight;
+    private final int top;
+    private final int bottom;
+    private final int right;
+    private final int left;
+    private final int slotHeight;
+    private final Minecraft client;
+    int scale;
+    private static ResourceLocation
             inv_itemlist_bg = new ResourceLocation("tesitems:textures/gui/inventory/inv_itemlist_bg.png"),
             inv_itemlist_border_LT = new ResourceLocation("tesitems:textures/gui/inventory/inv_itemlist_border_LT.png"),
             inv_itemlist_border_CT = new ResourceLocation("tesitems:textures/gui/inventory/inv_itemlist_border_CT.png"),
@@ -52,30 +63,22 @@ public class GuiInventoryItemList {
             inv_scrollbar_center = new ResourceLocation("tesitems:textures/gui/inventory/inv_scrollbar_center.png"),
             inv_scrollbar_bottom = new ResourceLocation("tesitems:textures/gui/inventory/inv_scrollbar_bottom.png"),
             inv_entry_bg_selected = new ResourceLocation("tesitems:textures/gui/inventory/inv_entry_bg_selected.png"),
-            inv_entry_bg_hovered = new ResourceLocation("tesitems:textures/gui/inventory/inv_entry_bg_hovered.png");
-    private final int listHeight;
-    private final int screenWidth;
-    private final int screenHeight;
-    private final int top;
-    private final int bottom;
-    private final int right;
-    private final int left;
-    private final int slotHeight;
-    private final Minecraft client;
+            inv_entry_bg_hovered = new ResourceLocation("tesitems:textures/gui/inventory/inv_entry_bg_hovered.png"),
+            icon_carryweight = new ResourceLocation("tesitems:textures/gui/icons/carryweight.png"),
+            inv_carryweight_bg = new ResourceLocation("tesitems:textures/gui/inventory/carryweight_bg.png");
     private int mouseX;
     private int mouseY;
     private InventoryClient inv;
     private int scrollUpActionId;
     private int scrollDownActionId;
-    private float initialMouseClickY = -2.0F;
+    private float initialMouseClickY = -2.0F, lastMouseX = -1, lastMouseY = -1;
     private float scrollFactor;
     private float scrollDistance;
     private long lastClickTime = 0L;
-    private boolean hasHeader;
-    private int headerHeight;
     private int lastHash = 0, lastItemCount = 0;
     private List<InventoryItemStack> stacks = new ArrayList<>();
     private HashMap<EntityEquipmentSlot, ItemStack> equipped = new HashMap<>();
+    private float characterRotation = 0, characterRotationFactor = 1;
 
     public GuiInventoryItemList(InventoryClient inv, Minecraft client) {
         ScaledResolution res = new ScaledResolution(client);
@@ -88,6 +91,7 @@ public class GuiInventoryItemList {
         this.right = width + this.left;
         this.screenWidth = res.getScaledWidth();
         this.screenHeight = res.getScaledHeight();
+        scale = (int) (screenHeight * 0.3f);
         this.inv = inv;
 
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
@@ -97,12 +101,6 @@ public class GuiInventoryItemList {
         }
         equipped.put(EntityEquipmentSlot.MAINHAND, player.getHeldItemMainhand());
         equipped.put(EntityEquipmentSlot.OFFHAND, player.getHeldItemOffhand());
-    }
-
-    protected void setHeaderInfo(boolean hasHeader, int headerHeight) {
-        this.hasHeader = hasHeader;
-        this.headerHeight = headerHeight;
-        if (!hasHeader) this.headerHeight = 0;
     }
 
     public void clickSlot(EntityEquipmentSlot slot, int index) {
@@ -166,8 +164,8 @@ public class GuiInventoryItemList {
         //background
         client.getTextureManager().bindTexture(inv_itemlist_bg);
         vb.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vb.pos(left, bottom, 0).tex(0, (float)(bottom - top)/width).endVertex();
-        vb.pos(right, bottom, 0).tex(1, (float)(bottom - top)/width).endVertex();
+        vb.pos(left, bottom, 0).tex(0, (float) (bottom - top) / width).endVertex();
+        vb.pos(right, bottom, 0).tex(1, (float) (bottom - top) / width).endVertex();
         vb.pos(right, top, 0).tex(1, 0).endVertex();
         vb.pos(left, top, 0).tex(0, 0).endVertex();
         tess.draw();
@@ -184,7 +182,7 @@ public class GuiInventoryItemList {
         tess.draw();
 
         //CT
-        tmp = Math.round((right - left)/borderSize);
+        tmp = Math.round((right - left) / borderSize);
         client.getTextureManager().bindTexture(inv_itemlist_border_CT);
         vb.begin(7, DefaultVertexFormats.POSITION_TEX);
         vb.pos(left, top, 0).tex(0, 1).endVertex();
@@ -212,7 +210,7 @@ public class GuiInventoryItemList {
         tess.draw();
 
         //LC
-        tmp = Math.round((bottom - top)/borderSize);
+        tmp = Math.round((bottom - top) / borderSize);
         client.getTextureManager().bindTexture(inv_itemlist_border_LC);
         vb.begin(7, DefaultVertexFormats.POSITION_TEX);
         vb.pos(left - borderSize, bottom, 0).tex(0, tmp).endVertex();
@@ -287,7 +285,7 @@ public class GuiInventoryItemList {
     }
 
     private int getContentHeight() {
-        return this.getSize() * this.slotHeight + this.headerHeight;
+        return this.getSize() * this.slotHeight;
     }
 
     private void applyScrollLimits() {
@@ -330,7 +328,7 @@ public class GuiInventoryItemList {
         }
     }
 
-    private void checkIfInvUpToDate() {
+    private void updateInventory() {
         int hash = inv.hashCode(), itemCount = inv.size();
         if ((hash) != lastHash || (itemCount) != lastItemCount) {
             lastItemCount = itemCount;
@@ -342,7 +340,7 @@ public class GuiInventoryItemList {
     }
 
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        checkIfInvUpToDate();
+        updateInventory();
 
         this.mouseX = mouseX;
         this.mouseY = mouseY;
@@ -350,6 +348,10 @@ public class GuiInventoryItemList {
         Tessellator tess = Tessellator.getInstance();
         VertexBuffer worldr = tess.getBuffer();
 
+        //draw character
+        int posX = right + (screenWidth - right) / 2, posY = screenHeight / 2 + scale * 2 - (int) (screenHeight * 0.3f);
+        drawEntityOnScreen(posX, posY, scale, characterRotation, client.thePlayer);
+        drawCarryweight(tess);
         drawBackground(tess);
 
         boolean isHovering = mouseX >= left && mouseX <= left + width && mouseY >= top && mouseY <= bottom;
@@ -360,7 +362,7 @@ public class GuiInventoryItemList {
         int entryRight = scrollBarLeft - 1;
         int viewHeight = this.bottom - this.top;
         int border = 4;
-        int mouseListY = mouseY - this.top - this.headerHeight + (int) this.scrollDistance - border;
+        int mouseListY = mouseY - this.top + (int) this.scrollDistance - border;
         int slotIndex = mouseListY / this.slotHeight;
 
         if (Mouse.isButtonDown(0)) {
@@ -395,13 +397,30 @@ public class GuiInventoryItemList {
                 this.scrollDistance -= ((float) mouseY - this.initialMouseClickY) * this.scrollFactor;
                 this.initialMouseClickY = (float) mouseY;
             }
+            if (lastMouseX == -1)
+                lastMouseX = mouseX;
+            if (mouseX > right + borderSize)
+                characterRotation += (lastMouseX - mouseX) * characterRotationFactor;
+            lastMouseX = mouseX;
+
+            if (lastMouseY == -1)
+                lastMouseY = mouseY;
+            if (mouseX > right + borderSize) {
+                scale += (mouseY - lastMouseY);
+                clampScale();
+            }
+            lastMouseY = mouseY;
         } else if (Mouse.isButtonDown(1)) {
             if (this.initialMouseClickY == -1.0F) {
-                elementRightClicked(slotIndex);
+                if (mouseX >= entryLeft && mouseX <= entryRight && slotIndex >= 0 && mouseListY >= 0 && slotIndex < listLength) {
+                    elementRightClicked(slotIndex);
+                }
                 this.initialMouseClickY = mouseY;
             }
         } else {
             this.initialMouseClickY = -1.0F;
+            lastMouseX = -1;
+            lastMouseY = -1;
         }
 
         this.applyScrollLimits();
@@ -413,7 +432,7 @@ public class GuiInventoryItemList {
         GL11.glScissor((int) (left * scaleW), (int) (client.displayHeight - (bottom * scaleH)), (int) (width * scaleW), (int) (viewHeight * scaleH));
         int baseY = this.top + border - (int) this.scrollDistance;
         for (int slotIdx = 0; slotIdx < listLength; ++slotIdx) {
-            int slotTop = baseY + slotIdx * this.slotHeight + this.headerHeight;
+            int slotTop = baseY + slotIdx * this.slotHeight;
             int slotBuffer = this.slotHeight - border;
             if (slotTop <= this.bottom && slotTop + slotBuffer >= this.top) {
                 //draw hover bg if mouse if hovering slot
@@ -488,35 +507,85 @@ public class GuiInventoryItemList {
             worldr.pos(scrollBarRight, barBottom - scrollBarSize, 0.0D).tex(1.0D, 0.0D).endVertex();
             worldr.pos(scrollBarLeft, barBottom - scrollBarSize, 0.0D).tex(0.0D, 0.0D).endVertex();
             tess.draw();
-
-            /*
-            GlStateManager.disableTexture2D();
-            worldr.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-            worldr.pos(scrollBarLeft, this.bottom, 0.0D).tex(0.0D, 1.0D).color(0x00, 0x00, 0x00, 0xFF).endVertex();
-            worldr.pos(scrollBarRight, this.bottom, 0.0D).tex(1.0D, 1.0D).color(0x00, 0x00, 0x00, 0xFF).endVertex();
-            worldr.pos(scrollBarRight, this.top, 0.0D).tex(1.0D, 0.0D).color(0x00, 0x00, 0x00, 0xFF).endVertex();
-            worldr.pos(scrollBarLeft, this.top, 0.0D).tex(0.0D, 0.0D).color(0x00, 0x00, 0x00, 0xFF).endVertex();
-            tess.draw();
-            worldr.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-            worldr.pos(scrollBarLeft, barTop + height, 0.0D).tex(0.0D, 1.0D).color(0x80, 0x80, 0x80, 0xFF).endVertex();
-            worldr.pos(scrollBarRight, barTop + height, 0.0D).tex(1.0D, 1.0D).color(0x80, 0x80, 0x80, 0xFF).endVertex();
-            worldr.pos(scrollBarRight, barTop, 0.0D).tex(1.0D, 0.0D).color(0x80, 0x80, 0x80, 0xFF).endVertex();
-            worldr.pos(scrollBarLeft, barTop, 0.0D).tex(0.0D, 0.0D).color(0x80, 0x80, 0x80, 0xFF).endVertex();
-            tess.draw();
-            worldr.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-            worldr.pos(scrollBarLeft, barTop + height - 1, 0.0D).tex(0.0D, 1.0D).color(0xC0, 0xC0, 0xC0, 0xFF).endVertex();
-            worldr.pos(scrollBarRight - 1, barTop + height - 1, 0.0D).tex(1.0D, 1.0D).color(0xC0, 0xC0, 0xC0, 0xFF).endVertex();
-            worldr.pos(scrollBarRight - 1, barTop, 0.0D).tex(1.0D, 0.0D).color(0xC0, 0xC0, 0xC0, 0xFF).endVertex();
-            worldr.pos(scrollBarLeft, barTop, 0.0D).tex(0.0D, 0.0D).color(0xC0, 0xC0, 0xC0, 0xFF).endVertex();
-            tess.draw();
-            */
-
         }
-        //GlStateManager.enableTexture2D();
         GlStateManager.shadeModel(GL11.GL_FLAT);
         GlStateManager.enableAlpha();
         GlStateManager.disableBlend();
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
+    }
+
+    private void drawCarryweight(Tessellator tess) {
+        int l = (screenWidth + right) / 2 - 50,
+                r = l + 100,
+                t = screenHeight - 24,
+                b = screenHeight;
+        VertexBuffer vb = tess.getBuffer();
+        client.getTextureManager().bindTexture(inv_carryweight_bg);
+        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
+        vb.pos(l, b, 0.0D).tex(0.0D, 1.0D).endVertex();
+        vb.pos(r, b, 0.0D).tex(1.0D, 1.0D).endVertex();
+        vb.pos(r, t, 0.0D).tex(1.0D, 0.0D).endVertex();
+        vb.pos(l, t, 0.0D).tex(0.0D, 0.0D).endVertex();
+        tess.draw();
+
+        client.getTextureManager().bindTexture(icon_carryweight);
+        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
+        vb.pos(l + 4, b - 4, 0.0D).tex(0.0D, 1.0D).endVertex();
+        vb.pos(l + 20, b - 4, 0.0D).tex(1.0D, 1.0D).endVertex();
+        vb.pos(l + 20, t + 4, 0.0D).tex(1.0D, 0.0D).endVertex();
+        vb.pos(l + 4, t + 4, 0.0D).tex(0.0D, 0.0D).endVertex();
+        tess.draw();
+
+        client.fontRendererObj.drawString(inv.carryweight + "/" + TESItems.getCapatibility(inv.player).getMaxCarryweight(), l + 24, t + 8, 0xFFFFFF);
+    }
+
+    private void clampScale() {
+        if (scale < screenHeight * 0.3f)
+            scale = (int) (screenHeight * 0.3f);
+        if (scale > screenHeight)
+            scale = screenHeight;
+    }
+
+    public void drawEntityOnScreen(int posX, int posY, int scale, float rotX, EntityLivingBase entity) {
+        GlStateManager.enableColorMaterial();
+        GlStateManager.pushMatrix();
+        GlStateManager.translate((float) posX, (float) posY, -500.0F);
+        GlStateManager.scale((float) (-scale), (float) scale, (float) scale);
+        GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+        float f = entity.renderYawOffset;
+        float f1 = entity.rotationYaw;
+        float f2 = entity.rotationPitch;
+        float f3 = entity.prevRotationYawHead;
+        float f4 = entity.rotationYawHead;
+        GlStateManager.rotate(135.0F, 0.0F, 1.0F, 0.0F);
+        RenderHelper.enableStandardItemLighting();
+        GlStateManager.rotate(-135.0F, 0.0F, 1.0F, 0.0F);
+        //GlStateManager.rotate(-((float)Math.atan((double)(mouseY / 40.0F))) * 20.0F, 1.0F, 0.0F, 0.0F);
+//        entity.renderYawOffset = (float)Math.atan((double)(mouseX / 40.0F)) * 20.0F;
+        entity.renderYawOffset = rotX;
+//        entity.rotationYaw = (float)Math.atan((double)(mouseX / 40.0F)) * 40.0F;
+        entity.rotationYaw = rotX;
+        entity.rotationPitch = 0;
+        //entity.rotationPitch = -((float)Math.atan((double)(mouseY / 40.0F))) * 20.0F;
+        entity.rotationYawHead = entity.rotationYaw;
+        entity.prevRotationYawHead = entity.rotationYaw;
+        GlStateManager.translate(0.0F, 0.0F, 0.0F);
+        RenderManager rendermanager = Minecraft.getMinecraft().getRenderManager();
+        rendermanager.setPlayerViewY(180.0F);
+        rendermanager.setRenderShadow(false);
+        rendermanager.doRenderEntity(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
+        rendermanager.setRenderShadow(true);
+        entity.renderYawOffset = f;
+        entity.rotationYaw = f1;
+        entity.rotationPitch = f2;
+        entity.prevRotationYawHead = f3;
+        entity.rotationYawHead = f4;
+        GlStateManager.popMatrix();
+        RenderHelper.disableStandardItemLighting();
+        GlStateManager.disableRescaleNormal();
+        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+        GlStateManager.disableTexture2D();
+        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
     }
 
     private void drawGradientRect(int left, int top, int right, int bottom, int color1, int color2) {

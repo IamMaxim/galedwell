@@ -1,5 +1,3 @@
-TODO: specify resolution of textures
-
 tesitems:textures/gui/inventory/inv_entry_bg_selected.png 200x15
 tesitems:textures/gui/inventory/inv_entry_bg_hovered.png 200x15
 tesitems:textures/gui/inventory/inv_itemlist_bg.png 206x206
@@ -28,3 +26,7 @@ tesitems:textures/gui/inventory/inv_scrollbar_bg_bottom.png 6x6
 tesitems:textures/gui/inventory/inv_scrollbar_top.png 6x6
 tesitems:textures/gui/inventory/inv_scrollbar_center.png 6x6
 tesitems:textures/gui/inventory/inv_scrollbar_bottom.png 6x6
+
+tesitems:textures/gui/inventory/carryweight_bg.png 24x100
+
+tesitems:textures/gui/icons/carryweight.png 16x16

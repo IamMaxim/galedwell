@@ -59,9 +59,12 @@ public class InventoryServer extends Inventory {
 
     @Override
     public void drop(Entity entity, int index, int count) {
-        super.drop(entity, index, count);
         ItemStack is = get(index);
-        TESItems.networkWrapper.sendTo(new ItemDropMessage(index, is.stackSize - count), (EntityPlayerMP) player);
+        super.drop(entity, index, count);
+        calculateCarryweight();
+        if (is.stackSize - count > 0)
+            sendMessage(new ItemDropMessage(index, is.stackSize - count), player);
+        else sendMessage(new InventoryUpdateMessage(InventoryUpdateMessage.ACTION_REMOVE_INDEX, index), player);
     }
 
     @Override

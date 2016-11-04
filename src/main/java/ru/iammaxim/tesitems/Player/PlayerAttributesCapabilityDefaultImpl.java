@@ -142,8 +142,14 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     }
     @Override
     public float getCarryWeight() {
-        return 0;
+        return inventory.carryweight;
     }
+
+    @Override
+    public float getMaxCarryweight() {
+        return attributes.get("strength");
+    }
+
     @Override
     public EntityNPC getLatestNPC() {
         return latestNPC;

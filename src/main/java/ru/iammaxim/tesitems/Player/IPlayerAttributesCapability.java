@@ -29,6 +29,7 @@ public interface IPlayerAttributesCapability {
     public void addQuest(QuestInstance quest);
     public List<QuestInstance> getQuests();
     public float getCarryWeight();
+    public float getMaxCarryweight();
     public EntityNPC getLatestNPC();
     public void setLatestNPC(EntityNPC npc);
     public Inventory getInventory();

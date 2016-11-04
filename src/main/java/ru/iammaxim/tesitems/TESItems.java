@@ -11,6 +11,8 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderLivingEvent;
@@ -45,10 +47,7 @@ import ru.iammaxim.tesitems.Craft.CraftRecipes;
 import ru.iammaxim.tesitems.GUI.GUIHandler;
 import ru.iammaxim.tesitems.GUI.KeyBindings;
 import ru.iammaxim.tesitems.Inventory.Inventory;
-import ru.iammaxim.tesitems.Items.Weapon;
-import ru.iammaxim.tesitems.Items.WeaponType;
-import ru.iammaxim.tesitems.Items.mArmor;
-import ru.iammaxim.tesitems.Items.mItems;
+import ru.iammaxim.tesitems.Items.*;
 import ru.iammaxim.tesitems.Magic.*;
 import ru.iammaxim.tesitems.NPC.EntityNPC;
 import ru.iammaxim.tesitems.NPC.RenderNPC;
@@ -66,6 +65,7 @@ public class TESItems {
     public static final String VERSION = "1.0";
     public static final String attributesTagName = "TESItems:playerAttributes";
     public static final String[] ATTRIBUTES = {
+            "strength",
             "mining",
             "woodcutting",
             "digging",
@@ -176,10 +176,14 @@ public class TESItems {
         Items.GOLD_INGOT.setMaxStackSize(2);
         CraftRecipes.addRecipe(new CraftRecipe("log", new ItemStack[]{new ItemStack(Items.STICK, 4)}, new ItemStack(Item.getItemFromBlock(Blocks.LOG), 1)));
         CraftRecipes.addRecipe(new CraftRecipe("testLargeStacks", new ItemStack[]{new ItemStack(Item.getItemFromBlock(Blocks.DIRT), 100)}, new ItemStack(Item.getItemFromBlock(Blocks.COBBLESTONE), 1)));
+        ItemWeightManager.init();
     }
 
     @SubscribeEvent
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
+        IPlayerAttributesCapability cap = getCapatibility(event.player);
+        if (cap.getCarryWeight() > cap.getMaxCarryweight())
+            event.player.addPotionEffect(new PotionEffect(Potion.getPotionById(2), 5, 3));
     }
 
     private boolean isMiningBlock(Block b) {
