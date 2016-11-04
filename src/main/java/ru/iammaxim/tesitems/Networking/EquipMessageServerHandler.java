@@ -15,8 +15,11 @@ public class EquipMessageServerHandler implements IMessageHandler<EquipMessage, 
     @Override
     public IMessage onMessage(EquipMessage message, MessageContext ctx) {
         EntityPlayer player = ctx.getServerHandler().playerEntity;
-        if (message.index == -1) player.setItemStackToSlot(EntityEquipmentSlot.fromString(message.slot), null);
-        else player.setItemStackToSlot(EntityEquipmentSlot.fromString(message.slot), Inventory.getInventory(player).get(message.index));
+        if (message.index == -1) {
+            player.setItemStackToSlot(EntityEquipmentSlot.fromString(message.slot), null);
+        } else {
+            player.setItemStackToSlot(EntityEquipmentSlot.fromString(message.slot), Inventory.getInventory(player).get(message.index));
+        }
         return null;
     }
 }

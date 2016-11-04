@@ -11,13 +11,12 @@ import ru.iammaxim.tesitems.TESItems;
 public class GUIHandler implements IGuiHandler {
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        System.out.println("trying to open gui from server");
+        TESItems.getCapatibility(player).getInventory().checkInventory();
         return new DummyContainer();
     }
 
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        System.out.println("trying to open gui from client");
         switch (ID) {
             case TESItems.guiSpellSelect: return new GuiSpellSelect();
             case TESItems.guiNpcDialog: return new GuiNpcDialog();

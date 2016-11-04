@@ -275,6 +275,9 @@ public class TESItems {
         event.registerServerCommand(new CommandCreateSpell());
         event.registerServerCommand(new CommandRemoveSpell());
         event.registerServerCommand(new CommandGiveMe());
+
+        //debug
+        event.registerServerCommand(new CommandManageInventory());
     }
 
     @SubscribeEvent
@@ -342,8 +345,9 @@ public class TESItems {
     public void onItemPickup(EntityItemPickupEvent event) {
         System.out.println("on item pickup");
         event.setCanceled(true);
-        Inventory inv = getCapatibility(event.getEntityPlayer()).getInventory();
+        Inventory inv = Inventory.getInventory(event.getEntityPlayer());
         inv.addItem(event.getItem().getEntityItem());
-        event.getItem().getEntityItem().stackSize = 0;
+        //event.getItem().getEntityItem().stackSize = 0;
+        event.getItem().setDead();
     }
 }

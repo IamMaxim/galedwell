@@ -218,7 +218,6 @@ public class GuiInventoryItemList {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         int hash = inv.hashCode(), itemCount = inv.size();
         if ((hash) != lastHash || (itemCount) != lastItemCount) {
-            System.out.println("updating");
             lastItemCount = itemCount;
             lastHash = hash;
             stacks.clear();

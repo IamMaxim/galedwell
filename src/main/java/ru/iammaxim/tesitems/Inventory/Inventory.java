@@ -1,5 +1,6 @@
 package ru.iammaxim.tesitems.Inventory;
 
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -54,7 +55,6 @@ public class Inventory {
     }
 
     public void addItem(ItemStack stack) {
-        System.out.println("add item()");
         if (stack.isItemStackDamageable())
             inventory.add(stack);
         else {
@@ -73,28 +73,33 @@ public class Inventory {
     }
 
     public void setItem(int index, ItemStack stack) {
+        System.out.println("setting item at index " + index + " to " + stack.getDisplayName() + " " + stack.stackSize);
         inventory.set(index, stack);
     }
 
     public void checkInventory() {
-        for (int i = inventory.size(); i >= 0; i--) {
+        for (int i = inventory.size() - 1; i >= 0; i--) {
             checkSlot(i);
         }
     }
 
     public void checkSlot(int index) {
-        System.out.println("checking slot " + index);
         ItemStack is = inventory.get(index);
         if (is.stackSize <= 0) inventory.remove(index);
     }
 
     public boolean removeItem(Item item) {
+        System.out.println("removing item " + item);
         int index = getItemIndex(item);
-        if (index == -1) return false;
+        if (index == -1) {
+            System.out.println("item not found in inventory");
+            return false;
+        }
         return removeItem(index);
     }
 
     public boolean removeItem(int index) {
+        System.out.println("removing item at slot " + index);
         inventory.remove(index);
         return true;
     }
@@ -180,11 +185,8 @@ public class Inventory {
     }
 
     public void drop(Entity entity, int index, int count) {
-        if (index < 0 || index > size() - 1) {
-            return;
-        }
+        System.out.println("index: " + index);
         ItemStack is = inventory.get(index);
-        System.out.println("index: " + index + " count: " + count + " stackSize: " + is.stackSize);
         if (count > is.stackSize) {
             System.out.println("count > is.stackSize. Something goes wrong");
             return;
@@ -194,7 +196,8 @@ public class Inventory {
         is.stackSize -= count;
         checkSlot(index);
         EntityItemNew e = new EntityItemNew(entity.worldObj, entity.posX, entity.posY, entity.posZ, stack);
-        e.setDefaultPickupDelay();
         entity.worldObj.spawnEntityInWorld(e);
     }
+
+
 }

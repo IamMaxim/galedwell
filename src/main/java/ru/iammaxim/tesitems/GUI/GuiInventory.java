@@ -22,6 +22,7 @@ public class GuiInventory extends GuiScreen {
     public GuiInventory(EntityPlayer player) {
         mc = Minecraft.getMinecraft();
         inv = (InventoryClient) TESItems.getCapatibility(player).getInventory();
+        inv.checkInventory();
         itemList = new GuiInventoryItemList(inv, mc);
     }
 
