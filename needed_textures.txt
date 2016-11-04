@@ -1,3 +1,21 @@
+TODO: specify resolution of textures
+
 tesitems:textures/gui/inventory/inv_entry_bg_selected.png
 tesitems:textures/gui/inventory/inv_entry_bg_hovered.png
 tesitems:textures/gui/inventory/inv_itemlist_bg.png
+
+//border textures:
+LT CT RT
+LC    RC
+LB CB RB
+//LC and RC UVs are rounded to match patterns
+
+tesitems:textures/gui/inventory/inv_itemlist_border_LT.png
+tesitems:textures/gui/inventory/inv_itemlist_border_CT.png
+tesitems:textures/gui/inventory/inv_itemlist_border_RT.png
+tesitems:textures/gui/inventory/inv_itemlist_border_LC.png
+tesitems:textures/gui/inventory/inv_itemlist_border_RC.png
+tesitems:textures/gui/inventory/inv_itemlist_border_LB.png
+tesitems:textures/gui/inventory/inv_itemlist_border_CB.png
+tesitems:textures/gui/inventory/inv_itemlist_border_RB.png
+

@@ -27,10 +27,25 @@ import java.util.*;
  * Created by maxim on 7/26/16 at 5:24 PM.
  */
 public class GuiInventoryItemList {
-    private static final int entry_height = 15, padding_top = 20, padding_bottom = 20, padding_left = 30, width = 206, scrollBarWidth = 6;
+    private static final int
+            entry_height = 15,
+            padding_top = 20,
+            padding_bottom = 20,
+            padding_left = 30,
+            width = 206,
+            scrollBarWidth = 6,
+    borderSize = 10;
     private ResourceLocation
             inv_itemlist_bg = new ResourceLocation("tesitems:textures/gui/inventory/inv_itemlist_bg.png"),
             inv_entry_bg_selected = new ResourceLocation("tesitems:textures/gui/inventory/inv_entry_bg_selected.png"),
+            inv_itemlist_border_LT = new ResourceLocation("tesitems:textures/gui/inventory/inv_itemlist_border_LT.png"),
+            inv_itemlist_border_CT = new ResourceLocation("tesitems:textures/gui/inventory/inv_itemlist_border_CT.png"),
+            inv_itemlist_border_RT = new ResourceLocation("tesitems:textures/gui/inventory/inv_itemlist_border_RT.png"),
+            inv_itemlist_border_LC = new ResourceLocation("tesitems:textures/gui/inventory/inv_itemlist_border_LC.png"),
+            inv_itemlist_border_RC = new ResourceLocation("tesitems:textures/gui/inventory/inv_itemlist_border_RC.png"),
+            inv_itemlist_border_LB = new ResourceLocation("tesitems:textures/gui/inventory/inv_itemlist_border_LB.png"),
+            inv_itemlist_border_CB = new ResourceLocation("tesitems:textures/gui/inventory/inv_itemlist_border_CB.png"),
+            inv_itemlist_border_RB = new ResourceLocation("tesitems:textures/gui/inventory/inv_itemlist_border_RB.png"),
             inv_entry_bg_hovered = new ResourceLocation("tesitems:textures/gui/inventory/inv_entry_bg_hovered.png");
     private final int listHeight;
     private final int screenWidth;
@@ -140,12 +155,91 @@ public class GuiInventoryItemList {
     private void drawBackground(Tessellator tess) {
         VertexBuffer vb = tess.getBuffer();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        float tmp;
+
+        //background
         client.getTextureManager().bindTexture(inv_itemlist_bg);
         vb.begin(7, DefaultVertexFormats.POSITION_TEX);
         vb.pos(left, bottom, 0).tex(0, (float)(bottom - top)/width).endVertex();
         vb.pos(right, bottom, 0).tex(1, (float)(bottom - top)/width).endVertex();
         vb.pos(right, top, 0).tex(1, 0).endVertex();
         vb.pos(left, top, 0).tex(0, 0).endVertex();
+        tess.draw();
+
+        //border
+
+        //LT
+        client.getTextureManager().bindTexture(inv_itemlist_border_LT);
+        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
+        vb.pos(left - borderSize, top, 0).tex(0, 1).endVertex();
+        vb.pos(left, top, 0).tex(1, 1).endVertex();
+        vb.pos(left, top - borderSize, 0).tex(1, 0).endVertex();
+        vb.pos(left - borderSize, top - borderSize, 0).tex(0, 0).endVertex();
+        tess.draw();
+
+        //CT
+        tmp = Math.round((right - left)/borderSize);
+        client.getTextureManager().bindTexture(inv_itemlist_border_CT);
+        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
+        vb.pos(left, top, 0).tex(0, 1).endVertex();
+        vb.pos(right, top, 0).tex(tmp, 1).endVertex();
+        vb.pos(right, top - borderSize, 0).tex(tmp, 0).endVertex();
+        vb.pos(left, top - borderSize, 0).tex(0, 0).endVertex();
+        tess.draw();
+
+        //CB
+        client.getTextureManager().bindTexture(inv_itemlist_border_CB);
+        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
+        vb.pos(left, bottom + borderSize, 0).tex(0, 1).endVertex();
+        vb.pos(right, bottom + borderSize, 0).tex(tmp, 1).endVertex();
+        vb.pos(right, bottom, 0).tex(tmp, 0).endVertex();
+        vb.pos(left, bottom, 0).tex(0, 0).endVertex();
+        tess.draw();
+
+        //RT
+        client.getTextureManager().bindTexture(inv_itemlist_border_RT);
+        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
+        vb.pos(right, top, 0).tex(0, 1).endVertex();
+        vb.pos(right + borderSize, top, 0).tex(1, 1).endVertex();
+        vb.pos(right + borderSize, top - borderSize, 0).tex(1, 0).endVertex();
+        vb.pos(right, top - borderSize, 0).tex(0, 0).endVertex();
+        tess.draw();
+
+        //LC
+        tmp = Math.round((bottom - top)/borderSize);
+        client.getTextureManager().bindTexture(inv_itemlist_border_LC);
+        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
+        vb.pos(left - borderSize, bottom, 0).tex(0, tmp).endVertex();
+        vb.pos(left, bottom, 0).tex(1, tmp).endVertex();
+        vb.pos(left, top, 0).tex(1, 0).endVertex();
+        vb.pos(left - borderSize, top, 0).tex(0, 0).endVertex();
+        tess.draw();
+
+        //RC
+        client.getTextureManager().bindTexture(inv_itemlist_border_RC);
+        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
+        vb.pos(right, bottom, 0).tex(0, tmp).endVertex();
+        vb.pos(right + borderSize, bottom, 0).tex(1, tmp).endVertex();
+        vb.pos(right + borderSize, top, 0).tex(1, 0).endVertex();
+        vb.pos(right, top, 0).tex(0, 0).endVertex();
+        tess.draw();
+
+        //LB
+        client.getTextureManager().bindTexture(inv_itemlist_border_LB);
+        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
+        vb.pos(left - borderSize, bottom + borderSize, 0).tex(0, 1).endVertex();
+        vb.pos(left, bottom + borderSize, 0).tex(1, 1).endVertex();
+        vb.pos(left, bottom, 0).tex(1, 0).endVertex();
+        vb.pos(left - borderSize, bottom, 0).tex(0, 0).endVertex();
+        tess.draw();
+
+        //RB
+        client.getTextureManager().bindTexture(inv_itemlist_border_RB);
+        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
+        vb.pos(right, bottom + borderSize, 0).tex(0, 1).endVertex();
+        vb.pos(right + borderSize, bottom + borderSize, 0).tex(1, 1).endVertex();
+        vb.pos(right + borderSize, bottom, 0).tex(1, 0).endVertex();
+        vb.pos(right, bottom, 0).tex(0, 0).endVertex();
         tess.draw();
     }
 
@@ -263,15 +357,6 @@ public class GuiInventoryItemList {
         int mouseListY = mouseY - this.top - this.headerHeight + (int) this.scrollDistance - border;
         int slotIndex = mouseListY / this.slotHeight;
 
-        if (isHovering) {
-            if (mouseX >= entryLeft && mouseX <= entryRight && slotIndex >= 0 && mouseListY >= 0 && slotIndex < listLength) {
-                int baseY = this.top + border - (int) this.scrollDistance;
-                int slotTop = baseY + slotIndex * this.slotHeight + this.headerHeight;
-                int slotBuffer = this.slotHeight - border;
-                drawHoveredSlotBackground(entryRight, slotTop, slotBuffer, tess);
-            }
-        }
-
         if (Mouse.isButtonDown(0)) {
             if (this.initialMouseClickY == -1.0F) {
                 if (isHovering) {
@@ -324,8 +409,16 @@ public class GuiInventoryItemList {
         for (int slotIdx = 0; slotIdx < listLength; ++slotIdx) {
             int slotTop = baseY + slotIdx * this.slotHeight + this.headerHeight;
             int slotBuffer = this.slotHeight - border;
-            if (slotTop <= this.bottom && slotTop + slotBuffer >= this.top)
+            if (slotTop <= this.bottom && slotTop + slotBuffer >= this.top) {
+                //draw hover bg if mouse if hovering slot
+                if (isHovering) {
+                    if (mouseX >= entryLeft && mouseX <= entryRight && slotIndex >= 0 && mouseListY >= 0 && slotIndex < listLength && slotIdx == slotIndex) {
+                        drawHoveredSlotBackground(entryRight, slotTop, slotBuffer, tess);
+                    }
+                }
+                //draw slot itself
                 this.drawSlot(slotIdx, entryRight, slotTop, slotBuffer, tess);
+            }
         }
         GlStateManager.disableDepth();
         int extraHeight = (this.getContentHeight() + border) - viewHeight;
