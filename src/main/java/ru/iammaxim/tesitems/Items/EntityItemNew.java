@@ -78,13 +78,9 @@ public class EntityItemNew extends EntityItem {
         System.out.println("on collide; stackSize: " + is.stackSize);
         //entityIn.onItemPickup(this, is.stackSize);
         Inventory inv = TESItems.getCapatibility(entityIn).getInventory();
-        inv.addItem(is);
-        is.stackSize = 0;
-        System.out.println("new stackSize: " + is.stackSize);
-        if (is.stackSize <= 0) {
-            System.out.println("trying to destroy item");
-            setDead();
-        }
+        inv.addItem(is.copy());
+        //is.stackSize = 0;
+        setDead();
     }
 
 
