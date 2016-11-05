@@ -28,7 +28,7 @@ public class GuiQuestList extends GuiScreen {
         super();
         mc = Minecraft.getMinecraft();
         player = mc.thePlayer;
-        cap = TESItems.getCapatibility(player);
+        cap = TESItems.getCapability(player);
         spellbook = cap.getSpellbook();
         selected = cap.getCurrentSpell();
         setGuiSize(w, h);

@@ -43,7 +43,7 @@ public class GuiNpcDialog extends GuiScreen {
         mc = Minecraft.getMinecraft();
         res = new ScaledResolution(mc);
         setGuiSize(w, h);
-        npc = TESItems.getCapatibility(mc.thePlayer).getLatestNPC();
+        npc = TESItems.getCapability(mc.thePlayer).getLatestNPC();
     }
 
     @Override

@@ -15,11 +15,15 @@ public class EquipMessageServerHandler implements IMessageHandler<EquipMessage, 
     @Override
     public IMessage onMessage(EquipMessage message, MessageContext ctx) {
         EntityPlayer player = ctx.getServerHandler().playerEntity;
+        Inventory inv = Inventory.getInventory(player);
         if (message.index == -1) {
             player.setItemStackToSlot(EntityEquipmentSlot.fromString(message.slot), null);
+        } else if (message.index >= inv.size()) {
+            System.out.println("trying to equip item that doesn't exists");
+            return null;
         } else {
-            player.setItemStackToSlot(EntityEquipmentSlot.fromString(message.slot), Inventory.getInventory(player).get(message.index));
+            player.setItemStackToSlot(EntityEquipmentSlot.fromString(message.slot), inv.get(message.index));
         }
-        return null;
+        return new EquipMessage(message.slot, message.index);
     }
 }

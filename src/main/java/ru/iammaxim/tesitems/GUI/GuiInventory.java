@@ -3,7 +3,6 @@ package ru.iammaxim.tesitems.GUI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
-import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.Inventory.InventoryClient;
 import ru.iammaxim.tesitems.TESItems;
 
@@ -21,7 +20,7 @@ public class GuiInventory extends GuiScreen {
 
     public GuiInventory(EntityPlayer player) {
         mc = Minecraft.getMinecraft();
-        inv = (InventoryClient) TESItems.getCapatibility(player).getInventory();
+        inv = (InventoryClient) TESItems.getCapability(player).getInventory();
         inv.checkInventory();
         itemList = new GuiInventoryItemList(inv, mc);
     }

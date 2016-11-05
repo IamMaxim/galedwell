@@ -101,7 +101,7 @@ public class EntityNPC extends EntityLivingBase {
     @Override
     public EnumActionResult applyPlayerInteraction(EntityPlayer player, Vec3d vec, @Nullable ItemStack stack, EnumHand hand) {
         if (player.worldObj.isRemote) {
-            TESItems.getCapatibility(player).setLatestNPC(this);
+            TESItems.getCapability(player).setLatestNPC(this);
             return EnumActionResult.SUCCESS;
         }
 

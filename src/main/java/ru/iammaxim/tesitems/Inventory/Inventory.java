@@ -1,6 +1,5 @@
 package ru.iammaxim.tesitems.Inventory;
 
-import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -183,7 +182,7 @@ public class Inventory {
     }*/
 
     public static Inventory getInventory(EntityPlayer player) {
-        return TESItems.getCapatibility(player).getInventory();
+        return TESItems.getCapability(player).getInventory();
     }
 
     public void equip(EntityEquipmentSlot slot, int index) {

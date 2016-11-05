@@ -14,6 +14,7 @@ import net.minecraft.item.ItemSword;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -56,6 +57,7 @@ import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.Player.PlayerAttributesCapabilityDefaultImpl;
 import ru.iammaxim.tesitems.Player.PlayerAttributesCapabilityProvider;
 import ru.iammaxim.tesitems.Player.PlayerAttributesStorage;
+import ru.iammaxim.tesitems.Questing.QuestManager;
 
 import java.lang.reflect.Field;
 
@@ -109,7 +111,7 @@ public class TESItems {
     */
     public static SimpleNetworkWrapper networkWrapper;
 
-    public static IPlayerAttributesCapability getCapatibility(EntityPlayer player) {
+    public static IPlayerAttributesCapability getCapability(EntityPlayer player) {
         return player.getCapability(TESItems.attributesCapability, null);
     }
 
@@ -177,11 +179,12 @@ public class TESItems {
         CraftRecipes.addRecipe(new CraftRecipe("log", new ItemStack[]{new ItemStack(Items.STICK, 4)}, new ItemStack(Item.getItemFromBlock(Blocks.LOG), 1)));
         CraftRecipes.addRecipe(new CraftRecipe("testLargeStacks", new ItemStack[]{new ItemStack(Item.getItemFromBlock(Blocks.DIRT), 100)}, new ItemStack(Item.getItemFromBlock(Blocks.COBBLESTONE), 1)));
         ItemWeightManager.init();
+        QuestManager.loadFromFile();
     }
 
     @SubscribeEvent
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        IPlayerAttributesCapability cap = getCapatibility(event.player);
+        IPlayerAttributesCapability cap = getCapability(event.player);
         if (cap.getCarryWeight() > cap.getMaxCarryweight())
             event.player.addPotionEffect(new PotionEffect(Potion.getPotionById(2), 5, 3));
     }
@@ -252,9 +255,9 @@ public class TESItems {
 
     @SubscribeEvent
     public void onClonePLayer(net.minecraftforge.event.entity.player.PlayerEvent.Clone event) {
-        getCapatibility(event.getEntityPlayer()).setAttributes(getCapatibility(event.getOriginal()).getAttributes());
-        getCapatibility(event.getEntityPlayer()).setSpellbook(getCapatibility(event.getOriginal()).getSpellbook());
-        getCapatibility(event.getEntityPlayer()).setInventory(getCapatibility(event.getOriginal()).getInventory());
+        getCapability(event.getEntityPlayer()).setAttributes(getCapability(event.getOriginal()).getAttributes());
+        getCapability(event.getEntityPlayer()).setSpellbook(getCapability(event.getOriginal()).getSpellbook());
+        getCapability(event.getEntityPlayer()).setInventory(getCapability(event.getOriginal()).getInventory());
     }
 
     @SubscribeEvent
@@ -288,25 +291,31 @@ public class TESItems {
 
     @SubscribeEvent
     public void onPlayerAttack(AttackEntityEvent event) {
+        EntityPlayer player = event.getEntityPlayer();
+        ItemStack held = player.getHeldItemMainhand();
         event.setCanceled(true);
-        if (event.getEntityPlayer().worldObj.isRemote || event.getEntityPlayer().getHeldItemMainhand() == null) return;
-        Item item = event.getEntityPlayer().getHeldItemMainhand().getItem();
+        if (held == null) return;
+        Item item = held.getItem();
         if (item instanceof Weapon) {
-            IPlayerAttributesCapability cap = event.getEntityPlayer().getCapability(attributesCapability, null);
-//            System.out.println("Resetting attack " + ((Weapon) item).time + " " + ((Weapon) item).lastAttack + " " + ((Weapon) item).attackTime);
-            float multiplier = 0;
-            if (((Weapon) item).getWeaponType() == WeaponType.BLADES) {
-                float skill = cap.getAttribute("blades");
-                multiplier = skill / maxSkillLevel;
-                cap.increaseAttribute("blades", getSkillIncreaseValue(skill));
-            } else if (((Weapon) item).getWeaponType() == WeaponType.BLUNT) {
-                float skill = cap.getAttribute("blunt");
-                multiplier = skill / maxSkillLevel;
-                cap.increaseAttribute("blunt", getSkillIncreaseValue(skill));
+            if (!player.worldObj.isRemote) {
+                IPlayerAttributesCapability cap = TESItems.getCapability(player);
+                float multiplier = 0;
+                if (((Weapon) item).getWeaponType() == WeaponType.BLADES) {
+                    float skill = cap.getAttribute("blades");
+                    multiplier = skill / maxSkillLevel;
+                    cap.increaseAttribute("blades", getSkillIncreaseValue(skill));
+                } else if (((Weapon) item).getWeaponType() == WeaponType.BLUNT) {
+                    float skill = cap.getAttribute("blunt");
+                    multiplier = skill / maxSkillLevel;
+                    cap.increaseAttribute("blunt", getSkillIncreaseValue(skill));
+                }
+                if (multiplier >= 0)
+                    event.getTarget().attackEntityFrom(DamageSource.causePlayerDamage(player), multiplier * ((ItemSword) item).getDamageVsEntity());
             }
-            if (multiplier >= 0)
-                event.getTarget().attackEntityFrom(DamageSource.causePlayerDamage(event.getEntityPlayer()), multiplier * ((ItemSword) item).getDamageVsEntity());
-            event.getEntityPlayer().getHeldItemMainhand().damageItem(1, event.getEntityPlayer());
+            held.damageItem(1, player);
+            if (held.getItemDamage() <= 0) {
+                player.setHeldItem(EnumHand.MAIN_HAND, null);
+            }
         }
     }
 
@@ -331,7 +340,7 @@ public class TESItems {
     public void onKeyPressed(InputEvent.KeyInputEvent event) {
         if (!FMLClientHandler.instance().isGUIOpen(GuiChat.class)) {
             if (KeyBindings.castSpellKB.isKeyDown()) {
-                networkWrapper.sendToServer(new CastSpellMessage(getCapatibility(Minecraft.getMinecraft().thePlayer).getCurrentSpell()));
+                networkWrapper.sendToServer(new CastSpellMessage(getCapability(Minecraft.getMinecraft().thePlayer).getCurrentSpell()));
             }
             if (KeyBindings.selectSpellKB.isKeyDown()) {
                 networkWrapper.sendToServer(new OpenGuiMessage(TESItems.guiSpellSelect));
@@ -344,7 +353,8 @@ public class TESItems {
 
     @SubscribeEvent
     public void onRenderNametag(RenderLivingEvent.Specials.Pre event) {
-        if (event.getEntity() instanceof EntityPlayer || event.getEntity() instanceof EntityNPC) event.setCanceled(true);
+        if (event.getEntity() instanceof EntityPlayer || event.getEntity() instanceof EntityNPC)
+            event.setCanceled(true);
     }
 
     @SubscribeEvent

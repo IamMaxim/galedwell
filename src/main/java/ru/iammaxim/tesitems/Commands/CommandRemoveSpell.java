@@ -31,7 +31,7 @@ public class CommandRemoveSpell extends CommandBase {
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         if (!(sender instanceof EntityPlayer)) return;
         if (args.length != 1) return;
-        IPlayerAttributesCapability cap = TESItems.getCapatibility((EntityPlayer) sender);
+        IPlayerAttributesCapability cap = TESItems.getCapability((EntityPlayer) sender);
         Iterator<SpellBase> it = cap.getSpellbook().iterator();
         while (it.hasNext()) {
             if (it.next().getName().equals(args[0])) it.remove();

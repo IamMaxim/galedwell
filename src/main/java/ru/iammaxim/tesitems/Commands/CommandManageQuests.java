@@ -36,11 +36,11 @@ public class CommandManageQuests extends CommandBase {
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         if (args[0].equals("show")) {
             StringBuilder sb = new StringBuilder();
-            sb.append("All quests:");
-            QuestManager.questList.forEach((k, v) -> sb.append(k).append(" ").append(v.toString()));
-            sb.append("Your instances:");
-            IPlayerAttributesCapability cap = TESItems.getCapatibility((EntityPlayer) sender);
-            cap.getQuests().forEach(q -> sb.append(q.toString()));
+            sb.append("All quests:\n");
+            QuestManager.questList.forEach((k, v) -> sb.append("id: ").append(k).append(": {").append(v.toString()).append("}").append('\n'));
+            sb.append("Your instances:\n");
+            IPlayerAttributesCapability cap = TESItems.getCapability((EntityPlayer) sender);
+            cap.getQuests().forEach(q -> sb.append(q.toString()).append('\n'));
             ((EntityPlayer) sender).addChatComponentMessage(new TextComponentString(sb.toString()));
         } else if (args[0].equals("add")) {
             Quest quest = new Quest("testQuest");
@@ -66,6 +66,10 @@ public class CommandManageQuests extends CommandBase {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        } else if (args[0].equals("start")) {
+            QuestManager.startQuest((EntityPlayer) sender, QuestManager.getByID(Integer.parseInt(args[1])));
+        } else {
+
         }
     }
 }

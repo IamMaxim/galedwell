@@ -2,12 +2,8 @@ package ru.iammaxim.tesitems.Items;
 
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.stats.AchievementList;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
@@ -75,7 +71,7 @@ public class EntityItemNew extends EntityItem {
     public void onCollideWithPlayer(EntityPlayer entityIn) {
         if (delayBeforeCanPickup > 0) return;
         ItemStack is = getEntityItem();
-        Inventory inv = TESItems.getCapatibility(entityIn).getInventory();
+        Inventory inv = TESItems.getCapability(entityIn).getInventory();
         inv.addItem(is.copy());
         setDead();
     }

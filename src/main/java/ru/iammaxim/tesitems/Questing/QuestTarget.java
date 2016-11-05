@@ -13,7 +13,7 @@ public abstract class QuestTarget {
     public abstract String getType();
     public abstract boolean check(EntityPlayer player);
     public abstract NBTTagCompound getNBT();
-    public abstract void loadFromNBT();
+    public abstract void loadFromNBT(NBTTagCompound tag);
     public static QuestTarget getTargetFromNBT(NBTTagCompound tag) {
         String type = tag.getString("type");
         if (type.equals("gather")) {

@@ -28,7 +28,7 @@ public class QuestTargetKill extends QuestTarget {
     }
 
     @Override
-    public void loadFromNBT() {
+    public void loadFromNBT(NBTTagCompound tag) {
 
     }
 }

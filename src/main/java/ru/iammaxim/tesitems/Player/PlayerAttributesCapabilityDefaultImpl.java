@@ -162,8 +162,8 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
         this.spellbook = spellbook;
     }
     @Override
-    public void addQuest(QuestInstance quest) {
-
+    public void addQuest(QuestInstance inst) {
+        quests.add(inst);
     }
     @Override
     public List<QuestInstance> getQuests() {

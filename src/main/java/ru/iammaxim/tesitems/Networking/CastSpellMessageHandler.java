@@ -16,7 +16,7 @@ public class CastSpellMessageHandler implements IMessageHandler<CastSpellMessage
     @Override
     public IMessage onMessage(CastSpellMessage message, MessageContext ctx) {
         EntityPlayer player = ctx.getServerHandler().playerEntity;
-        List<SpellBase> spellbook = TESItems.getCapatibility(player).getSpellbook();
+        List<SpellBase> spellbook = TESItems.getCapability(player).getSpellbook();
         if (message.spellIndex < 0 || message.spellIndex >= spellbook.size()) return null;
         SpellBase spell = spellbook.get(message.spellIndex);
         spell.cast(player);

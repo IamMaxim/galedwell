@@ -26,9 +26,9 @@ public class Quest {
 
     @Override
     public String toString() {
-        return "name: " + name +
-                " goldReward: " + goldReward +
-                " itemReward: [" + itemsReward.stream().map(ItemStack::toString).collect(Collectors.joining(", ")) + "]" +
+        return "name: " + name + ", " +
+                " goldReward: " + goldReward + ", " +
+                " itemsReward: [" + itemsReward.stream().map(ItemStack::toString).collect(Collectors.joining(", ")) + "], " +
                 "stages: [" + stages.stream().map(QuestStage::toString).collect(Collectors.joining(", ")) + "]";
     }
 }

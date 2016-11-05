@@ -20,15 +20,15 @@ public class QuestConditionAttribute implements IQuestCondition {
     @Override
     public boolean isTrue(EntityPlayer player) {
         if (condition == Condition.LESS) {
-            if (TESItems.getCapatibility(player).getAttribute(attributeName) < value) return true;
+            if (TESItems.getCapability(player).getAttribute(attributeName) < value) return true;
         } else if (condition == Condition.LESSEQUAL) {
-            if (TESItems.getCapatibility(player).getAttribute(attributeName) <= value) return true;
+            if (TESItems.getCapability(player).getAttribute(attributeName) <= value) return true;
         } else if (condition == Condition.EQUAL) {
-            if (TESItems.getCapatibility(player).getAttribute(attributeName) == value) return true;
+            if (TESItems.getCapability(player).getAttribute(attributeName) == value) return true;
         } else if (condition == Condition.GREATEREQUAL) {
-            if (TESItems.getCapatibility(player).getAttribute(attributeName) >= value) return true;
+            if (TESItems.getCapability(player).getAttribute(attributeName) >= value) return true;
         } else if (condition == Condition.GREATER) {
-            if (TESItems.getCapatibility(player).getAttribute(attributeName) > value) return true;
+            if (TESItems.getCapability(player).getAttribute(attributeName) > value) return true;
         }
         return false;
     }

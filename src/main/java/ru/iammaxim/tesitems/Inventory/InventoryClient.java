@@ -4,7 +4,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import ru.iammaxim.tesitems.Networking.EquipMessage;
 import ru.iammaxim.tesitems.Networking.ItemDropMessage;
 import ru.iammaxim.tesitems.TESItems;
@@ -41,17 +43,12 @@ public class InventoryClient extends Inventory {
 
     @Override
     public void drop(Entity entity, int index, int count) {
-//        System.out.println("sending drop message: " + index + " " + count);
         TESItems.networkWrapper.sendToServer(new ItemDropMessage(index, count));
         checkSlot(index);
     }
 
     @Override
     public void equip(EntityEquipmentSlot slot, int index) {
-        if (index == -1)
-            player.setItemStackToSlot(slot, null);
-        else
-            player.setItemStackToSlot(slot, get(index));
         TESItems.networkWrapper.sendToServer(new EquipMessage(slot.getName(), index));
     }
 }

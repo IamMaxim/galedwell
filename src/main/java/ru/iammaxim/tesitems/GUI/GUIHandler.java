@@ -11,7 +11,7 @@ import ru.iammaxim.tesitems.TESItems;
 public class GUIHandler implements IGuiHandler {
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        TESItems.getCapatibility(player).getInventory().checkInventory();
+        TESItems.getCapability(player).getInventory().checkInventory();
         return new DummyContainer();
     }
 

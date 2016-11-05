@@ -54,7 +54,7 @@ public class mItems {
         registerItem(elvenDagger = new Weapon(createWeaponMaterial("elvenDagger", 100, daggerDamageModifier * elvenDamage), "elvenDagger", WeaponType.BLADES));
         registerItem(elvenSword = new Weapon(createWeaponMaterial("elvenSword", 100, swordDamageModifier * elvenDamage), "elvenSword", WeaponType.BLADES));
         registerItem(ironSword = new Weapon(createWeaponMaterial("ironSword", 100, swordDamageModifier * ironDamage), "ironSword", WeaponType.BLADES));
-        registerItem(orcishDagger = new Weapon(createWeaponMaterial("orcishSword", 100, daggerDamageModifier * orcishDamage), "orcishSword", WeaponType.BLADES));
+        registerItem(orcishDagger = new Weapon(createWeaponMaterial("orcishDagger", 10, daggerDamageModifier * orcishDamage), "orcishDagger", WeaponType.BLADES));
         registerItem(steelSword = new Weapon(createWeaponMaterial("steelSword", 100, swordDamageModifier * steelDamage), "steelSword", WeaponType.BLADES));
 
 

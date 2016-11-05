@@ -1,6 +1,8 @@
 package ru.iammaxim.tesitems.Networking;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -15,7 +17,8 @@ import static ru.iammaxim.tesitems.Networking.InventoryUpdateMessage.*;
 public class InventoryUpdateMessageClientHandler implements IMessageHandler<InventoryUpdateMessage, IMessage> {
     @Override
     public IMessage onMessage(InventoryUpdateMessage message, MessageContext ctx) {
-        Inventory inv = TESItems.getCapatibility(Minecraft.getMinecraft().thePlayer).getInventory();
+        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+        Inventory inv = TESItems.getCapability(player).getInventory();
         switch(message.action) {
             case ACTION_ADD:
                 inv.addItem(message.stack);

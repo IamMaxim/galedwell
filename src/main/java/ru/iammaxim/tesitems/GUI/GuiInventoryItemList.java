@@ -536,7 +536,7 @@ public class GuiInventoryItemList {
         vb.pos(l + 4, t + 4, 0.0D).tex(0.0D, 0.0D).endVertex();
         tess.draw();
 
-        client.fontRendererObj.drawString(inv.carryweight + "/" + TESItems.getCapatibility(inv.player).getMaxCarryweight(), l + 24, t + 8, 0xFFFFFF);
+        client.fontRendererObj.drawString(inv.carryweight + "/" + TESItems.getCapability(inv.player).getMaxCarryweight(), l + 24, t + 8, 0xFFFFFF);
     }
 
     private void clampScale() {

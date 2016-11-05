@@ -18,7 +18,7 @@ public class QuestTargetGather extends QuestTarget {
     }
 
     public QuestTargetGather(NBTTagCompound tag) {
-        is = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("stack"));
+        loadFromNBT(tag);
     }
 
     @Override
@@ -35,11 +35,13 @@ public class QuestTargetGather extends QuestTarget {
 
     @Override
     public NBTTagCompound getNBT() {
-        return null;
+        NBTTagCompound tag = new NBTTagCompound();
+        tag.setTag("stack", is.serializeNBT());
+        return tag;
     }
 
     @Override
-    public void loadFromNBT() {
-
+    public void loadFromNBT(NBTTagCompound tag) {
+        is = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("stack"));
     }
 }
