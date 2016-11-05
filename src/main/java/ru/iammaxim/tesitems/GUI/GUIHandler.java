@@ -22,6 +22,7 @@ public class GUIHandler implements IGuiHandler {
             case TESItems.guiNpcDialog: return new GuiNpcDialog();
             case TESItems.guiInventory: return new GuiInventory(player);
             case TESItems.guiQuestList: return new GuiQuestList();
+            case TESItems.guiNPCEditor: return new GuiNPCEditor(player);
         }
         return null;
     }

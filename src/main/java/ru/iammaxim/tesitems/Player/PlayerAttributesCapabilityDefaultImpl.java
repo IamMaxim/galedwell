@@ -31,7 +31,7 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     private EntityNPC latestNPC;
     private Inventory inventory = new Inventory();
     private HashMap<Integer, QuestInstance> quests = new HashMap<>();
-    private String journal;
+    private String journal = "";
 
     public PlayerAttributesCapabilityDefaultImpl() {
     }

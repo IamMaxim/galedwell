@@ -46,13 +46,11 @@ public class CommandManageQuests extends CommandBase {
             Quest quest = new Quest("testQuest");
             quest.itemsReward.add(new ItemStack(Item.getItemFromBlock(Blocks.COBBLESTONE)));
             QuestStage stage1 = new QuestStage();
-            stage1.questLine = "questLine1";
-            stage1.dialogPhrase = "dialogsPhrase1";
+            stage1.journalLine = "journal line 1";
             stage1.targets.add(new QuestTargetGather(new ItemStack(Item.getItemFromBlock(Blocks.DIRT))));
             quest.stages.add(stage1);
             QuestStage stage2 = new QuestStage();
-            stage2.questLine = "questLine2";
-            stage2.dialogPhrase = "dialogsPhrase2";
+            stage2.journalLine = "journal line 2";
             stage2.targets.add(new QuestTargetGather(new ItemStack(Item.getItemFromBlock(Blocks.COBBLESTONE))));
             quest.stages.add(stage2);
             QuestManager.questList.put(quest.id, quest);

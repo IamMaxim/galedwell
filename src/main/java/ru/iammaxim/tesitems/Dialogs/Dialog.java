@@ -5,33 +5,30 @@ import net.minecraft.nbt.NBTTagList;
 import ru.iammaxim.tesitems.Questing.QuestManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
  * Created by maxim on 8/5/16 at 8:02 PM.
  */
 public class Dialog {
-    public String NPCname;
-    public String text;
-    public List<DialogEntry> entries = new ArrayList<>();
+    public HashMap<Integer, DialogNode> nodes = new HashMap<>();
 
-    public NBTTagCompound writeToNBT() {
+    public NBTTagCompound saveToNBT() {
         NBTTagCompound tag = new NBTTagCompound();
-        tag.setString("NPCname", NPCname);
-        tag.setString("text", text);
-        NBTTagList entriesTag = new NBTTagList();
-        entries.forEach((entry) -> entriesTag.appendTag(entry.writeToNBT()));
-        tag.setTag("entries", entriesTag);
+        NBTTagList list = new NBTTagList();
+        nodes.forEach((index,node) -> list.appendTag(node.saveToNBT()));
+        tag.setTag("nodes", list);
         return tag;
     }
 
-    public void loadFromNBT(NBTTagCompound tag) {
-        NPCname = tag.getString("NPCname");
-        text = tag.getString("text");
-        NBTTagList entriesTag = (NBTTagList) tag.getTag("entries");
-        for (int i = 0; i < entriesTag.tagCount(); i++) {
-            NBTTagCompound entryTag = (NBTTagCompound) entriesTag.get(0);
-            entries.add(new DialogEntry(entryTag.getString("name"), QuestManager.getByID(entryTag.getInteger("questID"))));
+    public static Dialog loadFromNBT(NBTTagCompound tag) {
+        Dialog dialog = new Dialog();
+        NBTTagList list = (NBTTagList) tag.getTag("nodes");
+        for (int i = 0; i < list.tagCount(); i++) {
+            DialogNode node = DialogNode.loadFromNBT(list.getCompoundTagAt(i));
+            dialog.nodes.put(node.index, node);
         }
+        return dialog;
     }
 }

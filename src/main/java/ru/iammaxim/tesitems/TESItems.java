@@ -98,7 +98,7 @@ public class TESItems {
     }, furnutureBlocks = {
 
     };
-    public static final int guiSpellSelect = 0, guiNpcDialog = 1, guiInventory = 2, guiQuestList = 3;
+    public static final int guiSpellSelect = 0, guiNpcDialog = 1, guiInventory = 2, guiQuestList = 3, guiNPCEditor = 4;
     @CapabilityInject(IPlayerAttributesCapability.class)
     public static Capability<IPlayerAttributesCapability> attributesCapability;
     @Mod.Instance

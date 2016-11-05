@@ -14,9 +14,12 @@ import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import ru.iammaxim.tesitems.Dialogs.Dialog;
 import ru.iammaxim.tesitems.Fractions.Faction;
+import ru.iammaxim.tesitems.Fractions.FactionManager;
 import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.Inventory.InventoryNPC;
+import ru.iammaxim.tesitems.Items.mItems;
 import ru.iammaxim.tesitems.TESItems;
 import scala.actors.threadpool.Arrays;
 
@@ -32,6 +35,7 @@ public class EntityNPC extends EntityLivingBase {
     private Inventory inventory = new InventoryNPC(this);
     private EnumHandSide mainHand = EnumHandSide.RIGHT;
     private List<Faction> factions = new ArrayList<>();
+    private Dialog dialog;
 
     private String name = "NPC";
 
@@ -49,8 +53,16 @@ public class EntityNPC extends EntityLivingBase {
         factions.add(faction);
     }
 
+    public void removeFaction(Faction faction) {
+        factions.remove(faction);
+    }
+
     public void setInvulnerable(boolean invulnerable) {
         isInvulnerable = invulnerable;
+    }
+
+    public void setDialog(Dialog dialog) {
+        this.dialog = dialog;
     }
 
     @Override
@@ -59,11 +71,22 @@ public class EntityNPC extends EntityLivingBase {
         tag.setBoolean("isInvulnerable", isInvulnerable);
         tag.setString("name", name);
         tag.setTag("inventory", inventory.writeToNBT());
+        tag.setTag("factions", saveFactions());
+        if (dialog != null) {
+            tag.setTag("dialog", dialog.saveToNBT());
+        }
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound compound) {
-        super.readEntityFromNBT(compound);
+    public void readEntityFromNBT(NBTTagCompound tag) {
+        super.readEntityFromNBT(tag);
+        name = tag.getString("name");
+        isInvulnerable = tag.getBoolean("isInvulnerable");
+        inventory.loadFromNBT(tag.getCompoundTag("inventory"));
+        loadFactions((NBTTagList) tag.getTag("factions"));
+        if (tag.hasKey("dialog")) {
+            dialog = Dialog.loadFromNBT(tag.getCompoundTag("dialog"));
+        }
     }
 
     @Override
@@ -109,7 +132,10 @@ public class EntityNPC extends EntityLivingBase {
             return EnumActionResult.SUCCESS;
         }
 
-        player.openGui(TESItems.instance, TESItems.guiNpcDialog, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
+        if (player.getHeldItemOffhand() != null && player.getHeldItemOffhand().getItem() == mItems.itemNPCEditorTool)
+            player.openGui(TESItems.instance, TESItems.guiNPCEditor, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
+        else
+            player.openGui(TESItems.instance, TESItems.guiNpcDialog, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
         return EnumActionResult.SUCCESS;
     }
 
@@ -118,8 +144,19 @@ public class EntityNPC extends EntityLivingBase {
         return super.getDisplayName();
     }
 
-    public NBTTagCompound saveFactions() {
+    public NBTTagList saveFactions() {
         NBTTagList list = new NBTTagList();
-        factions.forEach(f -> list.appendTag(f.id));
+        factions.forEach(f -> {
+            NBTTagCompound idTag = new NBTTagCompound();
+            idTag.setInteger("id", f.id);
+            list.appendTag(idTag);
+        });
+        return list;
+    }
+
+    public void loadFactions(NBTTagList list) {
+        for (int i = 0; i < list.tagCount(); i++) {
+            factions.add(FactionManager.getFaction(list.getCompoundTagAt(i).getInteger("id")));
+        }
     }
 }
