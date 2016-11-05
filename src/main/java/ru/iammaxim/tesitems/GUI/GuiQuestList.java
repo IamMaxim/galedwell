@@ -6,9 +6,8 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.client.GuiScrollingList;
-import ru.iammaxim.tesitems.Magic.SpellBase;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
-import ru.iammaxim.tesitems.Questing.Quest;
+import ru.iammaxim.tesitems.Questing.QuestInstance;
 import ru.iammaxim.tesitems.TESItems;
 
 import java.util.List;
@@ -17,60 +16,92 @@ import java.util.List;
  * Created by Maxim on 20.07.2016.
  */
 public class GuiQuestList extends GuiScreen {
-    private static final int w = 300, h = 500, entryHeight = 15;
+    private static final int w = 300, entryHeight = 15, paddingTop = 40, paddingBottom = 40;
+    private int h;
     private EntityPlayer player;
     private IPlayerAttributesCapability cap;
-    private List<Quest> questList;
+    private List<QuestInstance> questList;
     private int selected;
-    private List<SpellBase> spellbook;
+    GuiScrollingList guiQuestList;
+    ScaledResolution res;
 
     public GuiQuestList() {
-        super();
         mc = Minecraft.getMinecraft();
         player = mc.thePlayer;
         cap = TESItems.getCapability(player);
-        spellbook = cap.getSpellbook();
-        selected = cap.getCurrentSpell();
-        setGuiSize(w, h);
-        ScaledResolution res = new ScaledResolution(this.mc);
-        spellList = new GuiScrollingList(mc, w, h, (res.getScaledHeight() - h) / 2, (res.getScaledHeight() + h) / 2, (res.getScaledWidth() - w) / 2, entryHeight, width, height) {
-            @Override
-            protected int getSize() {
-                return spellbook.size();
-            }
+        questList = cap.getQuests();
 
-            @Override
-            protected void elementClicked(int index, boolean doubleClick) {
-                cap.setCurrentSpell(index);
-                selected = index;
-            }
-
-            @Override
-            protected boolean isSelected(int index) {
-                return index == selected;
-            }
-
-            @Override
-            protected void drawBackground() {
-                drawRect((res.getScaledWidth() - w) / 2, (res.getScaledHeight() - h) / 2, (res.getScaledWidth() + w) / 2, (res.getScaledHeight() + h) / 2, 0x99000000);
-            }
-
-            @Override
-            protected void drawSlot(int slotIdx, int entryRight, int slotTop, int slotBuffer, Tessellator tess) {
-                mc.fontRendererObj.drawString(spellbook.get(slotIdx).getName(), (res.getScaledWidth() - w) / 2 + 4, slotTop + 2, 0xffffffff);
-            }
-        };
+//        setGuiSize(w, h);
+        res = new ScaledResolution(this.mc);
+        h = res.getScaledHeight() - paddingTop - paddingBottom;
+        guiQuestList = new GuiQuestListList(mc, w, h,
+                paddingTop,
+                res.getScaledHeight() - paddingBottom,
+                (res.getScaledWidth() - w)/2,
+                entryHeight,
+                res.getScaledWidth(),
+                res.getScaledHeight(),
+                questList);
     }
 
-    GuiScrollingList spellList;
+    @Override
+    public void onResize(Minecraft mcIn, int nw, int nh) {
+        super.onResize(mcIn, w, h);
+        res = new ScaledResolution(mcIn);
+        h = res.getScaledHeight() - paddingTop - paddingBottom;
+        guiQuestList = new GuiQuestListList(mc, w, h,
+                paddingTop,
+                res.getScaledHeight() - paddingBottom,
+                (res.getScaledWidth() - w)/2,
+                entryHeight,
+                res.getScaledWidth(),
+                res.getScaledHeight(),
+                questList);
+    }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        spellList.drawScreen(mouseX, mouseY, partialTicks);
+        guiQuestList.drawScreen(mouseX, mouseY, partialTicks);
     }
 
     @Override
     public boolean doesGuiPauseGame() {
         return false;
+    }
+
+    private class GuiQuestListList extends GuiScrollingList {
+        private List<QuestInstance> questList;
+        private ScaledResolution res;
+
+        public GuiQuestListList(Minecraft client, int width, int height, int top, int bottom, int left, int entryHeight, int screenWidth, int screenHeight, List<QuestInstance> questList) {
+            super(client, width, height, top, bottom, left, entryHeight, screenWidth, screenHeight);
+            res = new ScaledResolution(client);
+            this.questList = questList;
+        }
+
+        @Override
+        protected int getSize() {
+            return questList.size();
+        }
+
+        @Override
+        protected void elementClicked(int index, boolean doubleClick) {
+            selected = index;
+        }
+
+        @Override
+        protected boolean isSelected(int index) {
+            return index == selected;
+        }
+
+        @Override
+        protected void drawBackground() {
+            //drawRect((res.getScaledWidth() - w) / 2, (res.getScaledHeight() - h) / 2, (res.getScaledWidth() + w) / 2, (res.getScaledHeight() + h) / 2, 0x99000000);
+        }
+
+        @Override
+        protected void drawSlot(int slotIdx, int entryRight, int slotTop, int slotBuffer, Tessellator tess) {
+            mc.fontRendererObj.drawString(questList.get(slotIdx).quest.name, (res.getScaledWidth() - w) / 2 + 4, slotTop + 2, 0xffffffff);
+        }
     }
 }

@@ -98,7 +98,7 @@ public class TESItems {
     }, furnutureBlocks = {
 
     };
-    public static final int guiSpellSelect = 0, guiNpcDialog = 1, guiInventory = 2;
+    public static final int guiSpellSelect = 0, guiNpcDialog = 1, guiInventory = 2, guiQuestList = 3;
     @CapabilityInject(IPlayerAttributesCapability.class)
     public static Capability<IPlayerAttributesCapability> attributesCapability;
     @Mod.Instance
@@ -179,6 +179,7 @@ public class TESItems {
         CraftRecipes.addRecipe(new CraftRecipe("log", new ItemStack[]{new ItemStack(Items.STICK, 4)}, new ItemStack(Item.getItemFromBlock(Blocks.LOG), 1)));
         CraftRecipes.addRecipe(new CraftRecipe("testLargeStacks", new ItemStack[]{new ItemStack(Item.getItemFromBlock(Blocks.DIRT), 100)}, new ItemStack(Item.getItemFromBlock(Blocks.COBBLESTONE), 1)));
         ItemWeightManager.init();
+        ItemValueManager.init();
         QuestManager.loadFromFile();
     }
 
@@ -319,18 +320,6 @@ public class TESItems {
         }
     }
 
-/*    @SubscribeEvent
-    public void onRightClick(PlayerInteractEvent.RightClickItem event) {
-        Inventory inventory = Inventory.getInventory(event.getEntityPlayer());
-        inventory.checkSlot(inventory.getItemList().indexOf(event.getItemStack()));
-    }*/
-
-/*    @SubscribeEvent
-    public void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-        Inventory inventory = Inventory.getInventory(event.getEntityPlayer());
-        inventory.checkSlot(inventory.getItemList().indexOf(event.getItemStack());
-    }*/
-
     public float getSkillIncreaseValue(float current) {
         float f = (1 + current / maxSkillLevel);
         return 1 / f / f / 100;
@@ -348,6 +337,9 @@ public class TESItems {
             if (KeyBindings.openInventoryKB.isKeyDown()) {
                 networkWrapper.sendToServer(new OpenGuiMessage(TESItems.guiInventory));
             }
+            if (KeyBindings.openQuestListKB.isKeyDown()) {
+                networkWrapper.sendToServer(new OpenGuiMessage(TESItems.guiQuestList));
+            }
         }
     }
 
@@ -359,11 +351,9 @@ public class TESItems {
 
     @SubscribeEvent
     public void onItemPickup(EntityItemPickupEvent event) {
-        System.out.println("on item pickup");
         event.setCanceled(true);
         Inventory inv = Inventory.getInventory(event.getEntityPlayer());
         inv.addItem(event.getItem().getEntityItem());
-        //event.getItem().getEntityItem().stackSize = 0;
         event.getItem().setDead();
     }
 }

@@ -1,7 +1,6 @@
 package ru.iammaxim.tesitems.GUI;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -18,10 +17,11 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import ru.iammaxim.tesitems.Inventory.InventoryClient;
 import ru.iammaxim.tesitems.Inventory.InventoryItemStack;
+import ru.iammaxim.tesitems.Items.ItemValueManager;
+import ru.iammaxim.tesitems.Items.ItemWeightManager;
 import ru.iammaxim.tesitems.Items.Weapon;
 import ru.iammaxim.tesitems.TESItems;
 
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -29,14 +29,19 @@ import java.util.*;
  */
 public class GuiInventoryItemList {
     private static final int
-            entry_height = 15,
-            padding_top = 20,
-            padding_bottom = 20,
-            padding_left = 30,
-            width = 206,
-            scrollBarSize = 6,
-            borderSize = 10;
-    private final int listHeight;
+            entryHeight = 20,
+            paddingTop = 20,
+            paddingBottom = 20,
+            paddingLeft = 30,
+            width = 390,
+            scrollBarSize = 16,
+            borderSize = 10,
+            nameWidth = 190,
+            valueWidth = 40,
+            weightWidth = 40,
+            damageWidth = 40,
+            durabilityWidth = 40,
+            textColor = 0xff481f09;
     private final int screenWidth;
     private final int screenHeight;
     private final int top;
@@ -59,9 +64,7 @@ public class GuiInventoryItemList {
             inv_scrollbar_bg_top = new ResourceLocation("tesitems:textures/gui/inventory/inv_scrollbar_bg_top.png"),
             inv_scrollbar_bg_center = new ResourceLocation("tesitems:textures/gui/inventory/inv_scrollbar_bg_center.png"),
             inv_scrollbar_bg_bottom = new ResourceLocation("tesitems:textures/gui/inventory/inv_scrollbar_bg_bottom.png"),
-            inv_scrollbar_top = new ResourceLocation("tesitems:textures/gui/inventory/inv_scrollbar_top.png"),
-            inv_scrollbar_center = new ResourceLocation("tesitems:textures/gui/inventory/inv_scrollbar_center.png"),
-            inv_scrollbar_bottom = new ResourceLocation("tesitems:textures/gui/inventory/inv_scrollbar_bottom.png"),
+            inv_scrollbar = new ResourceLocation("tesitems:textures/gui/inventory/inv_scrollbar.png"),
             inv_entry_bg_selected = new ResourceLocation("tesitems:textures/gui/inventory/inv_entry_bg_selected.png"),
             inv_entry_bg_hovered = new ResourceLocation("tesitems:textures/gui/inventory/inv_entry_bg_hovered.png"),
             icon_carryweight = new ResourceLocation("tesitems:textures/gui/icons/carryweight.png"),
@@ -83,11 +86,10 @@ public class GuiInventoryItemList {
     public GuiInventoryItemList(InventoryClient inv, Minecraft client) {
         ScaledResolution res = new ScaledResolution(client);
         this.client = client;
-        this.listHeight = res.getScaledHeight() - padding_bottom - padding_top;
-        this.top = padding_top;
-        this.bottom = res.getScaledHeight() - padding_bottom;
-        this.slotHeight = entry_height;
-        this.left = padding_left;
+        this.top = paddingTop;
+        this.bottom = res.getScaledHeight() - paddingBottom;
+        this.slotHeight = entryHeight;
+        this.left = paddingLeft;
         this.right = width + this.left;
         this.screenWidth = res.getScaledWidth();
         this.screenHeight = res.getScaledHeight();
@@ -280,8 +282,26 @@ public class GuiInventoryItemList {
         if (isEquipped(stack)) {
             drawSelectedSlotBackground(entryRight, slotTop, slotBuffer, tess);
         }
-        String s = client.fontRendererObj.trimStringToWidth(String.format("(%d) %s", stack.stackSize, stack.getDisplayName()), width - 14);
-        client.fontRendererObj.drawString(s, left + 4, slotTop + 2, 0xffffffff);
+        client.fontRendererObj.drawString(
+                client.fontRendererObj.trimStringToWidth("(" + stack.stackSize + ") " + stack.getDisplayName(), nameWidth),
+                left + 4, slotTop + 5, textColor);
+        client.fontRendererObj.drawString(
+                client.fontRendererObj.trimStringToWidth(ItemValueManager.getValue(stack) + "", valueWidth),
+                left + 8 + nameWidth, slotTop + 5, textColor);
+        client.fontRendererObj.drawString(
+                client.fontRendererObj.trimStringToWidth(ItemWeightManager.getWeight(stack) + "", weightWidth),
+                left + 12 + nameWidth + valueWidth, slotTop + 5, textColor);
+        if (stack.getItem() instanceof Weapon) {
+            Weapon weapon = (Weapon) stack.getItem();
+            client.fontRendererObj.drawString(
+                    client.fontRendererObj.trimStringToWidth(weapon.getDamageVsEntity() + "", damageWidth),
+                    left + 16 + nameWidth + valueWidth + weightWidth, slotTop + 5, textColor);
+        }
+        if (stack.isItemStackDamageable()) {
+            client.fontRendererObj.drawString(
+                    client.fontRendererObj.trimStringToWidth(100 * (1 - (float)stack.getItemDamage()/stack.getMaxDamage()) + "", durabilityWidth),
+                    left + 20 + nameWidth + valueWidth + weightWidth + damageWidth, slotTop + 5, textColor);
+        }
     }
 
     private int getContentHeight() {
@@ -301,30 +321,6 @@ public class GuiInventoryItemList {
 
         if (this.scrollDistance > (float) listHeight) {
             this.scrollDistance = (float) listHeight;
-        }
-    }
-
-    public void actionPerformed(GuiButton button) {
-        if (button.enabled) {
-            if (button.id == this.scrollUpActionId) {
-                this.scrollDistance -= (float) (this.slotHeight * 2 / 3);
-                this.initialMouseClickY = -2.0F;
-                this.applyScrollLimits();
-            } else if (button.id == this.scrollDownActionId) {
-                this.scrollDistance += (float) (this.slotHeight * 2 / 3);
-                this.initialMouseClickY = -2.0F;
-                this.applyScrollLimits();
-            }
-        }
-    }
-
-    public void handleMouseInput(int mouseX, int mouseY) throws IOException {
-        boolean isHovering = mouseX >= left && mouseX <= left + width && mouseY >= top && mouseY <= bottom;
-        if (!isHovering)
-            return;
-        int scroll = Mouse.getEventDWheel();
-        if (scroll != 0) {
-            this.scrollDistance += (scroll / -240.0F * this.slotHeight);
         }
     }
 
@@ -357,7 +353,7 @@ public class GuiInventoryItemList {
         boolean isHovering = mouseX >= left && mouseX <= left + width && mouseY >= top && mouseY <= bottom;
         int listLength = this.getSize();
         int scrollBarRight = left + width;
-        int scrollBarLeft = scrollBarRight - scrollBarSize;
+        int scrollBarLeft = scrollBarRight - scrollBarSize/2;
         int entryLeft = this.left;
         int entryRight = scrollBarLeft - 1;
         int viewHeight = this.bottom - this.top;
@@ -384,7 +380,7 @@ public class GuiInventoryItemList {
                         if (var13 > viewHeight - border * 2)
                             var13 = viewHeight - border * 2;
 
-                        this.scrollFactor /= (float) (viewHeight - var13) / (float) scrollHeight;
+                        this.scrollFactor /= (float) (viewHeight - 3.5 * scrollBarSize) / (float) scrollHeight;
                     } else {
                         this.scrollFactor = 1.0F;
                     }
@@ -452,13 +448,14 @@ public class GuiInventoryItemList {
             if (height < 32) height = 32;
             if (height > viewHeight - border * 2)
                 height = viewHeight - border * 2;
-            int barTop = (int) this.scrollDistance * (viewHeight - height) / extraHeight + this.top;
+            int barTop = (int) this.scrollDistance * (viewHeight - 3 * scrollBarSize) / extraHeight + this.top + scrollBarSize;
             if (barTop < this.top) {
                 barTop = this.top;
             }
-            int barBottom = barTop + height;
+            int barBottom = barTop + scrollBarSize;
 
             //draw scrollbar
+            GlStateManager.color(1, 1, 1, 1);
             client.getTextureManager().bindTexture(inv_scrollbar_bg_top);
             worldr.begin(7, DefaultVertexFormats.POSITION_TEX);
             worldr.pos(scrollBarLeft, top + scrollBarSize, 0.0D).tex(0.0D, 1.0D).endVertex();
@@ -483,29 +480,12 @@ public class GuiInventoryItemList {
             worldr.pos(scrollBarLeft, bottom - scrollBarSize, 0.0D).tex(0.0D, 0.0D).endVertex();
             tess.draw();
 
-
-            client.getTextureManager().bindTexture(inv_scrollbar_top);
-            worldr.begin(7, DefaultVertexFormats.POSITION_TEX);
-            worldr.pos(scrollBarLeft, barTop + scrollBarSize, 0.0D).tex(0.0D, 1.0D).endVertex();
-            worldr.pos(scrollBarRight, barTop + scrollBarSize, 0.0D).tex(1.0D, 1.0D).endVertex();
-            worldr.pos(scrollBarRight, barTop, 0.0D).tex(1.0D, 0.0D).endVertex();
-            worldr.pos(scrollBarLeft, barTop, 0.0D).tex(0.0D, 0.0D).endVertex();
-            tess.draw();
-
-            client.getTextureManager().bindTexture(inv_scrollbar_center);
-            worldr.begin(7, DefaultVertexFormats.POSITION_TEX);
-            worldr.pos(scrollBarLeft, barBottom - scrollBarSize, 0.0D).tex(0.0D, 1.0D).endVertex();
-            worldr.pos(scrollBarRight, barBottom - scrollBarSize, 0.0D).tex(1.0D, 1.0D).endVertex();
-            worldr.pos(scrollBarRight, barTop + scrollBarSize, 0.0D).tex(1.0D, 0.0D).endVertex();
-            worldr.pos(scrollBarLeft, barTop + scrollBarSize, 0.0D).tex(0.0D, 0.0D).endVertex();
-            tess.draw();
-
-            client.getTextureManager().bindTexture(inv_scrollbar_bottom);
+            client.getTextureManager().bindTexture(inv_scrollbar);
             worldr.begin(7, DefaultVertexFormats.POSITION_TEX);
             worldr.pos(scrollBarLeft, barBottom, 0.0D).tex(0.0D, 1.0D).endVertex();
             worldr.pos(scrollBarRight, barBottom, 0.0D).tex(1.0D, 1.0D).endVertex();
-            worldr.pos(scrollBarRight, barBottom - scrollBarSize, 0.0D).tex(1.0D, 0.0D).endVertex();
-            worldr.pos(scrollBarLeft, barBottom - scrollBarSize, 0.0D).tex(0.0D, 0.0D).endVertex();
+            worldr.pos(scrollBarRight, barTop, 0.0D).tex(1.0D, 0.0D).endVertex();
+            worldr.pos(scrollBarLeft, barTop, 0.0D).tex(0.0D, 0.0D).endVertex();
             tess.draw();
         }
         GlStateManager.shadeModel(GL11.GL_FLAT);
@@ -536,7 +516,7 @@ public class GuiInventoryItemList {
         vb.pos(l + 4, t + 4, 0.0D).tex(0.0D, 0.0D).endVertex();
         tess.draw();
 
-        client.fontRendererObj.drawString(inv.carryweight + "/" + TESItems.getCapability(inv.player).getMaxCarryweight(), l + 24, t + 8, 0xFFFFFF);
+        client.fontRendererObj.drawString(inv.carryweight + "/" + TESItems.getCapability(inv.player).getMaxCarryweight(), l + 24, t + 8, textColor);
     }
 
     private void clampScale() {
@@ -560,13 +540,9 @@ public class GuiInventoryItemList {
         GlStateManager.rotate(135.0F, 0.0F, 1.0F, 0.0F);
         RenderHelper.enableStandardItemLighting();
         GlStateManager.rotate(-135.0F, 0.0F, 1.0F, 0.0F);
-        //GlStateManager.rotate(-((float)Math.atan((double)(mouseY / 40.0F))) * 20.0F, 1.0F, 0.0F, 0.0F);
-//        entity.renderYawOffset = (float)Math.atan((double)(mouseX / 40.0F)) * 20.0F;
         entity.renderYawOffset = rotX;
-//        entity.rotationYaw = (float)Math.atan((double)(mouseX / 40.0F)) * 40.0F;
         entity.rotationYaw = rotX;
         entity.rotationPitch = 0;
-        //entity.rotationPitch = -((float)Math.atan((double)(mouseY / 40.0F))) * 20.0F;
         entity.rotationYawHead = entity.rotationYaw;
         entity.prevRotationYawHead = entity.rotationYaw;
         GlStateManager.translate(0.0F, 0.0F, 0.0F);
@@ -586,33 +562,5 @@ public class GuiInventoryItemList {
         GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
         GlStateManager.disableTexture2D();
         GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
-    }
-
-    private void drawGradientRect(int left, int top, int right, int bottom, int color1, int color2) {
-        float a1 = (float) (color1 >> 24 & 255) / 255.0F;
-        float r1 = (float) (color1 >> 16 & 255) / 255.0F;
-        float g1 = (float) (color1 >> 8 & 255) / 255.0F;
-        float b1 = (float) (color1 & 255) / 255.0F;
-        float a2 = (float) (color2 >> 24 & 255) / 255.0F;
-        float r2 = (float) (color2 >> 16 & 255) / 255.0F;
-        float g2 = (float) (color2 >> 8 & 255) / 255.0F;
-        float b2 = (float) (color2 & 255) / 255.0F;
-        GlStateManager.disableTexture2D();
-        GlStateManager.enableBlend();
-        GlStateManager.disableAlpha();
-        GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
-        GlStateManager.shadeModel(GL11.GL_SMOOTH);
-        Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer VertexBuffer = tessellator.getBuffer();
-        VertexBuffer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-        VertexBuffer.pos(right, top, 0.0D).color(r1, g1, b1, a1).endVertex();
-        VertexBuffer.pos(left, top, 0.0D).color(r1, g1, b1, a1).endVertex();
-        VertexBuffer.pos(left, bottom, 0.0D).color(r2, g2, b2, a2).endVertex();
-        VertexBuffer.pos(right, bottom, 0.0D).color(r2, g2, b2, a2).endVertex();
-        tessellator.draw();
-        GlStateManager.shadeModel(GL11.GL_FLAT);
-        GlStateManager.disableBlend();
-        GlStateManager.enableAlpha();
-        GlStateManager.enableTexture2D();
     }
 }

@@ -1,6 +1,6 @@
-tesitems:textures/gui/inventory/inv_entry_bg_selected.png 200x15
-tesitems:textures/gui/inventory/inv_entry_bg_hovered.png 200x15
-tesitems:textures/gui/inventory/inv_itemlist_bg.png 206x206
+tesitems:textures/gui/inventory/inv_entry_bg_selected.png 390x20
+tesitems:textures/gui/inventory/inv_entry_bg_hovered.png 390x20
+tesitems:textures/gui/inventory/inv_itemlist_bg.png 390x390
 
 //border textures:
 LT CT RT
@@ -17,15 +17,11 @@ tesitems:textures/gui/inventory/inv_itemlist_border_LB.png 10x10
 tesitems:textures/gui/inventory/inv_itemlist_border_CB.png 10x10
 tesitems:textures/gui/inventory/inv_itemlist_border_RB.png 10x10
 
-//scrollbar background center's UVs are rounded to match patterns
-tesitems:textures/gui/inventory/inv_scrollbar_bg_top.png 6x6
-tesitems:textures/gui/inventory/inv_scrollbar_bg_center.png 6x6
-tesitems:textures/gui/inventory/inv_scrollbar_bg_bottom.png 6x6
+tesitems:textures/gui/inventory/inv_scrollbar_bg_top.png 16x32
+tesitems:textures/gui/inventory/inv_scrollbar_bg_center.png 16x32
+tesitems:textures/gui/inventory/inv_scrollbar_bg_bottom.png 16x32
 
-//scrollbar center's UVs are rounded to match patterns
-tesitems:textures/gui/inventory/inv_scrollbar_top.png 6x6
-tesitems:textures/gui/inventory/inv_scrollbar_center.png 6x6
-tesitems:textures/gui/inventory/inv_scrollbar_bottom.png 6x6
+tesitems:textures/gui/inventory/inv_scrollbar_center.png 16x32
 
 tesitems:textures/gui/inventory/carryweight_bg.png 24x100
 

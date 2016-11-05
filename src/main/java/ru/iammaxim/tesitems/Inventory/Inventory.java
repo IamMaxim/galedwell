@@ -157,7 +157,7 @@ public class Inventory {
 
 /*    public ItemStack takeItem(Item item, int count) {
         if (item.isDamageable()) {
-            List<int[]> slots = getItemIndices(item);
+            GuiQuestListList<int[]> slots = getItemIndices(item);
             final int[] total = {0};
             slots.forEach((slot) -> total[0]+=slot[1]);
             if (total[0] < count) return null;
