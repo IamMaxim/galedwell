@@ -10,6 +10,7 @@ import java.util.List;
  * Created by maxim on 8/5/16 at 7:56 PM.
  */
 public class Faction {
+    public int id;
     public String name;
     public List<String> phrases = new ArrayList<>();
 

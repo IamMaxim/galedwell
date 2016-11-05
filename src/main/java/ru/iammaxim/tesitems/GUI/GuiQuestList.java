@@ -10,6 +10,8 @@ import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.Questing.QuestInstance;
 import ru.iammaxim.tesitems.TESItems;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -20,7 +22,7 @@ public class GuiQuestList extends GuiScreen {
     private int h;
     private EntityPlayer player;
     private IPlayerAttributesCapability cap;
-    private List<QuestInstance> questList;
+    private HashMap<Integer, QuestInstance> questList;
     private int selected;
     GuiScrollingList guiQuestList;
     ScaledResolution res;
@@ -70,13 +72,13 @@ public class GuiQuestList extends GuiScreen {
     }
 
     private class GuiQuestListList extends GuiScrollingList {
-        private List<QuestInstance> questList;
+        private List<QuestInstance> questList = new ArrayList<>();
         private ScaledResolution res;
 
-        public GuiQuestListList(Minecraft client, int width, int height, int top, int bottom, int left, int entryHeight, int screenWidth, int screenHeight, List<QuestInstance> questList) {
+        public GuiQuestListList(Minecraft client, int width, int height, int top, int bottom, int left, int entryHeight, int screenWidth, int screenHeight, HashMap<Integer, QuestInstance> questList) {
             super(client, width, height, top, bottom, left, entryHeight, screenWidth, screenHeight);
             res = new ScaledResolution(client);
-            this.questList = questList;
+            questList.forEach((k,v) -> this.questList.add(v));
         }
 
         @Override

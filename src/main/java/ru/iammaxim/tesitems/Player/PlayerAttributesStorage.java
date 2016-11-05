@@ -19,6 +19,7 @@ public class PlayerAttributesStorage implements Capability.IStorage<IPlayerAttri
         nbttag.setTag("spellbook", cap.saveSpellbook());
         nbttag.setTag("inventory", cap.getInventory().writeToNBT());
         nbttag.setTag("quests", cap.saveQuests());
+        nbttag.setString("journal", cap.getJournal());
         return nbttag;
     }
 
@@ -31,5 +32,6 @@ public class PlayerAttributesStorage implements Capability.IStorage<IPlayerAttri
         cap.loadSpellbook(nbttag.getCompoundTag("spellbook"));
         cap.getInventory().loadFromNBT(nbttag.getCompoundTag("inventory"));
         cap.loadQuests(nbttag.getCompoundTag("quests"));
+        cap.setJournal(nbttag.getString("journal"));
     }
 }

@@ -41,6 +41,7 @@ public class GuiInventoryItemList {
             weightWidth = 40,
             damageWidth = 40,
             durabilityWidth = 40,
+            topIconsHeight = 24,
             textColor = 0xff481f09;
     private final int screenWidth;
     private final int screenHeight;
@@ -67,7 +68,10 @@ public class GuiInventoryItemList {
             inv_scrollbar = new ResourceLocation("tesitems:textures/gui/inventory/inv_scrollbar.png"),
             inv_entry_bg_selected = new ResourceLocation("tesitems:textures/gui/inventory/inv_entry_bg_selected.png"),
             inv_entry_bg_hovered = new ResourceLocation("tesitems:textures/gui/inventory/inv_entry_bg_hovered.png"),
+            icon_value = new ResourceLocation("tesitems:textures/gui/icons/value.png"),
             icon_carryweight = new ResourceLocation("tesitems:textures/gui/icons/carryweight.png"),
+            icon_damage = new ResourceLocation("tesitems:textures/gui/icons/damage.png"),
+            icon_durability = new ResourceLocation("tesitems:textures/gui/icons/durability.png"),
             inv_carryweight_bg = new ResourceLocation("tesitems:textures/gui/inventory/carryweight_bg.png");
     private int mouseX;
     private int mouseY;
@@ -305,11 +309,11 @@ public class GuiInventoryItemList {
     }
 
     private int getContentHeight() {
-        return this.getSize() * this.slotHeight;
+        return getSize() * slotHeight;
     }
 
     private void applyScrollLimits() {
-        int listHeight = this.getContentHeight() - (this.bottom - this.top - 4);
+        int listHeight = getContentHeight() - (bottom - top - topIconsHeight - 4);
 
         if (listHeight < 0) {
             listHeight /= 2;
@@ -356,9 +360,9 @@ public class GuiInventoryItemList {
         int scrollBarLeft = scrollBarRight - scrollBarSize/2;
         int entryLeft = this.left;
         int entryRight = scrollBarLeft - 1;
-        int viewHeight = this.bottom - this.top;
+        int viewHeight = this.bottom - this.top - topIconsHeight;
         int border = 4;
-        int mouseListY = mouseY - this.top + (int) this.scrollDistance - border;
+        int mouseListY = mouseY - this.top - topIconsHeight + (int) this.scrollDistance - border;
         int slotIndex = mouseListY / this.slotHeight;
 
         if (Mouse.isButtonDown(0)) {
@@ -380,7 +384,7 @@ public class GuiInventoryItemList {
                         if (var13 > viewHeight - border * 2)
                             var13 = viewHeight - border * 2;
 
-                        this.scrollFactor /= (float) (viewHeight - 3.5 * scrollBarSize) / (float) scrollHeight;
+                        this.scrollFactor /= (float) (viewHeight - scrollBarSize * 3.5) / (float) scrollHeight;
                     } else {
                         this.scrollFactor = 1.0F;
                     }
@@ -426,11 +430,11 @@ public class GuiInventoryItemList {
         double scaleH = client.displayHeight / res.getScaledHeight_double();
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         GL11.glScissor((int) (left * scaleW), (int) (client.displayHeight - (bottom * scaleH)), (int) (width * scaleW), (int) (viewHeight * scaleH));
-        int baseY = this.top + border - (int) this.scrollDistance;
+        int baseY = this.top + topIconsHeight + border - (int) this.scrollDistance;
         for (int slotIdx = 0; slotIdx < listLength; ++slotIdx) {
             int slotTop = baseY + slotIdx * this.slotHeight;
             int slotBuffer = this.slotHeight - border;
-            if (slotTop <= this.bottom && slotTop + slotBuffer >= this.top) {
+            if (slotTop <= this.bottom && slotTop + slotBuffer >= this.top + topIconsHeight) {
                 //draw hover bg if mouse if hovering slot
                 if (isHovering) {
                     if (mouseX >= entryLeft && mouseX <= entryRight && slotIndex >= 0 && mouseListY >= 0 && slotIndex < listLength && slotIdx == slotIndex) {
@@ -448,7 +452,7 @@ public class GuiInventoryItemList {
             if (height < 32) height = 32;
             if (height > viewHeight - border * 2)
                 height = viewHeight - border * 2;
-            int barTop = (int) this.scrollDistance * (viewHeight - 3 * scrollBarSize) / extraHeight + this.top + scrollBarSize;
+            int barTop = (int) (scrollDistance * (viewHeight - 3 * scrollBarSize) / extraHeight + top + topIconsHeight + scrollBarSize);
             if (barTop < this.top) {
                 barTop = this.top;
             }
@@ -458,18 +462,18 @@ public class GuiInventoryItemList {
             GlStateManager.color(1, 1, 1, 1);
             client.getTextureManager().bindTexture(inv_scrollbar_bg_top);
             worldr.begin(7, DefaultVertexFormats.POSITION_TEX);
-            worldr.pos(scrollBarLeft, top + scrollBarSize, 0.0D).tex(0.0D, 1.0D).endVertex();
-            worldr.pos(scrollBarRight, top + scrollBarSize, 0.0D).tex(1.0D, 1.0D).endVertex();
-            worldr.pos(scrollBarRight, top, 0.0D).tex(1.0D, 0.0D).endVertex();
-            worldr.pos(scrollBarLeft, top, 0.0D).tex(0.0D, 0.0D).endVertex();
+            worldr.pos(scrollBarLeft, top + topIconsHeight + scrollBarSize, 0.0D).tex(0.0D, 1.0D).endVertex();
+            worldr.pos(scrollBarRight, top + topIconsHeight + scrollBarSize, 0.0D).tex(1.0D, 1.0D).endVertex();
+            worldr.pos(scrollBarRight, top + topIconsHeight, 0.0D).tex(1.0D, 0.0D).endVertex();
+            worldr.pos(scrollBarLeft, top + topIconsHeight, 0.0D).tex(0.0D, 0.0D).endVertex();
             tess.draw();
 
             client.getTextureManager().bindTexture(inv_scrollbar_bg_center);
             worldr.begin(7, DefaultVertexFormats.POSITION_TEX);
             worldr.pos(scrollBarLeft, bottom - scrollBarSize, 0.0D).tex(0.0D, 1.0D).endVertex();
             worldr.pos(scrollBarRight, bottom - scrollBarSize, 0.0D).tex(1.0D, 1.0D).endVertex();
-            worldr.pos(scrollBarRight, top + scrollBarSize, 0.0D).tex(1.0D, 0.0D).endVertex();
-            worldr.pos(scrollBarLeft, top + scrollBarSize, 0.0D).tex(0.0D, 0.0D).endVertex();
+            worldr.pos(scrollBarRight, top + topIconsHeight + scrollBarSize, 0.0D).tex(1.0D, 0.0D).endVertex();
+            worldr.pos(scrollBarLeft, top + topIconsHeight + scrollBarSize, 0.0D).tex(0.0D, 0.0D).endVertex();
             tess.draw();
 
             client.getTextureManager().bindTexture(inv_scrollbar_bg_bottom);
@@ -516,7 +520,7 @@ public class GuiInventoryItemList {
         vb.pos(l + 4, t + 4, 0.0D).tex(0.0D, 0.0D).endVertex();
         tess.draw();
 
-        client.fontRendererObj.drawString(inv.carryweight + "/" + TESItems.getCapability(inv.player).getMaxCarryweight(), l + 24, t + 8, textColor);
+        client.fontRendererObj.drawString(inv.carryweight + "/" + TESItems.getCapability(inv.player).getMaxCarryWeight(), l + 24, t + 8, textColor);
     }
 
     private void clampScale() {

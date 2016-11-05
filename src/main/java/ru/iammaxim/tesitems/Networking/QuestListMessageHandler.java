@@ -12,9 +12,7 @@ import ru.iammaxim.tesitems.Questing.QuestManager;
 public class QuestListMessageHandler implements IMessageHandler<QuestListMessage, IMessage> {
     @Override
     public IMessage onMessage(QuestListMessage message, MessageContext ctx) {
-        Minecraft.getMinecraft().addScheduledTask(() -> {
-            QuestManager.loadFromNBT(message.tag);
-        });
+        Minecraft.getMinecraft().addScheduledTask(() -> QuestManager.loadFromNBT(message.tag));
         return null;
     }
 }

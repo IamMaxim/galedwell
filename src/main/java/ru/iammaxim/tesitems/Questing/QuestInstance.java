@@ -6,12 +6,13 @@ package ru.iammaxim.tesitems.Questing;
 public class QuestInstance {
     public QuestStatus status;
     public Quest quest;
-    public int stage;
+    public int stage, quest_id;
 
     public QuestInstance(Quest quest, QuestStatus status, int stage) {
         this.quest = quest;
         this.status = status;
         this.stage = stage;
+        this.quest_id = quest.id;
     }
 
     @Override

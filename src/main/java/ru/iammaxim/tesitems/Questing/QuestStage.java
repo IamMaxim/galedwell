@@ -8,14 +8,12 @@ import java.util.stream.Collectors;
  * Created by Maxim on 20.07.2016.
  */
 public class QuestStage {
-    public String questLine;
-    public String dialogPhrase;
+    public String journalLine;
     public List<QuestTarget> targets = new ArrayList<>();
 
     @Override
     public String toString() {
-        return "questLine: " + questLine +
-                " dialogPhrase: " + dialogPhrase +
+        return "journalLine: " + journalLine +
                 " targets: [" + targets.stream().map(QuestTarget::toString).collect(Collectors.joining(", ")) + "]";
     }
 }

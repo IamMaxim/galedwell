@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EnumPlayerModelParts;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
@@ -53,8 +54,11 @@ public class EntityNPC extends EntityLivingBase {
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound compound) {
-        super.writeEntityToNBT(compound);
+    public void writeEntityToNBT(NBTTagCompound tag) {
+        super.writeEntityToNBT(tag);
+        tag.setBoolean("isInvulnerable", isInvulnerable);
+        tag.setString("name", name);
+        tag.setTag("inventory", inventory.writeToNBT());
     }
 
     @Override
@@ -112,5 +116,10 @@ public class EntityNPC extends EntityLivingBase {
     @Override
     public ITextComponent getDisplayName() {
         return super.getDisplayName();
+    }
+
+    public NBTTagCompound saveFactions() {
+        NBTTagList list = new NBTTagList();
+        factions.forEach(f -> list.appendTag(f.id));
     }
 }

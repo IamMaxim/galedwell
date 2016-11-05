@@ -18,6 +18,7 @@ import ru.iammaxim.tesitems.ReflectionUtils;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -29,28 +30,32 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     private int currentSpell = -1;
     private EntityNPC latestNPC;
     private Inventory inventory = new Inventory();
-    private ArrayList<QuestInstance> quests = new ArrayList<>();
+    private HashMap<Integer, QuestInstance> quests = new HashMap<>();
+    private String journal;
 
     public PlayerAttributesCapabilityDefaultImpl() {
     }
-
     public void createInventory(EntityPlayer player, Inventory inv) {
         if (!player.worldObj.isRemote)
             inventory = new InventoryServer(player);
         else inventory = new InventoryClient(Minecraft.getMinecraft().thePlayer);
         inventory.setItemList(inv.getItemList());
     }
-
     @Override
     public void loadQuests(NBTTagCompound nbttag) {
-        quests = new ArrayList<>();
+        quests.clear();
         NBTTagList nbtList = (NBTTagList) nbttag.getTag("quests");
         for (int i = 0; i < nbtList.tagCount(); i++) {
             NBTTagCompound tag = nbtList.getCompoundTagAt(i);
-            quests.add(new QuestInstance(QuestManager.getByID(tag.getInteger("id")), QuestStatus.valueOf(tag.getString("questStatus")), tag.getInteger("stage")));
+            loadQuest(tag);
         }
     }
+    @Override
+    public void loadQuest(NBTTagCompound tag) {
+        int id = tag.getInteger("id");
+        quests.put(id, new QuestInstance(QuestManager.getByID(id), QuestStatus.valueOf(tag.getString("questStatus")), tag.getInteger("stage")));
 
+    }
     @Override
     public NBTTagCompound saveQuests() {
         NBTTagCompound tag = new NBTTagCompound();
@@ -66,7 +71,31 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
         tag.setTag("quests", nbtlist);
         return tag;
     }
-
+    @Override
+    public void journalAppend(String s) {
+        journal = journal + s;
+    }
+    @Override
+    public void setJournal(String s) {
+        journal = s;
+    }
+    @Override
+    public void setQuestStage(int questID, int stage) {
+        if (stage == -1) { //complete quest
+            quests.remove(questID);
+        }
+        QuestInstance inst = getQuest(questID);
+        inst.stage = stage;
+        journalAppend(inst.quest.stages.get(stage).journalLine + "\n\n");
+    }
+    @Override
+    public QuestInstance getQuest(int id) {
+        return quests.get(id);
+    }
+    @Override
+    public String getJournal() {
+        return journal;
+    }
     @Override
     public float getAttribute(String s) {
         Float value = attributes.get(s);
@@ -163,26 +192,24 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     }
     @Override
     public void addQuest(QuestInstance inst) {
-        quests.add(inst);
+        quests.put(inst.quest_id, inst);
     }
     @Override
-    public List<QuestInstance> getQuests() {
+    public HashMap<Integer, QuestInstance> getQuests() {
         return quests;
     }
     @Override
     public float getCarryWeight() {
         return inventory.carryweight;
     }
-
     @Override
-    public float getMaxCarryweight() {
+    public float getMaxCarryWeight() {
         Float f = attributes.get("strength");
         if (f != null)
             return f;
         else
             return 0;
     }
-
     @Override
     public EntityNPC getLatestNPC() {
         return latestNPC;

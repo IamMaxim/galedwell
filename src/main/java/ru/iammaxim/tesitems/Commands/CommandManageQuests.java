@@ -40,7 +40,7 @@ public class CommandManageQuests extends CommandBase {
             QuestManager.questList.forEach((k, v) -> sb.append("id: ").append(k).append(": {").append(v.toString()).append("}").append('\n'));
             sb.append("Your instances:\n");
             IPlayerAttributesCapability cap = TESItems.getCapability((EntityPlayer) sender);
-            cap.getQuests().forEach(q -> sb.append(q.toString()).append('\n'));
+            cap.getQuests().forEach((k,q) -> sb.append(q.toString()).append('\n'));
             ((EntityPlayer) sender).addChatComponentMessage(new TextComponentString(sb.toString()));
         } else if (args[0].equals("add")) {
             Quest quest = new Quest("testQuest");

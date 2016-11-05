@@ -134,6 +134,8 @@ public class TESItems {
         networkWrapper.registerMessage(EquipMessageServerHandler.class, EquipMessage.class, 7, Side.SERVER);
         networkWrapper.registerMessage(EquipMessageClientHandler.class, EquipMessage.class, 8, Side.CLIENT);
         networkWrapper.registerMessage(ItemDropMessageHandlerServer.class, ItemDropMessage.class, 9, Side.SERVER);
+        networkWrapper.registerMessage(JournalMessageHandler.class, JournalMessage.class, 10, Side.CLIENT);
+        networkWrapper.registerMessage(JournalAppendMessageHandler.class, JournalAppendMessage.class, 11, Side.CLIENT);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GUIHandler());
         EntityRegistry.registerModEntity(EntityRangedSpellEffect.class, "EntityRangedSpellEffect", 0, instance, 100, 1, false);
@@ -186,7 +188,7 @@ public class TESItems {
     @SubscribeEvent
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
         IPlayerAttributesCapability cap = getCapability(event.player);
-        if (cap.getCarryWeight() > cap.getMaxCarryweight())
+        if (cap.getCarryWeight() > cap.getMaxCarryWeight())
             event.player.addPotionEffect(new PotionEffect(Potion.getPotionById(2), 5, 3));
     }
 
@@ -250,6 +252,8 @@ public class TESItems {
                 networkWrapper.sendTo(new AttributesMessage(cap.getAttributes()), (EntityPlayerMP) event.getEntity());
                 networkWrapper.sendTo(new SpellbookMessage(cap.saveSpellbook()), (EntityPlayerMP) event.getEntity());
                 networkWrapper.sendTo(new InventoryMessage(cap.getInventory().writeToNBT()), (EntityPlayerMP) event.getEntity());
+                networkWrapper.sendTo(new QuestListMessage(QuestManager.saveToNBT()), (EntityPlayerMP) event.getEntity());
+                networkWrapper.sendTo(new JournalMessage(cap.getJournal()), (EntityPlayerMP) event.getEntity());
             }
         }
     }

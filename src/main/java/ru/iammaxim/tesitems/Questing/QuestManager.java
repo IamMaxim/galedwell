@@ -21,7 +21,7 @@ public class QuestManager {
     private static final String FILEDIRECTORY = "questSystem";
     private static final String FILEPATH = FILEDIRECTORY + "/quests.nbt";
     public static HashMap<Integer, Quest> questList = new HashMap<>();
-    private static int idGen = Integer.MIN_VALUE;
+    private static int idGen = 0;
 
     public static Quest getByID(int ID) {
         return questList.get(ID);
@@ -31,7 +31,8 @@ public class QuestManager {
         return ++idGen;
     }
 
-    public static void saveToNBT(NBTTagCompound tagCompound) {
+    public static NBTTagCompound saveToNBT() {
+        NBTTagCompound tagCompound = new NBTTagCompound();
         NBTTagList quests = new NBTTagList();
         for (Quest quest : questList.values()) {
             NBTTagCompound questTag = new NBTTagCompound();
@@ -41,8 +42,7 @@ public class QuestManager {
             for (int j = 0; j < quest.stages.size(); j++) {
                 NBTTagCompound questStageNbt = new NBTTagCompound();
                 QuestStage stage = quest.stages.get(j);
-                questStageNbt.setString("questLine", stage.questLine);
-                questStageNbt.setString("dialogPhrase", stage.dialogPhrase);
+                questStageNbt.setString("journalLine", stage.journalLine);
                 NBTTagList targetsNbt = new NBTTagList();
                 for (int k = 0; k < stage.targets.size(); k++) {
                     QuestTarget target = stage.targets.get(k);
@@ -64,7 +64,8 @@ public class QuestManager {
             quests.appendTag(questTag);
         }
         tagCompound.setTag("quests", quests);
-        System.out.println("Saved quests tag: " + tagCompound.toString());
+        //System.out.println("Saved quests tag: " + tagCompound.toString());
+        return tagCompound;
     }
 
     public static void loadFromNBT(NBTTagCompound tag) {
@@ -92,8 +93,7 @@ public class QuestManager {
         for (int j = 0; j < stagesListNbt.tagCount(); j++) {
             NBTTagCompound questStageNbt = stagesListNbt.getCompoundTagAt(j);
             QuestStage stage = new QuestStage();
-            stage.questLine = questStageNbt.getString("questLine");
-            stage.dialogPhrase = questStageNbt.getString("dialogPhrase");
+            stage.journalLine = questStageNbt.getString("journalLine");
             NBTTagList targetsNbt = (NBTTagList) questStageNbt.getTag("targets");
             for (int k = 0; k < targetsNbt.tagCount(); k++) {
                 stage.targets.add(QuestTarget.getTargetFromNBT(targetsNbt.getCompoundTagAt(k)));
@@ -128,9 +128,7 @@ public class QuestManager {
         f.mkdirs();
         File f2 = new File(FILEPATH);
         FileOutputStream fos = new FileOutputStream(f2);
-        NBTTagCompound tag = new NBTTagCompound();
-        saveToNBT(tag);
-        fos.write(tag.toString().getBytes());
+        fos.write(saveToNBT().toString().getBytes());
         fos.close();
     }
 
@@ -138,5 +136,6 @@ public class QuestManager {
         IPlayerAttributesCapability cap = TESItems.getCapability(player);
         QuestInstance inst = new QuestInstance(quest, QuestStatus.INPROGRESS, 0);
         cap.addQuest(inst);
+        cap.setQuestStage(quest.id, 0);
     }
 }
