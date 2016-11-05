@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.Tessellator;
 import org.lwjgl.input.Keyboard;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Created by maxim on 11/5/16 at 11:01 PM.
@@ -16,6 +17,7 @@ public class GuiTextField extends RenderableBase {
     private int padding = 4, hintColor = 0xff999999, color = 0xffffffff;
     private int lineSpacing = 4;
     private int lastStrsSize = 0;
+    private Consumer<GuiTextField> onType;
 
     public GuiTextField(RenderableBase parent) {
         this.parent = parent;
@@ -32,8 +34,10 @@ public class GuiTextField extends RenderableBase {
         return text;
     }
 
-    public void setText(String s) {
+    public GuiTextField setText(String s) {
         text = s;
+        strs = Minecraft.getMinecraft().fontRendererObj.listFormattedStringToWidth(text, width);
+        return this;
     }
 
     public String getHint() {
@@ -52,9 +56,13 @@ public class GuiTextField extends RenderableBase {
         return lineSpacing;
     }
 
+    public GuiTextField setOnType(Consumer<GuiTextField> onType) {
+        this.onType = onType;
+        return this;
+    }
+
     @Override
     public void keyTyped(char typedChar, int keyCode) {
-        System.out.println("typed " + keyCode);
         if (focused) {
             if (keyCode == Keyboard.KEY_BACK) { //backspace
                 if (text.length() > 0)
@@ -74,6 +82,8 @@ public class GuiTextField extends RenderableBase {
                     ((GuiVerticalLinearLayout) parent).doLayout(parent.top, parent.left);
                 }
             }
+            if (onType != null)
+                onType.accept(this);
         }
     }
 

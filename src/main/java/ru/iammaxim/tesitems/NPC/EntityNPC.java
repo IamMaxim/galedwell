@@ -49,6 +49,10 @@ public class EntityNPC extends EntityLivingBase {
         return super.attackEntityFrom(source, amount);
     }
 
+    public List<Faction> getFactions() {
+        return factions;
+    }
+
     public void addFaction(Faction faction) {
         factions.add(faction);
     }
@@ -63,6 +67,10 @@ public class EntityNPC extends EntityLivingBase {
 
     public void setDialog(Dialog dialog) {
         this.dialog = dialog;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override

@@ -6,11 +6,14 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.text.TextComponentString;
+import ru.iammaxim.tesitems.Fractions.Faction;
 import ru.iammaxim.tesitems.NPC.EntityNPC;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.TESItems;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by maxim on 11/5/16 at 9:10 PM.
@@ -35,17 +38,48 @@ public class GuiNPCEditor extends GuiScreen {
         IPlayerAttributesCapability cap = TESItems.getCapability(player);
         npc = cap.getLatestNPC();
         res = new ScaledResolution(Minecraft.getMinecraft());
+        List<Faction> factions = npc.getFactions();
+        Collections.copy(factions, factions);
+        if (factions != npc.getFactions()) {
+            System.out.println("cloning good");
+        }
 
-        layout = new GuiVerticalLinearLayout();
+        layout = new GuiVerticalLinearLayout(null);
         layout.width = 300;
         layout.setSpace(4);
         layout.setPadding(6, 6, 6, 6);
 
-        layout.add(new GuiText(layout, "text1"));
-        layout.add(new GuiText(layout, "text2"));
-        layout.add(new GuiTextField(layout, "Hint..."));
-        layout.add(new GuiText(layout, "text3"));
-        layout.add(new GuiText(layout, "text4"));
+        //NPC name
+        GuiTextField nameField = new GuiTextField(layout, "NPC name").setText(npc.getName());
+        layout.add(nameField);
+
+        //Factions
+        layout.add(new GuiDivider(layout));
+        layout.add(new GuiText(layout, "Factions").centerHorizontally(true));
+        GuiVerticalLinearLayout factionsLayout = new GuiVerticalLinearLayout(layout);
+        factionsLayout.width = 270;
+        factionsLayout.setSpace(4);
+        factionsLayout.centerHorizontally(true);
+
+        factionsLayout.add(new GuiTextField(factionsLayout, "Faction ID"));
+        factionsLayout.add(new GuiText(factionsLayout, "Name of faction will be here if ID is right"));
+
+        factionsLayout.add(new GuiDivider(factionsLayout));
+
+        factionsLayout.add(new GuiTextField(factionsLayout, "Faction ID"));
+        factionsLayout.add(new GuiText(factionsLayout, "Name of faction will be here if ID is right"));
+
+        layout.add(factionsLayout);
+
+        layout.add(new GuiButton(layout, "Add faction").setOnClick(() -> {
+            //factions.add(null);
+        }).centerHorizontally(true));
+
+        //Save button
+        layout.add(new GuiDivider(layout));
+        layout.add(new GuiButton(layout, "Save").setOnClick(() -> {
+            npc.setName(nameField.getText());
+        }));
 
         int w = layout.calculateWidth();
         int left = (res.getScaledWidth() - w) / 2;

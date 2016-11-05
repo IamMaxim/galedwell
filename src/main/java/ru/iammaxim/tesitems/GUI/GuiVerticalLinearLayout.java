@@ -40,7 +40,8 @@ public class GuiVerticalLinearLayout extends RenderableBase {
     private ScaledResolution res;
     private Minecraft mc;
 
-    public GuiVerticalLinearLayout() {
+    public GuiVerticalLinearLayout(RenderableBase parent) {
+        this.parent = parent;
         mc = Minecraft.getMinecraft();
         resize();
     }
@@ -82,13 +83,27 @@ public class GuiVerticalLinearLayout extends RenderableBase {
         res = new ScaledResolution(mc);
     }
 
+    @Override
+    public void calculateBounds(int top, int left) {
+        doLayout(top, left);
+        right = left + getWidth();
+    }
+
     public void doLayout(int top, int left) {
         this.top = top;
         this.left = left;
         int tmpHeight = top - scroll;
         for (RenderableBase e : elements) {
-            e.calculateBounds(tmpHeight, left);
+            int l;
+            if (e.centerHorizontally)
+                l = left + (getWidth() - e.getWidth()) /2;
+            else l = left;
+            e.calculateBounds(tmpHeight, l);
             tmpHeight += e.getHeight() + space;
+        }
+        if (parent != null) { //if this is not a root element calculate its size
+            bottom = tmpHeight - space;
+            height = bottom - top;
         }
     }
 

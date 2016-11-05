@@ -14,6 +14,12 @@ public abstract class RenderableBase {
     protected int width, height;
     public int top, bottom, left, right;
     public boolean focused = false;
+    public boolean centerHorizontally = false;
+
+    public RenderableBase centerHorizontally(boolean center) {
+        centerHorizontally = center;
+        return this;
+    }
 
     public void calculateBounds(int top, int left) {
         this.top = top;
