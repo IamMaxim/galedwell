@@ -8,14 +8,14 @@ LC    RC
 LB CB RB
 //CT, CB, LC and RC are repeated and their UVs are rounded to match patterns
 
-tesitems:textures/gui/inventory/inv_itemlist_border_LT.png 10x10
-tesitems:textures/gui/inventory/inv_itemlist_border_CT.png 10x10
-tesitems:textures/gui/inventory/inv_itemlist_border_RT.png 10x10
-tesitems:textures/gui/inventory/inv_itemlist_border_LC.png 10x10
-tesitems:textures/gui/inventory/inv_itemlist_border_RC.png 10x10
-tesitems:textures/gui/inventory/inv_itemlist_border_LB.png 10x10
-tesitems:textures/gui/inventory/inv_itemlist_border_CB.png 10x10
-tesitems:textures/gui/inventory/inv_itemlist_border_RB.png 10x10
+tesitems:textures/gui/inventory/inv_itemlist_border_LT.png 36x36
+tesitems:textures/gui/inventory/inv_itemlist_border_CT.png 819x36
+tesitems:textures/gui/inventory/inv_itemlist_border_RT.png 36x36
+tesitems:textures/gui/inventory/inv_itemlist_border_LC.png 36x819
+tesitems:textures/gui/inventory/inv_itemlist_border_RC.png 36x819
+tesitems:textures/gui/inventory/inv_itemlist_border_LB.png 36x36
+tesitems:textures/gui/inventory/inv_itemlist_border_CB.png 819x36
+tesitems:textures/gui/inventory/inv_itemlist_border_RB.png 36x36
 
 tesitems:textures/gui/inventory/inv_scrollbar_bg_top.png 16x32
 tesitems:textures/gui/inventory/inv_scrollbar_bg_center.png 16x32

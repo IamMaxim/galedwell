@@ -38,7 +38,7 @@ public class GuiInventoryItemList {
             paddingLeft = 30,
             width = 390,
             scrollBarSize = 16,
-            borderSize = 10,
+            borderSize = 18,
             nameWidth = 200,
             valueWidth = 40,
             weightWidth = 40,
@@ -189,14 +189,14 @@ public class GuiInventoryItemList {
         //LT
         drawTexturedRect(left - borderSize, top - borderSize, left, top, inv_itemlist_border_LT);
         //CT
-        tmp = Math.round((right - left) / borderSize);
+        tmp = (right - left) / 22.75f / borderSize;
         drawTexturedRect(left, top - borderSize, right, top, tmp, 1, inv_itemlist_border_CT);
         //CB
         drawTexturedRect(left, bottom, right, bottom + borderSize, tmp, 1, inv_itemlist_border_CB);
         //RT
         drawTexturedRect(right, top - borderSize, right + borderSize, top, inv_itemlist_border_RT);
-        tmp = Math.round((bottom - top) / borderSize);
         //LC
+        tmp = (bottom - top) / 22.75f / borderSize;
         drawTexturedRect(left - borderSize, top, left, bottom, 1, tmp, inv_itemlist_border_LC);
         //RC
         drawTexturedRect(right, top, right + borderSize, bottom, 1, tmp, inv_itemlist_border_RC);

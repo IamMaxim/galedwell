@@ -1,9 +1,11 @@
 package ru.iammaxim.tesitems.GUI;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -74,6 +76,37 @@ public abstract class RenderableBase {
         buf.pos(left, top, 0.0D).endVertex();
         tess.draw();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GlStateManager.disableBlend();
+    }
+
+    public void drawTexturedRect(int left, int top, int right, int bottom, ResourceLocation texture) {
+        GlStateManager.enableBlend();
+        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        GlStateManager.color(1, 1, 1, 1);
+        Tessellator tess = Tessellator.getInstance();
+        VertexBuffer vb = tess.getBuffer();
+        Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
+        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
+        vb.pos(left, bottom, 0).tex(0, 1).endVertex();
+        vb.pos(right, bottom, 0).tex(1, 1).endVertex();
+        vb.pos(right, top, 0).tex(1, 0).endVertex();
+        vb.pos(left, top, 0).tex(0, 0).endVertex();
+        tess.draw();
+        GlStateManager.disableBlend();
+    }
+
+    public void drawTexturedRect(int left, int top, int right, int bottom, float UVx, float UVy, ResourceLocation texture) {
+        GlStateManager.enableBlend();
+        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        Tessellator tess = Tessellator.getInstance();
+        VertexBuffer vb = tess.getBuffer();
+        Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
+        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
+        vb.pos(left, bottom, 0).tex(0, UVy).endVertex();
+        vb.pos(right, bottom, 0).tex(UVx, UVy).endVertex();
+        vb.pos(right, top, 0).tex(UVx, 0).endVertex();
+        vb.pos(left, top, 0).tex(0, 0).endVertex();
+        tess.draw();
         GlStateManager.disableBlend();
     }
 

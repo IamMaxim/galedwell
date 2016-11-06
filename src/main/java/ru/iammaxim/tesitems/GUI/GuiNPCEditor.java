@@ -83,6 +83,8 @@ public class GuiNPCEditor extends GuiScreen {
         layout.add(new GuiButton(layout, I18n.format("tesitems:NPCEditor.save")).setOnClick(() -> {
             npc.setName(nameField.getText());
         }));
+        layout.add(new GuiButton(layout, "Test Alert Dialog").setOnClick(() ->
+                mc.displayGuiScreen(new GuiAlertDialog("This is example of alert dialog"))));
 
         int w = layout.calculateWidth();
         int left = (res.getScaledWidth() - w) / 2;

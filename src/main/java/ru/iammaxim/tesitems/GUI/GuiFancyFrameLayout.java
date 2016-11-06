@@ -11,7 +11,8 @@ import net.minecraft.util.ResourceLocation;
  * Created by maxim on 11/6/16 at 1:56 AM.
  */
 public class GuiFancyFrameLayout extends RenderableBase {
-    private static final int frameSize = 10, padding = 4;
+    private static final int frameSize = 18;
+    private int padding = 8;
     private static ResourceLocation
             inv_itemlist_border_LT = new ResourceLocation("tesitems:textures/gui/inventory/inv_itemlist_border_LT.png"),
             inv_itemlist_border_CT = new ResourceLocation("tesitems:textures/gui/inventory/inv_itemlist_border_CT.png"),
@@ -27,6 +28,10 @@ public class GuiFancyFrameLayout extends RenderableBase {
 
     public GuiFancyFrameLayout(RenderableBase parent) {
         this.parent = parent;
+    }
+
+    public void setPadding(int padding) {
+        this.padding = padding;
     }
 
     public GuiFancyFrameLayout set(RenderableBase element) {
@@ -63,88 +68,18 @@ public class GuiFancyFrameLayout extends RenderableBase {
         VertexBuffer vb = tess.getBuffer();
         Minecraft mc = Minecraft.getMinecraft();
         float tmp;
-        mc.getTextureManager().bindTexture(paper_bg);
-        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vb.pos(left, bottom, 0).tex(0, 1).endVertex();
-        vb.pos(right, bottom, 0).tex(1, 1).endVertex();
-        vb.pos(right, top, 0).tex(1, 0).endVertex();
-        vb.pos(left, top, 0).tex(0, 0).endVertex();
-        tess.draw();
 
-        //LT
-        mc.getTextureManager().bindTexture(inv_itemlist_border_LT);
-        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vb.pos(left, top + frameSize, 0).tex(0, 1).endVertex();
-        vb.pos(left + frameSize, top + frameSize, 0).tex(1, 1).endVertex();
-        vb.pos(left + frameSize, top, 0).tex(1, 0).endVertex();
-        vb.pos(left, top, 0).tex(0, 0).endVertex();
-        tess.draw();
-
-        //CT
-        tmp = Math.round((right - left - 2 * frameSize) / frameSize);
-        mc.getTextureManager().bindTexture(inv_itemlist_border_CT);
-        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vb.pos(left + frameSize, top + frameSize, 0).tex(0, 1).endVertex();
-        vb.pos(right - frameSize, top + frameSize, 0).tex(tmp, 1).endVertex();
-        vb.pos(right - frameSize, top, 0).tex(tmp, 0).endVertex();
-        vb.pos(left + frameSize, top, 0).tex(0, 0).endVertex();
-        tess.draw();
-
-        //CB
-        mc.getTextureManager().bindTexture(inv_itemlist_border_CB);
-        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vb.pos(left + frameSize, bottom, 0).tex(0, 1).endVertex();
-        vb.pos(right - frameSize, bottom, 0).tex(tmp, 1).endVertex();
-        vb.pos(right - frameSize, bottom - frameSize, 0).tex(tmp, 0).endVertex();
-        vb.pos(left + frameSize, bottom - frameSize, 0).tex(0, 0).endVertex();
-        tess.draw();
-
-        //RT
-        mc.getTextureManager().bindTexture(inv_itemlist_border_RT);
-        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vb.pos(right - frameSize, top + frameSize, 0).tex(0, 1).endVertex();
-        vb.pos(right, top + frameSize, 0).tex(1, 1).endVertex();
-        vb.pos(right, top, 0).tex(1, 0).endVertex();
-        vb.pos(right - frameSize, top, 0).tex(0, 0).endVertex();
-        tess.draw();
-
-        //LC
-        tmp = Math.round((bottom - top - 2 * frameSize) / frameSize);
-        mc.getTextureManager().bindTexture(inv_itemlist_border_LC);
-        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vb.pos(left, bottom - frameSize, 0).tex(0, tmp).endVertex();
-        vb.pos(left + frameSize, bottom - frameSize, 0).tex(1, tmp).endVertex();
-        vb.pos(left + frameSize, top + frameSize, 0).tex(1, 0).endVertex();
-        vb.pos(left, top + frameSize, 0).tex(0, 0).endVertex();
-        tess.draw();
-
-        //RC
-        mc.getTextureManager().bindTexture(inv_itemlist_border_RC);
-        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vb.pos(right - frameSize, bottom - frameSize, 0).tex(0, tmp).endVertex();
-        vb.pos(right, bottom - frameSize, 0).tex(1, tmp).endVertex();
-        vb.pos(right, top + frameSize, 0).tex(1, 0).endVertex();
-        vb.pos(right - frameSize, top + frameSize, 0).tex(0, 0).endVertex();
-        tess.draw();
-
-        //LB
-        mc.getTextureManager().bindTexture(inv_itemlist_border_LB);
-        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vb.pos(left, bottom, 0).tex(0, 1).endVertex();
-        vb.pos(left + frameSize, bottom, 0).tex(1, 1).endVertex();
-        vb.pos(left + frameSize, bottom - frameSize, 0).tex(1, 0).endVertex();
-        vb.pos(left, bottom - frameSize, 0).tex(0, 0).endVertex();
-        tess.draw();
-
-        //RB
-        mc.getTextureManager().bindTexture(inv_itemlist_border_RB);
-        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vb.pos(right - frameSize, bottom, 0).tex(0, 1).endVertex();
-        vb.pos(right, bottom, 0).tex(1, 1).endVertex();
-        vb.pos(right, bottom - frameSize, 0).tex(1, 0).endVertex();
-        vb.pos(right - frameSize, bottom - frameSize, 0).tex(0, 0).endVertex();
-        tess.draw();
-
+        drawTexturedRect(left, top, right, bottom, paper_bg);
+        drawTexturedRect(left, top, left + frameSize, top + frameSize, inv_itemlist_border_LT);
+        tmp = (right - left - 2 * frameSize) / 22.75f / frameSize;
+        drawTexturedRect(left + frameSize, top, right - frameSize, top + frameSize, tmp, 1, inv_itemlist_border_CT);
+        drawTexturedRect(left + frameSize, bottom - frameSize, right - frameSize, bottom, tmp, 1, inv_itemlist_border_CB);
+        drawTexturedRect(right - frameSize, top, right, top + frameSize, inv_itemlist_border_RT);
+        tmp = (bottom - top - 2 * frameSize) / 22.75f / frameSize;
+        drawTexturedRect(left, top + frameSize, left + frameSize, bottom - frameSize, 1, tmp, inv_itemlist_border_LC);
+        drawTexturedRect(right - frameSize, top + frameSize, right, bottom - frameSize, 1, tmp, inv_itemlist_border_RC);
+        drawTexturedRect(left, bottom - frameSize, left + frameSize, bottom, inv_itemlist_border_LB);
+        drawTexturedRect(right - frameSize, bottom - frameSize, right, bottom, inv_itemlist_border_RB);
         element.draw(mouseX, mouseY);
     }
 
