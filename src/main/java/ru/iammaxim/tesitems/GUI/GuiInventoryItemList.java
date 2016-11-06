@@ -22,7 +22,10 @@ import ru.iammaxim.tesitems.Items.ItemWeightManager;
 import ru.iammaxim.tesitems.Items.Weapon;
 import ru.iammaxim.tesitems.TESItems;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by maxim on 7/26/16 at 5:24 PM.
@@ -36,22 +39,13 @@ public class GuiInventoryItemList {
             width = 390,
             scrollBarSize = 16,
             borderSize = 10,
-            nameWidth = 190,
+            nameWidth = 200,
             valueWidth = 40,
             weightWidth = 40,
             damageWidth = 40,
             durabilityWidth = 40,
             topIconsHeight = 24,
             textColor = 0xff481f09;
-    private final int screenWidth;
-    private final int screenHeight;
-    private final int top;
-    private final int bottom;
-    private final int right;
-    private final int left;
-    private final int slotHeight;
-    private final Minecraft client;
-    int scale;
     private static ResourceLocation
             inv_itemlist_bg = new ResourceLocation("tesitems:textures/gui/inventory/inv_itemlist_bg.png"),
             inv_itemlist_border_LT = new ResourceLocation("tesitems:textures/gui/inventory/inv_itemlist_border_LT.png"),
@@ -73,6 +67,15 @@ public class GuiInventoryItemList {
             icon_damage = new ResourceLocation("tesitems:textures/gui/icons/damage.png"),
             icon_durability = new ResourceLocation("tesitems:textures/gui/icons/durability.png"),
             inv_carryweight_bg = new ResourceLocation("tesitems:textures/gui/inventory/carryweight_bg.png");
+    private final int screenWidth;
+    private final int screenHeight;
+    private final int top;
+    private final int bottom;
+    private final int right;
+    private final int left;
+    private final int slotHeight;
+    private final Minecraft client;
+    int scale;
     private int mouseX;
     private int mouseY;
     private InventoryClient inv;
@@ -86,6 +89,7 @@ public class GuiInventoryItemList {
     private List<InventoryItemStack> stacks = new ArrayList<>();
     private HashMap<EntityEquipmentSlot, ItemStack> equipped = new HashMap<>();
     private float characterRotation = 0, characterRotationFactor = 1;
+    private int dividersColor = 0x60481f09;
 
     public GuiInventoryItemList(InventoryClient inv, Minecraft client) {
         ScaledResolution res = new ScaledResolution(client);
@@ -162,95 +166,65 @@ public class GuiInventoryItemList {
         clickSlot(EntityEquipmentSlot.OFFHAND, index);
     }
 
-    private void drawBackground(Tessellator tess) {
-        VertexBuffer vb = tess.getBuffer();
+    public void drawVerticalDividers() {
+        Tessellator tess = Tessellator.getInstance();
+        int l = left + nameWidth + 1;
+        RenderableBase.drawColoredRect(tess, top, l, bottom, l + 1, dividersColor);
+        l += valueWidth + 4;
+        RenderableBase.drawColoredRect(tess, top, l, bottom, l + 1, dividersColor);
+        l += weightWidth + 4;
+        RenderableBase.drawColoredRect(tess, top, l, bottom, l + 1, dividersColor);
+        l += damageWidth + 4;
+        RenderableBase.drawColoredRect(tess, top, l, bottom, l + 1, dividersColor);
+    }
+
+    private void drawBackground() {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         float tmp;
 
         //background
-        client.getTextureManager().bindTexture(inv_itemlist_bg);
-        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vb.pos(left, bottom, 0).tex(0, (float) (bottom - top) / width).endVertex();
-        vb.pos(right, bottom, 0).tex(1, (float) (bottom - top) / width).endVertex();
-        vb.pos(right, top, 0).tex(1, 0).endVertex();
-        vb.pos(left, top, 0).tex(0, 0).endVertex();
-        tess.draw();
+        drawTexturedRect(left, top, right, bottom, 1, (float) (bottom - top) / width, inv_itemlist_bg);
 
         //border
-
         //LT
-        client.getTextureManager().bindTexture(inv_itemlist_border_LT);
-        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vb.pos(left - borderSize, top, 0).tex(0, 1).endVertex();
-        vb.pos(left, top, 0).tex(1, 1).endVertex();
-        vb.pos(left, top - borderSize, 0).tex(1, 0).endVertex();
-        vb.pos(left - borderSize, top - borderSize, 0).tex(0, 0).endVertex();
-        tess.draw();
-
+        drawTexturedRect(left - borderSize, top - borderSize, left, top, inv_itemlist_border_LT);
         //CT
         tmp = Math.round((right - left) / borderSize);
-        client.getTextureManager().bindTexture(inv_itemlist_border_CT);
-        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vb.pos(left, top, 0).tex(0, 1).endVertex();
-        vb.pos(right, top, 0).tex(tmp, 1).endVertex();
-        vb.pos(right, top - borderSize, 0).tex(tmp, 0).endVertex();
-        vb.pos(left, top - borderSize, 0).tex(0, 0).endVertex();
-        tess.draw();
-
+        drawTexturedRect(left, top - borderSize, right, top, tmp, 1, inv_itemlist_border_CT);
         //CB
-        client.getTextureManager().bindTexture(inv_itemlist_border_CB);
-        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vb.pos(left, bottom + borderSize, 0).tex(0, 1).endVertex();
-        vb.pos(right, bottom + borderSize, 0).tex(tmp, 1).endVertex();
-        vb.pos(right, bottom, 0).tex(tmp, 0).endVertex();
-        vb.pos(left, bottom, 0).tex(0, 0).endVertex();
-        tess.draw();
-
+        drawTexturedRect(left, bottom, right, bottom + borderSize, tmp, 1, inv_itemlist_border_CB);
         //RT
-        client.getTextureManager().bindTexture(inv_itemlist_border_RT);
-        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vb.pos(right, top, 0).tex(0, 1).endVertex();
-        vb.pos(right + borderSize, top, 0).tex(1, 1).endVertex();
-        vb.pos(right + borderSize, top - borderSize, 0).tex(1, 0).endVertex();
-        vb.pos(right, top - borderSize, 0).tex(0, 0).endVertex();
-        tess.draw();
-
-        //LC
+        drawTexturedRect(right, top - borderSize, right + borderSize, top, inv_itemlist_border_RT);
         tmp = Math.round((bottom - top) / borderSize);
-        client.getTextureManager().bindTexture(inv_itemlist_border_LC);
-        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vb.pos(left - borderSize, bottom, 0).tex(0, tmp).endVertex();
-        vb.pos(left, bottom, 0).tex(1, tmp).endVertex();
-        vb.pos(left, top, 0).tex(1, 0).endVertex();
-        vb.pos(left - borderSize, top, 0).tex(0, 0).endVertex();
-        tess.draw();
-
+        //LC
+        drawTexturedRect(left - borderSize, top, left, bottom, 1, tmp, inv_itemlist_border_LC);
         //RC
-        client.getTextureManager().bindTexture(inv_itemlist_border_RC);
-        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vb.pos(right, bottom, 0).tex(0, tmp).endVertex();
-        vb.pos(right + borderSize, bottom, 0).tex(1, tmp).endVertex();
-        vb.pos(right + borderSize, top, 0).tex(1, 0).endVertex();
-        vb.pos(right, top, 0).tex(0, 0).endVertex();
-        tess.draw();
-
+        drawTexturedRect(right, top, right + borderSize, bottom, 1, tmp, inv_itemlist_border_RC);
         //LB
-        client.getTextureManager().bindTexture(inv_itemlist_border_LB);
-        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vb.pos(left - borderSize, bottom + borderSize, 0).tex(0, 1).endVertex();
-        vb.pos(left, bottom + borderSize, 0).tex(1, 1).endVertex();
-        vb.pos(left, bottom, 0).tex(1, 0).endVertex();
-        vb.pos(left - borderSize, bottom, 0).tex(0, 0).endVertex();
-        tess.draw();
-
+        drawTexturedRect(left - borderSize, bottom, left, bottom + borderSize, inv_itemlist_border_LB);
         //RB
-        client.getTextureManager().bindTexture(inv_itemlist_border_RB);
-        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vb.pos(right, bottom + borderSize, 0).tex(0, 1).endVertex();
-        vb.pos(right + borderSize, bottom + borderSize, 0).tex(1, 1).endVertex();
-        vb.pos(right + borderSize, bottom, 0).tex(1, 0).endVertex();
-        vb.pos(right, bottom, 0).tex(0, 0).endVertex();
-        tess.draw();
+        drawTexturedRect(right, bottom, right + borderSize, bottom + borderSize, inv_itemlist_border_RB);
+    }
+
+    public void drawTopIcons() {
+        int t = top + 8;
+        client.fontRendererObj.drawString("Name", left + (nameWidth - client.fontRendererObj.getStringWidth("Name"))/2, t, textColor);
+        t = top + 4;
+        int l = left + 8 + nameWidth;
+        int tmp;
+        GlStateManager.color(1, 1, 1, 1);
+        tmp = l + (valueWidth - 24) / 2;
+        drawTexturedRect(tmp, t, tmp + 16, t + 16, icon_value);
+        l += valueWidth + 4;
+        tmp = l + (weightWidth - 24) / 2;
+        drawTexturedRect(tmp, t, tmp + 16, t + 16, icon_carryweight);
+        l += weightWidth + 4;
+        tmp = l + (damageWidth - 24) / 2;
+        drawTexturedRect(tmp, t, tmp + 16, t + 16, icon_damage);
+        l += damageWidth + 4;
+        tmp = l + (durabilityWidth - 24) / 2;
+        drawTexturedRect(tmp, t, tmp + 16, t + 16, icon_durability);
+        RenderableBase.drawColoredRect(Tessellator.getInstance(), top + topIconsHeight - 1, left, top + topIconsHeight, right, dividersColor);
     }
 
     public boolean isEquipped(ItemStack stack) {
@@ -286,25 +260,22 @@ public class GuiInventoryItemList {
         if (isEquipped(stack)) {
             drawSelectedSlotBackground(entryRight, slotTop, slotBuffer, tess);
         }
+        String s;
         client.fontRendererObj.drawString(
                 client.fontRendererObj.trimStringToWidth("(" + stack.stackSize + ") " + stack.getDisplayName(), nameWidth),
                 left + 4, slotTop + 5, textColor);
-        client.fontRendererObj.drawString(
-                client.fontRendererObj.trimStringToWidth(ItemValueManager.getValue(stack) + "", valueWidth),
-                left + 8 + nameWidth, slotTop + 5, textColor);
-        client.fontRendererObj.drawString(
-                client.fontRendererObj.trimStringToWidth(ItemWeightManager.getWeight(stack) + "", weightWidth),
-                left + 12 + nameWidth + valueWidth, slotTop + 5, textColor);
+        s = client.fontRendererObj.trimStringToWidth(ItemValueManager.getValue(stack) + "", valueWidth);
+        client.fontRendererObj.drawString(s, left + 4 + nameWidth + (valueWidth - client.fontRendererObj.getStringWidth(s))/2, slotTop + 5, textColor);
+        s = client.fontRendererObj.trimStringToWidth(ItemWeightManager.getWeightString(stack), weightWidth);
+        client.fontRendererObj.drawString(s, left + 8 + nameWidth + valueWidth + (weightWidth - client.fontRendererObj.getStringWidth(s))/2, slotTop + 5, textColor);
         if (stack.getItem() instanceof Weapon) {
             Weapon weapon = (Weapon) stack.getItem();
-            client.fontRendererObj.drawString(
-                    client.fontRendererObj.trimStringToWidth(weapon.getDamageVsEntity() + "", damageWidth),
-                    left + 16 + nameWidth + valueWidth + weightWidth, slotTop + 5, textColor);
+            s = client.fontRendererObj.trimStringToWidth(weapon.getDamageVsEntity() + "", damageWidth);
+            client.fontRendererObj.drawString(s, left + 12 + nameWidth + valueWidth + weightWidth + (damageWidth - client.fontRendererObj.getStringWidth(s))/2, slotTop + 5, textColor);
         }
         if (stack.isItemStackDamageable()) {
-            client.fontRendererObj.drawString(
-                    client.fontRendererObj.trimStringToWidth(100 * (1 - (float)stack.getItemDamage()/stack.getMaxDamage()) + "", durabilityWidth),
-                    left + 20 + nameWidth + valueWidth + weightWidth + damageWidth, slotTop + 5, textColor);
+            s = client.fontRendererObj.trimStringToWidth((int)(100 * (1 - (float) stack.getItemDamage() / stack.getMaxDamage())) + "", durabilityWidth);
+            client.fontRendererObj.drawString(s, left + 16 + nameWidth + valueWidth + weightWidth + damageWidth + (durabilityWidth - client.fontRendererObj.getStringWidth(s))/2, slotTop + 5, textColor);
         }
     }
 
@@ -352,12 +323,14 @@ public class GuiInventoryItemList {
         int posX = right + (screenWidth - right) / 2, posY = screenHeight / 2 + scale * 2 - (int) (screenHeight * 0.3f);
         drawEntityOnScreen(posX, posY, scale, characterRotation, client.thePlayer);
         drawCarryweight(tess);
-        drawBackground(tess);
+        drawBackground();
+        drawTopIcons();
+        drawVerticalDividers();
 
         boolean isHovering = mouseX >= left && mouseX <= left + width && mouseY >= top && mouseY <= bottom;
         int listLength = this.getSize();
         int scrollBarRight = left + width;
-        int scrollBarLeft = scrollBarRight - scrollBarSize/2;
+        int scrollBarLeft = scrollBarRight - scrollBarSize / 2;
         int entryLeft = this.left;
         int entryRight = scrollBarLeft - 1;
         int viewHeight = this.bottom - this.top - topIconsHeight;
@@ -460,37 +433,10 @@ public class GuiInventoryItemList {
 
             //draw scrollbar
             GlStateManager.color(1, 1, 1, 1);
-            client.getTextureManager().bindTexture(inv_scrollbar_bg_top);
-            worldr.begin(7, DefaultVertexFormats.POSITION_TEX);
-            worldr.pos(scrollBarLeft, top + topIconsHeight + scrollBarSize, 0.0D).tex(0.0D, 1.0D).endVertex();
-            worldr.pos(scrollBarRight, top + topIconsHeight + scrollBarSize, 0.0D).tex(1.0D, 1.0D).endVertex();
-            worldr.pos(scrollBarRight, top + topIconsHeight, 0.0D).tex(1.0D, 0.0D).endVertex();
-            worldr.pos(scrollBarLeft, top + topIconsHeight, 0.0D).tex(0.0D, 0.0D).endVertex();
-            tess.draw();
-
-            client.getTextureManager().bindTexture(inv_scrollbar_bg_center);
-            worldr.begin(7, DefaultVertexFormats.POSITION_TEX);
-            worldr.pos(scrollBarLeft, bottom - scrollBarSize, 0.0D).tex(0.0D, 1.0D).endVertex();
-            worldr.pos(scrollBarRight, bottom - scrollBarSize, 0.0D).tex(1.0D, 1.0D).endVertex();
-            worldr.pos(scrollBarRight, top + topIconsHeight + scrollBarSize, 0.0D).tex(1.0D, 0.0D).endVertex();
-            worldr.pos(scrollBarLeft, top + topIconsHeight + scrollBarSize, 0.0D).tex(0.0D, 0.0D).endVertex();
-            tess.draw();
-
-            client.getTextureManager().bindTexture(inv_scrollbar_bg_bottom);
-            worldr.begin(7, DefaultVertexFormats.POSITION_TEX);
-            worldr.pos(scrollBarLeft, bottom, 0.0D).tex(0.0D, 1.0D).endVertex();
-            worldr.pos(scrollBarRight, bottom, 0.0D).tex(1.0D, 1.0D).endVertex();
-            worldr.pos(scrollBarRight, bottom - scrollBarSize, 0.0D).tex(1.0D, 0.0D).endVertex();
-            worldr.pos(scrollBarLeft, bottom - scrollBarSize, 0.0D).tex(0.0D, 0.0D).endVertex();
-            tess.draw();
-
-            client.getTextureManager().bindTexture(inv_scrollbar);
-            worldr.begin(7, DefaultVertexFormats.POSITION_TEX);
-            worldr.pos(scrollBarLeft, barBottom, 0.0D).tex(0.0D, 1.0D).endVertex();
-            worldr.pos(scrollBarRight, barBottom, 0.0D).tex(1.0D, 1.0D).endVertex();
-            worldr.pos(scrollBarRight, barTop, 0.0D).tex(1.0D, 0.0D).endVertex();
-            worldr.pos(scrollBarLeft, barTop, 0.0D).tex(0.0D, 0.0D).endVertex();
-            tess.draw();
+            drawTexturedRect(scrollBarLeft, top + topIconsHeight, scrollBarRight, top + topIconsHeight + scrollBarSize, inv_scrollbar_bg_top);
+            drawTexturedRect(scrollBarLeft, top + topIconsHeight + scrollBarSize, scrollBarRight, bottom - scrollBarSize, inv_scrollbar_bg_center);
+            drawTexturedRect(scrollBarLeft, bottom - scrollBarSize, scrollBarRight, bottom, inv_scrollbar_bg_bottom);
+            drawTexturedRect(scrollBarLeft, barTop, scrollBarRight, barBottom, inv_scrollbar);
         }
         GlStateManager.shadeModel(GL11.GL_FLAT);
         GlStateManager.enableAlpha();
@@ -566,5 +512,29 @@ public class GuiInventoryItemList {
         GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
         GlStateManager.disableTexture2D();
         GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+    }
+
+    public void drawTexturedRect(int left, int top, int right, int bottom, ResourceLocation texture) {
+        Tessellator tess = Tessellator.getInstance();
+        VertexBuffer vb = tess.getBuffer();
+        client.getTextureManager().bindTexture(texture);
+        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
+        vb.pos(left, bottom, 0).tex(0, 1).endVertex();
+        vb.pos(right, bottom, 0).tex(1, 1).endVertex();
+        vb.pos(right, top, 0).tex(1, 0).endVertex();
+        vb.pos(left, top, 0).tex(0, 0).endVertex();
+        tess.draw();
+    }
+
+    public void drawTexturedRect(int left, int top, int right, int bottom, float UVx, float UVy, ResourceLocation texture) {
+        Tessellator tess = Tessellator.getInstance();
+        VertexBuffer vb = tess.getBuffer();
+        client.getTextureManager().bindTexture(texture);
+        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
+        vb.pos(left, bottom, 0).tex(0, UVy).endVertex();
+        vb.pos(right, bottom, 0).tex(UVx, UVy).endVertex();
+        vb.pos(right, top, 0).tex(UVx, 0).endVertex();
+        vb.pos(left, top, 0).tex(0, 0).endVertex();
+        tess.draw();
     }
 }

@@ -46,9 +46,9 @@ public class GuiButton extends RenderableBase {
         Tessellator tess = Tessellator.getInstance();
 
         if (clicked)
-            drawColoredRect(tess, top, left, bottom, right, 0.5f, 0.5f, 0.5f, 0.5f);
+            drawColoredRect(tess, top, left, bottom, right, 0x7F7F7F7F);
         else
-            drawColoredRect(tess, top, left, bottom, right, 0.3f, 0.3f, 0.3f, 0.5f);
+            drawColoredRect(tess, top, left, bottom, right, 0x7F4C4C4C);
         Minecraft.getMinecraft().fontRendererObj.drawString(text, left + padding, top + padding, color);
         clicked = false;
     }

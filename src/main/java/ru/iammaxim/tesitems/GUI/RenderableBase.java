@@ -57,17 +57,24 @@ public abstract class RenderableBase {
 
     public abstract void draw(int mouseX, int mouseY);
 
-    public void drawColoredRect(Tessellator tess, int top, int left, int bottom, int right, float red, float green, float blue, float alpha) {
+    public static void drawColoredRect(Tessellator tess, int top, int left, int bottom, int right, int color) {
+        float b = (float)(color & 0xFF)/255;
+        float g = (float)((color >> 8) & 0xFF)/255;
+        float r = (float)((color >> 16) & 0xFF)/255;
+        float a = (float)((color >> 24) & 0xFF)/255;
+        GlStateManager.enableBlend();
+        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GlStateManager.color(1, 1, 1, 1);
-        VertexBuffer b = tess.getBuffer();
-        b.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-        b.pos(left, bottom, 0.0D).tex(0, 1).color(red, green, blue, alpha).endVertex();
-        b.pos(right, bottom, 0.0D).tex(1, 1).color(red, green, blue, alpha).endVertex();
-        b.pos(right, top, 0.0D).tex(1, 0).color(red, green, blue, alpha).endVertex();
-        b.pos(left, top, 0.0D).tex(0, 0).color(red, green, blue, alpha).endVertex();
+        GlStateManager.color(r, g, b, a);
+        VertexBuffer buf = tess.getBuffer();
+        buf.begin(7, DefaultVertexFormats.POSITION);
+        buf.pos(left, bottom, 0.0D).endVertex();
+        buf.pos(right, bottom, 0.0D).endVertex();
+        buf.pos(right, top, 0.0D).endVertex();
+        buf.pos(left, top, 0.0D).endVertex();
         tess.draw();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GlStateManager.disableBlend();
     }
 
     public void keyTyped(char typedChar, int keyCode) {}

@@ -3,6 +3,7 @@ package ru.iammaxim.tesitems.GUI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.text.TextComponentString;
@@ -12,6 +13,7 @@ import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.TESItems;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,7 +22,7 @@ import java.util.List;
  */
 public class GuiNPCEditor extends GuiScreen {
     private static final int paddingTop = 30, paddingBottom = 30;
-
+    GuiFancyFrameLayout container;
     GuiVerticalLinearLayout layout;
     private ScaledResolution res;
     private EntityPlayer player;
@@ -39,58 +41,63 @@ public class GuiNPCEditor extends GuiScreen {
         npc = cap.getLatestNPC();
         res = new ScaledResolution(Minecraft.getMinecraft());
         List<Faction> factions = npc.getFactions();
-        Collections.copy(factions, factions);
-        if (factions != npc.getFactions()) {
-            System.out.println("cloning good");
-        }
 
-        layout = new GuiVerticalLinearLayout(null);
+        container = new GuiFancyFrameLayout(null);
+        layout = new GuiVerticalLinearLayout(container);
         layout.width = 300;
         layout.setSpace(4);
         layout.setPadding(6, 6, 6, 6);
+        //layout.setBackgroundColor(0x90000000);
 
         //NPC name
-        GuiTextField nameField = new GuiTextField(layout, "NPC name").setText(npc.getName());
+        GuiTextField nameField = new GuiTextField(layout, I18n.format("tesitems:NPCEditor.npcName")).setText(npc.getName());
         layout.add(nameField);
 
         //Factions
         layout.add(new GuiDivider(layout));
-        layout.add(new GuiText(layout, "Factions").centerHorizontally(true));
+        layout.add(new GuiText(layout, I18n.format("tesitems:NPCEditor.factions")).centerHorizontally(true));
         GuiVerticalLinearLayout factionsLayout = new GuiVerticalLinearLayout(layout);
         factionsLayout.width = 270;
         factionsLayout.setSpace(4);
         factionsLayout.centerHorizontally(true);
 
-        factionsLayout.add(new GuiTextField(factionsLayout, "Faction ID"));
-        factionsLayout.add(new GuiText(factionsLayout, "Name of faction will be here if ID is right"));
-
+        factionsLayout.add(new GuiTextField(factionsLayout, I18n.format("tesitems:NPCEditor.factionID")));
+        factionsLayout.add(new GuiText(factionsLayout, I18n.format("tesitems:NPCEditor.factionLabel")));
         factionsLayout.add(new GuiDivider(factionsLayout));
-
-        factionsLayout.add(new GuiTextField(factionsLayout, "Faction ID"));
-        factionsLayout.add(new GuiText(factionsLayout, "Name of faction will be here if ID is right"));
 
         layout.add(factionsLayout);
 
-        layout.add(new GuiButton(layout, "Add faction").setOnClick(() -> {
+        layout.add(new GuiButton(layout, I18n.format("tesitems:NPCEditor.addFaction")).setOnClick(() -> {
             //factions.add(null);
+            factionsLayout.add(new GuiTextField(factionsLayout, I18n.format("tesitems:NPCEditor.factionID")));
+            factionsLayout.add(new GuiText(factionsLayout, I18n.format("tesitems:NPCEditor.factionLabel")));
+            factionsLayout.add(new GuiDivider(factionsLayout));
+            layout.doLayout((res.getScaledHeight() - layout.getHeight()) / 2, layout.left);
+            container.matchToChild();
+            container.calculateBounds((res.getScaledHeight() - container.getHeight())/2, (res.getScaledWidth() - container.getWidth())/2);
+//            mc.displayGuiScreen(new GuiAlertDialog("Test alert dialog"));
         }).centerHorizontally(true));
 
         //Save button
         layout.add(new GuiDivider(layout));
-        layout.add(new GuiButton(layout, "Save").setOnClick(() -> {
+        layout.add(new GuiButton(layout, I18n.format("tesitems:NPCEditor.save")).setOnClick(() -> {
             npc.setName(nameField.getText());
         }));
 
         int w = layout.calculateWidth();
         int left = (res.getScaledWidth() - w) / 2;
-        int top = paddingTop;
+        int top = (res.getScaledHeight() - layout.getHeight()) / 2;
         layout.setBounds(top, left, res.getScaledHeight() - paddingBottom, left + w);
         layout.doLayout(top, left);
+
+        container.set(layout);
+        container.matchToChild();
+        container.calculateBounds((res.getScaledHeight() - container.getHeight())/2, (res.getScaledWidth() - container.getWidth())/2);
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        layout.draw(mouseX, mouseY);
+        container.draw(mouseX, mouseY);
     }
 
     @Override

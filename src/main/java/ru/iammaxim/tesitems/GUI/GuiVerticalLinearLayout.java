@@ -16,6 +16,11 @@ public class GuiVerticalLinearLayout extends RenderableBase {
     private int space = 0;
     private int minWidth = 0;
     private int scroll = 0;
+    private int bgColor;
+
+    public void setBackgroundColor(int color) {
+        this.bgColor = color;
+    }
 
     @Override
     public void checkClick(int mouseX, int mouseY) {
@@ -46,8 +51,9 @@ public class GuiVerticalLinearLayout extends RenderableBase {
         resize();
     }
 
-    public void add(RenderableBase element) {
+    public GuiVerticalLinearLayout add(RenderableBase element) {
         elements.add(element);
+        return this;
     }
 
     public void setSpace(int space) {
@@ -89,6 +95,15 @@ public class GuiVerticalLinearLayout extends RenderableBase {
         right = left + getWidth();
     }
 
+    @Override
+    public int getHeight() {
+        int h = 0;
+        for (RenderableBase e : elements) {
+            h += e.getHeight() + space;
+        }
+        return h - space;
+    }
+
     public void doLayout(int top, int left) {
         this.top = top;
         this.left = left;
@@ -128,7 +143,7 @@ public class GuiVerticalLinearLayout extends RenderableBase {
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         GL11.glScissor((int)((left - paddingLeft) * scaleX), (int)(mc.displayHeight - (bottom + paddingBottom) * scaleY), (int)((width + paddingLeft + paddingRight) * scaleX), (int)((height + paddingTop + paddingBottom) * scaleY));
 
-        drawColoredRect(tess, top - paddingTop, left - paddingLeft, bottom + paddingBottom, right + paddingBottom, 0, 0, 0, 0.5f);
+        drawColoredRect(tess, top - paddingTop, left - paddingLeft, bottom + paddingBottom, right + paddingBottom, bgColor);
         elements.forEach(e -> e.draw(mouseX, mouseY));
 
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
@@ -137,5 +152,9 @@ public class GuiVerticalLinearLayout extends RenderableBase {
     @Override
     public void keyTyped(char typedChar, int keyCode) {
         elements.forEach(e -> e.keyTyped(typedChar, keyCode));
+    }
+
+    public int getBackgroundColor() {
+        return bgColor;
     }
 }

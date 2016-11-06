@@ -16,6 +16,6 @@ public class GuiDivider extends RenderableBase {
 
     @Override
     public void draw(int mouseX, int mouseY) {
-        drawColoredRect(Tessellator.getInstance(), top + padding, left + padding, bottom - padding, right - padding, 0.3f, 0.3f, 0.3f, 1);
+        drawColoredRect(Tessellator.getInstance(), top + padding, left + padding, bottom - padding, right - padding, 0xFF4C4C4C);
     }
 }

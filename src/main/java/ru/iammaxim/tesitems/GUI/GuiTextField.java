@@ -91,9 +91,9 @@ public class GuiTextField extends RenderableBase {
     public void draw(int mouseX, int mouseY) {
         Tessellator tess = Tessellator.getInstance();
         if (!focused)
-            drawColoredRect(tess, top, left, bottom, right, 0.2f, 0.2f, 0.2f, 1);
+            drawColoredRect(tess, top, left, bottom, right, 0xFF333333);
         else
-            drawColoredRect(tess, top, left, bottom, right, 0.5f, 0.5f, 0.5f, 1);
+            drawColoredRect(tess, top, left, bottom, right, 0xFF7F7F7F);
         FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
         if (text.isEmpty()) //draw hint
             fontRenderer.drawString(hint, left + padding, top + padding, hintColor);

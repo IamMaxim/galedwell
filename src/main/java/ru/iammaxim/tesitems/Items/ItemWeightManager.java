@@ -21,4 +21,11 @@ public class ItemWeightManager {
             return w * is.stackSize;
         else return 1 * is.stackSize;
     }
+
+    public static String getWeightString(ItemStack is) {
+        float w = getWeight(is);
+        if (w == (int)w)
+            return String.valueOf((int)w);
+        else return String.valueOf(w);
+    }
 }
