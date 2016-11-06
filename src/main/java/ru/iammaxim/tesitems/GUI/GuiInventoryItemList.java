@@ -32,7 +32,7 @@ import java.util.List;
  */
 public class GuiInventoryItemList {
     private static final int
-            entryHeight = 20,
+            entryHeight = 26,
             paddingTop = 20,
             paddingBottom = 20,
             paddingLeft = 30,
@@ -183,7 +183,7 @@ public class GuiInventoryItemList {
         float tmp;
 
         //background
-        drawTexturedRect(left, top, right, bottom, 1, (float) (bottom - top) / width, inv_itemlist_bg);
+        drawTexturedRect(left, top, right, bottom, 0, scrollDistance/width, 1, (float) (bottom - top) / width + scrollDistance/width, inv_itemlist_bg);
 
         //border
         //LT
@@ -208,7 +208,7 @@ public class GuiInventoryItemList {
 
     public void drawTopIcons() {
         int t = top + 8;
-        client.fontRendererObj.drawString("Name", left + (nameWidth - client.fontRendererObj.getStringWidth("Name"))/2, t, textColor);
+        TESItems.fontRenderer.drawString("Name", left + (nameWidth - TESItems.fontRenderer.getStringWidth("Name"))/2, t, textColor);
         t = top + 4;
         int l = left + 8 + nameWidth;
         int tmp;
@@ -261,21 +261,21 @@ public class GuiInventoryItemList {
             drawSelectedSlotBackground(entryRight, slotTop, slotBuffer, tess);
         }
         String s;
-        client.fontRendererObj.drawString(
-                client.fontRendererObj.trimStringToWidth("(" + stack.stackSize + ") " + stack.getDisplayName(), nameWidth),
-                left + 4, slotTop + 5, textColor);
-        s = client.fontRendererObj.trimStringToWidth(ItemValueManager.getValue(stack) + "", valueWidth);
-        client.fontRendererObj.drawString(s, left + 4 + nameWidth + (valueWidth - client.fontRendererObj.getStringWidth(s))/2, slotTop + 5, textColor);
-        s = client.fontRendererObj.trimStringToWidth(ItemWeightManager.getWeightString(stack), weightWidth);
-        client.fontRendererObj.drawString(s, left + 8 + nameWidth + valueWidth + (weightWidth - client.fontRendererObj.getStringWidth(s))/2, slotTop + 5, textColor);
+        TESItems.fontRenderer.drawString(
+                TESItems.fontRenderer.trimStringToWidth("(" + stack.stackSize + ") " + stack.getDisplayName(), nameWidth),
+                left + 4, slotTop + 8, textColor);
+        s = TESItems.fontRenderer.trimStringToWidth(ItemValueManager.getValue(stack) + "", valueWidth);
+        TESItems.fontRenderer.drawString(s, left + 4 + nameWidth + (valueWidth - TESItems.fontRenderer.getStringWidth(s))/2, slotTop + 8, textColor);
+        s = TESItems.fontRenderer.trimStringToWidth(ItemWeightManager.getWeightString(stack), weightWidth);
+        TESItems.fontRenderer.drawString(s, left + 8 + nameWidth + valueWidth + (weightWidth - TESItems.fontRenderer.getStringWidth(s))/2, slotTop + 8, textColor);
         if (stack.getItem() instanceof Weapon) {
             Weapon weapon = (Weapon) stack.getItem();
-            s = client.fontRendererObj.trimStringToWidth(weapon.getDamageVsEntity() + "", damageWidth);
-            client.fontRendererObj.drawString(s, left + 12 + nameWidth + valueWidth + weightWidth + (damageWidth - client.fontRendererObj.getStringWidth(s))/2, slotTop + 5, textColor);
+            s = TESItems.fontRenderer.trimStringToWidth(weapon.getDamageVsEntity() + "", damageWidth);
+            TESItems.fontRenderer.drawString(s, left + 12 + nameWidth + valueWidth + weightWidth + (damageWidth - TESItems.fontRenderer.getStringWidth(s))/2, slotTop + 8, textColor);
         }
         if (stack.isItemStackDamageable()) {
-            s = client.fontRendererObj.trimStringToWidth((int)(100 * (1 - (float) stack.getItemDamage() / stack.getMaxDamage())) + "", durabilityWidth);
-            client.fontRendererObj.drawString(s, left + 16 + nameWidth + valueWidth + weightWidth + damageWidth + (durabilityWidth - client.fontRendererObj.getStringWidth(s))/2, slotTop + 5, textColor);
+            s = TESItems.fontRenderer.trimStringToWidth((int)(100 * (1 - (float) stack.getItemDamage() / stack.getMaxDamage())) + "", durabilityWidth);
+            TESItems.fontRenderer.drawString(s, left + 16 + nameWidth + valueWidth + weightWidth + damageWidth + (durabilityWidth - TESItems.fontRenderer.getStringWidth(s))/2, slotTop + 8, textColor);
         }
     }
 
@@ -466,7 +466,7 @@ public class GuiInventoryItemList {
         vb.pos(l + 4, t + 4, 0.0D).tex(0.0D, 0.0D).endVertex();
         tess.draw();
 
-        client.fontRendererObj.drawString(inv.carryweight + "/" + TESItems.getCapability(inv.player).getMaxCarryWeight(), l + 24, t + 8, textColor);
+        TESItems.fontRenderer.drawString((int)(inv.carryweight) + "/" + (int)(TESItems.getCapability(inv.player).getMaxCarryWeight()), l + 24, t + 8, textColor);
     }
 
     private void clampScale() {
@@ -527,6 +527,7 @@ public class GuiInventoryItemList {
     }
 
     public void drawTexturedRect(int left, int top, int right, int bottom, float UVx, float UVy, ResourceLocation texture) {
+        GlStateManager.enableTexture2D();
         Tessellator tess = Tessellator.getInstance();
         VertexBuffer vb = tess.getBuffer();
         client.getTextureManager().bindTexture(texture);
@@ -535,6 +536,19 @@ public class GuiInventoryItemList {
         vb.pos(right, bottom, 0).tex(UVx, UVy).endVertex();
         vb.pos(right, top, 0).tex(UVx, 0).endVertex();
         vb.pos(left, top, 0).tex(0, 0).endVertex();
+        tess.draw();
+    }
+
+    public void drawTexturedRect(int left, int top, int right, int bottom, float UVxStart, float UVyStart, float UVxEnd, float UVyEnd, ResourceLocation texture) {
+        GlStateManager.enableTexture2D();
+        Tessellator tess = Tessellator.getInstance();
+        VertexBuffer vb = tess.getBuffer();
+        client.getTextureManager().bindTexture(texture);
+        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
+        vb.pos(left, bottom, 0).tex(UVxStart, UVyEnd).endVertex();
+        vb.pos(right, bottom, 0).tex(UVxEnd, UVyEnd).endVertex();
+        vb.pos(right, top, 0).tex(UVxEnd, UVyStart).endVertex();
+        vb.pos(left, top, 0).tex(UVxStart, UVyStart).endVertex();
         tess.draw();
     }
 }

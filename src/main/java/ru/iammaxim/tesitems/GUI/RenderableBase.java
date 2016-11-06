@@ -80,9 +80,10 @@ public abstract class RenderableBase {
     }
 
     public void drawTexturedRect(int left, int top, int right, int bottom, ResourceLocation texture) {
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GlStateManager.color(1, 1, 1, 1);
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        GlStateManager.color(1, 1, 1, 1);
         Tessellator tess = Tessellator.getInstance();
         VertexBuffer vb = tess.getBuffer();
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
@@ -93,9 +94,12 @@ public abstract class RenderableBase {
         vb.pos(left, top, 0).tex(0, 0).endVertex();
         tess.draw();
         GlStateManager.disableBlend();
+        GL11.glDisable(GL11.GL_TEXTURE_2D);;
     }
 
     public void drawTexturedRect(int left, int top, int right, int bottom, float UVx, float UVy, ResourceLocation texture) {
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GlStateManager.color(1, 1, 1, 1);
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         Tessellator tess = Tessellator.getInstance();
@@ -108,6 +112,7 @@ public abstract class RenderableBase {
         vb.pos(left, top, 0).tex(0, 0).endVertex();
         tess.draw();
         GlStateManager.disableBlend();
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
     }
 
     public void keyTyped(char typedChar, int keyCode) {}

@@ -4,6 +4,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import org.lwjgl.input.Keyboard;
+import ru.iammaxim.tesitems.GUI.Fonts.UnicodeFontRenderer;
+import ru.iammaxim.tesitems.TESItems;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -48,12 +50,12 @@ public class GuiTextField extends RenderableBase {
         this.hint = hint;
     }
 
-    public void setLineSpacing(int spacing) {
-        this.lineSpacing = spacing;
-    }
-
     public int getLineSpacing() {
         return lineSpacing;
+    }
+
+    public void setLineSpacing(int spacing) {
+        this.lineSpacing = spacing;
     }
 
     public GuiTextField setOnType(Consumer<GuiTextField> onType) {
@@ -69,7 +71,7 @@ public class GuiTextField extends RenderableBase {
                     text = text.substring(0, text.length() - 1);
             } else if (keyCode == Keyboard.KEY_RETURN) {
                 text = text + '\n';
-            } else {
+            } else if (UnicodeFontRenderer.alphabet.contains(typedChar + "")) {
                 text = text + typedChar;
             }
             FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
@@ -94,7 +96,7 @@ public class GuiTextField extends RenderableBase {
             drawColoredRect(tess, top, left, bottom, right, 0xFF333333);
         else
             drawColoredRect(tess, top, left, bottom, right, 0xFF7F7F7F);
-        FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
+        FontRenderer fontRenderer = TESItems.fontRenderer;
         if (text.isEmpty()) //draw hint
             fontRenderer.drawString(hint, left + padding, top + padding, hintColor);
         else //draw text

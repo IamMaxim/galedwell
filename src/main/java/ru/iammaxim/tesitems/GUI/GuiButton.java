@@ -3,6 +3,7 @@ package ru.iammaxim.tesitems.GUI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
+import ru.iammaxim.tesitems.TESItems;
 
 /**
  * Created by maxim on 11/6/16 at 12:35 AM.
@@ -34,7 +35,7 @@ public class GuiButton extends RenderableBase {
 
     public void setText(String text) {
         this.text = text;
-        width = padding * 3 + Minecraft.getMinecraft().fontRendererObj.getStringWidth(text);
+        width = padding * 3 + TESItems.fontRenderer.getStringWidth(text);
     }
 
     @Override
@@ -56,7 +57,9 @@ public class GuiButton extends RenderableBase {
         if (mouseX > left && mouseX < right && mouseY > top && mouseY < bottom)
             hovered = true;
         drawTexturedRect(left, top, (int) (right + width * getMultiplier(width)), bottom + height, getTexture(width, clicked || hovered));
-        Minecraft.getMinecraft().fontRendererObj.drawString(text, (int) (left + padding * 1.5f), top + 4, color);
+//        TESItems.fontRenderer.drawString(text, (int) (left + padding * 1.5f), top + 4, color);
+//        TESItems.fontRenderer
+        TESItems.fontRenderer.drawString(text, (int) (left + padding * 1.5f), top + 4, color);
         clicked = false;
     }
 

@@ -45,6 +45,7 @@ import ru.iammaxim.tesitems.Blocks.mBlocks;
 import ru.iammaxim.tesitems.Commands.*;
 import ru.iammaxim.tesitems.Craft.CraftRecipe;
 import ru.iammaxim.tesitems.Craft.CraftRecipes;
+import ru.iammaxim.tesitems.GUI.Fonts.UnicodeFontRenderer;
 import ru.iammaxim.tesitems.GUI.GUIHandler;
 import ru.iammaxim.tesitems.GUI.KeyBindings;
 import ru.iammaxim.tesitems.Inventory.Inventory;
@@ -59,6 +60,11 @@ import ru.iammaxim.tesitems.Player.PlayerAttributesCapabilityProvider;
 import ru.iammaxim.tesitems.Player.PlayerAttributesStorage;
 import ru.iammaxim.tesitems.Questing.QuestManager;
 
+import java.awt.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 
 @Mod(modid = TESItems.MODID, version = TESItems.VERSION)
@@ -103,6 +109,7 @@ public class TESItems {
     public static Capability<IPlayerAttributesCapability> attributesCapability;
     @Mod.Instance
     public static TESItems instance;
+    public static UnicodeFontRenderer fontRenderer;
 
     //used for dialog camera orient
     /*
@@ -183,6 +190,14 @@ public class TESItems {
         ItemWeightManager.init();
         ItemValueManager.init();
         QuestManager.loadFromFile();
+
+        try {
+            Font font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File("oblivion.ttf")));
+            font = font.deriveFont(Font.PLAIN, 24);
+            fontRenderer = new UnicodeFontRenderer(font);
+        } catch (FontFormatException | IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @SubscribeEvent
