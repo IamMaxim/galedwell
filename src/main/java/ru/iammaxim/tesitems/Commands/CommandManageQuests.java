@@ -44,7 +44,7 @@ public class CommandManageQuests extends CommandBase {
             ((EntityPlayer) sender).addChatComponentMessage(new TextComponentString(sb.toString()));
         } else if (args[0].equals("add")) {
             Quest quest = new Quest("testQuest");
-            quest.itemsReward.add(new ItemStack(Item.getItemFromBlock(Blocks.COBBLESTONE)));
+            //quest.itemsReward.add(new ItemStack(Item.getItemFromBlock(Blocks.COBBLESTONE)));
             QuestStage stage1 = new QuestStage();
             stage1.journalLine = "journal line 1";
             stage1.targets.add(new QuestTargetGather(new ItemStack(Item.getItemFromBlock(Blocks.DIRT))));

@@ -15,6 +15,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
+import ru.iammaxim.tesitems.GUI.old.RenderableBase;
 import ru.iammaxim.tesitems.Inventory.InventoryClient;
 import ru.iammaxim.tesitems.Inventory.InventoryItemStack;
 import ru.iammaxim.tesitems.Items.ItemValueManager;

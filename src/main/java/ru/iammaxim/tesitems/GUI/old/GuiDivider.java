@@ -1,4 +1,4 @@
-package ru.iammaxim.tesitems.GUI;
+package ru.iammaxim.tesitems.GUI.old;
 
 import net.minecraft.client.renderer.Tessellator;
 

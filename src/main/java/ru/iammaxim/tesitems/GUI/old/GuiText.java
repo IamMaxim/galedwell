@@ -1,4 +1,4 @@
-package ru.iammaxim.tesitems.GUI;
+package ru.iammaxim.tesitems.GUI.old;
 
 import net.minecraft.client.Minecraft;
 import ru.iammaxim.tesitems.TESItems;
@@ -12,7 +12,7 @@ public class GuiText extends RenderableBase {
     public String text;
     public List<String> strs;
     private Minecraft mc;
-    private int lineSpacing = 4, color = 0xff481f09;
+    private int lineSpacing = 4, color = 0xffffffff;
 
     public void calculateWidth() {
         width = TESItems.fontRenderer.getStringWidth(text);

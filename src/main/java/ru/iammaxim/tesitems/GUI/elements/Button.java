@@ -1,14 +1,20 @@
-package ru.iammaxim.tesitems.GUI;
+package ru.iammaxim.tesitems.GUI.elements;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
 import ru.iammaxim.tesitems.TESItems;
 
+import java.util.function.Consumer;
+
 /**
- * Created by maxim on 11/6/16 at 12:35 AM.
+ * Created by maxim on 11/8/16 at 5:50 PM.
  */
-public class GuiButton extends RenderableBase {
+public class Button extends ElementBase {
+    public Consumer<Button> onClick;
+    private String text = "A button";
+    private int padding = 4, textColor = 0xff481f09;
+    private FontRenderer fontRenderer;
     private static ResourceLocation
             button_short = new ResourceLocation("tesitems:textures/gui/button_short.png"),
             button_short_on = new ResourceLocation("tesitems:textures/gui/button_short_on.png"),
@@ -16,38 +22,48 @@ public class GuiButton extends RenderableBase {
             button_long_on = new ResourceLocation("tesitems:textures/gui/button_long_on.png"),
             button_xtralong = new ResourceLocation("tesitems:textures/gui/button_xtralong.png"),
             button_xtralong_on = new ResourceLocation("tesitems:textures/gui/button_xtralong_on.png");
-    private String text;
-    private int padding = 6;
-    private int color = 0xff481f09;
-    private boolean clicked = false;
-    private Runnable onClick;
 
-    public GuiButton(RenderableBase parent) {
-        this.parent = parent;
-        height = 16;
-        setText("A button");
+    public Button setPadding(int padding) {
+        this.padding = padding;
+        return this;
     }
 
-    public GuiButton(RenderableBase parent, String text) {
-        this(parent);
-        setText(text);
+    public int getPadding() {
+        return padding;
     }
 
-    public void setText(String text) {
-        this.text = text;
-        width = padding * 3 + TESItems.fontRenderer.getStringWidth(text);
+    @Override
+    public int getWidth() {
+        return fontRenderer.getStringWidth(text) + 2 * padding;
+    }
+
+    @Override
+    public int getHeight() {
+        return padding * 2 + 8;
+    }
+
+    public Button(ElementBase parent) {
+        super(parent);
+        fontRenderer = TESItems.fontRenderer;
+    }
+
+    public Button setOnClick(Consumer<Button> onCLick) {
+        this.onClick = onCLick;
+        return this;
     }
 
     @Override
     public void click(int relativeX, int relativeY) {
-        clicked = true;
-        if (onClick != null)
-            onClick.run();
+        onClick.accept(this);
     }
 
-    public GuiButton setOnClick(Runnable action) {
-        onClick = action;
+    public Button setText(String text) {
+        this.text = text;
         return this;
+    }
+
+    public String getText() {
+        return text;
     }
 
     @Override
@@ -56,11 +72,8 @@ public class GuiButton extends RenderableBase {
         boolean hovered = false;
         if (mouseX > left && mouseX < right && mouseY > top && mouseY < bottom)
             hovered = true;
-        drawTexturedRect(left, top, (int) (right + width * getMultiplier(width)), bottom + height, getTexture(width, clicked || hovered));
-//        TESItems.fontRenderer.drawString(text, (int) (left + padding * 1.5f), top + 4, color);
-//        TESItems.fontRenderer
-        TESItems.fontRenderer.drawString(text, (int) (left + padding * 1.5f), top + 4, color);
-        clicked = false;
+        drawTexturedRect(tess, left, top, (int) (right + width * getMultiplier(width)), bottom + height, getTexture(width, hovered));
+        fontRenderer.drawString(text, left + padding, top + padding, textColor);
     }
 
     public float getMultiplier(int width) {

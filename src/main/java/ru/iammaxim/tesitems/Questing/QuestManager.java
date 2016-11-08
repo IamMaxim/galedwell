@@ -54,13 +54,6 @@ public class QuestManager {
                 stagesListNbt.appendTag(questStageNbt);
             }
             questTag.setTag("stages", stagesListNbt);
-            NBTTagList itemsReward = new NBTTagList();
-            for (int j = 0; j < quest.itemsReward.size(); j++) {
-                ItemStack is = quest.itemsReward.get(j);
-                itemsReward.appendTag(is.serializeNBT());
-            }
-            questTag.setTag("itemsReward", itemsReward);
-            questTag.setInteger("goldReward", quest.goldReward);
             quests.appendTag(questTag);
         }
         tagCompound.setTag("quests", quests);
@@ -100,12 +93,6 @@ public class QuestManager {
             }
             quest.stages.add(stage);
         }
-        NBTTagList itemsReward = (NBTTagList) questTag.getTag("itemsReward");
-        for (int j = 0; j < itemsReward.tagCount(); j++) {
-            ItemStack is = ItemStack.loadItemStackFromNBT(itemsReward.getCompoundTagAt(j));
-            quest.itemsReward.add(is);
-        }
-        quest.goldReward = questTag.getInteger("goldReward");
         return quest;
     }
 

@@ -14,8 +14,6 @@ public class Quest {
     public int id;
     public List<QuestStage> stages = new ArrayList<>();
     public String name;
-    public List<ItemStack> itemsReward = new ArrayList<>();
-    public int goldReward = 0;
 
     public Quest() {}
 
@@ -26,8 +24,6 @@ public class Quest {
 
     @Override
     public String toString() {
-        return "name: " + name + ",  goldReward: " + goldReward + ", " +
-                " itemsReward: [" + itemsReward.stream().map(ItemStack::toString).collect(Collectors.joining(", ")) + "], " +
-                "stages: [" + stages.stream().map(QuestStage::toString).collect(Collectors.joining(", ")) + "]";
+        return "name: " + name + ", stages: [" + stages.stream().map(QuestStage::toString).collect(Collectors.joining(", ")) + "]";
     }
 }
