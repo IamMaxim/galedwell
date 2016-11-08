@@ -73,8 +73,6 @@ public class Text extends ElementBase {
             update();
         }
 
-        drawColoredRect(Tessellator.getInstance(), left, top, right, bottom, 0x30000000);
-
         int x = left;
         int y = top;
         for (String str : strs) {

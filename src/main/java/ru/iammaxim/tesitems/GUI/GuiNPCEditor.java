@@ -44,7 +44,6 @@ public class GuiNPCEditor extends GuiScreen {
         IPlayerAttributesCapability cap = TESItems.getCapability(player);
         npc = cap.getLatestNPC();
         res = new ScaledResolution(Minecraft.getMinecraft());
-        List<Faction> factions = npc.getFactions();
 
         root = new ScreenCenteredLayout(null);
         FancyFrameLayout fancyFrameLayout = new FancyFrameLayout(root);
@@ -89,9 +88,7 @@ public class GuiNPCEditor extends GuiScreen {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        if (Mouse.isButtonDown(0)) {
-            root.checkClick(mouseX, mouseY);
-        }
+        root.checkClick(mouseX, mouseY);
         root.draw(mouseX, mouseY);
     }
 

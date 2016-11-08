@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -49,18 +50,22 @@ public abstract class ElementBase {
     }
 
     public void checkClick(int mouseX, int mouseY) {
+        boolean buttonDown = Mouse.isButtonDown(0);
         if (mouseX > left && mouseX < right && mouseY > top && mouseY < bottom) {
             if (!focused)
                 onFocus();
             focused = true;
-            if (!wasClicked)
-                click(mouseX - left, mouseY - top);
-            wasClicked = true;
+            if (buttonDown) {
+                if (!wasClicked)
+                    click(mouseX - left, mouseY - top);
+                wasClicked = true;
+            }
         } else {
             if (focused)
                 onFocusLost();
             focused = false;
-            wasClicked = false;
+            if (!buttonDown)
+                wasClicked = false;
         }
     }
 
