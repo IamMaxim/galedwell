@@ -2,6 +2,7 @@ package ru.iammaxim.tesitems.NPC;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.EnumPlayerModelParts;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -20,6 +21,8 @@ import ru.iammaxim.tesitems.Fractions.FactionManager;
 import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.Inventory.InventoryNPC;
 import ru.iammaxim.tesitems.Items.mItems;
+import ru.iammaxim.tesitems.Networking.NPCUpdateMessage;
+import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.TESItems;
 import scala.actors.threadpool.Arrays;
 
@@ -36,11 +39,18 @@ public class EntityNPC extends EntityLivingBase {
     private EnumHandSide mainHand = EnumHandSide.RIGHT;
     private List<Faction> factions = new ArrayList<>();
     private Dialog dialog;
-
     private String name = "NPC";
 
     public EntityNPC(World worldIn) {
         super(worldIn);
+    }
+
+    public boolean isInvulnerable() {
+        return isInvulnerable;
+    }
+
+    public void setInvulnerable(boolean invulnerable) {
+        isInvulnerable = invulnerable;
     }
 
     @Override
@@ -61,16 +71,8 @@ public class EntityNPC extends EntityLivingBase {
         factions.remove(faction);
     }
 
-    public void setInvulnerable(boolean invulnerable) {
-        isInvulnerable = invulnerable;
-    }
-
     public void setDialog(Dialog dialog) {
         this.dialog = dialog;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     @Override
@@ -118,7 +120,6 @@ public class EntityNPC extends EntityLivingBase {
         return mainHand;
     }
 
-
     public boolean isWearing(EnumPlayerModelParts part) {
         return false;
     }
@@ -133,13 +134,22 @@ public class EntityNPC extends EntityLivingBase {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public EnumActionResult applyPlayerInteraction(EntityPlayer player, Vec3d vec, @Nullable ItemStack stack, EnumHand hand) {
+        IPlayerAttributesCapability cap = TESItems.getCapability(player);
         if (player.worldObj.isRemote) {
-            TESItems.getCapability(player).setLatestNPC(this);
+            cap.setLatestNPC(this);
             return EnumActionResult.SUCCESS;
         }
 
+        if (cap.getLatestNPC() != this) {
+            TESItems.networkWrapper.sendTo(new NPCUpdateMessage(serializeNBT()), (EntityPlayerMP) player);
+            cap.setLatestNPC(this);
+        }
         if (player.getHeldItemOffhand() != null && player.getHeldItemOffhand().getItem() == mItems.itemNPCEditorTool)
             player.openGui(TESItems.instance, TESItems.guiNPCEditor, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
         else

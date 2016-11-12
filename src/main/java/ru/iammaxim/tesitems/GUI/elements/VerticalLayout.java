@@ -86,6 +86,11 @@ public class VerticalLayout extends LayoutBase {
     }
 
     @Override
+    public void checkHover(int mouseX, int mouseY) {
+        elements.forEach(e -> e.checkHover(mouseX, mouseY));
+    }
+
+    @Override
     public void onRescale() {
         elements.forEach(ElementBase::onRescale);
     }

@@ -1,7 +1,6 @@
 package ru.iammaxim.tesitems.Questing;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -46,7 +45,7 @@ public class QuestManager {
                 NBTTagList targetsNbt = new NBTTagList();
                 for (int k = 0; k < stage.targets.size(); k++) {
                     QuestTarget target = stage.targets.get(k);
-                    NBTTagCompound tag = target.getNBT();
+                    NBTTagCompound tag = target.saveToNBT();
                     tag.setString("type", target.getType());
                     targetsNbt.appendTag(tag);
                 }

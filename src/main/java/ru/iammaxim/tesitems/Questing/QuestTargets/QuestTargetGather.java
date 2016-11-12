@@ -34,7 +34,7 @@ public class QuestTargetGather extends QuestTarget {
     }
 
     @Override
-    public NBTTagCompound getNBT() {
+    public NBTTagCompound saveToNBT() {
         NBTTagCompound tag = new NBTTagCompound();
         tag.setTag("stack", is.serializeNBT());
         return tag;

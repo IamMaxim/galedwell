@@ -2,7 +2,8 @@ package ru.iammaxim.tesitems.Player;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.Inventory.InventoryClient;
 import ru.iammaxim.tesitems.Inventory.InventoryServer;
@@ -18,7 +19,6 @@ import ru.iammaxim.tesitems.ReflectionUtils;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -105,6 +105,7 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     @Override
     public void setAttribute(String name, float value) {
         attributes.put(name, value);
+        System.out.println("putting " + value + " into " + name);
     }
     @Override
     public void increaseAttribute(String name, float value) {

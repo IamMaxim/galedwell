@@ -23,7 +23,7 @@ public class QuestTargetTalk extends QuestTarget {
     }
 
     @Override
-    public NBTTagCompound getNBT() {
+    public NBTTagCompound saveToNBT() {
         return null;
     }
 

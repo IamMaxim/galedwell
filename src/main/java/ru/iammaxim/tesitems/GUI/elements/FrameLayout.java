@@ -16,6 +16,11 @@ public class FrameLayout extends LayoutBase {
     }
 
     @Override
+    public void checkHover(int mouseX, int mouseY) {
+        element.checkHover(mouseX, mouseY);
+    }
+
+    @Override
     public void checkClick(int mouseX, int mouseY) {
         element.checkClick(mouseX, mouseY);
     }
@@ -49,6 +54,9 @@ public class FrameLayout extends LayoutBase {
 
     @Override
     public void draw(int mouseX, int mouseY) {
-        element.draw(mouseX, mouseY);
+        if (element != null)
+            element.draw(mouseX, mouseY);
+        else
+            System.out.println("no element");
     }
 }

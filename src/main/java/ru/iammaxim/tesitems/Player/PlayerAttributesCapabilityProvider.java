@@ -20,7 +20,7 @@ public class PlayerAttributesCapabilityProvider implements ICapabilitySerializab
     @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing enumFacing) {
         if (capability == TESItems.attributesCapability) {
-            return TESItems.attributesCapability.<T>cast(inst);
+            return TESItems.attributesCapability.cast(inst);
         } else {
             return null;
         }

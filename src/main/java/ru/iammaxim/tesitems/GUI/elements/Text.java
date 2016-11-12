@@ -41,8 +41,9 @@ public class Text extends ElementBase {
         return this;
     }
 
-    public void setColor(int color) {
+    public Text setColor(int color) {
         this.color = color;
+        return this;
     }
 
     @Override

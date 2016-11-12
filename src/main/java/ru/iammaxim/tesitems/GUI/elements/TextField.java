@@ -25,6 +25,17 @@ public class TextField extends ElementBase {
     private Consumer<TextField> onType;
     private int padding = 4;
     private boolean dirty = false;
+    private boolean active = false;
+
+    @Override
+    public void checkClick(int mouseX, int mouseY) {
+        if (mouseX > left && mouseX < right && mouseY > top && mouseY < bottom) {
+            click(mouseX - left, mouseY - top);
+            active = true;
+        } else {
+            active = false;
+        }
+    }
 
     public TextField(ElementBase parent) {
         super(parent);
@@ -73,13 +84,13 @@ public class TextField extends ElementBase {
 
     @Override
     public void keyTyped(char typedChar, int keyCode) {
-        if (focused) {
+        if (active) {
             if (keyCode == Keyboard.KEY_BACK) { //backspace
                 if (text.length() > 0)
                     text = text.substring(0, text.length() - 1);
             } else if (keyCode == Keyboard.KEY_RETURN) {
                 text = text + '\n';
-            } else if (UnicodeFontRenderer.alphabet.contains(typedChar + "")) {
+            } else if (typedChar == ' ' || UnicodeFontRenderer.alphabet.contains(typedChar + "")) {
                 text = text + typedChar;
             }
             FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
@@ -117,7 +128,7 @@ public class TextField extends ElementBase {
         drawColoredRect(tess, left, top, right, bottom, 0xff000000);
         //System.out.println(left + " " + top + " " + right + " " + bottom);
 
-        if (!focused)
+        if (!active)
             drawColoredRect(tess, left, top, right, bottom, 0xFF333333);
         else
             drawColoredRect(tess, left, top, right, bottom, 0xFF7F7F7F);

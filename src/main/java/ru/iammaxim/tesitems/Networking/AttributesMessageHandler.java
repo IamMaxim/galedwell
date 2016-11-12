@@ -15,15 +15,14 @@ public class AttributesMessageHandler implements IMessageHandler<AttributesMessa
     @Override
     public IMessage onMessage(AttributesMessage message, MessageContext ctx) {
         Minecraft.getMinecraft().addScheduledTask(() -> {
+            System.out.println("setting attributes");
             EntityPlayer player = Minecraft.getMinecraft().thePlayer;
             IPlayerAttributesCapability cap = player.getCapability(TESItems.attributesCapability, null);
 
             for (String s : TESItems.ATTRIBUTES) {
-//                System.out.println("Adding " + s + " to player");
                 cap.setAttribute(s, message.getAttribute(s));
             }
         });
-//        System.out.println("got message");
         return null;
     }
 }

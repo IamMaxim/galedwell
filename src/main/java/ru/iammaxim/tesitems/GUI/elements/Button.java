@@ -7,6 +7,8 @@ import ru.iammaxim.tesitems.TESItems;
 
 import java.util.function.Consumer;
 
+import static ru.iammaxim.tesitems.GUI.ResManager.*;
+
 /**
  * Created by maxim on 11/8/16 at 5:50 PM.
  */
@@ -15,13 +17,12 @@ public class Button extends ElementBase {
     private String text = "A button";
     private int padding = 4, textColor = 0xff481f09;
     private FontRenderer fontRenderer;
-    private static ResourceLocation
-            button_short = new ResourceLocation("tesitems:textures/gui/button_short.png"),
-            button_short_on = new ResourceLocation("tesitems:textures/gui/button_short_on.png"),
-            button_long = new ResourceLocation("tesitems:textures/gui/button_long.png"),
-            button_long_on = new ResourceLocation("tesitems:textures/gui/button_long_on.png"),
-            button_xtralong = new ResourceLocation("tesitems:textures/gui/button_xtralong.png"),
-            button_xtralong_on = new ResourceLocation("tesitems:textures/gui/button_xtralong_on.png");
+    private boolean useInactiveBackground = true, center = false;
+
+    public Button center(boolean center) {
+        this.center = center;
+        return this;
+    }
 
     public Button setPadding(int padding) {
         this.padding = padding;
@@ -72,8 +73,9 @@ public class Button extends ElementBase {
         boolean hovered = false;
         if (mouseX > left && mouseX < right && mouseY > top && mouseY < bottom)
             hovered = true;
-        drawTexturedRect(tess, left, top, (int) (right + width * getMultiplier(width)), bottom + height, getTexture(width, hovered));
-        fontRenderer.drawString(text, left + padding, top + padding, textColor);
+        if (!(!useInactiveBackground && !hovered))
+            drawTexturedRect(tess, left, top, (int) (right + width * getMultiplier(width)), bottom + height, getTexture(width, hovered));
+        fontRenderer.drawString(text, center ? left + (width - fontRenderer.getStringWidth(text))/2 : left + padding, top + padding, textColor);
     }
 
     public float getMultiplier(int width) {
@@ -98,5 +100,10 @@ public class Button extends ElementBase {
             return button_long_on;
         else
             return button_long;
+    }
+
+    public Button setUseInactiveBackground(boolean useInactiveBackground) {
+        this.useInactiveBackground = useInactiveBackground;
+        return this;
     }
 }

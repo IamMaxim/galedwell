@@ -60,6 +60,8 @@ public class mItems {
 
         if (side == Side.CLIENT) {
             ModelLoader.setCustomModelResourceLocation(itemBreakingTool, 0, new ModelResourceLocation("tesitems:breakingTool"));
+            ModelLoader.setCustomModelResourceLocation(itemNPCEditorTool, 0, new ModelResourceLocation("tesitems:NPCEditorTool"));
+            ModelLoader.setCustomModelResourceLocation(itemNPCCreatorTool, 0, new ModelResourceLocation("tesitems:NPCCreatorTool"));
             ModelLoader.setCustomModelResourceLocation(dwarvenSword, 0, new ModelResourceLocation("tesitems:dwarvenSword"));
             ModelLoader.setCustomModelResourceLocation(elvenDagger, 0, new ModelResourceLocation("tesitems:elvenDagger"));
             ModelLoader.setCustomModelResourceLocation(elvenSword, 0, new ModelResourceLocation("tesitems:elvenSword"));

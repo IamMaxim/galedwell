@@ -1,5 +1,6 @@
 package ru.iammaxim.tesitems.Items;
 
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
 /**
@@ -8,6 +9,7 @@ import net.minecraft.item.Item;
 public class ItemBreakingTool extends Item {
     public ItemBreakingTool() {
         super();
+        setCreativeTab(CreativeTabs.TOOLS);
         setUnlocalizedName("breakingTool");
         setRegistryName("breakingTool");
     }

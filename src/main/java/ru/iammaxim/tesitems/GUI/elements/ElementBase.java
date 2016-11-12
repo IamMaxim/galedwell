@@ -1,5 +1,6 @@
 package ru.iammaxim.tesitems.GUI.elements;
 
+import joptsimple.internal.Strings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -8,6 +9,8 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
+
+import java.util.Arrays;
 
 /**
  * Created by maxim on 11/7/16 at 4:22 PM.
@@ -23,7 +26,6 @@ public abstract class ElementBase {
     protected int marginH = 0;
     protected int marginV = 0;
     protected boolean focused;
-    private boolean wasClicked = false;
 
     public ElementBase(ElementBase parent) {
         this.parent = parent;
@@ -50,22 +52,20 @@ public abstract class ElementBase {
     }
 
     public void checkClick(int mouseX, int mouseY) {
-        boolean buttonDown = Mouse.isButtonDown(0);
+        if (mouseX > left && mouseX < right && mouseY > top && mouseY < bottom) {
+            click(mouseX - left, mouseY - top);
+        }
+    }
+
+    public void checkHover(int mouseX, int mouseY) {
         if (mouseX > left && mouseX < right && mouseY > top && mouseY < bottom) {
             if (!focused)
                 onFocus();
             focused = true;
-            if (buttonDown) {
-                if (!wasClicked)
-                    click(mouseX - left, mouseY - top);
-                wasClicked = true;
-            }
         } else {
             if (focused)
                 onFocusLost();
             focused = false;
-            if (!buttonDown)
-                wasClicked = false;
         }
     }
 

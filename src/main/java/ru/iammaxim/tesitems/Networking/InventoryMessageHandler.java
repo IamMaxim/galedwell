@@ -16,6 +16,7 @@ public class InventoryMessageHandler implements IMessageHandler<InventoryMessage
         Minecraft.getMinecraft().addScheduledTask(() -> {
             Inventory inv = TESItems.getCapability(Minecraft.getMinecraft().thePlayer).getInventory();
             inv.loadFromNBT(message.tag);
+            inv.calculateCarryweight();
         });
         return null;
     }

@@ -2,12 +2,6 @@ functions:
     setQuestStage int:questID int:stage
         Sets current stage of quest to int:stage
     give string:itemUnlocalizedName int:count
+        Gives item to player
     remove string:itemUnlocalizedName int:count
-//    call string:functionName <args>
-//      Calls function string:functionName with <args>
-
-syntax:
-    <functionName> <args>
-All is separated with space.
-    Example:
-        setQuestStage 0 1
+        Removes item from player's inventory

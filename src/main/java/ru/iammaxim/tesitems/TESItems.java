@@ -64,7 +64,6 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Field;
 
 @Mod(modid = TESItems.MODID, version = TESItems.VERSION)
@@ -109,6 +108,8 @@ public class TESItems {
     public static Capability<IPlayerAttributesCapability> attributesCapability;
     @Mod.Instance
     public static TESItems instance;
+
+    @SideOnly(Side.CLIENT)
     public static UnicodeFontRenderer fontRenderer;
 
     //used for dialog camera orient
@@ -131,26 +132,34 @@ public class TESItems {
         mBlocks.register(event.getSide());
         mArmor.register();
         networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel("TESItemsChannel");
-        networkWrapper.registerMessage(AttributesMessageHandler.class, AttributesMessage.class, 0, Side.CLIENT);
-        networkWrapper.registerMessage(OpenGuiMessageHandler.class, OpenGuiMessage.class, 1, Side.SERVER);
+        networkWrapper.registerMessage(OpenGuiMessageHandler.class, OpenGuiMessage.class, 0, Side.SERVER);
         networkWrapper.registerMessage(CastSpellMessageHandler.class, CastSpellMessage.class, 2, Side.SERVER);
-        networkWrapper.registerMessage(SpellbookMessageHandler.class, SpellbookMessage.class, 3, Side.CLIENT);
-        networkWrapper.registerMessage(InventoryUpdateMessageClientHandler.class, InventoryUpdateMessage.class, 4, Side.CLIENT);
         networkWrapper.registerMessage(InventoryUpdateMessageServerHandler.class, InventoryUpdateMessage.class, 5, Side.SERVER);
-        networkWrapper.registerMessage(InventoryMessageHandler.class, InventoryMessage.class, 6, Side.CLIENT);
         networkWrapper.registerMessage(EquipMessageServerHandler.class, EquipMessage.class, 7, Side.SERVER);
-        networkWrapper.registerMessage(EquipMessageClientHandler.class, EquipMessage.class, 8, Side.CLIENT);
         networkWrapper.registerMessage(ItemDropMessageHandlerServer.class, ItemDropMessage.class, 9, Side.SERVER);
-        networkWrapper.registerMessage(JournalMessageHandler.class, JournalMessage.class, 10, Side.CLIENT);
-        networkWrapper.registerMessage(JournalAppendMessageHandler.class, JournalAppendMessage.class, 11, Side.CLIENT);
+        networkWrapper.registerMessage(NPCUpdateMessageServerHandler.class, NPCUpdateMessage.class, 12, Side.SERVER);
+
+        if (event.getSide() == Side.CLIENT) {
+            networkWrapper.registerMessage(AttributesMessageHandler.class, AttributesMessage.class, 1, Side.CLIENT);
+            networkWrapper.registerMessage(SpellbookMessageHandler.class, SpellbookMessage.class, 3, Side.CLIENT);
+            networkWrapper.registerMessage(InventoryUpdateMessageClientHandler.class, InventoryUpdateMessage.class, 4, Side.CLIENT);
+            networkWrapper.registerMessage(InventoryMessageHandler.class, InventoryMessage.class, 6, Side.CLIENT);
+            networkWrapper.registerMessage(EquipMessageClientHandler.class, EquipMessage.class, 8, Side.CLIENT);
+            networkWrapper.registerMessage(JournalMessageHandler.class, JournalMessage.class, 10, Side.CLIENT);
+            networkWrapper.registerMessage(JournalAppendMessageHandler.class, JournalAppendMessage.class, 11, Side.CLIENT);
+            networkWrapper.registerMessage(NPCUpdateMessageClientHandler.class, NPCUpdateMessage.class, 13, Side.CLIENT);
+        }
 
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GUIHandler());
         EntityRegistry.registerModEntity(EntityRangedSpellEffect.class, "EntityRangedSpellEffect", 0, instance, 100, 1, false);
         EntityRegistry.registerModEntity(EntityFlyingSpell.class, "EntityFlyingSpell", 1, instance, 100, 1, true);
         EntityRegistry.registerModEntity(EntityNPC.class, "EntityNPC", 2, instance, 80, 3, true);
-        RenderingRegistry.registerEntityRenderingHandler(EntityRangedSpellEffect.class, RenderEntityRangedSpellEffect::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityFlyingSpell.class, RenderEntityFlyingSpell::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityNPC.class, RenderNPC::new);
+
+        if (event.getSide() == Side.CLIENT) {
+            RenderingRegistry.registerEntityRenderingHandler(EntityRangedSpellEffect.class, RenderEntityRangedSpellEffect::new);
+            RenderingRegistry.registerEntityRenderingHandler(EntityFlyingSpell.class, RenderEntityFlyingSpell::new);
+            RenderingRegistry.registerEntityRenderingHandler(EntityNPC.class, RenderNPC::new);
+        }
     }
 
     @SideOnly(Side.CLIENT)
@@ -191,13 +200,14 @@ public class TESItems {
         ItemValueManager.init();
         QuestManager.loadFromFile();
 
-        try {
-            Font font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File("oblivion.ttf")));
-            font = font.deriveFont(Font.PLAIN, 24);
-            fontRenderer = new UnicodeFontRenderer(font);
-        } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
-        }
+        if (event.getSide() == Side.CLIENT)
+            try {
+                Font font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File("oblivion.ttf")));
+                font = font.deriveFont(Font.PLAIN, 24);
+                fontRenderer = new UnicodeFontRenderer(font);
+            } catch (FontFormatException | IOException e) {
+                e.printStackTrace();
+            }
     }
 
     @SubscribeEvent
@@ -260,10 +270,11 @@ public class TESItems {
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
         if (event.getEntity() instanceof EntityPlayer) {
             ((EntityPlayer) event.getEntity()).inventory.clear();
-            IPlayerAttributesCapability cap = event.getEntity().getCapability(TESItems.attributesCapability, null);
+            IPlayerAttributesCapability cap = TESItems.getCapability((EntityPlayer) event.getEntity());
             cap.createInventory((EntityPlayer) event.getEntity(), cap.getInventory());
             cap.getInventory().calculateCarryweight();
             if (!event.getWorld().isRemote) {
+                System.out.println("sending packets");
                 networkWrapper.sendTo(new AttributesMessage(cap.getAttributes()), (EntityPlayerMP) event.getEntity());
                 networkWrapper.sendTo(new SpellbookMessage(cap.saveSpellbook()), (EntityPlayerMP) event.getEntity());
                 networkWrapper.sendTo(new InventoryMessage(cap.getInventory().writeToNBT()), (EntityPlayerMP) event.getEntity());
@@ -344,6 +355,7 @@ public class TESItems {
         return 1 / f / f / 100;
     }
 
+    @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onKeyPressed(InputEvent.KeyInputEvent event) {
         if (!FMLClientHandler.instance().isGUIOpen(GuiChat.class)) {
@@ -362,6 +374,7 @@ public class TESItems {
         }
     }
 
+    @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onRenderNametag(RenderLivingEvent.Specials.Pre event) {
         if (event.getEntity() instanceof EntityPlayer || event.getEntity() instanceof EntityNPC)

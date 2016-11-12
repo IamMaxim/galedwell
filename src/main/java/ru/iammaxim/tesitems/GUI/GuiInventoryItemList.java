@@ -28,6 +28,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import static ru.iammaxim.tesitems.GUI.ResManager.*;
+
 /**
  * Created by maxim on 7/26/16 at 5:24 PM.
  */
@@ -47,27 +49,6 @@ public class GuiInventoryItemList {
             durabilityWidth = 40,
             topIconsHeight = 24,
             textColor = 0xff481f09;
-    private static ResourceLocation
-            inv_itemlist_bg = new ResourceLocation("tesitems:textures/gui/inventory/inv_itemlist_bg.png"),
-            inv_itemlist_border_LT = new ResourceLocation("tesitems:textures/gui/inventory/inv_itemlist_border_LT.png"),
-            inv_itemlist_border_CT = new ResourceLocation("tesitems:textures/gui/inventory/inv_itemlist_border_CT.png"),
-            inv_itemlist_border_RT = new ResourceLocation("tesitems:textures/gui/inventory/inv_itemlist_border_RT.png"),
-            inv_itemlist_border_LC = new ResourceLocation("tesitems:textures/gui/inventory/inv_itemlist_border_LC.png"),
-            inv_itemlist_border_RC = new ResourceLocation("tesitems:textures/gui/inventory/inv_itemlist_border_RC.png"),
-            inv_itemlist_border_LB = new ResourceLocation("tesitems:textures/gui/inventory/inv_itemlist_border_LB.png"),
-            inv_itemlist_border_CB = new ResourceLocation("tesitems:textures/gui/inventory/inv_itemlist_border_CB.png"),
-            inv_itemlist_border_RB = new ResourceLocation("tesitems:textures/gui/inventory/inv_itemlist_border_RB.png"),
-            inv_scrollbar_bg_top = new ResourceLocation("tesitems:textures/gui/inventory/inv_scrollbar_bg_top.png"),
-            inv_scrollbar_bg_center = new ResourceLocation("tesitems:textures/gui/inventory/inv_scrollbar_bg_center.png"),
-            inv_scrollbar_bg_bottom = new ResourceLocation("tesitems:textures/gui/inventory/inv_scrollbar_bg_bottom.png"),
-            inv_scrollbar = new ResourceLocation("tesitems:textures/gui/inventory/inv_scrollbar.png"),
-            inv_entry_bg_selected = new ResourceLocation("tesitems:textures/gui/inventory/inv_entry_bg_selected.png"),
-            inv_entry_bg_hovered = new ResourceLocation("tesitems:textures/gui/inventory/inv_entry_bg_hovered.png"),
-            icon_value = new ResourceLocation("tesitems:textures/gui/icons/value.png"),
-            icon_carryweight = new ResourceLocation("tesitems:textures/gui/icons/carryweight.png"),
-            icon_damage = new ResourceLocation("tesitems:textures/gui/icons/damage.png"),
-            icon_durability = new ResourceLocation("tesitems:textures/gui/icons/durability.png"),
-            inv_carryweight_bg = new ResourceLocation("tesitems:textures/gui/inventory/carryweight_bg.png");
     private final int screenWidth;
     private final int screenHeight;
     private final int top;
@@ -188,23 +169,23 @@ public class GuiInventoryItemList {
 
         //border
         //LT
-        drawTexturedRect(left - borderSize, top - borderSize, left, top, inv_itemlist_border_LT);
+        drawTexturedRect(left - borderSize, top - borderSize, left, top, frameBorder_LT);
         //CT
         tmp = (right - left) / 22.75f / borderSize;
-        drawTexturedRect(left, top - borderSize, right, top, tmp, 1, inv_itemlist_border_CT);
+        drawTexturedRect(left, top - borderSize, right, top, tmp, 1, frameBorder_CT);
         //CB
-        drawTexturedRect(left, bottom, right, bottom + borderSize, tmp, 1, inv_itemlist_border_CB);
+        drawTexturedRect(left, bottom, right, bottom + borderSize, tmp, 1, frameBorder_CB);
         //RT
-        drawTexturedRect(right, top - borderSize, right + borderSize, top, inv_itemlist_border_RT);
+        drawTexturedRect(right, top - borderSize, right + borderSize, top, frameBorder_RT);
         //LC
         tmp = (bottom - top) / 22.75f / borderSize;
-        drawTexturedRect(left - borderSize, top, left, bottom, 1, tmp, inv_itemlist_border_LC);
+        drawTexturedRect(left - borderSize, top, left, bottom, 1, tmp, frameBorder_LC);
         //RC
-        drawTexturedRect(right, top, right + borderSize, bottom, 1, tmp, inv_itemlist_border_RC);
+        drawTexturedRect(right, top, right + borderSize, bottom, 1, tmp, frameBorder_RC);
         //LB
-        drawTexturedRect(left - borderSize, bottom, left, bottom + borderSize, inv_itemlist_border_LB);
+        drawTexturedRect(left - borderSize, bottom, left, bottom + borderSize, frameBorder_LB);
         //RB
-        drawTexturedRect(right, bottom, right + borderSize, bottom + borderSize, inv_itemlist_border_RB);
+        drawTexturedRect(right, bottom, right + borderSize, bottom + borderSize, frameBorder_RB);
     }
 
     public void drawTopIcons() {

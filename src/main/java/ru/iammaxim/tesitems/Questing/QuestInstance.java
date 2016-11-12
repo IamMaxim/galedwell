@@ -15,6 +15,10 @@ public class QuestInstance {
         this.quest_id = quest.id;
     }
 
+    public QuestStage getCurrentStage() {
+        return quest.stages.get(stage);
+    }
+
     @Override
     public String toString() {
         return "status: " + status + " quest: " + quest + " stage: " + stage;
