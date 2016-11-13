@@ -145,20 +145,20 @@ public class TESItems {
         mArmor.register();
 
         networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel("TESItemsChannel");
-        networkWrapper.registerMessage(OpenGuiMessageHandler.class, OpenGuiMessage.class, 0, Side.SERVER);
-        networkWrapper.registerMessage(AttributesMessageHandler.class, AttributesMessage.class, 1, Side.CLIENT);
-        networkWrapper.registerMessage(CastSpellMessageHandler.class, CastSpellMessage.class, 2, Side.SERVER);
-        networkWrapper.registerMessage(SpellbookMessageHandler.class, SpellbookMessage.class, 3, Side.CLIENT);
-        networkWrapper.registerMessage(InventoryUpdateMessageClientHandler.class, InventoryUpdateMessage.class, 4, Side.CLIENT);
-        networkWrapper.registerMessage(InventoryUpdateMessageServerHandler.class, InventoryUpdateMessage.class, 5, Side.SERVER);
-        networkWrapper.registerMessage(InventoryMessageHandler.class, InventoryMessage.class, 6, Side.CLIENT);
-        networkWrapper.registerMessage(EquipMessageServerHandler.class, EquipMessage.class, 7, Side.SERVER);
-        networkWrapper.registerMessage(EquipMessageClientHandler.class, EquipMessage.class, 8, Side.CLIENT);
-        networkWrapper.registerMessage(ItemDropMessageHandlerServer.class, ItemDropMessage.class, 9, Side.SERVER);
-        networkWrapper.registerMessage(JournalMessageHandler.class, JournalMessage.class, 10, Side.CLIENT);
-        networkWrapper.registerMessage(JournalAppendMessageHandler.class, JournalAppendMessage.class, 11, Side.CLIENT);
-        networkWrapper.registerMessage(NPCUpdateMessageServerHandler.class, NPCUpdateMessage.class, 12, Side.SERVER);
-        networkWrapper.registerMessage(NPCUpdateMessageClientHandler.class, NPCUpdateMessage.class, 13, Side.CLIENT);
+        networkWrapper.registerMessage(OpenGuiMessage.Handler.class, OpenGuiMessage.class, 0, Side.SERVER);
+        networkWrapper.registerMessage(AttributesMessage.Handler.class, AttributesMessage.class, 1, Side.CLIENT);
+        networkWrapper.registerMessage(CastSpellMessage.Handler.class, CastSpellMessage.class, 2, Side.SERVER);
+        networkWrapper.registerMessage(SpellbookMessage.Handler.class, SpellbookMessage.class, 3, Side.CLIENT);
+        networkWrapper.registerMessage(InventoryUpdateMessage.ClientHandler.class, InventoryUpdateMessage.class, 4, Side.CLIENT);
+        networkWrapper.registerMessage(InventoryUpdateMessage.ServerHandler.class, InventoryUpdateMessage.class, 5, Side.SERVER);
+        networkWrapper.registerMessage(InventoryMessage.Handler.class, InventoryMessage.class, 6, Side.CLIENT);
+        networkWrapper.registerMessage(EquipMessage.ServerHandler.class, EquipMessage.class, 7, Side.SERVER);
+        networkWrapper.registerMessage(EquipMessage.ClientHandler.class, EquipMessage.class, 8, Side.CLIENT);
+        networkWrapper.registerMessage(ItemDropMessage.ServerHandler.class, ItemDropMessage.class, 9, Side.SERVER);
+        networkWrapper.registerMessage(JournalMessage.Handler.class, JournalMessage.class, 10, Side.CLIENT);
+        networkWrapper.registerMessage(JournalAppendMessage.Handler.class, JournalAppendMessage.class, 11, Side.CLIENT);
+        networkWrapper.registerMessage(NPCUpdateMessage.ServerHandler.class, NPCUpdateMessage.class, 12, Side.SERVER);
+        networkWrapper.registerMessage(NPCUpdateMessage.ClientHandler.class, NPCUpdateMessage.class, 13, Side.CLIENT);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GUIHandler());
         EntityRegistry.registerModEntity(EntityRangedSpellEffect.class, "EntityRangedSpellEffect", 0, instance, 100, 1, false);

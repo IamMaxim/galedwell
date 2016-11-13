@@ -12,6 +12,7 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentString;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -448,7 +449,7 @@ public class GuiInventoryItemList {
         vb.pos(l + 4, t + 4, 0.0D).tex(0.0D, 0.0D).endVertex();
         tess.draw();
 
-        TESItems.fontRenderer.drawString((int)(inv.carryweight) + "/" + (int)(TESItems.getCapability(inv.player).getMaxCarryWeight()), l + 24, t + 8, textColor);
+        TESItems.fontRenderer.drawString((int) (inv.carryweight) + "/" + (int) (TESItems.getCapability(inv.player).getMaxCarryWeight()), l + 24, t + 8, textColor);
     }
 
     private void clampScale() {

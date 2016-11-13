@@ -3,10 +3,12 @@ package ru.iammaxim.tesitems.Inventory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundEvent;
 import ru.iammaxim.tesitems.Networking.EquipMessage;
 import ru.iammaxim.tesitems.Networking.ItemDropMessage;
 import ru.iammaxim.tesitems.TESItems;
@@ -42,9 +44,14 @@ public class InventoryClient extends Inventory {
     }
 
     @Override
+    public void addItem(ItemStack stack) {
+        super.addItem(stack);
+        player.playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2f, player.getRNG().nextFloat() * 3f);
+    }
+
+    @Override
     public void drop(Entity entity, int index, int count) {
         TESItems.networkWrapper.sendToServer(new ItemDropMessage(index, count));
-        checkSlot(index);
     }
 
     @Override

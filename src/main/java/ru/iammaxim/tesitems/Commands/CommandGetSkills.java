@@ -35,4 +35,9 @@ public class CommandGetSkills extends CommandBase {
             sender.addChatMessage(new TextComponentString(sb.toString()));
         }
     }
+
+    @Override
+    public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
+        return true;
+    }
 }

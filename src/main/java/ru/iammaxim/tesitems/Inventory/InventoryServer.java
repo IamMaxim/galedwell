@@ -62,7 +62,9 @@ public class InventoryServer extends Inventory {
         ItemStack is = get(index);
         super.drop(entity, index, count);
         calculateCarryweight();
-        if (is.stackSize - count > 0)
+        System.out.println(is.stackSize);
+        System.out.println(is.stackSize - count);
+        if (is.stackSize > 0)
             sendMessage(new ItemDropMessage(index, is.stackSize - count), player);
         else sendMessage(new InventoryUpdateMessage(InventoryUpdateMessage.ACTION_REMOVE_INDEX, index), player);
     }
