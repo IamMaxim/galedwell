@@ -4,6 +4,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.Inventory.InventoryClient;
 import ru.iammaxim.tesitems.Inventory.InventoryServer;
@@ -38,9 +40,15 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     public void createInventory(EntityPlayer player, Inventory inv) {
         if (!player.worldObj.isRemote)
             inventory = new InventoryServer(player);
-        else inventory = new InventoryClient(Minecraft.getMinecraft().thePlayer);
+        else inventory = new InventoryClient(getClientPlayer());
         inventory.setItemList(inv.getItemList());
     }
+
+    @SideOnly(Side.CLIENT)
+    private EntityPlayer getClientPlayer() {
+        return Minecraft.getMinecraft().thePlayer;
+    }
+
     @Override
     public void loadQuests(NBTTagCompound nbttag) {
         quests.clear();
@@ -105,7 +113,6 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     @Override
     public void setAttribute(String name, float value) {
         attributes.put(name, value);
-        System.out.println("putting " + value + " into " + name);
     }
     @Override
     public void increaseAttribute(String name, float value) {

@@ -201,7 +201,9 @@ public class Inventory {
         checkSlot(index);
         EntityItemNew e = new EntityItemNew(entity.worldObj, entity.posX, entity.posY, entity.posZ, stack);
         Vec3d lookVec = entity.getLookVec();
-        e.setVelocity(lookVec.xCoord, lookVec.yCoord, lookVec.zCoord);
+        e.motionX = lookVec.xCoord;
+        e.motionY = lookVec.yCoord;
+        e.motionZ = lookVec.zCoord;
         entity.worldObj.spawnEntityInWorld(e);
     }
 

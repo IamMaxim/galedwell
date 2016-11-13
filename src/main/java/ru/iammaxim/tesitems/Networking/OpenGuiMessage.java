@@ -17,7 +17,9 @@ public class OpenGuiMessage implements IMessage {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        GuiID = buf.readInt();
+        try {
+            GuiID = buf.readInt();
+        } catch (Exception e) {}
     }
 
     @Override

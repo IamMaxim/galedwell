@@ -15,7 +15,7 @@ import ru.iammaxim.tesitems.TESItems;
 public class NPCUpdateMessageClientHandler implements IMessageHandler<NPCUpdateMessage, IMessage> {
     @Override
     public IMessage onMessage(NPCUpdateMessage message, MessageContext ctx) {
-        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+        EntityPlayer player = TESItems.getClientPlayer();
         if (player.getHeldItemOffhand() != null && player.getHeldItemOffhand().getItem() != mItems.itemNPCEditorTool)
             return null;
         IPlayerAttributesCapability cap = TESItems.getCapability(player);

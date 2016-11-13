@@ -22,7 +22,6 @@ public class AttributesMessage implements IMessage {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        System.out.println("received message size: " + buf.capacity() + " " + buf.maxCapacity());
         for (String s : TESItems.ATTRIBUTES) {
             attributes.put(s, buf.readFloat());
         }

@@ -40,7 +40,9 @@ public class CommandSetAttribute extends CommandBase {
                 return;
             }
             IPlayerAttributesCapability cap = player.getCapability(TESItems.attributesCapability, null);
-            cap.setAttribute(args[1], Float.parseFloat(args[2]));
+            float f = Float.parseFloat(args[2]);
+            cap.setAttribute(args[1], f);
+            iCommandSender.addChatMessage(new TextComponentString("Setting " + TextFormatting.YELLOW + args[0] + TextFormatting.RESET + "'s " + TextFormatting.BLUE + args[1] + TextFormatting.RESET + " to " + f));
             TESItems.networkWrapper.sendTo(new AttributesMessage(cap.getAttributes()), (EntityPlayerMP) player);
         } else {
             iCommandSender.addChatMessage(new TextComponentString(TextFormatting.RED + "Invalid argument count"));

@@ -16,6 +16,8 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
@@ -123,32 +125,40 @@ public class TESItems {
         return player.getCapability(TESItems.attributesCapability, null);
     }
 
+    @SideOnly(Side.CLIENT)
+    public static EntityPlayer getClientPlayer() {
+        return Minecraft.getMinecraft().thePlayer;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static Minecraft getMinecraft() {
+        return Minecraft.getMinecraft();
+    }
+
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        CapabilityManager.INSTANCE.register(IPlayerAttributesCapability.class, new PlayerAttributesStorage(), PlayerAttributesCapabilityDefaultImpl.class);
+        CapabilityManager.INSTANCE.register(IPlayerAttributesCapability.class, new PlayerAttributesStorage(), PlayerAttributesCapabilityDefaultImpl::new);
         MinecraftForge.EVENT_BUS.register(this);
         SpellEffectManager.register();
         mItems.register(event.getSide());
         mBlocks.register(event.getSide());
         mArmor.register();
+
         networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel("TESItemsChannel");
         networkWrapper.registerMessage(OpenGuiMessageHandler.class, OpenGuiMessage.class, 0, Side.SERVER);
+        networkWrapper.registerMessage(AttributesMessageHandler.class, AttributesMessage.class, 1, Side.CLIENT);
         networkWrapper.registerMessage(CastSpellMessageHandler.class, CastSpellMessage.class, 2, Side.SERVER);
+        networkWrapper.registerMessage(SpellbookMessageHandler.class, SpellbookMessage.class, 3, Side.CLIENT);
+        networkWrapper.registerMessage(InventoryUpdateMessageClientHandler.class, InventoryUpdateMessage.class, 4, Side.CLIENT);
         networkWrapper.registerMessage(InventoryUpdateMessageServerHandler.class, InventoryUpdateMessage.class, 5, Side.SERVER);
+        networkWrapper.registerMessage(InventoryMessageHandler.class, InventoryMessage.class, 6, Side.CLIENT);
         networkWrapper.registerMessage(EquipMessageServerHandler.class, EquipMessage.class, 7, Side.SERVER);
+        networkWrapper.registerMessage(EquipMessageClientHandler.class, EquipMessage.class, 8, Side.CLIENT);
         networkWrapper.registerMessage(ItemDropMessageHandlerServer.class, ItemDropMessage.class, 9, Side.SERVER);
+        networkWrapper.registerMessage(JournalMessageHandler.class, JournalMessage.class, 10, Side.CLIENT);
+        networkWrapper.registerMessage(JournalAppendMessageHandler.class, JournalAppendMessage.class, 11, Side.CLIENT);
         networkWrapper.registerMessage(NPCUpdateMessageServerHandler.class, NPCUpdateMessage.class, 12, Side.SERVER);
-
-        if (event.getSide() == Side.CLIENT) {
-            networkWrapper.registerMessage(AttributesMessageHandler.class, AttributesMessage.class, 1, Side.CLIENT);
-            networkWrapper.registerMessage(SpellbookMessageHandler.class, SpellbookMessage.class, 3, Side.CLIENT);
-            networkWrapper.registerMessage(InventoryUpdateMessageClientHandler.class, InventoryUpdateMessage.class, 4, Side.CLIENT);
-            networkWrapper.registerMessage(InventoryMessageHandler.class, InventoryMessage.class, 6, Side.CLIENT);
-            networkWrapper.registerMessage(EquipMessageClientHandler.class, EquipMessage.class, 8, Side.CLIENT);
-            networkWrapper.registerMessage(JournalMessageHandler.class, JournalMessage.class, 10, Side.CLIENT);
-            networkWrapper.registerMessage(JournalAppendMessageHandler.class, JournalAppendMessage.class, 11, Side.CLIENT);
-            networkWrapper.registerMessage(NPCUpdateMessageClientHandler.class, NPCUpdateMessage.class, 13, Side.CLIENT);
-        }
+        networkWrapper.registerMessage(NPCUpdateMessageClientHandler.class, NPCUpdateMessage.class, 13, Side.CLIENT);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GUIHandler());
         EntityRegistry.registerModEntity(EntityRangedSpellEffect.class, "EntityRangedSpellEffect", 0, instance, 100, 1, false);
@@ -266,20 +276,29 @@ public class TESItems {
         }
     }
 
+    public String getMOTD() {
+        return TextFormatting.YELLOW + "Добро пожаловать на тестовый сервер Галедвелл!\n" + TextFormatting.RESET + "Доступные команды:\n/giveme <название предмета> <кол-во (необязательно)>\nЧтобы ломать любые блоки, используйте предмет breakingTool";
+    }
+
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
         if (event.getEntity() instanceof EntityPlayer) {
-            ((EntityPlayer) event.getEntity()).inventory.clear();
+            EntityPlayer player = (EntityPlayer) event.getEntity();
+            //clear vanilla inventory
+            player.inventory.clear();
             IPlayerAttributesCapability cap = TESItems.getCapability((EntityPlayer) event.getEntity());
-            cap.createInventory((EntityPlayer) event.getEntity(), cap.getInventory());
+            if (cap.getAttribute("strength") == 0)
+                cap.setAttribute("strength", 10);
+            cap.createInventory(player, cap.getInventory());
             cap.getInventory().calculateCarryweight();
             if (!event.getWorld().isRemote) {
-                System.out.println("sending packets");
                 networkWrapper.sendTo(new AttributesMessage(cap.getAttributes()), (EntityPlayerMP) event.getEntity());
                 networkWrapper.sendTo(new SpellbookMessage(cap.saveSpellbook()), (EntityPlayerMP) event.getEntity());
                 networkWrapper.sendTo(new InventoryMessage(cap.getInventory().writeToNBT()), (EntityPlayerMP) event.getEntity());
                 networkWrapper.sendTo(new QuestListMessage(QuestManager.saveToNBT()), (EntityPlayerMP) event.getEntity());
                 networkWrapper.sendTo(new JournalMessage(cap.getJournal()), (EntityPlayerMP) event.getEntity());
+
+                player.addChatComponentMessage(new TextComponentString(getMOTD()));
             }
         }
     }
@@ -292,8 +311,8 @@ public class TESItems {
     }
 
     @SubscribeEvent
-    public void onEntityLoad(AttachCapabilitiesEvent.Entity event) {
-        if (event.getEntity() instanceof EntityPlayer) {
+    public void onEntityLoad(AttachCapabilitiesEvent event) {
+        if (event.getObject() instanceof EntityPlayer) {
             event.addCapability(new ResourceLocation(TESItems.attributesTagName), new PlayerAttributesCapabilityProvider());
         }
     }

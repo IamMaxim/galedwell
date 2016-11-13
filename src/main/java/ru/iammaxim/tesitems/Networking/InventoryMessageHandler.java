@@ -13,8 +13,8 @@ import ru.iammaxim.tesitems.TESItems;
 public class InventoryMessageHandler implements IMessageHandler<InventoryMessage, IMessage> {
     @Override
     public IMessage onMessage(InventoryMessage message, MessageContext ctx) {
-        Minecraft.getMinecraft().addScheduledTask(() -> {
-            Inventory inv = TESItems.getCapability(Minecraft.getMinecraft().thePlayer).getInventory();
+        TESItems.getMinecraft().addScheduledTask(() -> {
+            Inventory inv = TESItems.getCapability(TESItems.getClientPlayer()).getInventory();
             inv.loadFromNBT(message.tag);
             inv.calculateCarryweight();
         });

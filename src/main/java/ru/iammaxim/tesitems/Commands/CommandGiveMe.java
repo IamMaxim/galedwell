@@ -8,6 +8,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import ru.iammaxim.tesitems.Inventory.Inventory;
 
 import javax.annotation.Nullable;
@@ -30,16 +32,26 @@ public class CommandGiveMe extends CommandBase {
 
     @Override
     public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos) {
-        return args.length == 1 ? getListOfStringsMatchingLastWord(args, server.getAllUsernames()) : (args.length == 2 ? getListOfStringsMatchingLastWord(args, Item.REGISTRY.getKeys()) : Collections.emptyList());
+//        return args.length == 1 ? getListOfStringsMatchingLastWord(args, server.getAllUsernames()) : (args.length == 2 ? getListOfStringsMatchingLastWord(args, Item.REGISTRY.getKeys()) : Collections.emptyList());
+        return args.length == 1 ? getListOfStringsMatchingLastWord(args, Item.REGISTRY.getKeys()) : Collections.emptyList();
+    }
+
+    @Override
+    public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
+        return true;
     }
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-        EntityPlayer player = server.getPlayerList().getPlayerByUsername(args[0]);
-        Inventory inv = Inventory.getInventory(player);
-        int count = 1;
-        if (args.length == 3) count = Integer.parseInt(args[2]);
-        ItemStack stack = new ItemStack(Item.getByNameOrId(args[1]), count);
-        inv.addItem(stack);
+        try {
+            EntityPlayer player = (EntityPlayer) sender;
+            Inventory inv = Inventory.getInventory(player);
+            int count = 1;
+            if (args.length == 2) count = Integer.parseInt(args[1]);
+            ItemStack stack = new ItemStack(Item.getByNameOrId(args[0]), count);
+            inv.addItem(stack);
+        } catch (Exception e) {
+            ((EntityPlayer) sender).addChatComponentMessage(new TextComponentString(TextFormatting.RED + "Error occured while running command:\n" + e.toString()));
+        }
     }
 }

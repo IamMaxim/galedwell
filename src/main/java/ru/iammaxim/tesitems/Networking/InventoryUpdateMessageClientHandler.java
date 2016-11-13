@@ -17,7 +17,7 @@ import static ru.iammaxim.tesitems.Networking.InventoryUpdateMessage.*;
 public class InventoryUpdateMessageClientHandler implements IMessageHandler<InventoryUpdateMessage, IMessage> {
     @Override
     public IMessage onMessage(InventoryUpdateMessage message, MessageContext ctx) {
-        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+        EntityPlayer player = TESItems.getClientPlayer();
         Inventory inv = TESItems.getCapability(player).getInventory();
         switch(message.action) {
             case ACTION_ADD:

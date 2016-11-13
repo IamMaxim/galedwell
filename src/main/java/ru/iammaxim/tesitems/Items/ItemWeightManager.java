@@ -17,6 +17,7 @@ public class ItemWeightManager {
 
     public static float getWeight(ItemStack is) {
         Float w;
+        if (is == null) return 1;
         if ((w = weights.get(is.getItem())) != null)
             return w * is.stackSize;
         else return 1 * is.stackSize;

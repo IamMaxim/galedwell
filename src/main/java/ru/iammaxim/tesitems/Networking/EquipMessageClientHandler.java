@@ -15,7 +15,7 @@ import ru.iammaxim.tesitems.TESItems;
 public class EquipMessageClientHandler implements IMessageHandler<EquipMessage, IMessage> {
     @Override
     public IMessage onMessage(EquipMessage message, MessageContext ctx) {
-        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+        EntityPlayer player = TESItems.getClientPlayer();
         if (message.index == -1) player.setItemStackToSlot(EntityEquipmentSlot.fromString(message.slot), null);
         else player.setItemStackToSlot(EntityEquipmentSlot.fromString(message.slot), Inventory.getInventory(player).get(message.index));
         return null;

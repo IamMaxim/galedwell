@@ -13,8 +13,8 @@ import ru.iammaxim.tesitems.TESItems;
 public class JournalAppendMessageHandler implements IMessageHandler<JournalAppendMessage, IMessage> {
     @Override
     public IMessage onMessage(JournalAppendMessage message, MessageContext ctx) {
-        Minecraft.getMinecraft().addScheduledTask(() -> {
-            IPlayerAttributesCapability cap = TESItems.getCapability(Minecraft.getMinecraft().thePlayer);
+        TESItems.getMinecraft().addScheduledTask(() -> {
+            IPlayerAttributesCapability cap = TESItems.getCapability(TESItems.getClientPlayer());
             cap.journalAppend(message.s);
         });
         return null;
