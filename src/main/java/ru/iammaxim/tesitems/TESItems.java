@@ -105,7 +105,12 @@ public class TESItems {
     }, furnutureBlocks = {
 
     };
-    public static final int guiSpellSelect = 0, guiNpcDialog = 1, guiInventory = 2, guiQuestList = 3, guiNPCEditor = 4;
+    public static final int guiSpellSelect = 0,
+            guiNpcDialog = 1,
+            guiInventory = 2,
+            guiNPCEditor = 3,
+            guiQuestEditor = 4,
+            guiJournal = 5;
     @CapabilityInject(IPlayerAttributesCapability.class)
     public static Capability<IPlayerAttributesCapability> attributesCapability;
     @Mod.Instance
@@ -145,20 +150,21 @@ public class TESItems {
         mArmor.register();
 
         networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel("TESItemsChannel");
-        networkWrapper.registerMessage(OpenGuiMessage.Handler.class, OpenGuiMessage.class, 0, Side.SERVER);
-        networkWrapper.registerMessage(AttributesMessage.Handler.class, AttributesMessage.class, 1, Side.CLIENT);
-        networkWrapper.registerMessage(CastSpellMessage.Handler.class, CastSpellMessage.class, 2, Side.SERVER);
-        networkWrapper.registerMessage(SpellbookMessage.Handler.class, SpellbookMessage.class, 3, Side.CLIENT);
-        networkWrapper.registerMessage(InventoryUpdateMessage.ClientHandler.class, InventoryUpdateMessage.class, 4, Side.CLIENT);
-        networkWrapper.registerMessage(InventoryUpdateMessage.ServerHandler.class, InventoryUpdateMessage.class, 5, Side.SERVER);
-        networkWrapper.registerMessage(InventoryMessage.Handler.class, InventoryMessage.class, 6, Side.CLIENT);
-        networkWrapper.registerMessage(EquipMessage.ServerHandler.class, EquipMessage.class, 7, Side.SERVER);
-        networkWrapper.registerMessage(EquipMessage.ClientHandler.class, EquipMessage.class, 8, Side.CLIENT);
-        networkWrapper.registerMessage(ItemDropMessage.ServerHandler.class, ItemDropMessage.class, 9, Side.SERVER);
-        networkWrapper.registerMessage(JournalMessage.Handler.class, JournalMessage.class, 10, Side.CLIENT);
-        networkWrapper.registerMessage(JournalAppendMessage.Handler.class, JournalAppendMessage.class, 11, Side.CLIENT);
-        networkWrapper.registerMessage(NPCUpdateMessage.ServerHandler.class, NPCUpdateMessage.class, 12, Side.SERVER);
-        networkWrapper.registerMessage(NPCUpdateMessage.ClientHandler.class, NPCUpdateMessage.class, 13, Side.CLIENT);
+        networkWrapper.registerMessage(MessageOpenGui.Handler.class, MessageOpenGui.class, 0, Side.SERVER);
+        networkWrapper.registerMessage(MessageAttributes.Handler.class, MessageAttributes.class, 1, Side.CLIENT);
+        networkWrapper.registerMessage(MessageCastSpell.Handler.class, MessageCastSpell.class, 2, Side.SERVER);
+        networkWrapper.registerMessage(MessageSpellbook.Handler.class, MessageSpellbook.class, 3, Side.CLIENT);
+        networkWrapper.registerMessage(MessageInventoryUpdate.ClientHandler.class, MessageInventoryUpdate.class, 4, Side.CLIENT);
+        networkWrapper.registerMessage(MessageInventoryUpdate.ServerHandler.class, MessageInventoryUpdate.class, 5, Side.SERVER);
+        networkWrapper.registerMessage(MessageInventory.Handler.class, MessageInventory.class, 6, Side.CLIENT);
+        networkWrapper.registerMessage(MessageEquip.ServerHandler.class, MessageEquip.class, 7, Side.SERVER);
+        networkWrapper.registerMessage(MessageEquip.ClientHandler.class, MessageEquip.class, 8, Side.CLIENT);
+        networkWrapper.registerMessage(MessageItemDrop.ServerHandler.class, MessageItemDrop.class, 9, Side.SERVER);
+        networkWrapper.registerMessage(MessageJournal.Handler.class, MessageJournal.class, 10, Side.CLIENT);
+        networkWrapper.registerMessage(MessageJournalAppend.Handler.class, MessageJournalAppend.class, 11, Side.CLIENT);
+        networkWrapper.registerMessage(MessageNPCUpdate.ServerHandler.class, MessageNPCUpdate.class, 12, Side.SERVER);
+        networkWrapper.registerMessage(MessageNPCUpdate.ClientHandler.class, MessageNPCUpdate.class, 13, Side.CLIENT);
+        networkWrapper.registerMessage(MessageDialog.Handler.class, MessageDialog.class, 14, Side.CLIENT);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GUIHandler());
         EntityRegistry.registerModEntity(EntityRangedSpellEffect.class, "EntityRangedSpellEffect", 0, instance, 100, 1, false);
@@ -292,11 +298,11 @@ public class TESItems {
             cap.createInventory(player, cap.getInventory());
             cap.getInventory().calculateCarryweight();
             if (!event.getWorld().isRemote) {
-                networkWrapper.sendTo(new AttributesMessage(cap.getAttributes()), (EntityPlayerMP) event.getEntity());
-                networkWrapper.sendTo(new SpellbookMessage(cap.saveSpellbook()), (EntityPlayerMP) event.getEntity());
-                networkWrapper.sendTo(new InventoryMessage(cap.getInventory().writeToNBT()), (EntityPlayerMP) event.getEntity());
-                networkWrapper.sendTo(new QuestListMessage(QuestManager.saveToNBT()), (EntityPlayerMP) event.getEntity());
-                networkWrapper.sendTo(new JournalMessage(cap.getJournal()), (EntityPlayerMP) event.getEntity());
+                networkWrapper.sendTo(new MessageAttributes(cap.getAttributes()), (EntityPlayerMP) event.getEntity());
+                networkWrapper.sendTo(new MessageSpellbook(cap.saveSpellbook()), (EntityPlayerMP) event.getEntity());
+                networkWrapper.sendTo(new MessageInventory(cap.getInventory().writeToNBT()), (EntityPlayerMP) event.getEntity());
+                networkWrapper.sendTo(new MessageQuestList(QuestManager.saveToNBT()), (EntityPlayerMP) event.getEntity());
+                networkWrapper.sendTo(new MessageJournal(cap.getJournal()), (EntityPlayerMP) event.getEntity());
 
                 player.addChatComponentMessage(new TextComponentString(getMOTD()));
             }
@@ -379,16 +385,16 @@ public class TESItems {
     public void onKeyPressed(InputEvent.KeyInputEvent event) {
         if (!FMLClientHandler.instance().isGUIOpen(GuiChat.class)) {
             if (KeyBindings.castSpellKB.isKeyDown()) {
-                networkWrapper.sendToServer(new CastSpellMessage(getCapability(Minecraft.getMinecraft().thePlayer).getCurrentSpell()));
+                networkWrapper.sendToServer(new MessageCastSpell(getCapability(Minecraft.getMinecraft().thePlayer).getCurrentSpell()));
             }
             if (KeyBindings.selectSpellKB.isKeyDown()) {
-                networkWrapper.sendToServer(new OpenGuiMessage(TESItems.guiSpellSelect));
+                networkWrapper.sendToServer(new MessageOpenGui(TESItems.guiSpellSelect));
             }
             if (KeyBindings.openInventoryKB.isKeyDown()) {
-                networkWrapper.sendToServer(new OpenGuiMessage(TESItems.guiInventory));
+                networkWrapper.sendToServer(new MessageOpenGui(TESItems.guiInventory));
             }
-            if (KeyBindings.openQuestListKB.isKeyDown()) {
-                networkWrapper.sendToServer(new OpenGuiMessage(TESItems.guiQuestList));
+            if (KeyBindings.openJournalKB.isKeyDown()) {
+                networkWrapper.sendToServer(new MessageOpenGui(TESItems.guiJournal));
             }
         }
     }

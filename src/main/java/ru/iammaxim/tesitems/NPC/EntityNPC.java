@@ -16,12 +16,13 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import ru.iammaxim.tesitems.Dialogs.Dialog;
-import ru.iammaxim.tesitems.Fractions.Faction;
-import ru.iammaxim.tesitems.Fractions.FactionManager;
+import ru.iammaxim.tesitems.Factions.Faction;
+import ru.iammaxim.tesitems.Factions.FactionManager;
 import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.Inventory.InventoryNPC;
 import ru.iammaxim.tesitems.Items.mItems;
-import ru.iammaxim.tesitems.Networking.NPCUpdateMessage;
+import ru.iammaxim.tesitems.Networking.MessageDialog;
+import ru.iammaxim.tesitems.Networking.MessageNPCUpdate;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.TESItems;
 import scala.actors.threadpool.Arrays;
@@ -147,14 +148,16 @@ public class EntityNPC extends EntityLivingBase {
         }
 
         if (cap.getLatestNPC() != this) {
-            TESItems.networkWrapper.sendTo(new NPCUpdateMessage(serializeNBT()), (EntityPlayerMP) player);
+            TESItems.networkWrapper.sendTo(new MessageNPCUpdate(serializeNBT()), (EntityPlayerMP) player);
             cap.setLatestNPC(this);
         }
         if (player.getHeldItemOffhand() != null && player.getHeldItemOffhand().getItem() == mItems.itemNPCEditorTool)
             player.openGui(TESItems.instance, TESItems.guiNPCEditor, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
-        else
+        else {
+            TESItems.networkWrapper.sendTo(new MessageDialog(Dialog.createDialogForPlayer(this, player).saveToNBT()), (EntityPlayerMP) player);
             player.openGui(TESItems.instance, TESItems.guiNpcDialog, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
-        return EnumActionResult.SUCCESS;
+        }
+            return EnumActionResult.SUCCESS;
     }
 
     @Override

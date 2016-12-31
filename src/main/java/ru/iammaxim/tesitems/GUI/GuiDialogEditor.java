@@ -2,7 +2,7 @@ package ru.iammaxim.tesitems.GUI;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import ru.iammaxim.tesitems.GUI.elements.ScrollableLayout;
+import ru.iammaxim.tesitems.GUI.Elements.ScrollableLayout;
 import ru.iammaxim.tesitems.NPC.EntityNPC;
 
 /**

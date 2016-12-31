@@ -9,7 +9,7 @@ import net.minecraft.server.MinecraftServer;
 import ru.iammaxim.tesitems.Magic.SpellBase;
 import ru.iammaxim.tesitems.Magic.SpellEffectBase;
 import ru.iammaxim.tesitems.Magic.SpellEffectManager;
-import ru.iammaxim.tesitems.Networking.SpellbookMessage;
+import ru.iammaxim.tesitems.Networking.MessageSpellbook;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.ReflectionUtils;
 import ru.iammaxim.tesitems.TESItems;
@@ -47,6 +47,6 @@ public class CommandCreateSpell extends CommandBase {
         }
         SpellBase spell = SpellBase.createSpell(spellType, args[0], effects);
         cap.getSpellbook().add(spell);
-        TESItems.networkWrapper.sendTo(new SpellbookMessage(cap.saveSpellbook()), (EntityPlayerMP) sender);
+        TESItems.networkWrapper.sendTo(new MessageSpellbook(cap.saveSpellbook()), (EntityPlayerMP) sender);
     }
 }

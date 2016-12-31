@@ -1,9 +1,9 @@
 package ru.iammaxim.tesitems.GUI;
 
-import ru.iammaxim.tesitems.GUI.elements.ScrollableLayout;
-import ru.iammaxim.tesitems.GUI.elements.Text;
-import ru.iammaxim.tesitems.GUI.elements.TextField;
-import ru.iammaxim.tesitems.GUI.elements.VerticalLayout;
+import ru.iammaxim.tesitems.GUI.Elements.ScrollableLayout;
+import ru.iammaxim.tesitems.GUI.Elements.Text;
+import ru.iammaxim.tesitems.GUI.Elements.TextField;
+import ru.iammaxim.tesitems.GUI.Elements.VerticalLayout;
 import ru.iammaxim.tesitems.Questing.Quest;
 
 /**

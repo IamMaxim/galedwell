@@ -19,9 +19,9 @@ public class GUIHandler implements IGuiHandler {
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         switch (ID) {
             case TESItems.guiSpellSelect: return new GuiSpellSelect();
-            case TESItems.guiNpcDialog: return new GuiNpcDialog();
+            case TESItems.guiNpcDialog: return new GuiNPCDialog();
             case TESItems.guiInventory: return new GuiInventory(player);
-            case TESItems.guiQuestList: return new GuiQuestList();
+            case TESItems.guiJournal: return new GuiJournal();
             case TESItems.guiNPCEditor: return new GuiNPCEditor(player);
         }
         return null;

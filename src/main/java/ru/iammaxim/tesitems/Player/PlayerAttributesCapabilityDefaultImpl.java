@@ -6,6 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import ru.iammaxim.tesitems.Dialogs.Dialog;
 import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.Inventory.InventoryClient;
 import ru.iammaxim.tesitems.Inventory.InventoryServer;
@@ -27,16 +28,27 @@ import java.util.List;
  * Created by Maxim on 06.06.2016.
  */
 public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesCapability {
+    //player attributes and skills
     private HashMap<String, Float> attributes = new HashMap<>();
+    //player spells
     private List<SpellBase> spellbook = new ArrayList<>();
+    //current player's spell index
     private int currentSpell = -1;
+    //latest NPC player interacted with
     private EntityNPC latestNPC;
+    //player inventory
     private Inventory inventory = new Inventory();
+    //player active quests
     private HashMap<Integer, QuestInstance> quests = new HashMap<>();
+    //player quest journal; quest lines are saved here
     private String journal = "";
+    //latest dialog with NPC
+    @SideOnly(Side.CLIENT)
+    private Dialog dialog;
 
     public PlayerAttributesCapabilityDefaultImpl() {
     }
+
     public void createInventory(EntityPlayer player, Inventory inv) {
         if (!player.worldObj.isRemote)
             inventory = new InventoryServer(player);
@@ -58,12 +70,14 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
             loadQuest(tag);
         }
     }
+
     @Override
     public void loadQuest(NBTTagCompound tag) {
         int id = tag.getInteger("id");
         quests.put(id, new QuestInstance(QuestManager.getByID(id), QuestStatus.valueOf(tag.getString("questStatus")), tag.getInteger("stage")));
 
     }
+
     @Override
     public NBTTagCompound saveQuests() {
         NBTTagCompound tag = new NBTTagCompound();
@@ -79,14 +93,12 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
         tag.setTag("quests", nbtlist);
         return tag;
     }
+
     @Override
     public void journalAppend(String s) {
         journal = journal + s;
     }
-    @Override
-    public void setJournal(String s) {
-        journal = s;
-    }
+
     @Override
     public void setQuestStage(int questID, int stage) {
         if (stage == -1) { //complete quest
@@ -96,24 +108,46 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
         inst.stage = stage;
         journalAppend(inst.quest.stages.get(stage).journalLine + "\n\n");
     }
+
     @Override
     public QuestInstance getQuest(int id) {
         return quests.get(id);
     }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public Dialog getDialog() {
+        return dialog;
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void setDialog(Dialog dialog) {
+        this.dialog = dialog;
+    }
+
     @Override
     public String getJournal() {
         return journal;
     }
+
+    @Override
+    public void setJournal(String s) {
+        journal = s;
+    }
+
     @Override
     public float getAttribute(String s) {
         Float value = attributes.get(s);
         if (value == null) return 0;
         return attributes.get(s);
     }
+
     @Override
     public void setAttribute(String name, float value) {
         attributes.put(name, value);
     }
+
     @Override
     public void increaseAttribute(String name, float value) {
         Float f = attributes.get(name);
@@ -121,30 +155,42 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
         if (f >= 100) return;
         attributes.put(name, f + value);
     }
+
     @Override
     public HashMap<String, Float> getAttributes() {
         return attributes;
     }
+
     @Override
     public void setAttributes(HashMap<String, Float> newAttrs) {
         attributes = newAttrs;
     }
+
     @Override
     public List<SpellBase> getSpellbook() {
         return spellbook;
     }
+
+    @Override
+    public void setSpellbook(List<SpellBase> spellbook) {
+        this.spellbook = spellbook;
+    }
+
     @Override
     public void addSpell(SpellBase spell) {
         spellbook.add(spell);
     }
-    @Override
-    public void setCurrentSpell(int index) {
-        currentSpell = index;
-    }
+
     @Override
     public int getCurrentSpell() {
         return currentSpell;
     }
+
+    @Override
+    public void setCurrentSpell(int index) {
+        currentSpell = index;
+    }
+
     @Override
     public void loadSpellbook(NBTTagCompound nbttag) {
         spellbook.clear();
@@ -170,6 +216,7 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
             spellbook.add(spell);
         }
     }
+
     @Override
     public NBTTagCompound saveSpellbook() {
         NBTTagCompound tagCompound = new NBTTagCompound();
@@ -194,22 +241,22 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
         tagCompound.setTag("spellbook", list);
         return tagCompound;
     }
-    @Override
-    public void setSpellbook(List<SpellBase> spellbook) {
-        this.spellbook = spellbook;
-    }
+
     @Override
     public void addQuest(QuestInstance inst) {
         quests.put(inst.quest_id, inst);
     }
+
     @Override
     public HashMap<Integer, QuestInstance> getQuests() {
         return quests;
     }
+
     @Override
     public float getCarryWeight() {
         return inventory.carryweight;
     }
+
     @Override
     public float getMaxCarryWeight() {
         Float f = attributes.get("strength");
@@ -218,18 +265,22 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
         else
             return 0;
     }
+
     @Override
     public EntityNPC getLatestNPC() {
         return latestNPC;
     }
+
     @Override
     public void setLatestNPC(EntityNPC npc) {
         latestNPC = npc;
     }
+
     @Override
     public Inventory getInventory() {
         return inventory;
     }
+
     @Override
     public void setInventory(Inventory inventory) {
         this.inventory = inventory;

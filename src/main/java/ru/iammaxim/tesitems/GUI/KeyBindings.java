@@ -11,11 +11,11 @@ public class KeyBindings {
     public static KeyBinding castSpellKB = new KeyBinding("Cast spell", Keyboard.KEY_C, "Magic");
     public static KeyBinding selectSpellKB = new KeyBinding("Open spell selection", Keyboard.KEY_O, "Magic");
     public static KeyBinding openInventoryKB = new KeyBinding("Open inventory", Keyboard.KEY_TAB, "Player");
-    public static KeyBinding openQuestListKB = new KeyBinding("Open quest list", Keyboard.KEY_J, "Player");
+    public static KeyBinding openJournalKB = new KeyBinding("Open journal", Keyboard.KEY_J, "Player");
     public static void register() {
         ClientRegistry.registerKeyBinding(castSpellKB);
         ClientRegistry.registerKeyBinding(selectSpellKB);
         ClientRegistry.registerKeyBinding(openInventoryKB);
-        ClientRegistry.registerKeyBinding(openQuestListKB);
+        ClientRegistry.registerKeyBinding(openJournalKB);
     }
 }

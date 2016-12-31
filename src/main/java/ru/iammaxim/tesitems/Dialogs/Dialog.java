@@ -3,6 +3,7 @@ package ru.iammaxim.tesitems.Dialogs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import ru.iammaxim.tesitems.NPC.EntityNPC;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.Questing.Quest;
 import ru.iammaxim.tesitems.Questing.QuestInstance;
@@ -19,12 +20,17 @@ import java.util.List;
 public class Dialog {
     public HashMap<String, DialogTopic> topics = new HashMap<>();
 
-    public static Dialog createDialogForPlayer(EntityPlayer player, QuestInstance inst) {
+    public static Dialog createDialogForPlayer(EntityNPC npc, EntityPlayer player) {
         Dialog dialog = new Dialog();
         IPlayerAttributesCapability cap = TESItems.getCapability(player);
         cap.getQuests().forEach((id, quest) -> {
             ArrayList<DialogTopic> topics = quest.getCurrentStage().topics;
-            topics.forEach(t -> dialog.addTopic(t.name, t));
+            topics.forEach(t -> {
+                if (t.npcName.equals(npc.getName())) dialog.addTopic(t.name, t);
+            });
+        });
+        npc.getFactions().forEach(faction -> {
+
         });
         return dialog;
     }

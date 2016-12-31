@@ -7,7 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import ru.iammaxim.tesitems.Magic.SpellBase;
-import ru.iammaxim.tesitems.Networking.SpellbookMessage;
+import ru.iammaxim.tesitems.Networking.MessageSpellbook;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.TESItems;
 
@@ -36,6 +36,6 @@ public class CommandRemoveSpell extends CommandBase {
         while (it.hasNext()) {
             if (it.next().getName().equals(args[0])) it.remove();
         }
-        TESItems.networkWrapper.sendTo(new SpellbookMessage(cap.saveSpellbook()), (EntityPlayerMP) sender);
+        TESItems.networkWrapper.sendTo(new MessageSpellbook(cap.saveSpellbook()), (EntityPlayerMP) sender);
     }
 }

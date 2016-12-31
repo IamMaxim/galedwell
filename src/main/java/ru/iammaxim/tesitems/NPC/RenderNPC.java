@@ -43,7 +43,6 @@ public class RenderNPC extends RenderLivingBase<EntityNPC> {
     }
 
     public void doRender(EntityNPC entity, double x, double y, double z, float entityYaw, float partialTicks) {
-        //if (!entity.isUser() || this.renderManager.renderViewEntity == entity) {
         double d0 = y;
 
             /* //never sneaking
@@ -55,7 +54,6 @@ public class RenderNPC extends RenderLivingBase<EntityNPC> {
         GlStateManager.enableBlendProfile(GlStateManager.Profile.PLAYER_SKIN);
         super.doRender(entity, x, d0, z, entityYaw, partialTicks);
         GlStateManager.disableBlendProfile(GlStateManager.Profile.PLAYER_SKIN);
-        //}
     }
 
     @Override

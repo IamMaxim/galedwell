@@ -1,6 +1,5 @@
 package ru.iammaxim.tesitems.Inventory;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -8,9 +7,9 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import ru.iammaxim.tesitems.Networking.EquipMessage;
-import ru.iammaxim.tesitems.Networking.InventoryUpdateMessage;
-import ru.iammaxim.tesitems.Networking.ItemDropMessage;
+import ru.iammaxim.tesitems.Networking.MessageEquip;
+import ru.iammaxim.tesitems.Networking.MessageInventoryUpdate;
+import ru.iammaxim.tesitems.Networking.MessageItemDrop;
 import ru.iammaxim.tesitems.TESItems;
 
 /**
@@ -30,30 +29,30 @@ public class InventoryServer extends Inventory {
     @Override
     public void clear() {
         super.clear();
-        sendMessage(new InventoryUpdateMessage(InventoryUpdateMessage.ACTION_CLEAR), player);
+        sendMessage(new MessageInventoryUpdate(MessageInventoryUpdate.ACTION_CLEAR), player);
     }
 
     @Override
     public void addItem(ItemStack stack) {
         super.addItem(stack);
-        sendMessage(new InventoryUpdateMessage(InventoryUpdateMessage.ACTION_ADD, stack), player);
+        sendMessage(new MessageInventoryUpdate(MessageInventoryUpdate.ACTION_ADD, stack), player);
     }
 
     @Override
     public void setItem(int index, ItemStack stack) {
         super.setItem(index, stack);
-        sendMessage(new InventoryUpdateMessage(InventoryUpdateMessage.ACTION_SET, index, stack), player);
+        sendMessage(new MessageInventoryUpdate(MessageInventoryUpdate.ACTION_SET, index, stack), player);
     }
 
     @Override
     public boolean removeItem(Item item) {
-        sendMessage(new InventoryUpdateMessage(InventoryUpdateMessage.ACTION_REMOVE_ITEM, item), player);
+        sendMessage(new MessageInventoryUpdate(MessageInventoryUpdate.ACTION_REMOVE_ITEM, item), player);
         return super.removeItem(item);
     }
 
     @Override
     public boolean removeItem(int index) {
-        sendMessage(new InventoryUpdateMessage(InventoryUpdateMessage.ACTION_REMOVE_INDEX, index), player);
+        sendMessage(new MessageInventoryUpdate(MessageInventoryUpdate.ACTION_REMOVE_INDEX, index), player);
         return super.removeItem(index);
     }
 
@@ -65,8 +64,8 @@ public class InventoryServer extends Inventory {
         System.out.println(is.stackSize);
         System.out.println(is.stackSize - count);
         if (is.stackSize > 0)
-            sendMessage(new ItemDropMessage(index, is.stackSize - count), player);
-        else sendMessage(new InventoryUpdateMessage(InventoryUpdateMessage.ACTION_REMOVE_INDEX, index), player);
+            sendMessage(new MessageItemDrop(index, is.stackSize - count), player);
+        else sendMessage(new MessageInventoryUpdate(MessageInventoryUpdate.ACTION_REMOVE_INDEX, index), player);
     }
 
     @Override
@@ -75,6 +74,6 @@ public class InventoryServer extends Inventory {
             player.setItemStackToSlot(slot, null);
         else
             player.setItemStackToSlot(slot, get(index));
-        TESItems.networkWrapper.sendTo(new EquipMessage(slot.toString(), index), (EntityPlayerMP) player);
+        TESItems.networkWrapper.sendTo(new MessageEquip(slot.toString(), index), (EntityPlayerMP) player);
     }
 }

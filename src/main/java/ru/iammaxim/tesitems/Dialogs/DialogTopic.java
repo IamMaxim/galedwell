@@ -11,6 +11,7 @@ import java.util.ArrayList;
  * Created by maxim on 11/11/16 at 7:57 PM.
  */
 public class DialogTopic {
+    public String npcName;
     public String name;
     public String script;
     public String dialogLine;
@@ -27,6 +28,7 @@ public class DialogTopic {
 
     public NBTTagCompound saveToNBT() {
         NBTTagCompound tag = new NBTTagCompound();
+        tag.setString("npcName", npcName);
         tag.setString("name", name);
         tag.setString("dialogLine", dialogLine);
         tag.setString("script", script);
@@ -38,6 +40,7 @@ public class DialogTopic {
 
     public static DialogTopic loadFromNBT(NBTTagCompound tag) {
         DialogTopic topic = new DialogTopic();
+        topic.npcName = tag.getString("npcName");
         topic.name = tag.getString("name");
         topic.script = tag.getString("script");
         topic.dialogLine = tag.getString("dialogLine");

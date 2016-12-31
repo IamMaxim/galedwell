@@ -2,6 +2,9 @@ package ru.iammaxim.tesitems.Player;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import ru.iammaxim.tesitems.Dialogs.Dialog;
 import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.Magic.SpellBase;
 import ru.iammaxim.tesitems.NPC.EntityNPC;
@@ -43,4 +46,8 @@ public interface IPlayerAttributesCapability {
     void setJournal(String s);
     void setQuestStage(int questID, int stage);
     QuestInstance getQuest(int id);
+    @SideOnly(Side.CLIENT)
+    void setDialog(Dialog dialog);
+    @SideOnly(Side.CLIENT)
+    Dialog getDialog();
 }

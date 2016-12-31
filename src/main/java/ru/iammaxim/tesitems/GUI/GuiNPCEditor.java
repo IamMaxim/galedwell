@@ -3,9 +3,9 @@ package ru.iammaxim.tesitems.GUI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
-import ru.iammaxim.tesitems.GUI.elements.*;
+import ru.iammaxim.tesitems.GUI.Elements.*;
 import ru.iammaxim.tesitems.NPC.EntityNPC;
-import ru.iammaxim.tesitems.Networking.NPCUpdateMessage;
+import ru.iammaxim.tesitems.Networking.MessageNPCUpdate;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.TESItems;
 
@@ -47,7 +47,7 @@ public class GuiNPCEditor extends Screen {
         }));
         layout.add(npcName);
         layout.add(invulnerability);
-        layout.add(new Divider(layout));
+        layout.add(new HorizontalDivider(layout));
         layout.add(new Text(layout, "Factions").center(true));
 
         VerticalLayout factionsLayout = new VerticalLayout(layout);
@@ -68,9 +68,9 @@ public class GuiNPCEditor extends Screen {
             factionsLayout.add(fl);
         }));
 
-        layout.add(new Divider(layout));
+        layout.add(new HorizontalDivider(layout));
         layout.add(new Button(layout).setText("Update").setOnClick(b -> {
-            TESItems.networkWrapper.sendToServer(new NPCUpdateMessage(npc.serializeNBT()));
+            TESItems.networkWrapper.sendToServer(new MessageNPCUpdate(npc.serializeNBT()));
             mc.displayGuiScreen(new GuiAlertDialog("Changes updated", this));
         }));
 

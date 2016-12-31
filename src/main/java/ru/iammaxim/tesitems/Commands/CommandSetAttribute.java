@@ -9,7 +9,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
-import ru.iammaxim.tesitems.Networking.AttributesMessage;
+import ru.iammaxim.tesitems.Networking.MessageAttributes;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.TESItems;
 
@@ -43,7 +43,7 @@ public class CommandSetAttribute extends CommandBase {
             float f = Float.parseFloat(args[2]);
             cap.setAttribute(args[1], f);
             iCommandSender.addChatMessage(new TextComponentString("Setting " + TextFormatting.YELLOW + args[0] + TextFormatting.RESET + "'s " + TextFormatting.BLUE + args[1] + TextFormatting.RESET + " to " + f));
-            TESItems.networkWrapper.sendTo(new AttributesMessage(cap.getAttributes()), (EntityPlayerMP) player);
+            TESItems.networkWrapper.sendTo(new MessageAttributes(cap.getAttributes()), (EntityPlayerMP) player);
         } else {
             iCommandSender.addChatMessage(new TextComponentString(TextFormatting.RED + "Invalid argument count"));
         }
