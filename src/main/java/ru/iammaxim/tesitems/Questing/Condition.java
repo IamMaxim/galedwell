@@ -17,4 +17,5 @@ public abstract class Condition {
         }
         return null;
     }
+    public abstract Condition clone();
 }

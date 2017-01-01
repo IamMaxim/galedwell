@@ -16,8 +16,6 @@ import ru.iammaxim.tesitems.Questing.QuestStage;
 import ru.iammaxim.tesitems.Questing.QuestTargets.QuestTargetGather;
 import ru.iammaxim.tesitems.TESItems;
 
-import java.io.IOException;
-
 /**
  * Created by maxim on 11/4/16 at 10:15 PM.
  */
@@ -54,16 +52,10 @@ public class CommandManageQuests extends CommandBase {
             stage2.targets.add(new QuestTargetGather(new ItemStack(Item.getItemFromBlock(Blocks.COBBLESTONE))));
             quest.stages.add(stage2);
             QuestManager.questList.put(quest.id, quest);
+
             sender.addChatMessage(new TextComponentString("Quest added"));
         } else if (args[0].equals("remove")) {
             QuestManager.questList.remove(Integer.valueOf(args[1]));
-        } else if (args[0].equals("save")) {
-            try {
-                QuestManager.saveToFile();
-                sender.addChatMessage(new TextComponentString("Quests saved"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         } else if (args[0].equals("start")) {
             QuestManager.startQuest((EntityPlayer) sender, QuestManager.getByID(Integer.parseInt(args[1])));
         } else {

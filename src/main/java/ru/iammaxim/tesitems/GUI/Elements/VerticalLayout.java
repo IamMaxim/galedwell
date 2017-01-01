@@ -22,6 +22,10 @@ public class VerticalLayout extends LayoutBase {
         return this;
     }
 
+    public void remove(ElementBase element) {
+        elements.remove(element);
+    }
+
     public void clear() {
         elements.clear();
     }

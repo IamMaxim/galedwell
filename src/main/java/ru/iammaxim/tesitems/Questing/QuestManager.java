@@ -17,8 +17,8 @@ import java.util.Scanner;
  * Created by Maxim on 20.07.2016.
  */
 public class QuestManager {
-    private static final String FILEDIRECTORY = "questSystem";
-    private static final String FILEPATH = FILEDIRECTORY + "/quests.nbt";
+//    private static final String FILEDIRECTORY = "questSystem";
+//    private static final String FILEPATH = FILEDIRECTORY + "/quests.nbt";
     public static HashMap<Integer, Quest> questList = new HashMap<>();
     private static int idGen = 0;
 
@@ -30,7 +30,7 @@ public class QuestManager {
         return ++idGen;
     }
 
-    public static NBTTagCompound saveToNBT() {
+    public static NBTTagCompound writeToNBT() {
         NBTTagCompound tagCompound = new NBTTagCompound();
         NBTTagList quests = new NBTTagList();
         for (Quest quest : questList.values()) {
@@ -95,7 +95,7 @@ public class QuestManager {
         return quest;
     }
 
-    public static void loadFromFile() {
+/*    public static void loadFromFile() {
         try {
             File f = new File(FILEPATH);
             if (!f.exists()) return;
@@ -107,16 +107,16 @@ public class QuestManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
-    public static void saveToFile() throws IOException {
+/*    public static void saveToFile() throws IOException {
         File f = new File(FILEDIRECTORY);
         f.mkdirs();
         File f2 = new File(FILEPATH);
         FileOutputStream fos = new FileOutputStream(f2);
-        fos.write(saveToNBT().toString().getBytes());
+        fos.write(writeToNBT().toString().getBytes());
         fos.close();
-    }
+    }*/
 
     public static void startQuest(EntityPlayer player, Quest quest) {
         IPlayerAttributesCapability cap = TESItems.getCapability(player);

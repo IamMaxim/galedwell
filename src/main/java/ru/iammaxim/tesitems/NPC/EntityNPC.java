@@ -147,13 +147,16 @@ public class EntityNPC extends EntityLivingBase {
             return EnumActionResult.SUCCESS;
         }
 
+        //if latest NPC player interacted with is not this NPC, send him this NPC data (name etc.)
         if (cap.getLatestNPC() != this) {
             TESItems.networkWrapper.sendTo(new MessageNPCUpdate(serializeNBT()), (EntityPlayerMP) player);
             cap.setLatestNPC(this);
         }
         if (player.getHeldItemOffhand() != null && player.getHeldItemOffhand().getItem() == mItems.itemNPCEditorTool)
+            //let the player edit this NPC
             player.openGui(TESItems.instance, TESItems.guiNPCEditor, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
         else {
+            //open dialog GUI
             TESItems.networkWrapper.sendTo(new MessageDialog(Dialog.createDialogForPlayer(this, player).saveToNBT()), (EntityPlayerMP) player);
             player.openGui(TESItems.instance, TESItems.guiNpcDialog, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
         }

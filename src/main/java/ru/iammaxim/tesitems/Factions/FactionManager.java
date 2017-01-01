@@ -1,5 +1,8 @@
 package ru.iammaxim.tesitems.Factions;
 
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+
 import java.util.HashMap;
 
 /**
@@ -14,5 +17,18 @@ public class FactionManager {
 
     public static Faction getFaction(int id) {
         return factions.get(id);
+    }
+
+    public static NBTTagList writeToNBT() {
+        NBTTagList tagList = new NBTTagList();
+        factions.forEach((id, f) -> tagList.appendTag(f.writeToNBT()));
+        return tagList;
+    }
+
+    public static void loadFromNBT(NBTTagList tagList) {
+        for (int i = tagList.tagCount(); i >= 0; i--) {
+            Faction faction = Faction.loadFromNBT(tagList.getCompoundTagAt(i));
+            factions.put(faction.id, faction);
+        }
     }
 }

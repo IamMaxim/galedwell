@@ -54,6 +54,11 @@ public class ConditionAttribute extends Condition {
         return tag;
     }
 
+    @Override
+    public ru.iammaxim.tesitems.Questing.Condition clone() {
+        return new ConditionAttribute(attributeName, this.condition, value);
+    }
+
     public enum Condition {
         LESS, LESSEQUAL, EQUAL, GREATEREQUAL, GREATER
     }

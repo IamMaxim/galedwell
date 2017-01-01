@@ -30,7 +30,7 @@ public class Dialog {
             });
         });
         npc.getFactions().forEach(faction -> {
-
+            faction.topics.forEach(t -> dialog.addTopic(t.name, t));
         });
         return dialog;
     }

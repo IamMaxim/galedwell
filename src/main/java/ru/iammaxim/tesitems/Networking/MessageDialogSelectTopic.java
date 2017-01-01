@@ -6,6 +6,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import ru.iammaxim.tesitems.Dialogs.DialogTopic;
+import ru.iammaxim.tesitems.GUI.GuiNPCDialog;
 import ru.iammaxim.tesitems.TESItems;
 
 /**
@@ -17,7 +18,7 @@ public class MessageDialogSelectTopic implements IMessage {
     public MessageDialogSelectTopic() {}
 
     public MessageDialogSelectTopic(DialogTopic topic) {
-        topic.
+//        topic.
     }
 
     @Override
@@ -34,7 +35,9 @@ public class MessageDialogSelectTopic implements IMessage {
         @Override
         public IMessage onMessage(MessageDialogSelectTopic message, MessageContext ctx) {
             GuiScreen currentScreen = TESItems.getMinecraft().currentScreen;
-            if (currentScreen instanceof )
+            if (currentScreen instanceof GuiNPCDialog) {
+
+            }
 
                 return null;
         }

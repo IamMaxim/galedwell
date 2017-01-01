@@ -2,6 +2,7 @@ package ru.iammaxim.tesitems;
 
 import net.minecraft.block.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,6 +28,7 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -110,14 +112,16 @@ public class TESItems {
             guiInventory = 2,
             guiNPCEditor = 3,
             guiQuestEditor = 4,
-            guiJournal = 5;
+            guiJournal = 5,
+            guiFactionList = 6,
+            guiFactionEditor = 7;
     @CapabilityInject(IPlayerAttributesCapability.class)
     public static Capability<IPlayerAttributesCapability> attributesCapability;
     @Mod.Instance
     public static TESItems instance;
 
     @SideOnly(Side.CLIENT)
-    public static UnicodeFontRenderer fontRenderer;
+    public static FontRenderer fontRenderer;
 
     //used for dialog camera orient
     /*
@@ -165,6 +169,9 @@ public class TESItems {
         networkWrapper.registerMessage(MessageNPCUpdate.ServerHandler.class, MessageNPCUpdate.class, 12, Side.SERVER);
         networkWrapper.registerMessage(MessageNPCUpdate.ClientHandler.class, MessageNPCUpdate.class, 13, Side.CLIENT);
         networkWrapper.registerMessage(MessageDialog.Handler.class, MessageDialog.class, 14, Side.CLIENT);
+        networkWrapper.registerMessage(MessageFactionList.Handler.class, MessageFactionList.class, 15, Side.CLIENT);
+        networkWrapper.registerMessage(MessageFaction.ServerHandler.class, MessageFaction.class, 16, Side.SERVER);
+        networkWrapper.registerMessage(MessageFaction.ClientHandler.class, MessageFaction.class, 17, Side.CLIENT);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GUIHandler());
         EntityRegistry.registerModEntity(EntityRangedSpellEffect.class, "EntityRangedSpellEffect", 0, instance, 100, 1, false);
@@ -214,15 +221,19 @@ public class TESItems {
         CraftRecipes.addRecipe(new CraftRecipe("testLargeStacks", new ItemStack[]{new ItemStack(Item.getItemFromBlock(Blocks.DIRT), 100)}, new ItemStack(Item.getItemFromBlock(Blocks.COBBLESTONE), 1)));
         ItemWeightManager.init();
         ItemValueManager.init();
-        QuestManager.loadFromFile();
+//        QuestManager.loadFromFile();
 
         if (event.getSide() == Side.CLIENT)
             try {
                 Font font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File("oblivion.ttf")));
                 font = font.deriveFont(Font.PLAIN, 24);
                 fontRenderer = new UnicodeFontRenderer(font);
+
+//                todo: add config setting
+//                getMinecraft().fontRendererObj = fontRenderer;
             } catch (FontFormatException | IOException e) {
                 e.printStackTrace();
+                fontRenderer = getMinecraft().fontRendererObj;
             }
     }
 
@@ -301,7 +312,7 @@ public class TESItems {
                 networkWrapper.sendTo(new MessageAttributes(cap.getAttributes()), (EntityPlayerMP) event.getEntity());
                 networkWrapper.sendTo(new MessageSpellbook(cap.saveSpellbook()), (EntityPlayerMP) event.getEntity());
                 networkWrapper.sendTo(new MessageInventory(cap.getInventory().writeToNBT()), (EntityPlayerMP) event.getEntity());
-                networkWrapper.sendTo(new MessageQuestList(QuestManager.saveToNBT()), (EntityPlayerMP) event.getEntity());
+                networkWrapper.sendTo(new MessageQuestList(QuestManager.writeToNBT()), (EntityPlayerMP) event.getEntity());
                 networkWrapper.sendTo(new MessageJournal(cap.getJournal()), (EntityPlayerMP) event.getEntity());
 
                 player.addChatComponentMessage(new TextComponentString(getMOTD()));
@@ -339,6 +350,7 @@ public class TESItems {
         event.registerServerCommand(new CommandCreateSpell());
         event.registerServerCommand(new CommandRemoveSpell());
         event.registerServerCommand(new CommandGiveMe());
+        event.registerServerCommand(new CommandManageFactions());
 
         //debug
         event.registerServerCommand(new CommandManageInventory());
@@ -413,4 +425,14 @@ public class TESItems {
         inv.addItem(event.getItem().getEntityItem());
         event.getItem().setDead();
     }
+
+    @SubscribeEvent
+    public void onWorldLoad(WorldEvent.Load event) {
+        MWorldSavedData data = MWorldSavedData.get(event.getWorld());
+    }
+
+    /*@SubscribeEvent
+    public void onWorldUnload(WorldEvent.Unload event) {
+
+    }*/
 }

@@ -12,9 +12,9 @@ import java.util.ArrayList;
  */
 public class DialogTopic {
     public String npcName;
-    public String name;
+    public String name = "";
     public String script;
-    public String dialogLine;
+    public String dialogLine = "";
     public ArrayList<Condition> conditions = new ArrayList<>();
 
     public boolean needToAdd(EntityPlayer player) {

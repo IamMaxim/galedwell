@@ -17,7 +17,7 @@ public class Button extends ElementBase {
     private String text = "A button";
     private int padding = 4, textColor = 0xff481f09;
     private FontRenderer fontRenderer;
-    private boolean useInactiveBackground = true, center = false;
+    private boolean useInactiveBackground = true, center = true;
 
     public Button center(boolean center) {
         this.center = center;
