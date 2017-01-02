@@ -1,6 +1,5 @@
 package ru.iammaxim.tesitems.GUI.Elements;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import org.lwjgl.input.Keyboard;
@@ -19,11 +18,14 @@ public class TextField extends ElementBase {
     private List<String> strs = new ArrayList<>();
     private int hintColor = 0xff999999, color = 0xffffffff;
     private int lineSpacing = 4;
-    private int lastStrsSize = 0;
     private Consumer<TextField> onType;
     private int padding = 4;
     private boolean dirty = false;
     private boolean active = false;
+
+    public TextField(ElementBase parent) {
+        super(parent);
+    }
 
     @Override
     public void checkClick(int mouseX, int mouseY) {
@@ -33,10 +35,6 @@ public class TextField extends ElementBase {
         } else {
             active = false;
         }
-    }
-
-    public TextField(ElementBase parent) {
-        super(parent);
     }
 
     public String getText() {
@@ -54,12 +52,17 @@ public class TextField extends ElementBase {
         if (width == 0) {
             return;
         }
-        strs = TESItems.fontRenderer.listFormattedStringToWidth(text, width);
+        strs = TESItems.fontRenderer.listFormattedStringToWidth(text, width - 2 * padding);
         dirty = false;
     }
 
     public String getHint() {
         return hint;
+    }
+
+    public TextField setHint(String hint) {
+        this.hint = hint;
+        return this;
     }
 
     @Override
@@ -68,11 +71,6 @@ public class TextField extends ElementBase {
             return TESItems.fontRenderer.getStringWidth(text) + 2 * padding;
         else
             return TESItems.fontRenderer.getStringWidth(hint) + 2 * padding;
-    }
-
-    public TextField setHint(String hint) {
-        this.hint = hint;
-        return this;
     }
 
     public TextField setOnType(Consumer<TextField> onType) {
@@ -91,14 +89,8 @@ public class TextField extends ElementBase {
             } else if (typedChar == ' ' || UnicodeFontRenderer.alphabet.contains(typedChar + "")) {
                 text = text + typedChar;
             }
-            FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
-            strs = fontRenderer.listFormattedStringToWidth(text, width);
-            if (lastStrsSize != strs.size()) {
-                lastStrsSize = strs.size();
-                if (parent instanceof LayoutBase) {
-                    ((LayoutBase) getRoot()).doLayout();
-                }
-            }
+            update();
+            ((LayoutBase) getRoot()).doLayout();
             if (onType != null)
                 onType.accept(this);
         }
@@ -117,8 +109,8 @@ public class TextField extends ElementBase {
     @Override
     public void draw(int mouseX, int mouseY) {
         if (dirty) {
-            ((LayoutBase)getRoot()).doLayout();
             update();
+            ((LayoutBase) getRoot()).doLayout();
         }
 
         Tessellator tess = Tessellator.getInstance();

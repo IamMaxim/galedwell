@@ -1,9 +1,11 @@
-package ru.iammaxim.tesitems.GUI.Elements;
+package ru.iammaxim.tesitems.GUI.Elements.Layouts;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
+import ru.iammaxim.tesitems.GUI.Elements.ElementBase;
+import ru.iammaxim.tesitems.GUI.Elements.LayoutBase;
 
 /**
  * Created by maxim on 11/8/16 at 5:18 PM.

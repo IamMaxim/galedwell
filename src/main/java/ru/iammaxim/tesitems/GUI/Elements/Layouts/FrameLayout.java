@@ -1,4 +1,7 @@
-package ru.iammaxim.tesitems.GUI.Elements;
+package ru.iammaxim.tesitems.GUI.Elements.Layouts;
+
+import ru.iammaxim.tesitems.GUI.Elements.ElementBase;
+import ru.iammaxim.tesitems.GUI.Elements.LayoutBase;
 
 /**
  * Created by maxim on 11/7/16 at 4:38 PM.

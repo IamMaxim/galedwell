@@ -3,6 +3,8 @@ package ru.iammaxim.tesitems.GUI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import ru.iammaxim.tesitems.GUI.Elements.*;
+import ru.iammaxim.tesitems.GUI.Elements.Layouts.FancyFrameLayout;
+import ru.iammaxim.tesitems.GUI.Elements.Layouts.VerticalLayout;
 
 /**
  * Created by maxim on 11/6/16 at 1:53 AM.

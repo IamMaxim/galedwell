@@ -33,5 +33,7 @@ public class ResManager {
             icon_carryweight = new ResourceLocation("tesitems:textures/gui/icons/carryweight.png"),
             icon_damage = new ResourceLocation("tesitems:textures/gui/icons/damage.png"),
             icon_durability = new ResourceLocation("tesitems:textures/gui/icons/durability.png"),
-            inv_carryweight_bg = new ResourceLocation("tesitems:textures/gui/inventory/carryweight_bg.png");
+            inv_carryweight_bg = new ResourceLocation("tesitems:textures/gui/inventory/carryweight_bg.png"),
+            decor_blue_left = new ResourceLocation("tesitems:textures/gui/decor_blue_left.png"),
+            decor_blue_right = new ResourceLocation("tesitems:textures/gui/decor_blue_right.png");
 }

@@ -1,7 +1,9 @@
-package ru.iammaxim.tesitems.GUI.Elements;
+package ru.iammaxim.tesitems.GUI.Elements.Layouts;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import ru.iammaxim.tesitems.GUI.Elements.ElementBase;
+import ru.iammaxim.tesitems.GUI.Elements.LayoutBase;
 
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
@@ -9,25 +11,29 @@ import java.util.ConcurrentModificationException;
 /**
  * Created by maxim on 11/7/16 at 4:19 PM.
  */
-public class HorizontalLayout extends LayoutBase {
+public class VerticalLayout extends LayoutBase {
     private int spacing = 4;
     private ArrayList<ElementBase> elements = new ArrayList<>();
 
-    public HorizontalLayout(ElementBase parent) {
+    public ArrayList<ElementBase> getElements() {
+        return elements;
+    }
+
+    public VerticalLayout(ElementBase parent) {
         super(parent);
     }
 
-    public int getSpacing() {
-        return spacing;
-    }
-
-    public void setSpacing(int spacing) {
-        this.spacing = spacing;
-    }
-
-    public HorizontalLayout add(ElementBase element) {
+    public VerticalLayout add(ElementBase element) {
         elements.add(element);
         return this;
+    }
+
+    public void remove(ElementBase element) {
+        elements.remove(element);
+    }
+
+    public void clear() {
+        elements.clear();
     }
 
     @Override
@@ -39,8 +45,7 @@ public class HorizontalLayout extends LayoutBase {
     public void checkClick(int mouseX, int mouseY) {
         try {
             elements.forEach(e -> e.checkClick(mouseX, mouseY));
-        } catch (ConcurrentModificationException e) {
-        }
+        } catch (ConcurrentModificationException e) {}
     }
 
     @Override
@@ -48,12 +53,12 @@ public class HorizontalLayout extends LayoutBase {
         int y = top + padding;
         int x = left + padding;
         for (ElementBase element : elements) {
-            int w = element.getWidth();
-            int h = height - 2 * padding;
+            int w = width - 2 * padding;
+            int h = element.getHeight();
             element.setBounds(x, y, x + w, y + h);
             if (element instanceof LayoutBase)
                 ((LayoutBase) element).doLayout();
-            x += w + spacing;
+            y += h + spacing;
         }
     }
 
@@ -61,12 +66,10 @@ public class HorizontalLayout extends LayoutBase {
     public int getHeight() {
         int height = 0;
         for (ElementBase e : elements) {
-            int h = e.getHeight();
-            if (parent != null)
-                h = (int) Math.min(h, new ScaledResolution(Minecraft.getMinecraft()).getScaledHeight() * 0.8 - 2 * padding);
-            if (h > height) height = h;
+            height += e.getHeight();
         }
-        height += 2 * padding;
+        height += (elements.size() - 1) * spacing;
+        height += 2 * padding + 2 * marginV;
         return height;
     }
 
@@ -79,10 +82,12 @@ public class HorizontalLayout extends LayoutBase {
     public int getWidth() {
         int width = 0;
         for (ElementBase e : elements) {
-            width += e.getWidth();
+            int w = e.getWidth();
+            if (parent != null)
+                w = (int) Math.min(w, new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth() * 0.8 - 2 * padding);
+            if (w > width) width = w;
         }
-        width += (elements.size() - 1) * spacing;
-        width += 2 * padding;
+        width += 2 * padding + 2 * marginH;
         return width;
     }
 

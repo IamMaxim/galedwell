@@ -4,9 +4,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import org.lwjgl.input.Mouse;
-import ru.iammaxim.tesitems.GUI.Elements.FancyFrameLayout;
-import ru.iammaxim.tesitems.GUI.Elements.FrameLayout;
-import ru.iammaxim.tesitems.GUI.Elements.ScreenCenteredLayout;
+import ru.iammaxim.tesitems.GUI.Elements.Layouts.FancyFrameLayout;
+import ru.iammaxim.tesitems.GUI.Elements.Layouts.FrameLayout;
+import ru.iammaxim.tesitems.GUI.Elements.Layouts.ScreenCenteredLayout;
 
 import java.io.IOException;
 

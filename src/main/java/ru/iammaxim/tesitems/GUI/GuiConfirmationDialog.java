@@ -3,9 +3,9 @@ package ru.iammaxim.tesitems.GUI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import ru.iammaxim.tesitems.GUI.Elements.Button;
-import ru.iammaxim.tesitems.GUI.Elements.FancyFrameLayout;
+import ru.iammaxim.tesitems.GUI.Elements.Layouts.FancyFrameLayout;
 import ru.iammaxim.tesitems.GUI.Elements.Text;
-import ru.iammaxim.tesitems.GUI.Elements.VerticalLayout;
+import ru.iammaxim.tesitems.GUI.Elements.Layouts.VerticalLayout;
 
 /**
  * Created by maxim on 02.01.2017.

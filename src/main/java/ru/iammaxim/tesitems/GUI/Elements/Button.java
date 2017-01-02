@@ -18,6 +18,7 @@ public class Button extends ElementBase {
     private int padding = 4, textColor = 0xff481f09;
     private FontRenderer fontRenderer;
     private boolean useInactiveBackground = true, center = true;
+    private int textWidth;
 
     public Button center(boolean center) {
         this.center = center;
@@ -35,7 +36,7 @@ public class Button extends ElementBase {
 
     @Override
     public int getWidth() {
-        return fontRenderer.getStringWidth(text) + 2 * padding;
+        return textWidth + 2 * padding;
     }
 
     @Override
@@ -69,6 +70,7 @@ public class Button extends ElementBase {
 
     public Button setText(String text) {
         this.text = text;
+        textWidth = fontRenderer.getStringWidth(text);
         return this;
     }
 
@@ -77,13 +79,30 @@ public class Button extends ElementBase {
     }
 
     @Override
+    public void checkClick(int mouseX, int mouseY) {
+        int _padding = (width - textWidth) / 2 - padding;
+        if (mouseX > left + _padding && mouseX < right - _padding && mouseY > top && mouseY < bottom) {
+            click(mouseX - left, mouseY - top);
+        }
+    }
+
+    @Override
     public void draw(int mouseX, int mouseY) {
         Tessellator tess = Tessellator.getInstance();
+        int _padding = (width - textWidth) / 2 - padding;
+        int tmp_w = width - 2 * _padding;
         boolean hovered = false;
-        if (mouseX > left && mouseX < right && mouseY > top && mouseY < bottom)
+        if (mouseX > left + _padding && mouseX < right - _padding && mouseY > top && mouseY < bottom)
             hovered = true;
-        if (!(!useInactiveBackground && !hovered))
-            drawTexturedRect(tess, left, top, (int) (right + width * getMultiplier(width)), bottom + height, getTexture(width, hovered));
+        if (!(!useInactiveBackground && !hovered)) {
+//            drawTexturedRect(tess, left + _padding, top, (int) (right + (width - _padding) * getMultiplier(width - _padding) - _padding), bottom + height, getTexture(width, hovered));
+            drawTexturedRect(tess,
+                    left + _padding,
+                    top,
+                    (int) (right - _padding + tmp_w * getMultiplier(tmp_w)),
+                    bottom + height, //because button texture is only an upper half
+                    getTexture(tmp_w, hovered));
+        }
         fontRenderer.drawString(text, center ? left + (width - fontRenderer.getStringWidth(text))/2 : left + padding, top + padding, textColor);
     }
 

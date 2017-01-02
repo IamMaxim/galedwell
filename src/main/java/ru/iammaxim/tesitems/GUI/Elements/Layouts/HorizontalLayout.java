@@ -1,7 +1,9 @@
-package ru.iammaxim.tesitems.GUI.Elements;
+package ru.iammaxim.tesitems.GUI.Elements.Layouts;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import ru.iammaxim.tesitems.GUI.Elements.ElementBase;
+import ru.iammaxim.tesitems.GUI.Elements.LayoutBase;
 
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
@@ -9,25 +11,31 @@ import java.util.ConcurrentModificationException;
 /**
  * Created by maxim on 11/7/16 at 4:19 PM.
  */
-public class VerticalLayout extends LayoutBase {
+public class HorizontalLayout extends LayoutBase {
     private int spacing = 4;
     private ArrayList<ElementBase> elements = new ArrayList<>();
+    private boolean center = false;
 
-    public VerticalLayout(ElementBase parent) {
-        super(parent);
-    }
-
-    public VerticalLayout add(ElementBase element) {
-        elements.add(element);
+    public HorizontalLayout center(boolean center) {
+        this.center = center;
         return this;
     }
 
-    public void remove(ElementBase element) {
-        elements.remove(element);
+    public HorizontalLayout(ElementBase parent) {
+        super(parent);
     }
 
-    public void clear() {
-        elements.clear();
+    public int getSpacing() {
+        return spacing;
+    }
+
+    public void setSpacing(int spacing) {
+        this.spacing = spacing;
+    }
+
+    public HorizontalLayout add(ElementBase element) {
+        elements.add(element);
+        return this;
     }
 
     @Override
@@ -39,20 +47,24 @@ public class VerticalLayout extends LayoutBase {
     public void checkClick(int mouseX, int mouseY) {
         try {
             elements.forEach(e -> e.checkClick(mouseX, mouseY));
-        } catch (ConcurrentModificationException e) {}
+        } catch (ConcurrentModificationException e) {
+        }
     }
 
     @Override
     public void doLayout() {
+        int _w = getWidth();
         int y = top + padding;
-        int x = left + padding;
+        int x;
+        if (center) x = left + (width - _w) / 2;
+        else x = left + padding;
         for (ElementBase element : elements) {
-            int w = width - 2 * padding;
-            int h = element.getHeight();
+            int w = element.getWidth();
+            int h = height - 2 * padding;
             element.setBounds(x, y, x + w, y + h);
             if (element instanceof LayoutBase)
                 ((LayoutBase) element).doLayout();
-            y += h + spacing;
+            x += w + spacing;
         }
     }
 
@@ -60,10 +72,12 @@ public class VerticalLayout extends LayoutBase {
     public int getHeight() {
         int height = 0;
         for (ElementBase e : elements) {
-            height += e.getHeight();
+            int h = e.getHeight();
+            if (parent != null)
+                h = (int) Math.min(h, new ScaledResolution(Minecraft.getMinecraft()).getScaledHeight() * 0.8 - 2 * padding);
+            if (h > height) height = h;
         }
-        height += (elements.size() - 1) * spacing;
-        height += 2 * padding + 2 * marginV;
+        height += 2 * padding;
         return height;
     }
 
@@ -76,12 +90,10 @@ public class VerticalLayout extends LayoutBase {
     public int getWidth() {
         int width = 0;
         for (ElementBase e : elements) {
-            int w = e.getWidth();
-            if (parent != null)
-                w = (int) Math.min(w, new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth() * 0.8 - 2 * padding);
-            if (w > width) width = w;
+            width += e.getWidth();
         }
-        width += 2 * padding + 2 * marginH;
+        width += (elements.size() - 1) * spacing;
+        width += 2 * padding;
         return width;
     }
 

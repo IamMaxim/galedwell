@@ -18,7 +18,7 @@ import org.newdawn.slick.font.effects.ColorEffect;
 public class UnicodeFontRenderer extends FontRenderer {
 	private final UnicodeFont font;
 	private static final ResourceLocation fakeTexture = new ResourceLocation("tesitems:textures/fakeTexture.png");
-    public static String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'";
+    public static String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'.,-_!?@#$%*/\\|";
 
 	@SuppressWarnings("unchecked")
 	public UnicodeFontRenderer(Font awtFont) {

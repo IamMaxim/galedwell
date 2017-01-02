@@ -1,7 +1,8 @@
-package ru.iammaxim.tesitems.GUI.Elements;
+package ru.iammaxim.tesitems.GUI.Elements.Layouts;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import ru.iammaxim.tesitems.GUI.Elements.ElementBase;
 
 /**
  * Created by maxim on 11/7/16 at 5:56 PM.

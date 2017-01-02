@@ -2,13 +2,15 @@ package ru.iammaxim.tesitems.GUI;
 
 import ru.iammaxim.tesitems.Dialogs.DialogTopic;
 import ru.iammaxim.tesitems.Factions.Faction;
-import ru.iammaxim.tesitems.Factions.FactionManager;
 import ru.iammaxim.tesitems.GUI.Elements.*;
+import ru.iammaxim.tesitems.GUI.Elements.Layouts.HeaderLayout;
+import ru.iammaxim.tesitems.GUI.Elements.Layouts.HorizontalLayout;
+import ru.iammaxim.tesitems.GUI.Elements.Layouts.ScrollableLayout;
+import ru.iammaxim.tesitems.GUI.Elements.Layouts.VerticalLayout;
 import ru.iammaxim.tesitems.Networking.MessageFaction;
 import ru.iammaxim.tesitems.Networking.MessageFactionRemove;
 import ru.iammaxim.tesitems.TESItems;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -26,20 +28,23 @@ public class GuiFactionEditor extends Screen {
         contentLayout.setElement(root1);
         VerticalLayout root2 = new VerticalLayout(root1);
         root1.setElement(root2);
-        root2.add(new Text(root2, "Faction editor").center(true));
+//        root2.add(new Text(root2, "Faction editor").center(true));
+        root2.add(new HeaderLayout(root2, "Faction editor"));
         root2.add(new TextField(root2).setHint("Name").setText(finalFaction.name).setOnType(tf -> finalFaction.name = tf.getText()));
         root2.add(new Text(root2, "id: " + finalFaction.id));
         root2.add(new HorizontalDivider(root2));
+        root2.add(new HeaderLayout(root2, "Topics"));
         root2.add(topics = new VerticalLayout(root2));
-        root2.add(new HorizontalDivider(root2));
         root2.add(new Button(root2, "Add topic").setOnClick(b -> {
             DialogTopic topic = new DialogTopic();
-            ElementBase element = getTopicElement(topics, topic);
+            ElementBase element = getTopicElement(topics, topic, false);
             elements.put(element, topic);
             topics.add(element);
         }));
         root2.add(new HorizontalDivider(root2));
-        root2.add(new Button(root2).setText("Save").setOnClick(b -> {
+        HorizontalLayout root3 = new HorizontalLayout(root2).center(true);
+        root2.add(root3);
+        root3.add(new Button(root3).setText("Save").setOnClick(b -> {
             mc.displayGuiScreen(new GuiAlertDialog("Faction saved", this));
 
             //check for empty topics
@@ -63,7 +68,7 @@ public class GuiFactionEditor extends Screen {
 
             TESItems.networkWrapper.sendToServer(new MessageFaction(finalFaction));
         }));
-        root2.add(new Button(root2).setText("Remove").setOnClick(b -> {
+        root3.add(new Button(root3).setText("Remove").setOnClick(b -> {
             mc.displayGuiScreen(new GuiConfirmationDialog("Are you sure you want to remove faction " + finalFaction.name + "?", this, () -> {
                 //check if this faction exists or newly created
                 if (finalFaction.id != -1)
@@ -71,10 +76,10 @@ public class GuiFactionEditor extends Screen {
                 mc.displayGuiScreen(new GuiFactionList());
             }));
         }));
-        root2.add(new Button(root2).setText("Back").setOnClick(b -> mc.displayGuiScreen(new GuiFactionList())));
+        root3.add(new Button(root3).setText("Back").setOnClick(b -> mc.displayGuiScreen(new GuiFactionList())));
 
         faction.topics.forEach(t -> {
-            ElementBase e = getTopicElement(topics, t);
+            ElementBase e = getTopicElement(topics, t, false);
             elements.put(e, t);
             topics.add(e);
         });
@@ -154,16 +159,37 @@ public class GuiFactionEditor extends Screen {
         }
     }*/
 
-    private ElementBase getTopicElement(ElementBase parent, DialogTopic topic) {
-        VerticalLayout layout = new VerticalLayout(parent);
-        layout.add(new TextField(layout).setHint("Name").setText(topic.name).setOnType(tf -> topic.name = tf.getText()));
-        layout.add(new TextField(layout).setHint("Dialog line").setText(topic.dialogLine).setOnType(tf -> topic.dialogLine = tf.getText()));
-        layout.add(new Button(layout).setText("Delete").setOnClick(b -> {
-            mc.displayGuiScreen(new GuiConfirmationDialog("Are you sure you want to remove topic " + topic.name + "?", this, () -> {
-                ((VerticalLayout) parent).remove(layout);
-                elements.remove(layout);
+    private ElementBase getTopicElement(ElementBase _parent, DialogTopic topic, boolean opened) {
+        if (opened) {
+            VerticalLayout layout = new VerticalLayout(_parent);
+            layout.add(new HorizontalDivider(layout));
+            layout.add(new Text(layout, "Close") {
+                @Override
+                public void click(int relativeX, int relativeY) {
+                    VerticalLayout p = ((VerticalLayout)_parent);
+                    p.getElements().set(p.getElements().indexOf(layout), getTopicElement(_parent, topic, false));
+                    ((LayoutBase)getRoot()).doLayout();
+                }
+            });
+            layout.add(new TextField(layout).setHint("Name").setText(topic.name).setOnType(tf -> topic.name = tf.getText()));
+            layout.add(new TextField(layout).setHint("Dialog line").setText(topic.dialogLine).setOnType(tf -> topic.dialogLine = tf.getText()));
+            layout.add(new Button(layout).setText("Remove").setOnClick(b -> {
+                mc.displayGuiScreen(new GuiConfirmationDialog("Are you sure you want to remove topic " + topic.name + "?", this, () -> {
+                    ((VerticalLayout) _parent).remove(layout);
+                    elements.remove(layout);
+                }));
             }));
-        }));
-        return layout;
+            layout.add(new HorizontalDivider(layout));
+            return layout;
+        } else {
+            return new Text(root, topic.name) {
+                @Override
+                public void click(int relativeX, int relativeY) {
+                    VerticalLayout p = ((VerticalLayout)_parent);
+                    p.getElements().set(p.getElements().indexOf(this), getTopicElement(_parent, topic, true));
+                    ((LayoutBase)getRoot()).doLayout();
+                }
+            };
+        }
     }
 }

@@ -3,7 +3,8 @@ package ru.iammaxim.tesitems.GUI;
 import ru.iammaxim.tesitems.Factions.Faction;
 import ru.iammaxim.tesitems.Factions.FactionManager;
 import ru.iammaxim.tesitems.GUI.Elements.*;
-import ru.iammaxim.tesitems.Networking.MessageOpenGui;
+import ru.iammaxim.tesitems.GUI.Elements.Layouts.ScrollableLayout;
+import ru.iammaxim.tesitems.GUI.Elements.Layouts.VerticalLayout;
 import ru.iammaxim.tesitems.TESItems;
 
 /**
