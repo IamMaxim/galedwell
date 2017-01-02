@@ -2,22 +2,24 @@ package ru.iammaxim.tesitems.GUI;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import ru.iammaxim.tesitems.GUI.Elements.*;
+import ru.iammaxim.tesitems.GUI.Elements.Button;
+import ru.iammaxim.tesitems.GUI.Elements.FancyFrameLayout;
+import ru.iammaxim.tesitems.GUI.Elements.Text;
+import ru.iammaxim.tesitems.GUI.Elements.VerticalLayout;
 
 /**
- * Created by maxim on 11/6/16 at 1:53 AM.
+ * Created by maxim on 02.01.2017.
  */
-public class GuiAlertDialog extends Screen {
+public class GuiConfirmationDialog extends Screen {
     private String text;
     private GuiScreen lastScreen;
 
-    public GuiAlertDialog(String text, GuiScreen lastScreen) {
-        this(text);
+    public GuiConfirmationDialog(String text, GuiScreen lastScreen, Runnable onConfirm) {
+        this(text, onConfirm);
         this.lastScreen = lastScreen;
     }
 
-    public GuiAlertDialog(String text) {
-        super();
+    public GuiConfirmationDialog(String text, Runnable onConfirm) {
         this.text = text;
         FancyFrameLayout fancyFrameLayout = new FancyFrameLayout(root);
         root.setElement(fancyFrameLayout);
@@ -25,7 +27,11 @@ public class GuiAlertDialog extends Screen {
         fancyFrameLayout.setElement(layout);
         layout.add(new Text(layout, text));
         layout.add(new Button(layout).setText("Ok").setUseInactiveBackground(false).setOnClick(
-                b -> mc.displayGuiScreen(lastScreen)));
+                b -> {
+                    mc.displayGuiScreen(lastScreen);
+                    onConfirm.run();
+                }));
+        layout.add(new Button(layout).setText("Cancel").setUseInactiveBackground(true).setOnClick(b -> mc.displayGuiScreen(lastScreen)));
     }
 
     @Override

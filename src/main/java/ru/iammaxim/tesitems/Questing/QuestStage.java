@@ -23,7 +23,7 @@ public class QuestStage {
         targets.forEach(t -> targetsList.appendTag(t.saveToNBT()));
         tag.setTag("targets", targetsList);
         NBTTagList topicsList = new NBTTagList();
-        topics.forEach(t -> topicsList.appendTag(t.saveToNBT()));
+        topics.forEach(t -> topicsList.appendTag(t.writeToNBT()));
         tag.setTag("topics", topicsList);
         return tag;
     }
@@ -37,7 +37,7 @@ public class QuestStage {
         }
         NBTTagList topicsList = (NBTTagList) tag.getTag("topics");
         for (int i = 0; i < targetsList.tagCount(); i++) {
-            stage.topics.add(DialogTopic.loadFromNBT(topicsList.getCompoundTagAt(i)));
+            stage.topics.add(DialogTopic.readFromNBT(topicsList.getCompoundTagAt(i)));
         }
         return stage;
     }

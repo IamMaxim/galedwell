@@ -14,7 +14,6 @@ import ru.iammaxim.tesitems.Questing.QuestManager;
 public class WorldCapabilityStorage implements Capability.IStorage<IWorldCapability> {
     @Override
     public NBTBase writeNBT(Capability<IWorldCapability> capability, IWorldCapability instance, EnumFacing side) {
-        System.out.println("writeNBT()");
         NBTTagCompound tag = new NBTTagCompound();
         tag.setTag("factions", FactionManager.writeToNBT());
         tag.setTag("quests", QuestManager.writeToNBT());
@@ -23,7 +22,6 @@ public class WorldCapabilityStorage implements Capability.IStorage<IWorldCapabil
 
     @Override
     public void readNBT(Capability<IWorldCapability> capability, IWorldCapability instance, EnumFacing side, NBTBase nbt) {
-        System.out.println("readNBT()");
         FactionManager.readFromNBT((NBTTagList) ((NBTTagCompound)nbt).getTag("factions"));
         QuestManager.readFromNBT((NBTTagList) ((NBTTagCompound)nbt).getTag("quests"));
     }

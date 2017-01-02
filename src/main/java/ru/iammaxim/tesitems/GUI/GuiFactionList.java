@@ -22,7 +22,7 @@ public class GuiFactionList extends Screen {
         VerticalLayout factionsLayout = new VerticalLayout(root2);
         root2.add(factionsLayout);
         root2.add(new HorizontalDivider(root2));
-        root2.add(new Button(root2).setText("Create new faction").center(true).setOnClick(b -> {
+        root2.add(new Button(root2).setText("Create new faction").setOnClick(b -> {
             Faction f = new Faction("");
             f.id = -1;
             TESItems.getMinecraft().displayGuiScreen(new GuiFactionEditor(f));
