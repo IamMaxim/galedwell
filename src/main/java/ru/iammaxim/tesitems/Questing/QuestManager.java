@@ -30,8 +30,7 @@ public class QuestManager {
         return ++idGen;
     }
 
-    public static NBTTagCompound writeToNBT() {
-        NBTTagCompound tagCompound = new NBTTagCompound();
+    public static NBTTagList writeToNBT() {
         NBTTagList quests = new NBTTagList();
         for (Quest quest : questList.values()) {
             NBTTagCompound questTag = new NBTTagCompound();
@@ -55,17 +54,18 @@ public class QuestManager {
             questTag.setTag("stages", stagesListNbt);
             quests.appendTag(questTag);
         }
-        tagCompound.setTag("quests", quests);
-        //System.out.println("Saved quests tag: " + tagCompound.toString());
-        return tagCompound;
+
+        //todo: remove out
+        System.out.println("Saved quests tag: " + quests.toString());
+        return quests;
     }
 
-    public static void loadFromNBT(NBTTagCompound tag) {
+    public static void readFromNBT(NBTTagList tag) {
         try {
+            //todo: remove out
             System.out.println("Loading quest tag: " + tag.toString());
-            NBTTagList list = (NBTTagList) tag.getTag("quests");
-            for (int i = 0; i < list.tagCount(); i++) {
-                NBTTagCompound questTag = list.getCompoundTagAt(i);
+            for (int i = 0; i < tag.tagCount(); i++) {
+                NBTTagCompound questTag = tag.getCompoundTagAt(i);
                 Quest q = getQuestFromNBT(questTag);
                 questList.put(q.id, q);
             }
@@ -102,7 +102,7 @@ public class QuestManager {
             Scanner scanner = new Scanner(f).useDelimiter("\\A");
             String s = scanner.next();
             NBTTagCompound tag = JsonToNBT.getTagFromJson(s);
-            loadFromNBT(tag);
+            readFromNBT(tag);
             scanner.close();
         } catch (Exception e) {
             e.printStackTrace();

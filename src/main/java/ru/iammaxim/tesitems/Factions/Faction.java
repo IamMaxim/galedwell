@@ -23,6 +23,7 @@ public class Faction {
     public NBTTagCompound writeToNBT() {
         NBTTagCompound tag = new NBTTagCompound();
         tag.setString("name", name);
+        tag.setInteger("id", id);
         NBTTagList list = new NBTTagList();
         topics.forEach((topic) -> list.appendTag(topic.saveToNBT()));
         tag.setTag("topics", list);
@@ -33,7 +34,7 @@ public class Faction {
         Faction faction = new Faction(tag.getString("name"));
         faction.id = tag.getInteger("id");
         NBTTagList tagList = (NBTTagList) tag.getTag("topics");
-        for (int i = tagList.tagCount(); i >= 0; i--) {
+        for (int i = tagList.tagCount() - 1; i >= 0; i--) {
             faction.topics.add(DialogTopic.loadFromNBT(tagList.getCompoundTagAt(i)));
         }
         return faction;

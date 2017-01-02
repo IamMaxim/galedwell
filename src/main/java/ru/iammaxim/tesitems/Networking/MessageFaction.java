@@ -38,8 +38,11 @@ public class MessageFaction implements IMessage {
 
             //todo: add permission check
 //            if (player.per)
+            if (FactionManager.factions.get(message.faction.id) == null || message.faction.id == -1)
+                message.faction.id = FactionManager.nextID();
+            FactionManager.addFaction(message.faction);
 
-            return null;
+            return new MessageFaction(message.faction);
         }
     }
 

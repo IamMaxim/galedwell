@@ -82,7 +82,7 @@ public class EntityNPC extends EntityLivingBase {
         tag.setBoolean("isInvulnerable", isInvulnerable);
         tag.setString("name", name);
         tag.setTag("inventory", inventory.writeToNBT());
-        tag.setTag("factions", saveFactions());
+        tag.setTag("topics", saveFactions());
         if (dialog != null) {
             tag.setTag("dialog", dialog.saveToNBT());
         }
@@ -94,7 +94,7 @@ public class EntityNPC extends EntityLivingBase {
         name = tag.getString("name");
         isInvulnerable = tag.getBoolean("isInvulnerable");
         inventory.loadFromNBT(tag.getCompoundTag("inventory"));
-        loadFactions((NBTTagList) tag.getTag("factions"));
+        loadFactions((NBTTagList) tag.getTag("topics"));
         if (tag.hasKey("dialog")) {
             dialog = Dialog.loadFromNBT(tag.getCompoundTag("dialog"));
         }

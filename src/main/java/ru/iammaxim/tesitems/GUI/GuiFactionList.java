@@ -12,7 +12,7 @@ import ru.iammaxim.tesitems.TESItems;
 public class GuiFactionList extends Screen {
 
     public GuiFactionList() {
-        ScrollableLayout root1 = new ScrollableLayout(root);
+        ScrollableLayout root1 = new ScrollableLayout(contentLayout);
         contentLayout.setElement(root1);
         root1.setHeight((int) (res.getScaledHeight() * 0.8));
         VerticalLayout root2 = new VerticalLayout(root1);
@@ -26,14 +26,13 @@ public class GuiFactionList extends Screen {
             Faction f = new Faction("");
             f.id = -1;
             TESItems.getMinecraft().displayGuiScreen(new GuiFactionEditor(f));
-//            TESItems.getMinecraft().currentScreen = new GuiFactionEditor(f);
         }));
 
         FactionManager.factions.forEach((id, f) -> {
-            root2.add(new Text(factionsLayout, "[Edit: " + f.name + "]") {
+            factionsLayout.add(new Text(factionsLayout, "[Edit: " + f.name + "]") {
                 @Override
                 public void click(int relativeX, int relativeY) {
-                    TESItems.getMinecraft().currentScreen = new GuiFactionEditor(f);
+                    mc.displayGuiScreen(new GuiFactionEditor(f));
                 }
             });
         });

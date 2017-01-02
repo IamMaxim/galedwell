@@ -11,9 +11,9 @@ import java.util.ArrayList;
  * Created by maxim on 11/11/16 at 7:57 PM.
  */
 public class DialogTopic {
-    public String npcName;
+    public String npcName = "";
     public String name = "";
-    public String script;
+    public String script = "";
     public String dialogLine = "";
     public ArrayList<Condition> conditions = new ArrayList<>();
 
@@ -35,6 +35,7 @@ public class DialogTopic {
         NBTTagList conditionsList = new NBTTagList();
         conditions.forEach(c -> conditionsList.appendTag(c.saveToNBT()));
         tag.setTag("conditions", conditionsList);
+        System.out.println(tag.toString());
         return tag;
     }
 
@@ -45,6 +46,9 @@ public class DialogTopic {
         topic.script = tag.getString("script");
         topic.dialogLine = tag.getString("dialogLine");
         NBTTagList conditionsList = (NBTTagList) tag.getTag("conditions");
+        if (conditionsList == null)
+            System.out.println("conditionsList is null");
+        System.out.println(tag.toString());
         for (int i = 0; i < conditionsList.tagCount(); i++) {
             topic.conditions.add(Condition.loadFromNBT(conditionsList.getCompoundTagAt(i)));
         }

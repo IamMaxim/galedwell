@@ -19,6 +19,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
@@ -49,6 +50,7 @@ import ru.iammaxim.tesitems.Blocks.mBlocks;
 import ru.iammaxim.tesitems.Commands.*;
 import ru.iammaxim.tesitems.Craft.CraftRecipe;
 import ru.iammaxim.tesitems.Craft.CraftRecipes;
+import ru.iammaxim.tesitems.Factions.FactionManager;
 import ru.iammaxim.tesitems.GUI.Fonts.UnicodeFontRenderer;
 import ru.iammaxim.tesitems.GUI.GUIHandler;
 import ru.iammaxim.tesitems.GUI.KeyBindings;
@@ -63,6 +65,10 @@ import ru.iammaxim.tesitems.Player.PlayerAttributesCapabilityDefaultImpl;
 import ru.iammaxim.tesitems.Player.PlayerAttributesCapabilityProvider;
 import ru.iammaxim.tesitems.Player.PlayerAttributesStorage;
 import ru.iammaxim.tesitems.Questing.QuestManager;
+import ru.iammaxim.tesitems.World.IWorldCapability;
+import ru.iammaxim.tesitems.World.WorldCapabilityDefaultImpl;
+import ru.iammaxim.tesitems.World.WorldCapabilityProvider;
+import ru.iammaxim.tesitems.World.WorldCapabilityStorage;
 
 import java.awt.*;
 import java.io.File;
@@ -75,6 +81,7 @@ public class TESItems {
     public static final String MODID = "tesitems";
     public static final String VERSION = "1.0";
     public static final String attributesTagName = "TESItems:playerAttributes";
+    public static final String worldTagName = "TESItems:world";
     public static final String[] ATTRIBUTES = {
             "strength",
             "mining",
@@ -115,8 +122,13 @@ public class TESItems {
             guiJournal = 5,
             guiFactionList = 6,
             guiFactionEditor = 7;
+
     @CapabilityInject(IPlayerAttributesCapability.class)
     public static Capability<IPlayerAttributesCapability> attributesCapability;
+
+    @CapabilityInject(IWorldCapability.class)
+    public static Capability<IWorldCapability> worldCapability;
+
     @Mod.Instance
     public static TESItems instance;
 
@@ -147,6 +159,7 @@ public class TESItems {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         CapabilityManager.INSTANCE.register(IPlayerAttributesCapability.class, new PlayerAttributesStorage(), PlayerAttributesCapabilityDefaultImpl::new);
+        CapabilityManager.INSTANCE.register(IWorldCapability.class, new WorldCapabilityStorage(), WorldCapabilityDefaultImpl::new);
         MinecraftForge.EVENT_BUS.register(this);
         SpellEffectManager.register();
         mItems.register(event.getSide());
@@ -312,8 +325,10 @@ public class TESItems {
                 networkWrapper.sendTo(new MessageAttributes(cap.getAttributes()), (EntityPlayerMP) event.getEntity());
                 networkWrapper.sendTo(new MessageSpellbook(cap.saveSpellbook()), (EntityPlayerMP) event.getEntity());
                 networkWrapper.sendTo(new MessageInventory(cap.getInventory().writeToNBT()), (EntityPlayerMP) event.getEntity());
-                networkWrapper.sendTo(new MessageQuestList(QuestManager.writeToNBT()), (EntityPlayerMP) event.getEntity());
                 networkWrapper.sendTo(new MessageJournal(cap.getJournal()), (EntityPlayerMP) event.getEntity());
+
+                //todo: replace with quest instances
+                networkWrapper.sendTo(new MessageQuestList(QuestManager.writeToNBT()), (EntityPlayerMP) event.getEntity());
 
                 player.addChatComponentMessage(new TextComponentString(getMOTD()));
             }
@@ -328,9 +343,12 @@ public class TESItems {
     }
 
     @SubscribeEvent
-    public void onEntityLoad(AttachCapabilitiesEvent event) {
+    public void attachCapabilities(AttachCapabilitiesEvent event) {
         if (event.getObject() instanceof EntityPlayer) {
             event.addCapability(new ResourceLocation(TESItems.attributesTagName), new PlayerAttributesCapabilityProvider());
+        } else if (event.getObject() instanceof World) {
+            System.out.println("attaching cap to world");
+            event.addCapability(new ResourceLocation(TESItems.worldTagName), new WorldCapabilityProvider());
         }
     }
 
@@ -425,14 +443,4 @@ public class TESItems {
         inv.addItem(event.getItem().getEntityItem());
         event.getItem().setDead();
     }
-
-    @SubscribeEvent
-    public void onWorldLoad(WorldEvent.Load event) {
-        MWorldSavedData data = MWorldSavedData.get(event.getWorld());
-    }
-
-    /*@SubscribeEvent
-    public void onWorldUnload(WorldEvent.Unload event) {
-
-    }*/
 }

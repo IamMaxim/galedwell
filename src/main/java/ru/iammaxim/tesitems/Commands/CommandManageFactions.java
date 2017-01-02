@@ -19,7 +19,7 @@ public class CommandManageFactions extends CommandBase {
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "Used to edit factions";
+        return "Used to edit topics";
     }
 
     @Override

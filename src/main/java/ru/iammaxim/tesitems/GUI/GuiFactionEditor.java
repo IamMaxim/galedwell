@@ -2,7 +2,10 @@ package ru.iammaxim.tesitems.GUI;
 
 import ru.iammaxim.tesitems.Dialogs.DialogTopic;
 import ru.iammaxim.tesitems.Factions.Faction;
+import ru.iammaxim.tesitems.Factions.FactionManager;
 import ru.iammaxim.tesitems.GUI.Elements.*;
+import ru.iammaxim.tesitems.Networking.MessageFaction;
+import ru.iammaxim.tesitems.TESItems;
 
 import java.util.ArrayList;
 
@@ -10,51 +13,48 @@ import java.util.ArrayList;
  * Created by maxim on 01.01.2017.
  */
 public class GuiFactionEditor extends Screen {
-    public VerticalLayout factions;
-    public ArrayList<GuiFaction> factionList;
+    public VerticalLayout topics;
 
     public GuiFactionEditor(Faction faction) {
-        ScreenCenteredLayout root1 = new ScreenCenteredLayout(root);
+        Faction finalFaction = cloneFaction(faction);
+        ScrollableLayout root1 = new ScrollableLayout(contentLayout);
+        root1.setHeight((int) (res.getScaledHeight() * 0.8));
         contentLayout.setElement(root1);
         VerticalLayout root2 = new VerticalLayout(root1);
         root1.setElement(root2);
         root2.add(new Text(root2, "Faction editor").center(true));
-        root2.add(new TextField(root2).setHint("Name").setText(faction.name).setOnType(tf -> faction.name = tf.getText()));
+        root2.add(new TextField(root2).setHint("Name").setText(finalFaction.name).setOnType(tf -> finalFaction.name = tf.getText()));
         root2.add(new HorizontalDivider(root2));
-        ScrollableLayout root3 = new ScrollableLayout(root2);
-        root3.setElement(factions = new VerticalLayout(root3));
-        root2.add(root3);
+        root2.add(topics = new VerticalLayout(root2));
         root2.add(new HorizontalDivider(root2));
-        root2.add(new Button(root2, "Add faction"));
+        root2.add(new Button(root2, "Add topic"));
+        root2.add(new HorizontalDivider(root2));
+        root2.add(new Button(root2).setText("Save").setOnClick(b -> {
+            mc.displayGuiScreen(new GuiAlertDialog("Faction saved", this));
+            TESItems.networkWrapper.sendToServer(new MessageFaction(finalFaction));
+        }));
 
-        GuiFaction guiFaction;
-        if (faction == null)
-            guiFaction = new GuiFaction(root3);
-        else
-            guiFaction = new GuiFaction(root3, faction);
-
-        root3.setElement(guiFaction.getElement(false));
         root.doLayout();
+    }
+
+    private Faction cloneFaction(Faction orig) {
+        Faction dest = new Faction(orig.name);
+        dest.id = orig.id;
+        orig.topics.forEach(t -> {
+            DialogTopic destTopic = new DialogTopic();
+            destTopic.name = t.name;
+            destTopic.script = t.script;
+            destTopic.dialogLine = t.dialogLine;
+            destTopic.npcName = t.npcName;
+            t.conditions.forEach(c -> destTopic.conditions.add(c.clone()));
+        });
+        return dest;
     }
 
     private class GuiFaction {
         public boolean opened = false;
         public ElementBase root, element;
         public Faction faction;
-
-        private Faction cloneFaction(Faction orig) {
-            Faction dest = new Faction(orig.name);
-            dest.id = orig.id;
-            orig.topics.forEach(t -> {
-                DialogTopic destTopic = new DialogTopic();
-                destTopic.name = t.name;
-                destTopic.script = t.script;
-                destTopic.dialogLine = t.dialogLine;
-                destTopic.npcName = t.npcName;
-                t.conditions.forEach(c -> destTopic.conditions.add(c.clone()));
-            });
-            return dest;
-        }
 
         public GuiFaction(ElementBase root) {
 
