@@ -31,7 +31,7 @@ public class GuiConfirmationDialog extends Screen {
                     mc.displayGuiScreen(lastScreen);
                     onConfirm.run();
                 }));
-        layout.add(new Button(layout).setText("Cancel").setUseInactiveBackground(true).setOnClick(b -> mc.displayGuiScreen(lastScreen)));
+        layout.add(new Button(layout).setText("Cancel").setUseInactiveBackground(false).setOnClick(b -> mc.displayGuiScreen(lastScreen)));
     }
 
     @Override

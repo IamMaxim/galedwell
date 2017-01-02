@@ -28,6 +28,7 @@ public class GuiFactionEditor extends Screen {
         root1.setElement(root2);
         root2.add(new Text(root2, "Faction editor").center(true));
         root2.add(new TextField(root2).setHint("Name").setText(finalFaction.name).setOnType(tf -> finalFaction.name = tf.getText()));
+        root2.add(new Text(root2, "id: " + finalFaction.id));
         root2.add(new HorizontalDivider(root2));
         root2.add(topics = new VerticalLayout(root2));
         root2.add(new HorizontalDivider(root2));
@@ -46,6 +47,7 @@ public class GuiFactionEditor extends Screen {
             while (it.hasNext()) {
                 ElementBase e = it.next();
                 DialogTopic t = elements.get(e);
+                System.out.println("checking " + t.name + " " + t.dialogLine);
                 if (t.name.isEmpty() || t.dialogLine.isEmpty()) {
                     System.out.println("removing topic: " + t.name + " with dialog line: " + t.dialogLine);
                     elements.remove(e);
@@ -71,7 +73,11 @@ public class GuiFactionEditor extends Screen {
         }));
         root2.add(new Button(root2).setText("Back").setOnClick(b -> mc.displayGuiScreen(new GuiFactionList())));
 
-        faction.topics.forEach(t -> topics.add(getTopicElement(topics, t)));
+        faction.topics.forEach(t -> {
+            ElementBase e = getTopicElement(topics, t);
+            elements.put(e, t);
+            topics.add(e);
+        });
 
         root.doLayout();
     }
@@ -90,7 +96,7 @@ public class GuiFactionEditor extends Screen {
         return dest;
     }
 
-    private class GuiFaction {
+    /*private class GuiFaction {
         public boolean opened = false;
         public ElementBase root, element;
         public Faction faction;
@@ -146,14 +152,18 @@ public class GuiFactionEditor extends Screen {
                 };
             }
         }
-    }
+    }*/
 
     private ElementBase getTopicElement(ElementBase parent, DialogTopic topic) {
         VerticalLayout layout = new VerticalLayout(parent);
         layout.add(new TextField(layout).setHint("Name").setText(topic.name).setOnType(tf -> topic.name = tf.getText()));
         layout.add(new TextField(layout).setHint("Dialog line").setText(topic.dialogLine).setOnType(tf -> topic.dialogLine = tf.getText()));
-        layout.add(new Button(layout).setText("Delete").setOnClick(b -> ((VerticalLayout) parent).remove(layout)));
-        elements.remove(layout);
+        layout.add(new Button(layout).setText("Delete").setOnClick(b -> {
+            mc.displayGuiScreen(new GuiConfirmationDialog("Are you sure you want to remove topic " + topic.name + "?", this, () -> {
+                ((VerticalLayout) parent).remove(layout);
+                elements.remove(layout);
+            }));
+        }));
         return layout;
     }
 }

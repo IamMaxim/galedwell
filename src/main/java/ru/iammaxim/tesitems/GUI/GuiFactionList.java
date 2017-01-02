@@ -10,6 +10,11 @@ import ru.iammaxim.tesitems.TESItems;
  * Created by maxim on 01.01.2017.
  */
 public class GuiFactionList extends Screen {
+    private VerticalLayout factionsLayout;
+
+    public void removeFaction(int id) {
+
+    }
 
     public GuiFactionList() {
         ScrollableLayout root1 = new ScrollableLayout(contentLayout);
@@ -19,7 +24,7 @@ public class GuiFactionList extends Screen {
         root1.setElement(root2);
         root2.add(new Text(root2, "Faction list").center(true));
         root2.add(new HorizontalDivider(root2));
-        VerticalLayout factionsLayout = new VerticalLayout(root2);
+        factionsLayout = new VerticalLayout(root2);
         root2.add(factionsLayout);
         root2.add(new HorizontalDivider(root2));
         root2.add(new Button(root2).setText("Create new faction").setOnClick(b -> {
