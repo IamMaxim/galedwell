@@ -105,7 +105,7 @@ public class VerticalLayout extends LayoutBase {
     }
 
     @Override
-    public void onRescale() {
-        elements.forEach(ElementBase::onRescale);
+    public void onResize() {
+        elements.forEach(ElementBase::onResize);
     }
 }

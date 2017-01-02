@@ -42,6 +42,7 @@ public class Text extends ElementBase {
 
     public Text setText(String text) {
         this.text = text;
+        update();
         dirty = true;
         return this;
     }

@@ -3,6 +3,7 @@ package ru.iammaxim.tesitems.GUI;
 import ru.iammaxim.tesitems.Factions.Faction;
 import ru.iammaxim.tesitems.Factions.FactionManager;
 import ru.iammaxim.tesitems.GUI.Elements.*;
+import ru.iammaxim.tesitems.GUI.Elements.Layouts.HeaderLayout;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.ScrollableLayout;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.VerticalLayout;
 import ru.iammaxim.tesitems.TESItems;
@@ -23,7 +24,7 @@ public class GuiFactionList extends Screen {
         root1.setHeight((int) (res.getScaledHeight() * 0.8));
         VerticalLayout root2 = new VerticalLayout(root1);
         root1.setElement(root2);
-        root2.add(new Text(root2, "Faction list").center(true));
+        root2.add(new HeaderLayout(root2, "Faction list"));
         root2.add(new HorizontalDivider(root2));
         factionsLayout = new VerticalLayout(root2);
         root2.add(factionsLayout);

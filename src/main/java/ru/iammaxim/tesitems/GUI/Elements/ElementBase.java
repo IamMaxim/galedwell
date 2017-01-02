@@ -167,5 +167,5 @@ public abstract class ElementBase {
         GL11.glDisable(GL11.GL_TEXTURE_2D);
     }
 
-    public void onRescale() {}
+    public void onResize() {}
 }

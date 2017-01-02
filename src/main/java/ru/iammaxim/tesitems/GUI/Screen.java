@@ -37,18 +37,18 @@ public class Screen extends GuiScreen {
     public void onResize(Minecraft mcIn, int w, int h) {
         super.onResize(mcIn, w, h);
         res = new ScaledResolution(mcIn);
-        int width = root.getWidth();
-        int height = root.getHeight();
-        root.setBounds((res.getScaledWidth() - width)/2, (res.getScaledHeight() - height)/2, (res.getScaledWidth() + width)/2, (res.getScaledHeight() + height)/2);
+/*        int width = root.getWidth();
+        int height = root.getHeight();*/
+//        root.setBounds((res.getScaledWidth() - width)/2, (res.getScaledHeight() - height)/2, (res.getScaledWidth() + width)/2, (res.getScaledHeight() + height)/2);
+        System.out.println("onResize");
         root.doLayout();
-        root.onRescale();
+        root.onResize();
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         if (Mouse.isButtonDown(0)) {
             if (!wasClicked) {
-                System.out.println("going to check click");
                 root.checkClick(mouseX, mouseY);
                 wasClicked = true;
             }

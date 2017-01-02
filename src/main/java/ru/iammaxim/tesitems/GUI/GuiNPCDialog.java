@@ -4,10 +4,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import ru.iammaxim.tesitems.Dialogs.DialogTopic;
 import ru.iammaxim.tesitems.GUI.Elements.*;
-import ru.iammaxim.tesitems.GUI.Elements.Layouts.FancyFrameLayout;
-import ru.iammaxim.tesitems.GUI.Elements.Layouts.HorizontalLayout;
-import ru.iammaxim.tesitems.GUI.Elements.Layouts.ScreenCenteredLayout;
-import ru.iammaxim.tesitems.GUI.Elements.Layouts.VerticalLayout;
+import ru.iammaxim.tesitems.GUI.Elements.Layouts.*;
 import ru.iammaxim.tesitems.NPC.EntityNPC;
 import ru.iammaxim.tesitems.Networking.MessageDialogSelectTopic;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
@@ -24,9 +21,10 @@ public class GuiNPCDialog extends Screen {
     private EntityNPC npc;
     private String history = "History text.\nSome more.\nAnd more.\ndksfglksdjfgklsdfgkjsdklgjsdlkfgjsdklgsdklfgsdkfgdskfgdklfgjdsklgdklsgjdklsgjkldklfjgkldsjglkdsjglkdsjgkldsjglkdsgjdlksgjdsklgjdslkgjdsklgjdslkgjdsklgjdsfklgfdjsgklfdsjklsjgfsdklgjfsdklgjfdslkgjskldfjglkdsfgjkldsfg";
     private Text historyElement;
-    private boolean updated = false;
+    private boolean updated = true;
 
     public VerticalLayout topics, leftElement;
+    public ScrollableLayout topicsScrollableLayout;
 
     public GuiNPCDialog() {
         super();
@@ -58,8 +56,11 @@ public class GuiNPCDialog extends Screen {
         contentLayout = new FancyFrameLayout(root);
         root.setElement(contentLayout);
         DialogWindowLayout root1 = new DialogWindowLayout(contentLayout);
-        leftElement = new VerticalLayout(root1);
-        historyElement = new Text(leftElement);
+        ScrollableLayout leftElement = new ScrollableLayout(root1);
+        VerticalLayout leftLayout = new VerticalLayout(leftElement);
+        historyElement = new Text(leftLayout);
+        leftLayout.add(historyElement);
+        leftElement.setElement(leftLayout);
 
         //todo: remove
         historyElement.setText(history);
@@ -79,18 +80,32 @@ public class GuiNPCDialog extends Screen {
         rightLayout.add(new Text(rightLayout, npc.getName()).setLeftPadding(4)).add(new HorizontalDivider(rightLayout));
         topics = new VerticalLayout(rightLayout);
         topics.setHorizontalMargin(4);
-        rightLayout.add(topics);
-
+        topicsScrollableLayout = new ScrollableLayout(rightElement);
+        topicsScrollableLayout.setElement(topics);
+        rightLayout.add(topicsScrollableLayout);
         contentLayout.setElement(root1);
+
+        cap.getDialog().topics.forEach((name, t) -> {
+            System.out.println("adding topic " + name);
+            topics.add(buildTopicElement(topics, t));
+        });
+
+        contentLayout.doLayout();
+        leftElement.setHeight(root1.getHeight());
+        topicsScrollableLayout.setHeight(rightElement.getHeight());
         contentLayout.doLayout();
     }
 
     public Text buildTopicElement(ElementBase root, DialogTopic topic) {
-        Text text = new Text(root) {
+        Text text = new Text(root, topic.name) {
             @Override
             public void click(int relativeX, int relativeY) {
+                System.out.println("clicked topic");
                 historyAppend(topic.name);
-                TESItems.networkWrapper.sendToServer(new MessageDialogSelectTopic());
+                historyAppend(topic.dialogLine);
+                ((LayoutBase)root).doLayout();
+                topicsScrollableLayout.scrollToBottom();
+                TESItems.networkWrapper.sendToServer(new MessageDialogSelectTopic(topic));
             }
         };
         return text;
@@ -119,6 +134,12 @@ public class GuiNPCDialog extends Screen {
         public DialogWindowLayout(ElementBase parent) {
             super(parent);
             res = new ScaledResolution(mc);
+        }
+
+        @Override
+        public void checkClick(int mouseX, int mouseY) {
+            leftElement.checkClick(mouseX, mouseY);
+            rightElement.checkClick(mouseX, mouseY);
         }
 
         @Override

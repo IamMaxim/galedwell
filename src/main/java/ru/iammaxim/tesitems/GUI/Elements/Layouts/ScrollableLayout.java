@@ -2,6 +2,7 @@ package ru.iammaxim.tesitems.GUI.Elements.Layouts;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.Tessellator;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import ru.iammaxim.tesitems.GUI.Elements.ElementBase;
@@ -33,13 +34,24 @@ public class ScrollableLayout extends FrameLayout {
     }
 
     @Override
-    public void onRescale() {
+    public void onResize() {
         res = new ScaledResolution(mc);
-        element.onRescale();
+        element.onResize();
+    }
+
+    public void scrollToBottom() {
+        scroll = element.getHeight() - height;
     }
 
     @Override
     public void draw(int mouseX, int mouseY) {
+        //draw scrollbar
+        int scrollbarHeight = (int) (height * ((float)height / element.getHeight()));
+        if (scrollbarHeight > height)
+            scrollbarHeight = height;
+        int scrollbarTopOffset = (int) ((float) (height - scrollbarHeight) * scroll / (element.getHeight() - height));
+        drawColoredRect(Tessellator.getInstance(), right-2, top + scrollbarTopOffset, right, top + scrollbarTopOffset + scrollbarHeight, 0xffffffff);
+
         int scr = - Mouse.getDWheel() / 10;
         if (scr != 0) {
             scroll += scr;

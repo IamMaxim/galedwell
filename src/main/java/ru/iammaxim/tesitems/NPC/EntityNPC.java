@@ -22,6 +22,7 @@ import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.Inventory.InventoryNPC;
 import ru.iammaxim.tesitems.Items.mItems;
 import ru.iammaxim.tesitems.Networking.MessageDialog;
+import ru.iammaxim.tesitems.Networking.MessageFactionList;
 import ru.iammaxim.tesitems.Networking.MessageNPCUpdate;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.TESItems;
@@ -152,10 +153,12 @@ public class EntityNPC extends EntityLivingBase {
             TESItems.networkWrapper.sendTo(new MessageNPCUpdate(serializeNBT()), (EntityPlayerMP) player);
             cap.setLatestNPC(this);
         }
-        if (player.getHeldItemOffhand() != null && player.getHeldItemOffhand().getItem() == mItems.itemNPCEditorTool)
+        if (player.getHeldItemOffhand() != null && player.getHeldItemOffhand().getItem() == mItems.itemNPCEditorTool) {
             //let the player edit this NPC
+            //todo: uncomment this
+//            TESItems.networkWrapper.sendTo(new MessageFactionList(), (EntityPlayerMP) player);
             player.openGui(TESItems.instance, TESItems.guiNPCEditor, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
-        else {
+        } else {
             //open dialog GUI
             TESItems.networkWrapper.sendTo(new MessageDialog(Dialog.createDialogForPlayer(this, player).saveToNBT()), (EntityPlayerMP) player);
             player.openGui(TESItems.instance, TESItems.guiNpcDialog, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);

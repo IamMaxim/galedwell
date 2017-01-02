@@ -18,6 +18,8 @@ import java.util.HashMap;
 public class MessageFactionList implements IMessage {
     public HashMap<Integer, String> factions;
 
+    public MessageFactionList() {}
+
     @Override
     public void fromBytes(ByteBuf buf) {
         int size = buf.readInt();
@@ -30,15 +32,14 @@ public class MessageFactionList implements IMessage {
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(factions.size());
-        factions.forEach((id, name) -> {
+        buf.writeInt(FactionManager.factions.size());
+        FactionManager.factions.forEach((id, f) -> {
             buf.writeInt(id);
-            ByteBufUtils.writeUTF8String(buf, name);
+            ByteBufUtils.writeUTF8String(buf, f.name);
         });
     }
 
     public static class Handler implements IMessageHandler<MessageFactionList, IMessage> {
-
         @Override
         public IMessage onMessage(MessageFactionList message, MessageContext ctx) {
             message.factions.forEach((id, name) -> {

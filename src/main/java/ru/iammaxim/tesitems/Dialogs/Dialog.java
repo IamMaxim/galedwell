@@ -17,6 +17,7 @@ public class Dialog {
     public HashMap<String, DialogTopic> topics = new HashMap<>();
 
     public static Dialog createDialogForPlayer(EntityNPC npc, EntityPlayer player) {
+        System.out.println("creating dialog");
         Dialog dialog = new Dialog();
         IPlayerAttributesCapability cap = TESItems.getCapability(player);
         cap.getQuests().forEach((id, quest) -> {
@@ -26,7 +27,11 @@ public class Dialog {
             });
         });
         npc.getFactions().forEach(faction -> {
-            faction.topics.forEach(t -> dialog.addTopic(t.name, t));
+            System.out.println("processing faction " + faction.name);
+            faction.topics.forEach(t -> {
+                System.out.println("adding topic " + t.name);
+                dialog.addTopic(t.name, t);
+            });
         });
         return dialog;
     }
@@ -40,6 +45,7 @@ public class Dialog {
         NBTTagList list = new NBTTagList();
         topics.forEach((name,topic) -> list.appendTag(topic.writeToNBT()));
         tag.setTag("topics", list);
+        System.out.println("saved to " + tag.toString());
         return tag;
     }
 

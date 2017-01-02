@@ -51,8 +51,8 @@ public class FrameLayout extends LayoutBase {
     }
 
     @Override
-    public void onRescale() {
-        element.onRescale();
+    public void onResize() {
+        element.onResize();
     }
 
     @Override

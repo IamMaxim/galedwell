@@ -37,6 +37,6 @@ public class GuiConfirmationDialog extends Screen {
     @Override
     public void onResize(Minecraft mcIn, int w, int h) {
         super.onResize(mcIn, w, h);
-        root.onRescale();
+        root.onResize();
     }
 }

@@ -34,12 +34,8 @@ public class MessageDialogSelectTopic implements IMessage {
     public static class ServerHandler implements IMessageHandler<MessageDialogSelectTopic, IMessage> {
         @Override
         public IMessage onMessage(MessageDialogSelectTopic message, MessageContext ctx) {
-            GuiScreen currentScreen = TESItems.getMinecraft().currentScreen;
-            if (currentScreen instanceof GuiNPCDialog) {
 
-            }
-
-                return null;
+            return null;
         }
     }
 }
