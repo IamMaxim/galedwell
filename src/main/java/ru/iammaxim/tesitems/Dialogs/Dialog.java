@@ -5,14 +5,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import ru.iammaxim.tesitems.NPC.EntityNPC;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
-import ru.iammaxim.tesitems.Questing.Quest;
-import ru.iammaxim.tesitems.Questing.QuestInstance;
-import ru.iammaxim.tesitems.Questing.QuestManager;
 import ru.iammaxim.tesitems.TESItems;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by maxim on 8/5/16 at 8:02 PM.
@@ -42,7 +38,7 @@ public class Dialog {
     public NBTTagCompound saveToNBT() {
         NBTTagCompound tag = new NBTTagCompound();
         NBTTagList list = new NBTTagList();
-        topics.forEach((name,topic) -> list.appendTag(topic.saveToNBT()));
+        topics.forEach((name,topic) -> list.appendTag(topic.writeToNBT()));
         tag.setTag("topics", list);
         return tag;
     }
@@ -51,7 +47,7 @@ public class Dialog {
         Dialog dialog = new Dialog();
         NBTTagList list = (NBTTagList) tag.getTag("topics");
         for (int i = 0; i < list.tagCount(); i++) {
-            DialogTopic topic = DialogTopic.loadFromNBT(list.getCompoundTagAt(i));
+            DialogTopic topic = DialogTopic.readFromNBT(list.getCompoundTagAt(i));
             dialog.topics.put(topic.name, topic);
         }
         return dialog;

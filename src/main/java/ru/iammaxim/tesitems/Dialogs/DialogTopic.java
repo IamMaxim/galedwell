@@ -26,7 +26,7 @@ public class DialogTopic {
         return true;
     }
 
-    public NBTTagCompound saveToNBT() {
+    public NBTTagCompound writeToNBT() {
         NBTTagCompound tag = new NBTTagCompound();
         tag.setString("npcName", npcName);
         tag.setString("name", name);
@@ -35,20 +35,16 @@ public class DialogTopic {
         NBTTagList conditionsList = new NBTTagList();
         conditions.forEach(c -> conditionsList.appendTag(c.saveToNBT()));
         tag.setTag("conditions", conditionsList);
-        System.out.println(tag.toString());
         return tag;
     }
 
-    public static DialogTopic loadFromNBT(NBTTagCompound tag) {
+    public static DialogTopic readFromNBT(NBTTagCompound tag) {
         DialogTopic topic = new DialogTopic();
         topic.npcName = tag.getString("npcName");
         topic.name = tag.getString("name");
         topic.script = tag.getString("script");
         topic.dialogLine = tag.getString("dialogLine");
         NBTTagList conditionsList = (NBTTagList) tag.getTag("conditions");
-        if (conditionsList == null)
-            System.out.println("conditionsList is null");
-        System.out.println(tag.toString());
         for (int i = 0; i < conditionsList.tagCount(); i++) {
             topic.conditions.add(Condition.loadFromNBT(conditionsList.getCompoundTagAt(i)));
         }

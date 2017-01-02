@@ -5,15 +5,19 @@ import ru.iammaxim.tesitems.Factions.Faction;
 import ru.iammaxim.tesitems.Factions.FactionManager;
 import ru.iammaxim.tesitems.GUI.Elements.*;
 import ru.iammaxim.tesitems.Networking.MessageFaction;
+import ru.iammaxim.tesitems.Networking.MessageFactionRemove;
 import ru.iammaxim.tesitems.TESItems;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * Created by maxim on 01.01.2017.
  */
 public class GuiFactionEditor extends Screen {
     public VerticalLayout topics;
+    public HashMap<ElementBase, DialogTopic> elements = new HashMap<>();
 
     public GuiFactionEditor(Faction faction) {
         Faction finalFaction = cloneFaction(faction);
@@ -27,12 +31,47 @@ public class GuiFactionEditor extends Screen {
         root2.add(new HorizontalDivider(root2));
         root2.add(topics = new VerticalLayout(root2));
         root2.add(new HorizontalDivider(root2));
-        root2.add(new Button(root2, "Add topic"));
+        root2.add(new Button(root2, "Add topic").setOnClick(b -> {
+            DialogTopic topic = new DialogTopic();
+            ElementBase element = getTopicElement(topics, topic);
+            elements.put(element, topic);
+            topics.add(element);
+        }));
         root2.add(new HorizontalDivider(root2));
         root2.add(new Button(root2).setText("Save").setOnClick(b -> {
             mc.displayGuiScreen(new GuiAlertDialog("Faction saved", this));
+
+            //check for empty topics
+            Iterator<ElementBase> it = elements.keySet().iterator();
+            while (it.hasNext()) {
+                ElementBase e = it.next();
+                DialogTopic t = elements.get(e);
+                if (t.name.isEmpty() || t.dialogLine.isEmpty()) {
+                    System.out.println("removing topic: " + t.name + " with dialog line: " + t.dialogLine);
+                    elements.remove(e);
+                    topics.remove(e);
+                    root.doLayout();
+                }
+            }
+
+            finalFaction.topics.clear();
+            elements.forEach((e, t) -> finalFaction.topics.add(t));
+
+            System.out.println("gonna save " + finalFaction.writeToNBT().toString());
+
             TESItems.networkWrapper.sendToServer(new MessageFaction(finalFaction));
         }));
+        root2.add(new Button(root2).setText("Remove").setOnClick(b -> {
+            mc.displayGuiScreen(new GuiConfirmationDialog("Are you sure you want to remove faction " + finalFaction.name + "?", this, () -> {
+                //check if this faction exists or newly created
+                if (finalFaction.id != -1)
+                    TESItems.networkWrapper.sendToServer(new MessageFactionRemove(finalFaction.id));
+                mc.displayGuiScreen(new GuiFactionList());
+            }));
+        }));
+        root2.add(new Button(root2).setText("Back").setOnClick(b -> mc.displayGuiScreen(new GuiFactionList())));
+
+        faction.topics.forEach(t -> topics.add(getTopicElement(topics, t)));
 
         root.doLayout();
     }
@@ -83,7 +122,7 @@ public class GuiFactionEditor extends Screen {
                 VerticalLayout topicsLayout = new VerticalLayout(layout);
                 layout.add(topicsLayout);
                 layout.add(new HorizontalDivider(layout));
-                layout.add(new Button(layout).setText("Add topic").center(true).setOnClick(b -> topicsLayout.add(getTopicElement(layout, new DialogTopic()))));
+                layout.add(new Button(layout).setText("Add topic").setOnClick(b -> topicsLayout.add(getTopicElement(layout, new DialogTopic()))));
 
                 //fill topics layout with actual topics
                 faction.topics.forEach(t -> {
@@ -92,24 +131,29 @@ public class GuiFactionEditor extends Screen {
 
                 return layout;
             } else {
-                return new Text(root, "[Edit: " + faction.name + "]") {
+                return new Text(root, faction.name) {
                     @Override
                     public void click(int relativeX, int relativeY) {
                         opened = true;
                         element = getElement(true);
                         ((LayoutBase) root).doLayout();
                     }
+
+                    @Override
+                    public void draw(int mouseX, int mouseY) {
+                        super.draw(mouseX, mouseY);
+                    }
                 };
             }
         }
+    }
 
-        private ElementBase getTopicElement(ElementBase parent, DialogTopic topic) {
-            VerticalLayout layout = new VerticalLayout(parent);
-            layout.add(new TextField(layout).setHint("Name").setText(topic.name).setOnType(tf -> topic.name = tf.getText()));
-            layout.add(new TextField(layout).setHint("Dialog line").setText(topic.dialogLine).setOnType(tf -> topic.dialogLine = tf.getText()));
-            layout.add(new Button(layout).setText("Delete").setOnClick(b -> ((VerticalLayout) parent).remove(layout)));
-            return layout;
-        }
-
+    private ElementBase getTopicElement(ElementBase parent, DialogTopic topic) {
+        VerticalLayout layout = new VerticalLayout(parent);
+        layout.add(new TextField(layout).setHint("Name").setText(topic.name).setOnType(tf -> topic.name = tf.getText()));
+        layout.add(new TextField(layout).setHint("Dialog line").setText(topic.dialogLine).setOnType(tf -> topic.dialogLine = tf.getText()));
+        layout.add(new Button(layout).setText("Delete").setOnClick(b -> ((VerticalLayout) parent).remove(layout)));
+        elements.remove(layout);
+        return layout;
     }
 }

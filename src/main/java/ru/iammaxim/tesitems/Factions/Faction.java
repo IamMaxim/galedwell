@@ -2,7 +2,6 @@ package ru.iammaxim.tesitems.Factions;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import ru.iammaxim.tesitems.Dialogs.Dialog;
 import ru.iammaxim.tesitems.Dialogs.DialogTopic;
 
 import java.util.ArrayList;
@@ -25,7 +24,7 @@ public class Faction {
         tag.setString("name", name);
         tag.setInteger("id", id);
         NBTTagList list = new NBTTagList();
-        topics.forEach((topic) -> list.appendTag(topic.saveToNBT()));
+        topics.forEach((topic) -> list.appendTag(topic.writeToNBT()));
         tag.setTag("topics", list);
         return tag;
     }
@@ -35,7 +34,7 @@ public class Faction {
         faction.id = tag.getInteger("id");
         NBTTagList tagList = (NBTTagList) tag.getTag("topics");
         for (int i = tagList.tagCount() - 1; i >= 0; i--) {
-            faction.topics.add(DialogTopic.loadFromNBT(tagList.getCompoundTagAt(i)));
+            faction.topics.add(DialogTopic.readFromNBT(tagList.getCompoundTagAt(i)));
         }
         return faction;
     }
