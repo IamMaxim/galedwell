@@ -41,15 +41,19 @@ public class ScrollableLayout extends FrameLayout {
 
     public void scrollToBottom() {
         scroll = element.getHeight() - height;
+//        if (scroll < 0) scroll = 0;
+        System.out.println(element.getHeight() + " " + height + " " + scroll);
+        ((VerticalLayout) element).setTop(top + padding - scroll);
+        ((LayoutBase)element).doLayout();
     }
 
     @Override
     public void draw(int mouseX, int mouseY) {
         //draw scrollbar
-        int scrollbarHeight = (int) (height * ((float)height / element.getHeight()));
-        if (scrollbarHeight > height)
-            scrollbarHeight = height;
-        int scrollbarTopOffset = (int) ((float) (height - scrollbarHeight) * scroll / (element.getHeight() - height));
+        int scrollbarHeight = (int) ((height - 2 * padding) * ((float)(height - 2 * padding) / element.getHeight()));
+        if (scrollbarHeight > height - 2 * padding)
+            scrollbarHeight = height - 2 * padding;
+        int scrollbarTopOffset = (int) ((float) (height - 2 * padding - scrollbarHeight) * scroll / (element.getHeight() - height + 2 * padding));
         drawColoredRect(Tessellator.getInstance(), right-2, top + scrollbarTopOffset, right, top + scrollbarTopOffset + scrollbarHeight, 0xffffffff);
 
         int scr = - Mouse.getDWheel() / 10;

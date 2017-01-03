@@ -59,26 +59,27 @@ public class Text extends ElementBase {
 
     @Override
     public int getHeight() {
-        if (dirty) {
+/*        if (dirty) {
             return 8;
-        }
+        }*/
         return strs.size() * lineHeight + (strs.size() - 1) * lineSpacing;
     }
 
     private void update() {
+        ((LayoutBase)getRoot()).doLayout();
         if (width == 0) {
             return;
         }
         strs = fontRenderer.listFormattedStringToWidth(text, width);
-        dirty = false;
+//        dirty = false;
     }
 
     @Override
     public void draw(int mouseX, int mouseY) {
-        if (dirty) {
+/*        if (dirty) {
             ((LayoutBase)getRoot()).doLayout();
             update();
-        }
+        }*/
 
         int x = left + leftPadding;
         int y = top;

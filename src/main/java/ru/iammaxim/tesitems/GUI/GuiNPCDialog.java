@@ -21,9 +21,10 @@ public class GuiNPCDialog extends Screen {
     private EntityNPC npc;
     private String history = "History text.\nSome more.\nAnd more.\ndksfglksdjfgklsdfgkjsdklgjsdlkfgjsdklgsdklfgsdkfgdskfgdklfgjdsklgdklsgjdklsgjkldklfjgkldsjglkdsjglkdsjgkldsjglkdsgjdlksgjdsklgjdslkgjdsklgjdslkgjdsklgjdsfklgfdjsgklfdsjklsjgfsdklgjfsdklgjfdslkgjskldfjglkdsfgjkldsfg";
     private Text historyElement;
+    private ScrollableLayout leftElement;
     private boolean updated = true;
 
-    public VerticalLayout topics, leftElement;
+    public VerticalLayout topics;
     public ScrollableLayout topicsScrollableLayout;
 
     public GuiNPCDialog() {
@@ -56,7 +57,7 @@ public class GuiNPCDialog extends Screen {
         contentLayout = new FancyFrameLayout(root);
         root.setElement(contentLayout);
         DialogWindowLayout root1 = new DialogWindowLayout(contentLayout);
-        ScrollableLayout leftElement = new ScrollableLayout(root1);
+        leftElement = new ScrollableLayout(root1);
         VerticalLayout leftLayout = new VerticalLayout(leftElement);
         historyElement = new Text(leftLayout);
         leftLayout.add(historyElement);
@@ -104,7 +105,7 @@ public class GuiNPCDialog extends Screen {
                 historyAppend(topic.name);
                 historyAppend(topic.dialogLine);
                 ((LayoutBase)root).doLayout();
-                topicsScrollableLayout.scrollToBottom();
+                leftElement.scrollToBottom();
                 TESItems.networkWrapper.sendToServer(new MessageDialogSelectTopic(topic));
             }
         };
