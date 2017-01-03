@@ -35,14 +35,12 @@ public class GuiFactionList extends Screen {
             TESItems.getMinecraft().displayGuiScreen(new GuiFactionEditor(f));
         }));
 
-        FactionManager.factions.forEach((id, f) -> {
-            factionsLayout.add(new Text(factionsLayout, "[Edit: " + f.name + "]") {
-                @Override
-                public void click(int relativeX, int relativeY) {
-                    mc.displayGuiScreen(new GuiFactionEditor(f));
-                }
-            });
-        });
+        FactionManager.factions.forEach((id, f) -> factionsLayout.add(new Text(factionsLayout, "[Edit: " + f.name + "]") {
+            @Override
+            public void click(int relativeX, int relativeY) {
+                mc.displayGuiScreen(new GuiFactionEditor(f));
+            }
+        }));
 
         root.doLayout();
     }

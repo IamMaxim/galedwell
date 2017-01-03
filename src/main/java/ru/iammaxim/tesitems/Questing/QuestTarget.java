@@ -16,13 +16,16 @@ public abstract class QuestTarget {
     public abstract void loadFromNBT(NBTTagCompound tag);
     public static QuestTarget getTargetFromNBT(NBTTagCompound tag) {
         String type = tag.getString("type");
-        if (type.equals("gather")) {
-            return new QuestTargetGather(tag);
-        } else if (type.equals("kill")) {
-            return new QuestTargetKill(tag);
-        } else if (type.equals("talk")) {
-            return new QuestTargetTalk(tag);
-        } else return null;
+        switch (type) {
+            case "gather":
+                return new QuestTargetGather(tag);
+            case "kill":
+                return new QuestTargetKill(tag);
+            case "talk":
+                return new QuestTargetTalk(tag);
+            default:
+                return null;
+        }
     }
 
     @Override

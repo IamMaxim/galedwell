@@ -32,10 +32,7 @@ public class CommandRemoveSpell extends CommandBase {
         if (!(sender instanceof EntityPlayer)) return;
         if (args.length != 1) return;
         IPlayerAttributesCapability cap = TESItems.getCapability((EntityPlayer) sender);
-        Iterator<SpellBase> it = cap.getSpellbook().iterator();
-        while (it.hasNext()) {
-            if (it.next().getName().equals(args[0])) it.remove();
-        }
+        cap.getSpellbook().removeIf(spellBase -> spellBase.getName().equals(args[0]));
         TESItems.networkWrapper.sendTo(new MessageSpellbook(cap.saveSpellbook()), (EntityPlayerMP) sender);
     }
 }

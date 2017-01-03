@@ -10,14 +10,14 @@ import java.util.List;
  * Created by maxim on 11/7/16 at 4:56 PM.
  */
 public class Text extends ElementBase {
-    private String text = "";
-    private FontRenderer fontRenderer;
-    private List<String> strs = new ArrayList<>();
-    private boolean dirty = false;
-    private int lineSpacing = 4, lineHeight = 8;
-    private int color = 0xff481f09;
-    private boolean center = false;
-    private int textWidth = 0;
+    protected String text = "";
+    protected FontRenderer fontRenderer;
+    protected List<String> strs = new ArrayList<>();
+    protected boolean dirty = false;
+    protected int lineSpacing = 4, lineHeight = 8;
+    protected int color = 0xff481f09;
+    protected boolean center = false;
+    protected int textWidth = 0;
     public int leftPadding = 0;
 
     public Text setLeftPadding(int padding) {
@@ -59,27 +59,37 @@ public class Text extends ElementBase {
 
     @Override
     public int getHeight() {
-/*        if (dirty) {
+        if (dirty) {
             return 8;
-        }*/
+        }
+        return getNonDirtyHeight();
+    }
+
+    public int getNonDirtyHeight() {
         return strs.size() * lineHeight + (strs.size() - 1) * lineSpacing;
     }
 
     private void update() {
-        ((LayoutBase)getRoot()).doLayout();
+        System.out.println("update()");
+        try {
+            ((LayoutBase) getRoot()).doLayout();
+            System.out.println("layout() done");
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
         if (width == 0) {
             return;
         }
         strs = fontRenderer.listFormattedStringToWidth(text, width);
-//        dirty = false;
+        dirty = false;
     }
 
     @Override
     public void draw(int mouseX, int mouseY) {
-/*        if (dirty) {
+        if (dirty) {
             ((LayoutBase)getRoot()).doLayout();
             update();
-        }*/
+        }
 
         int x = left + leftPadding;
         int y = top;

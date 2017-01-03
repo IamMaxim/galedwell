@@ -46,9 +46,7 @@ public class EntityRangedSpellEffect extends Entity {
     public void onEntityUpdate() {
         super.onEntityUpdate();
         List<EntityLivingBase> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(posX - range, posY - range, posZ - range, posX + range, posY + range, posZ + range));
-        entities.forEach((entity) -> {
-            effect.castTargetEntity(caster, entity);
-        });
+        entities.forEach(entity -> effect.castTargetEntity(caster, entity));
         kill();
     }
 }

@@ -44,12 +44,8 @@ public class GuiNPCEditor extends Screen {
         scrollableLayout.setElement(layout);
 
 
-        TextField npcName = new TextField(layout).setHint("Name").setText(npc.getName()).setOnType(tf -> {
-            npc.setName(tf.getText());
-        });
-        CheckBox invulnerability = new CheckBox(layout).setChecked(npc.isInvulnerable()).setText("Invulnerable").setOnClick(((cb, newState) -> {
-            npc.setInvulnerable(newState);
-        }));
+        TextField npcName = new TextField(layout).setHint("Name").setText(npc.getName()).setOnType(tf -> npc.setName(tf.getText()));
+        CheckBox invulnerability = new CheckBox(layout).setChecked(npc.isInvulnerable()).setText("Invulnerable").setOnClick(((cb, newState) -> npc.setInvulnerable(newState)));
         layout.add(npcName);
         layout.add(invulnerability);
         layout.add(new HorizontalDivider(layout));

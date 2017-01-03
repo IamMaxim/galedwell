@@ -32,34 +32,40 @@ public class CommandManageQuests extends CommandBase {
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-        if (args[0].equals("show")) {
-            StringBuilder sb = new StringBuilder();
-            sb.append("All quests:\n");
-            QuestManager.questList.forEach((k, v) -> sb.append("id: ").append(k).append(": {").append(v.toString()).append("}").append('\n'));
-            sb.append("Your instances:\n");
-            IPlayerAttributesCapability cap = TESItems.getCapability((EntityPlayer) sender);
-            cap.getQuests().forEach((k,q) -> sb.append(q.toString()).append('\n'));
-            ((EntityPlayer) sender).addChatComponentMessage(new TextComponentString(sb.toString()));
-        } else if (args[0].equals("add")) {
-            Quest quest = new Quest("testQuest");
-            //quest.itemsReward.add(new ItemStack(Item.getItemFromBlock(Blocks.COBBLESTONE)));
-            QuestStage stage1 = new QuestStage();
-            stage1.journalLine = "journal line 1";
-            stage1.targets.add(new QuestTargetGather(new ItemStack(Item.getItemFromBlock(Blocks.DIRT))));
-            quest.stages.add(stage1);
-            QuestStage stage2 = new QuestStage();
-            stage2.journalLine = "journal line 2";
-            stage2.targets.add(new QuestTargetGather(new ItemStack(Item.getItemFromBlock(Blocks.COBBLESTONE))));
-            quest.stages.add(stage2);
-            QuestManager.questList.put(quest.id, quest);
+        switch (args[0]) {
+            case "show":
+                StringBuilder sb = new StringBuilder();
+                sb.append("All quests:\n");
+                QuestManager.questList.forEach((k, v) -> sb.append("id: ").append(k).append(": {").append(v.toString()).append("}").append('\n'));
+                sb.append("Your instances:\n");
+                IPlayerAttributesCapability cap = TESItems.getCapability((EntityPlayer) sender);
+                cap.getQuests().forEach((k, q) -> sb.append(q.toString()).append('\n'));
+                ((EntityPlayer) sender).addChatComponentMessage(new TextComponentString(sb.toString()));
+                break;
+            case "add":
+                Quest quest = new Quest("testQuest");
+                //quest.itemsReward.add(new ItemStack(Item.getItemFromBlock(Blocks.COBBLESTONE)));
+                QuestStage stage1 = new QuestStage();
+                stage1.journalLine = "journal line 1";
+                stage1.targets.add(new QuestTargetGather(new ItemStack(Item.getItemFromBlock(Blocks.DIRT))));
+                quest.stages.add(stage1);
+                QuestStage stage2 = new QuestStage();
+                stage2.journalLine = "journal line 2";
+                stage2.targets.add(new QuestTargetGather(new ItemStack(Item.getItemFromBlock(Blocks.COBBLESTONE))));
+                quest.stages.add(stage2);
+                QuestManager.questList.put(quest.id, quest);
 
-            sender.addChatMessage(new TextComponentString("Quest added"));
-        } else if (args[0].equals("remove")) {
-            QuestManager.questList.remove(Integer.valueOf(args[1]));
-        } else if (args[0].equals("start")) {
-            QuestManager.startQuest((EntityPlayer) sender, QuestManager.getByID(Integer.parseInt(args[1])));
-        } else {
+                sender.addChatMessage(new TextComponentString("Quest added"));
+                break;
+            case "remove":
+                QuestManager.questList.remove(Integer.valueOf(args[1]));
+                break;
+            case "start":
+                QuestManager.startQuest((EntityPlayer) sender, QuestManager.getByID(Integer.parseInt(args[1])));
+                break;
+            default:
 
+                break;
         }
     }
 }

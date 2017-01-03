@@ -57,9 +57,54 @@ public class GuiNPCDialog extends Screen {
         contentLayout = new FancyFrameLayout(root);
         root.setElement(contentLayout);
         DialogWindowLayout root1 = new DialogWindowLayout(contentLayout);
-        leftElement = new ScrollableLayout(root1);
-        VerticalLayout leftLayout = new VerticalLayout(leftElement);
-        historyElement = new Text(leftLayout);
+        leftElement = new ScrollableLayout(root1) {
+            @Override
+            public void doLayout() {
+                System.out.println("leftElement doLayout()");
+                super.doLayout();
+            }
+
+            @Override
+            public void scrollToBottom() {
+                int h = element.getHeight();
+                scroll = h - height;
+                if (scroll < 0) scroll = 0;
+                System.out.println(h + " " + height + " " + scroll);
+                ((VerticalLayout) element).setTop(top + padding - scroll);
+                ((LayoutBase)element).doLayout();
+            }
+        };
+        VerticalLayout leftLayout = new VerticalLayout(leftElement) {
+            @Override
+            public void doLayout() {
+                System.out.println("leftLayout doLayout()");
+                super.doLayout();
+            }
+
+            @Override
+            public int getHeight() {
+                int height = 0;
+                height += ((Text)elements.get(0)).getNonDirtyHeight();
+                height += 2 * padding + 2 * marginV;
+                return height;
+            }
+        };
+        historyElement = new Text(leftLayout) {
+            @Override
+            public void draw(int mouseX, int mouseY) {
+                 int x = left + leftPadding;
+                int y = top;
+                for (String str : strs) {
+                    if (center) {
+                        fontRenderer.drawString(str, x + (width - textWidth) / 2, y, color);
+                        y += lineHeight + lineSpacing;
+                    } else {
+                        fontRenderer.drawString(str, x, y, color);
+                        y += lineHeight + lineSpacing;
+                    }
+                }
+            }
+        };
         leftLayout.add(historyElement);
         leftElement.setElement(leftLayout);
 

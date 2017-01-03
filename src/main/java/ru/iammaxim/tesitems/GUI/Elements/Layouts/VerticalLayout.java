@@ -12,8 +12,8 @@ import java.util.ConcurrentModificationException;
  * Created by maxim on 11/7/16 at 4:19 PM.
  */
 public class VerticalLayout extends LayoutBase {
-    private int spacing = 4;
-    private ArrayList<ElementBase> elements = new ArrayList<>();
+    protected int spacing = 4;
+    protected ArrayList<ElementBase> elements = new ArrayList<>();
 
     public ArrayList<ElementBase> getElements() {
         return elements;
@@ -29,7 +29,7 @@ public class VerticalLayout extends LayoutBase {
     }
 
     public void remove(ElementBase element) {
-        elements.remove(element);
+        System.out.println("removed element: " + elements.remove(element));
     }
 
     public void clear() {

@@ -12,10 +12,10 @@ import ru.iammaxim.tesitems.GUI.Elements.LayoutBase;
  * Created by maxim on 11/8/16 at 5:18 PM.
  */
 public class ScrollableLayout extends FrameLayout {
-    private int height;
-    private int scroll = 0;
-    private Minecraft mc;
-    private ScaledResolution res;
+    protected int height;
+    protected int scroll = 0;
+    protected Minecraft mc;
+    protected ScaledResolution res;
 
     public ScrollableLayout setHeight(int height) {
         this.height = height;
@@ -41,7 +41,7 @@ public class ScrollableLayout extends FrameLayout {
 
     public void scrollToBottom() {
         scroll = element.getHeight() - height;
-//        if (scroll < 0) scroll = 0;
+        if (scroll < 0) scroll = 0;
         System.out.println(element.getHeight() + " " + height + " " + scroll);
         ((VerticalLayout) element).setTop(top + padding - scroll);
         ((LayoutBase)element).doLayout();
@@ -54,7 +54,7 @@ public class ScrollableLayout extends FrameLayout {
         if (scrollbarHeight > height - 2 * padding)
             scrollbarHeight = height - 2 * padding;
         int scrollbarTopOffset = (int) ((float) (height - 2 * padding - scrollbarHeight) * scroll / (element.getHeight() - height + 2 * padding));
-        drawColoredRect(Tessellator.getInstance(), right-2, top + scrollbarTopOffset, right, top + scrollbarTopOffset + scrollbarHeight, 0xffffffff);
+        drawColoredRect(Tessellator.getInstance(), right, top + scrollbarTopOffset, right+8, top + scrollbarTopOffset + scrollbarHeight, 0xffffffff);
 
         int scr = - Mouse.getDWheel() / 10;
         if (scr != 0) {

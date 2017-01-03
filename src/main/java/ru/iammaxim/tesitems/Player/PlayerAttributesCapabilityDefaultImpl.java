@@ -221,8 +221,7 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     public NBTTagCompound saveSpellbook() {
         NBTTagCompound tagCompound = new NBTTagCompound();
         NBTTagList list = new NBTTagList();
-        for (int i = 0; i < spellbook.size(); i++) {
-            SpellBase spell = spellbook.get(i);
+        for (SpellBase spell : spellbook) {
             NBTTagCompound tag = new NBTTagCompound();
             tag.setString("name", spell.getName());
             tag.setInteger("type", spell.getSpellType());
