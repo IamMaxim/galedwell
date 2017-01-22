@@ -70,10 +70,8 @@ public class Text extends ElementBase {
     }
 
     private void update() {
-        System.out.println("update()");
         try {
             ((LayoutBase) getRoot()).doLayout();
-            System.out.println("layout() done");
         } catch (NullPointerException e) {
             e.printStackTrace();
         }

@@ -5,12 +5,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import ru.iammaxim.tesitems.Dialogs.DialogTopic;
 import ru.iammaxim.tesitems.GUI.Elements.*;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.*;
-import ru.iammaxim.tesitems.NPC.EntityNPC;
+import ru.iammaxim.tesitems.NPC.NPC;
 import ru.iammaxim.tesitems.Networking.MessageDialogSelectTopic;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.TESItems;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by maxim on 7/24/16.
@@ -18,9 +19,9 @@ import java.io.IOException;
 public class GuiNPCDialog extends Screen {
     private EntityPlayer player;
     private IPlayerAttributesCapability cap;
-    private EntityNPC npc;
-    private String history = "History text.\nSome more.\nAnd more.\ndksfglksdjfgklsdfgkjsdklgjsdlkfgjsdklgsdklfgsdkfgdskfgdklfgjdsklgdklsgjdklsgjkldklfjgkldsjglkdsjglkdsjgkldsjglkdsgjdlksgjdsklgjdslkgjdsklgjdslkgjdsklgjdsfklgfdjsgklfdsjklsjgfsdklgjfsdklgjfdslkgjskldfjglkdsfgjkldsfg";
-    private Text historyElement;
+    private NPC npc;
+//    private String history = "";
+    private VerticalLayout historyElement;
     private ScrollableLayout leftElement;
     private boolean updated = true;
 
@@ -60,7 +61,6 @@ public class GuiNPCDialog extends Screen {
         leftElement = new ScrollableLayout(root1) {
             @Override
             public void doLayout() {
-                System.out.println("leftElement doLayout()");
                 super.doLayout();
             }
 
@@ -69,47 +69,52 @@ public class GuiNPCDialog extends Screen {
                 int h = element.getHeight();
                 scroll = h - height;
                 if (scroll < 0) scroll = 0;
-                System.out.println(h + " " + height + " " + scroll);
                 ((VerticalLayout) element).setTop(top + padding - scroll);
                 ((LayoutBase)element).doLayout();
             }
         };
+        leftElement.setHorizontalMargin(8);
+        leftElement.setPadding(0);
         VerticalLayout leftLayout = new VerticalLayout(leftElement) {
             @Override
+            public int getHeight() {
+                int height = 0;
+                for (ElementBase e : elements) {
+                    ArrayList<ElementBase> els = ((VerticalLayout)e).getElements();
+                    for (ElementBase el : els) {
+                        height += ((Text)el).getNonDirtyHeight();
+                    }
+                }
+                height += 2 * padding + 2 * marginV;
+                return height;
+            }
+        };
+        historyElement = new VerticalLayout(leftLayout) {
+            @Override
             public void doLayout() {
-                System.out.println("leftLayout doLayout()");
-                super.doLayout();
+                int y = top + padding;
+                int x = left + padding;
+                for (ElementBase element : elements) {
+                    int w = width - 2 * padding;
+                    int h = ((Text)element).getNonDirtyHeight();
+                    element.setBounds(x, y, x + w, y + h);
+                    y += h + spacing;
+                }
             }
 
             @Override
             public int getHeight() {
                 int height = 0;
-                height += ((Text)elements.get(0)).getNonDirtyHeight();
+                for (ElementBase e : elements) {
+                    height += ((Text)e).getNonDirtyHeight();
+                }
+                height += (elements.size() - 1) * spacing;
                 height += 2 * padding + 2 * marginV;
                 return height;
             }
         };
-        historyElement = new Text(leftLayout) {
-            @Override
-            public void draw(int mouseX, int mouseY) {
-                 int x = left + leftPadding;
-                int y = top;
-                for (String str : strs) {
-                    if (center) {
-                        fontRenderer.drawString(str, x + (width - textWidth) / 2, y, color);
-                        y += lineHeight + lineSpacing;
-                    } else {
-                        fontRenderer.drawString(str, x, y, color);
-                        y += lineHeight + lineSpacing;
-                    }
-                }
-            }
-        };
         leftLayout.add(historyElement);
         leftElement.setElement(leftLayout);
-
-        //todo: remove
-        historyElement.setText(history);
 
         HorizontalLayout rightElement = new HorizontalLayout(root1);
         rightElement.setSpacing(0);
@@ -123,7 +128,7 @@ public class GuiNPCDialog extends Screen {
             }
         };
         rightElement.add(rightLayout);
-        rightLayout.add(new Text(rightLayout, npc.getName()).setLeftPadding(4)).add(new HorizontalDivider(rightLayout));
+        rightLayout.add(new Text(rightLayout, npc.name).setLeftPadding(4)).add(new HorizontalDivider(rightLayout));
         topics = new VerticalLayout(rightLayout);
         topics.setHorizontalMargin(4);
         topicsScrollableLayout = new ScrollableLayout(rightElement);
@@ -131,10 +136,7 @@ public class GuiNPCDialog extends Screen {
         rightLayout.add(topicsScrollableLayout);
         contentLayout.setElement(root1);
 
-        cap.getDialog().topics.forEach((name, t) -> {
-            System.out.println("adding topic " + name);
-            topics.add(buildTopicElement(topics, t));
-        });
+        cap.getLatestDialog().topics.forEach((name, t) -> topics.add(buildTopicElement(topics, t)));
 
         contentLayout.doLayout();
         leftElement.setHeight(root1.getHeight());
@@ -146,9 +148,8 @@ public class GuiNPCDialog extends Screen {
         Text text = new Text(root, topic.name) {
             @Override
             public void click(int relativeX, int relativeY) {
-                System.out.println("clicked topic");
-                historyAppend(topic.name);
-                historyAppend(topic.dialogLine);
+                historyAppendTopic(topic.name);
+                historyAppendText(topic.dialogLine);
                 ((LayoutBase)root).doLayout();
                 leftElement.scrollToBottom();
                 TESItems.networkWrapper.sendToServer(new MessageDialogSelectTopic(topic));
@@ -157,9 +158,49 @@ public class GuiNPCDialog extends Screen {
         return text;
     }
 
-    public void historyAppend(String appendStr) {
-        history += "\n\n" + appendStr;
-        historyElement.setText(history);
+    public void historyAppendText(String appendStr) {
+        Text t = new Text(historyElement) {
+            @Override
+            public void draw(int mouseX, int mouseY) {
+                int x = left + leftPadding;
+                int y = top;
+                for (String str : strs) {
+                    if (center) {
+                        fontRenderer.drawString(str, x + (width - textWidth) / 2, y, color);
+                        y += lineHeight + lineSpacing;
+                    } else {
+                        fontRenderer.drawString(str, x, y, color);
+                        y += lineHeight + lineSpacing;
+                    }
+                }
+            }
+        };
+//        t._setwidth(historyElement.width());
+        historyElement.add(t);
+        t.setText(appendStr);
+    }
+
+    public void historyAppendTopic(String appendStr) {
+        Text t = new Text(historyElement) {
+            @Override
+            public void draw(int mouseX, int mouseY) {
+                int x = left + leftPadding;
+                int y = top;
+                for (String str : strs) {
+                    if (center) {
+                        fontRenderer.drawString(str, x + (width - textWidth) / 2, y, color);
+                        y += lineHeight + lineSpacing;
+                    } else {
+                        fontRenderer.drawString(str, x, y, color);
+                        y += lineHeight + lineSpacing;
+                    }
+                }
+            }
+        };
+//        t._setwidth(historyElement.width());
+        historyElement.add(t);
+        t.setText(appendStr);
+        t.setColor(0xFF0066CC);
     }
 
     public void setUpdated() {

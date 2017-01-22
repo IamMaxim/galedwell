@@ -2,6 +2,7 @@ package ru.iammaxim.tesitems.GUI.Elements;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
+import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import ru.iammaxim.tesitems.GUI.Fonts.UnicodeFontRenderer;
 import ru.iammaxim.tesitems.TESItems;
@@ -79,12 +80,21 @@ public class TextField extends ElementBase {
     }
 
     @Override
-    public void keyTyped(char typedChar, int keyCode) {
+    public void keyTyped(char typedChar, int key) {
         if (active) {
-            if (keyCode == Keyboard.KEY_BACK) { //backspace
+            //Left or right control + V
+            if(key == 47 && (Keyboard.isKeyDown(29) || Keyboard.isKeyDown(157))) {
+                String toPaste = Sys.getClipboard();
+                if(toPaste != null) {
+                    text += toPaste;
+                }
+                return;
+            }
+
+            if (key == Keyboard.KEY_BACK) { //backspace
                 if (text.length() > 0)
                     text = text.substring(0, text.length() - 1);
-            } else if (keyCode == Keyboard.KEY_RETURN) {
+            } else if (key == Keyboard.KEY_RETURN) {
                 text = text + '\n';
             } else if (typedChar == ' ' || UnicodeFontRenderer.alphabet.contains(typedChar + "")) {
                 text = text + typedChar;

@@ -12,8 +12,9 @@ public abstract class LayoutBase extends ElementBase {
 
     public abstract void doLayout();
 
-    public void setPadding(int padding) {
+    public LayoutBase setPadding(int padding) {
         this.padding = padding;
+        return this;
     }
 
     public int getPadding() {

@@ -8,7 +8,9 @@ import ru.iammaxim.tesitems.Dialogs.Dialog;
 import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.Magic.SpellBase;
 import ru.iammaxim.tesitems.NPC.EntityNPC;
+import ru.iammaxim.tesitems.NPC.NPC;
 import ru.iammaxim.tesitems.Questing.QuestInstance;
+import ru.iammaxim.tesitems.Scripting.VariableStorage;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,21 +35,19 @@ public interface IPlayerAttributesCapability {
     HashMap<Integer, QuestInstance> getQuests();
     float getCarryWeight();
     float getMaxCarryWeight();
-    EntityNPC getLatestNPC();
-    void setLatestNPC(EntityNPC npc);
+    NPC getLatestNPC();
+    void setLatestNPC(NPC npc);
     Inventory getInventory();
     void setInventory(Inventory inventory);
     void createInventory(EntityPlayer player, Inventory inv);
     void loadQuests(NBTTagCompound nbttag);
-    void loadQuest(NBTTagCompound nbttag);
     NBTTagCompound saveQuests();
     void journalAppend(String s);
     String getJournal();
     void setJournal(String s);
     void setQuestStage(int questID, int stage);
     QuestInstance getQuest(int id);
-    @SideOnly(Side.CLIENT)
-    void setDialog(Dialog dialog);
-    @SideOnly(Side.CLIENT)
-    Dialog getDialog();
+    void setLatestDialog(Dialog dialog);
+    Dialog getLatestDialog();
+    VariableStorage getVariableStorage();
 }

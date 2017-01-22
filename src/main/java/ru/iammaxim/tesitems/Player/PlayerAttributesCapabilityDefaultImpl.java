@@ -13,11 +13,10 @@ import ru.iammaxim.tesitems.Inventory.InventoryServer;
 import ru.iammaxim.tesitems.Magic.SpellBase;
 import ru.iammaxim.tesitems.Magic.SpellEffectBase;
 import ru.iammaxim.tesitems.Magic.SpellEffectManager;
-import ru.iammaxim.tesitems.NPC.EntityNPC;
+import ru.iammaxim.tesitems.NPC.NPC;
 import ru.iammaxim.tesitems.Questing.QuestInstance;
-import ru.iammaxim.tesitems.Questing.QuestManager;
-import ru.iammaxim.tesitems.Questing.QuestStatus;
 import ru.iammaxim.tesitems.ReflectionUtils;
+import ru.iammaxim.tesitems.Scripting.VariableStorage;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -35,7 +34,7 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     //current player's spell index
     private int currentSpell = -1;
     //latest NPC player interacted with
-    private EntityNPC latestNPC;
+    private NPC latestNPC;
     //player inventory
     private Inventory inventory = new Inventory();
     //player active quests
@@ -45,6 +44,7 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     //latest dialog with NPC
     @SideOnly(Side.CLIENT)
     private Dialog dialog;
+    private VariableStorage variableStorage = new VariableStorage();
 
     public PlayerAttributesCapabilityDefaultImpl() {
     }
@@ -66,30 +66,18 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
         quests.clear();
         NBTTagList nbtList = (NBTTagList) nbttag.getTag("quests");
         for (int i = 0; i < nbtList.tagCount(); i++) {
-            NBTTagCompound tag = nbtList.getCompoundTagAt(i);
-            loadQuest(tag);
+            QuestInstance inst = new QuestInstance();
+            inst.loadFromNBT(nbtList.getCompoundTagAt(i));
+            quests.put(inst.quest_id, inst);
         }
-    }
-
-    @Override
-    public void loadQuest(NBTTagCompound tag) {
-        int id = tag.getInteger("id");
-        quests.put(id, new QuestInstance(QuestManager.getByID(id), QuestStatus.valueOf(tag.getString("questStatus")), tag.getInteger("stage")));
-
     }
 
     @Override
     public NBTTagCompound saveQuests() {
         NBTTagCompound tag = new NBTTagCompound();
         NBTTagList nbtlist = new NBTTagList();
-        for (int i = 0; i < quests.size(); i++) {
-            QuestInstance quest = quests.get(i);
-            NBTTagCompound questTag = new NBTTagCompound();
-            questTag.setInteger("id", quest.quest.id);
-            questTag.setInteger("stage", quest.stage);
-            questTag.setString("questStatus", quest.status.toString());
-            nbtlist.appendTag(questTag);
-        }
+        for (int i = 0; i < quests.size(); i++)
+            nbtlist.appendTag(quests.get(i).writeToNBT());
         tag.setTag("quests", nbtlist);
         return tag;
     }
@@ -116,13 +104,18 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
 
     @SideOnly(Side.CLIENT)
     @Override
-    public Dialog getDialog() {
+    public Dialog getLatestDialog() {
         return dialog;
+    }
+
+    @Override
+    public VariableStorage getVariableStorage() {
+        return variableStorage;
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void setDialog(Dialog dialog) {
+    public void setLatestDialog(Dialog dialog) {
         this.dialog = dialog;
     }
 
@@ -266,12 +259,12 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     }
 
     @Override
-    public EntityNPC getLatestNPC() {
+    public NPC getLatestNPC() {
         return latestNPC;
     }
 
     @Override
-    public void setLatestNPC(EntityNPC npc) {
+    public void setLatestNPC(NPC npc) {
         latestNPC = npc;
     }
 

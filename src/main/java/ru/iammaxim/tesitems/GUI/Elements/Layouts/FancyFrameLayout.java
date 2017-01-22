@@ -2,6 +2,7 @@ package ru.iammaxim.tesitems.GUI.Elements.Layouts;
 
 import net.minecraft.client.renderer.Tessellator;
 import ru.iammaxim.tesitems.GUI.Elements.ElementBase;
+import ru.iammaxim.tesitems.GUI.Elements.LayoutBase;
 
 import static ru.iammaxim.tesitems.GUI.ResManager.*;
 
@@ -17,8 +18,9 @@ public class FancyFrameLayout extends FrameLayout {
     }
 
     @Override
-    public void setPadding(int padding) {
+    public LayoutBase setPadding(int padding) {
         super.setPadding(padding + frameSize);
+        return this;
     }
 
     @Override

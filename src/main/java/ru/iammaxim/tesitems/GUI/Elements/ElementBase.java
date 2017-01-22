@@ -27,6 +27,11 @@ public abstract class ElementBase {
         return width;
     }
 
+    //force set this.width
+    public void _setwidth(int width) {
+        this.width = width;
+    }
+
     public int height() {
         return height;
     }

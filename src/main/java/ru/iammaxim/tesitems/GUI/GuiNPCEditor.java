@@ -9,6 +9,7 @@ import ru.iammaxim.tesitems.GUI.Elements.*;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.ScrollableLayout;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.VerticalLayout;
 import ru.iammaxim.tesitems.NPC.EntityNPC;
+import ru.iammaxim.tesitems.NPC.NPC;
 import ru.iammaxim.tesitems.Networking.MessageNPCUpdate;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.TESItems;
@@ -22,7 +23,7 @@ import java.util.Iterator;
  */
 public class GuiNPCEditor extends Screen {
     private EntityPlayer player;
-    private EntityNPC npc;
+    private NPC npc;
     private ScrollableLayout scrollableLayout;
     private HashMap<VerticalLayout, Faction> factionEntries = new HashMap<>();
 
@@ -44,7 +45,7 @@ public class GuiNPCEditor extends Screen {
         scrollableLayout.setElement(layout);
 
 
-        TextField npcName = new TextField(layout).setHint("Name").setText(npc.getName()).setOnType(tf -> npc.setName(tf.getText()));
+        TextField npcName = new TextField(layout).setHint("Name").setText(npc.name).setOnType(tf -> npc.setName(tf.getText()));
         CheckBox invulnerability = new CheckBox(layout).setChecked(npc.isInvulnerable()).setText("Invulnerable").setOnClick(((cb, newState) -> npc.setInvulnerable(newState)));
         layout.add(npcName);
         layout.add(invulnerability);
@@ -100,7 +101,7 @@ public class GuiNPCEditor extends Screen {
                 else npc.addFaction(f);
             }
 
-            TESItems.networkWrapper.sendToServer(new MessageNPCUpdate(npc.serializeNBT()));
+            TESItems.networkWrapper.sendToServer(new MessageNPCUpdate(npc.getNBT()));
             mc.displayGuiScreen(new GuiAlertDialog("Changes updated", this));
         }));
 

@@ -30,9 +30,11 @@ public class Inventory {
         return null;
     }
 
+    //used to sync this inventory with Entity's one
     public void setMainHandItem() {
     }
 
+    //used to sync this inventory with Entity's one
     public void setOffHandItem() {
     }
 

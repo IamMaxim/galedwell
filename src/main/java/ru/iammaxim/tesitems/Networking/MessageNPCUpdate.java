@@ -43,7 +43,7 @@ public class MessageNPCUpdate implements IMessage {
             if (player.getHeldItemOffhand() != null && player.getHeldItemOffhand().getItem() != mItems.itemNPCEditorTool)
                 return null;
             IPlayerAttributesCapability cap = TESItems.getCapability(player);
-            cap.getLatestNPC().deserializeNBT(message.tag);
+            cap.getLatestNPC().readFromNBT(message.tag);
             return null;
         }
     }
@@ -58,7 +58,7 @@ public class MessageNPCUpdate implements IMessage {
             if (player.getHeldItemOffhand() != null && player.getHeldItemOffhand().getItem() != mItems.itemNPCEditorTool)
                 return null;
             IPlayerAttributesCapability cap = TESItems.getCapability(player);
-            cap.getLatestNPC().deserializeNBT(message.tag);
+            cap.getLatestNPC().readFromNBT(message.tag);
             return null;
         }
     }

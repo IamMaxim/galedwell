@@ -372,6 +372,7 @@ public class TESItems {
         event.registerServerCommand(new CommandRemoveSpell());
         event.registerServerCommand(new CommandGiveMe());
         event.registerServerCommand(new CommandManageFactions());
+        event.registerServerCommand(new CommandStatus());
 
         //debug
         event.registerServerCommand(new CommandManageInventory());

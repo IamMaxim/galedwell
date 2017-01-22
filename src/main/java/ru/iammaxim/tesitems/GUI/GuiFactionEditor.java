@@ -126,6 +126,7 @@ public class GuiFactionEditor extends Screen {
             });
             layout.add(new TextField(layout).setHint("Name").setText(topic.name).setOnType(tf -> topic.name = tf.getText()));
             layout.add(new TextField(layout).setHint("Dialog line").setText(topic.dialogLine).setOnType(tf -> topic.dialogLine = tf.getText()));
+            layout.add(new TextField(layout).setHint("Script").setText(topic.script).setOnType(tf -> topic.script = tf.getText()));
             layout.add(new Button(layout).setText("Remove").setOnClick(b -> mc.displayGuiScreen(new GuiConfirmationDialog("Are you sure you want to remove topic " + topic.name + "?", this,
                     () -> {
                         ((VerticalLayout) _parent).remove(layout);

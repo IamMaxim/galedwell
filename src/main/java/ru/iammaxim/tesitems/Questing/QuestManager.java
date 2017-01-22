@@ -120,7 +120,7 @@ public class QuestManager {
 
     public static void startQuest(EntityPlayer player, Quest quest) {
         IPlayerAttributesCapability cap = TESItems.getCapability(player);
-        QuestInstance inst = new QuestInstance(quest, QuestStatus.INPROGRESS, 0);
+        QuestInstance inst = new QuestInstance(quest, 0);
         cap.addQuest(inst);
         cap.setQuestStage(quest.id, 0);
     }

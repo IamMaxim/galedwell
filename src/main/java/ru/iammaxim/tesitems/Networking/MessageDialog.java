@@ -48,7 +48,7 @@ public class MessageDialog implements IMessage {
                 dialog.topics.forEach((name, topic) -> gui.topics.add(new Text(gui.topics, name)));
                 gui.setUpdated();
             }
-            cap.setDialog(dialog);
+            cap.setLatestDialog(dialog);
             return null;
         }
     }

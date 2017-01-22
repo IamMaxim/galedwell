@@ -42,7 +42,6 @@ public class ScrollableLayout extends FrameLayout {
     public void scrollToBottom() {
         scroll = element.getHeight() - height;
         if (scroll < 0) scroll = 0;
-        System.out.println(element.getHeight() + " " + height + " " + scroll);
         ((VerticalLayout) element).setTop(top + padding - scroll);
         ((LayoutBase)element).doLayout();
     }
@@ -56,23 +55,25 @@ public class ScrollableLayout extends FrameLayout {
         int scrollbarTopOffset = (int) ((float) (height - 2 * padding - scrollbarHeight) * scroll / (element.getHeight() - height + 2 * padding));
         drawColoredRect(Tessellator.getInstance(), right, top + scrollbarTopOffset, right+8, top + scrollbarTopOffset + scrollbarHeight, 0xffffffff);
 
-        int scr = - Mouse.getDWheel() / 10;
-        if (scr != 0) {
-            scroll += scr;
+        if (mouseX > left && mouseX < right && mouseY > top && mouseY < bottom) {
+            int scr = -Mouse.getDWheel() / 10;
+            if (scr != 0) {
+                scroll += scr;
 
-            if (scroll < 0) {
-                scroll = 0;
-            }
+                if (scroll < 0) {
+                    scroll = 0;
+                }
 
-            int i = element.getHeight() - height;
-            if (i < 0) i = 0;
-            if (scroll > i) {
-                scroll = i;
-            }
+                int i = element.getHeight() - height;
+                if (i < 0) i = 0;
+                if (scroll > i) {
+                    scroll = i;
+                }
 
-            ((VerticalLayout) element).setTop(top + padding - scroll);
-            if (element instanceof LayoutBase) {
-                ((LayoutBase) element).doLayout();
+                ((VerticalLayout) element).setTop(top + padding - scroll);
+                if (element instanceof LayoutBase) {
+                    ((LayoutBase) element).doLayout();
+                }
             }
         }
 
