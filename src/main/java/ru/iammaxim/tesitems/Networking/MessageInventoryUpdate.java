@@ -39,12 +39,10 @@ public class MessageInventoryUpdate implements IMessage {
                 stack = new ItemStack((Item) data[0]);
                 break;
         }
-        System.out.println("created inventory update message");
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        System.out.println("message size: " + buf.maxCapacity());
         action = buf.readByte();
         switch (action) {
             case ACTION_ADD:

@@ -1,6 +1,7 @@
 package ru.iammaxim.tesitems.GUI;
 
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
 import ru.iammaxim.tesitems.Dialogs.DialogTopic;
 import ru.iammaxim.tesitems.GUI.Elements.*;
@@ -20,7 +21,6 @@ public class GuiNPCDialog extends Screen {
     private EntityPlayer player;
     private IPlayerAttributesCapability cap;
     private NPC npc;
-//    private String history = "";
     private VerticalLayout historyElement;
     private ScrollableLayout leftElement;
     private boolean updated = true;
@@ -60,11 +60,6 @@ public class GuiNPCDialog extends Screen {
         DialogWindowLayout root1 = new DialogWindowLayout(contentLayout);
         leftElement = new ScrollableLayout(root1) {
             @Override
-            public void doLayout() {
-                super.doLayout();
-            }
-
-            @Override
             public void scrollToBottom() {
                 int h = element.getHeight();
                 scroll = h - height;
@@ -80,10 +75,7 @@ public class GuiNPCDialog extends Screen {
             public int getHeight() {
                 int height = 0;
                 for (ElementBase e : elements) {
-                    ArrayList<ElementBase> els = ((VerticalLayout)e).getElements();
-                    for (ElementBase el : els) {
-                        height += ((Text)el).getNonDirtyHeight();
-                    }
+                    height += e.getHeight() + spacing;
                 }
                 height += 2 * padding + 2 * marginV;
                 return height;
@@ -93,20 +85,22 @@ public class GuiNPCDialog extends Screen {
             @Override
             public void doLayout() {
                 int y = top + padding;
-                int x = left + padding;
-                for (ElementBase element : elements) {
-                    int w = width - 2 * padding;
-                    int h = ((Text)element).getNonDirtyHeight();
-                    element.setBounds(x, y, x + w, y + h);
+                int x_left = left + padding;
+                int x_right = x_left + width - 2 * padding;
+                for (ElementBase e : elements) {
+                    int h = ((Text)e).getNonDirtyHeight();
+                    e.setBounds(x_left, y, x_right, y + h);
                     y += h + spacing;
                 }
+                y -= spacing;
             }
 
             @Override
             public int getHeight() {
                 int height = 0;
                 for (ElementBase e : elements) {
-                    height += ((Text)e).getNonDirtyHeight();
+                    int h = ((Text)e).getNonDirtyHeight();
+                    height += h;
                 }
                 height += (elements.size() - 1) * spacing;
                 height += 2 * padding + 2 * marginV;
@@ -131,7 +125,7 @@ public class GuiNPCDialog extends Screen {
         rightLayout.add(new Text(rightLayout, npc.name).setLeftPadding(4)).add(new HorizontalDivider(rightLayout));
         topics = new VerticalLayout(rightLayout);
         topics.setHorizontalMargin(4);
-        topicsScrollableLayout = new ScrollableLayout(rightElement);
+        topicsScrollableLayout = new ScrollableLayout(rightLayout);
         topicsScrollableLayout.setElement(topics);
         rightLayout.add(topicsScrollableLayout);
         contentLayout.setElement(root1);
@@ -140,7 +134,7 @@ public class GuiNPCDialog extends Screen {
 
         contentLayout.doLayout();
         leftElement.setHeight(root1.getHeight());
-        topicsScrollableLayout.setHeight(rightElement.getHeight());
+        topicsScrollableLayout.setHeight(rightElement.getHeight() - 16);
         contentLayout.doLayout();
     }
 
@@ -150,7 +144,7 @@ public class GuiNPCDialog extends Screen {
             public void click(int relativeX, int relativeY) {
                 historyAppendTopic(topic.name);
                 historyAppendText(topic.dialogLine);
-                ((LayoutBase)root).doLayout();
+                GuiNPCDialog.this.root.doLayout();
                 leftElement.scrollToBottom();
                 TESItems.networkWrapper.sendToServer(new MessageDialogSelectTopic(topic));
             }
@@ -161,6 +155,16 @@ public class GuiNPCDialog extends Screen {
     public void historyAppendText(String appendStr) {
         Text t = new Text(historyElement) {
             @Override
+            protected void update() {
+                if (width == 0) {
+                    System.out.println("width is 0");
+                    return;
+                }
+                strs = fontRenderer.listFormattedStringToWidth(text, width);
+                dirty = false;
+            }
+
+            @Override
             public void draw(int mouseX, int mouseY) {
                 int x = left + leftPadding;
                 int y = top;
@@ -174,14 +178,26 @@ public class GuiNPCDialog extends Screen {
                     }
                 }
             }
+
+
         };
-//        t._setwidth(historyElement.width());
+        t._setwidth(historyElement.width());
         historyElement.add(t);
         t.setText(appendStr);
     }
 
     public void historyAppendTopic(String appendStr) {
         Text t = new Text(historyElement) {
+            @Override
+            protected void update() {
+                if (width == 0) {
+                    System.out.println("width is 0");
+                    return;
+                }
+                strs = fontRenderer.listFormattedStringToWidth(text, width);
+                dirty = false;
+            }
+
             @Override
             public void draw(int mouseX, int mouseY) {
                 int x = left + leftPadding;
@@ -197,7 +213,7 @@ public class GuiNPCDialog extends Screen {
                 }
             }
         };
-//        t._setwidth(historyElement.width());
+        t._setwidth(historyElement.width());
         historyElement.add(t);
         t.setText(appendStr);
         t.setColor(0xFF0066CC);

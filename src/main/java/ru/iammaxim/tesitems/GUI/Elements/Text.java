@@ -69,11 +69,11 @@ public class Text extends ElementBase {
         return strs.size() * lineHeight + (strs.size() - 1) * lineSpacing;
     }
 
-    private void update() {
+    protected void update() {
         try {
             ((LayoutBase) getRoot()).doLayout();
         } catch (NullPointerException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         }
         if (width == 0) {
             return;
