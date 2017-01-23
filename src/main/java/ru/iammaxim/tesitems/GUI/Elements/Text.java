@@ -66,7 +66,7 @@ public class Text extends ElementBase {
     }
 
     public int getNonDirtyHeight() {
-        return strs.size() * lineHeight + (strs.size() - 1) * lineSpacing;
+        return strs.size() * lineHeight + (strs.size() - 1) * lineSpacing + marginBottom + marginTop;
     }
 
     protected void update() {

@@ -69,7 +69,7 @@ public class VerticalLayout extends LayoutBase {
             height += e.getHeight();
         }
         height += (elements.size() - 1) * spacing;
-        height += 2 * padding + 2 * marginV;
+        height += 2 * padding + marginBottom + marginTop;
         return height;
     }
 

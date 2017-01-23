@@ -77,7 +77,7 @@ public class GuiNPCDialog extends Screen {
                 for (ElementBase e : elements) {
                     height += e.getHeight() + spacing;
                 }
-                height += 2 * padding + 2 * marginV;
+                height += 2 * padding + marginBottom + marginTop;
                 return height;
             }
         };
@@ -92,7 +92,6 @@ public class GuiNPCDialog extends Screen {
                     e.setBounds(x_left, y, x_right, y + h);
                     y += h + spacing;
                 }
-                y -= spacing;
             }
 
             @Override
@@ -103,7 +102,7 @@ public class GuiNPCDialog extends Screen {
                     height += h;
                 }
                 height += (elements.size() - 1) * spacing;
-                height += 2 * padding + 2 * marginV;
+                height += 2 * padding + marginBottom + marginTop;
                 return height;
             }
         };
@@ -215,6 +214,7 @@ public class GuiNPCDialog extends Screen {
         };
         t._setwidth(historyElement.width());
         historyElement.add(t);
+        t.setTopMargin(8);
         t.setText(appendStr);
         t.setColor(0xFF0066CC);
     }

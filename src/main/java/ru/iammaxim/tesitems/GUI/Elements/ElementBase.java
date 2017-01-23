@@ -20,7 +20,8 @@ public abstract class ElementBase {
     protected int height;
     protected ElementBase parent;
     protected int marginH = 0;
-    protected int marginV = 0;
+    protected int marginTop = 0;
+    protected int marginBottom = 0;
     protected boolean focused;
 
     public int width() {
@@ -101,12 +102,25 @@ public abstract class ElementBase {
         this.marginH = margin;
     }
 
-    public int getVerticalMargin() {
-        return marginV;
+    public int getTopMargin() {
+        return marginTop;
+    }
+
+    public int getBottomMargin() {
+        return marginTop;
     }
 
     public void setVerticalMargin(int margin) {
-        this.marginV = margin;
+        this.marginTop = margin;
+        this.marginBottom = margin;
+    }
+
+    public void setTopMargin(int margin) {
+        this.marginTop = margin;
+    }
+
+    public void setBottomMargin(int margin) {
+        this.marginBottom = margin;
     }
 
     public int getWidth() {
@@ -114,7 +128,7 @@ public abstract class ElementBase {
     }
 
     public int getHeight() {
-        return height + 2 * marginV;
+        return height + marginBottom + marginTop;
     }
 
     //calculates width and height
@@ -126,8 +140,8 @@ public abstract class ElementBase {
     public void setBounds(int left, int top, int right, int bottom) {
         this.left = left + marginH;
         this.right = right - marginH;
-        this.top = top + marginV;
-        this.bottom = bottom - marginV;
+        this.top = top + marginTop;
+        this.bottom = bottom - marginBottom;
         this.width = this.right - this.left;
         this.height = this.bottom - this.top;
     }
