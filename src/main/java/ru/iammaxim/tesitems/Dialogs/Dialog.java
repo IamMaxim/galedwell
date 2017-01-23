@@ -23,6 +23,7 @@ public class Dialog {
         cap.getQuests().forEach((id, quest) -> {
             ArrayList<DialogTopic> topics = quest.getCurrentStage().topics;
             topics.forEach(t -> {
+                t.attachTo(quest.quest);
                 if (t.npcName.equals(npc.name)) dialog.addTopic(t.name, t);
             });
         });

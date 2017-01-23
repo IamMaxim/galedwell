@@ -12,7 +12,7 @@ import javax.annotation.Nullable;
  * Created by maxim on 02.01.2017.
  */
 public class WorldCapabilityProvider implements ICapabilitySerializable<NBTTagCompound> {
-    IWorldCapability inst = TESItems.worldCapability.getDefaultInstance();
+    private IWorldCapability inst = TESItems.worldCapability.getDefaultInstance();
 
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {

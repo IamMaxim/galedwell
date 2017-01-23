@@ -8,13 +8,14 @@ import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.Questing.QuestInstance;
 import ru.iammaxim.tesitems.TESItems;
 
+import javax.annotation.Nullable;
 import java.util.Scanner;
 
 /**
  * Created by maxim on 11/5/16 at 6:58 PM.
  */
 public class ScriptEngine {
-    public static void processScript(NPC npc, EntityPlayer caller, String script, VariableStorage variableStorage) {
+    public static void processScript(NPC npc, EntityPlayer caller, String script, VariableStorage variableStorage, QuestInstance questInst) {
         try {
             IPlayerAttributesCapability cap = TESItems.getCapability(caller);
             Scanner scanner = new Scanner(script);
@@ -27,6 +28,12 @@ public class ScriptEngine {
                             QuestInstance inst = cap.getQuest(Integer.parseInt(tokens[1]));
                             inst.stage = Integer.parseInt(tokens[2]);
                             break;
+                        case "setCurrentQuestStage":
+                            questInst.stage = Integer.parseInt(tokens[1]);
+                            break;
+                        case "stage++":
+                            questInst.stage++;
+                            break;
                         case "give":
                             cap.getInventory().addItem(new ItemStack(Item.getByNameOrId(tokens[1]), Integer.parseInt(tokens[2])));
                             break;
@@ -38,6 +45,8 @@ public class ScriptEngine {
                         case "set":
                             variableStorage.setVar(tokens[1], tokens[2]);
                             break;
+                        case "printVar":
+
                     }
                 }
             }

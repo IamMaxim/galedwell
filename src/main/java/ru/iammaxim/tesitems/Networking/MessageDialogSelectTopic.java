@@ -9,6 +9,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import ru.iammaxim.tesitems.Dialogs.Dialog;
 import ru.iammaxim.tesitems.Dialogs.DialogTopic;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
+import ru.iammaxim.tesitems.Questing.Quest;
+import ru.iammaxim.tesitems.Questing.QuestInstance;
 import ru.iammaxim.tesitems.Scripting.ScriptEngine;
 import ru.iammaxim.tesitems.TESItems;
 
@@ -41,8 +43,13 @@ public class MessageDialogSelectTopic implements IMessage {
             IPlayerAttributesCapability cap = TESItems.getCapability(player);
             Dialog d = cap.getLatestDialog();
             d.topics.forEach((name, topic) -> {
-                if (name.equals(message.topicName))
-                    ScriptEngine.processScript(cap.getLatestNPC(), player, topic.script, cap.getVariableStorage());
+                if (name.equals(message.topicName)) {
+                    Quest attachedTo = topic.attachedTo;
+                    QuestInstance inst = null;
+                    if (attachedTo != null)
+                        inst = cap.getQuest(attachedTo.id);
+                    ScriptEngine.processScript(cap.getLatestNPC(), player, topic.script, cap.getVariableStorage(), inst);
+                }
             });
             return null;
         }

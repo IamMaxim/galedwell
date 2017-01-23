@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import ru.iammaxim.tesitems.Questing.Condition;
+import ru.iammaxim.tesitems.Questing.Quest;
 
 import java.util.ArrayList;
 
@@ -11,6 +12,7 @@ import java.util.ArrayList;
  * Created by maxim on 11/11/16 at 7:57 PM.
  */
 public class DialogTopic {
+    public Quest attachedTo;
     public String npcName = "";
     public String name = "";
     public String script = "";
@@ -24,6 +26,10 @@ public class DialogTopic {
             }
         }
         return true;
+    }
+
+    public void attachTo(Quest quest) {
+
     }
 
     public NBTTagCompound writeToNBT() {

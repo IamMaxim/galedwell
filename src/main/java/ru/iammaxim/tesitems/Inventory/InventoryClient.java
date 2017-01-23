@@ -5,6 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import ru.iammaxim.tesitems.GUI.NotificationManager;
 import ru.iammaxim.tesitems.Networking.MessageEquip;
 import ru.iammaxim.tesitems.Networking.MessageItemDrop;
 import ru.iammaxim.tesitems.TESItems;
@@ -43,6 +44,10 @@ public class InventoryClient extends Inventory {
     public void addItem(ItemStack stack) {
         super.addItem(stack);
         player.playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2f, player.getRNG().nextFloat() * 3f);
+        if (stack.stackSize > 1)
+            NotificationManager.addNotification("Added (" + stack.stackSize + ") " + stack.getDisplayName());
+        else
+            NotificationManager.addNotification("Added " + stack.getDisplayName());
     }
 
     @Override

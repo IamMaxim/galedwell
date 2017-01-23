@@ -4,6 +4,7 @@ import net.minecraft.block.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -20,6 +21,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
@@ -29,7 +31,6 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -46,14 +47,15 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 import ru.iammaxim.tesitems.Blocks.mBlocks;
 import ru.iammaxim.tesitems.Commands.*;
 import ru.iammaxim.tesitems.Craft.CraftRecipe;
 import ru.iammaxim.tesitems.Craft.CraftRecipes;
-import ru.iammaxim.tesitems.Factions.FactionManager;
 import ru.iammaxim.tesitems.GUI.Fonts.UnicodeFontRenderer;
 import ru.iammaxim.tesitems.GUI.GUIHandler;
 import ru.iammaxim.tesitems.GUI.KeyBindings;
+import ru.iammaxim.tesitems.GUI.NotificationManager;
 import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.Items.*;
 import ru.iammaxim.tesitems.Magic.*;
@@ -75,6 +77,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.List;
 
 @Mod(modid = TESItems.MODID, version = TESItems.VERSION)
 public class TESItems {
@@ -188,6 +191,7 @@ public class TESItems {
         networkWrapper.registerMessage(MessageFactionRemove.ClientHandler.class, MessageFactionRemove.class, 18, Side.CLIENT);
         networkWrapper.registerMessage(MessageFactionRemove.ServerHandler.class, MessageFactionRemove.class, 19, Side.SERVER);
         networkWrapper.registerMessage(MessageDialogSelectTopic.ServerHandler.class, MessageDialogSelectTopic.class, 20, Side.SERVER);
+        networkWrapper.registerMessage(MessageShowNotification.Handler.class, MessageShowNotification.class, 21, Side.CLIENT);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GUIHandler());
         EntityRegistry.registerModEntity(EntityRangedSpellEffect.class, "EntityRangedSpellEffect", 0, instance, 100, 1, false);
@@ -446,5 +450,37 @@ public class TESItems {
         Inventory inv = Inventory.getInventory(event.getEntityPlayer());
         inv.addItem(event.getItem().getEntityItem());
         event.getItem().setDead();
+    }
+
+    @SubscribeEvent
+    public void onHUDDraw(RenderGameOverlayEvent.Post event) {
+        //update notifications
+        NotificationManager.update();
+
+        List<String> notifications = NotificationManager.getNotificationsToRender();
+
+        fontRenderer.drawString("Notifications count: " + notifications.size(), 16, 100, 0xFFFFFFFF);
+
+        if (notifications.size() > 0) {
+//            GL11.glEnable(GL11.GL_TEXTURE_2D);
+            GlStateManager.color(1, 1, 1, 1);
+            GlStateManager.enableBlend();
+            GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+            int first_alpha = (int) (255 * Math.min(NotificationManager.getFirstLivetime() * 6, 1));
+            fontRenderer.drawString("Alpha: " + first_alpha, 16, 112, 0xFFFFFFFF);
+            int y = (int) (4 + (float) 12 / 255 * first_alpha);
+            fontRenderer.drawString(notifications.get(0), 16, y, 0x00FFFFFF + (first_alpha << 24));
+            y += 12;
+            for (int i = 1; i < notifications.size(); i++) {
+                if (i == notifications.size() - 1) {
+                    fontRenderer.drawString(notifications.get(i), 16, y, 0x00FFFFFF + ((0xFF - first_alpha) << 24));
+                } else {
+                    fontRenderer.drawString(notifications.get(i), 16, y, 0xFFFFFFFF);
+                }
+                y += 12;
+            }
+            GlStateManager.disableBlend();
+//            GL11.glDisable(GL11.GL_TEXTURE_2D);
+        }
     }
 }
