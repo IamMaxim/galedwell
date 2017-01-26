@@ -5,10 +5,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiChat;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -51,7 +47,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
 import ru.iammaxim.tesitems.Blocks.mBlocks;
 import ru.iammaxim.tesitems.Commands.*;
 import ru.iammaxim.tesitems.Craft.CraftRecipe;
@@ -464,20 +459,25 @@ public class TESItems {
         NotificationManager.update();
         List<String> notifications = NotificationManager.getNotificationsToRender();
 
-        fontRenderer.drawString("Notifications count: " + notifications.size(), 16, 100, 0xFFFFFFFF, false);
-        fontRenderer.drawString(event.getType().toString(), 16, 120, 0xFFFFFFFF);
-
         if (notifications.size() > 0) {
-//            int first_alpha = (int) (255 * Math.min(NotificationManager.getFirstLivetime() * 6, 1));
-            int first_alpha = (int) (255 * NotificationManager.getFirstLivetime());
-            fontRenderer.drawString("Alpha: " + first_alpha + " | " + (((0xFFFFFFFF - (first_alpha << 24)) >> 24) & 0xFF), 8, 112, 0xFFFFFFFF);
+            int first_alpha = (int) (255 * Math.min(NotificationManager.getFirstLivetime() * 6, 1));
+            //fixes reset of alpha 0x00 to 0xFF
+            if (first_alpha == 0) first_alpha = 1;
+            if (first_alpha == 255) first_alpha = 254;
+
             float y = ((float) 12 / 255 * first_alpha);
+
+            //draw first string
             fontRenderer.drawString(notifications.get(0), 8, y, 0x00FFFFFF + (first_alpha << 24), false);
             y += 12;
+
+            //draw strings between first and last
             for (int i = 1; i < notifications.size() - 1; i++) {
                 fontRenderer.drawString(notifications.get(i), 8, y, 0xFFFFFFFF, false);
                 y += 12;
             }
+
+            //draw last string
             if (notifications.size() == NotificationManager.RENDER_COUNT)
                 fontRenderer.drawString(notifications.get(notifications.size() - 1), 8, y, 0xFFFFFFFF - (first_alpha << 24), false);
             else if (notifications.size() > 1)

@@ -1,5 +1,7 @@
 package ru.iammaxim.tesitems.GUI;
 
+import ru.iammaxim.tesitems.TESItems;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -10,12 +12,14 @@ import java.util.List;
 public class NotificationManager {
     private static ArrayList<String> notifications = new ArrayList<>();
     private static ArrayList<Long> spawntimes = new ArrayList<>();
-    public static final int RENDER_COUNT = 3;
+    public static final int RENDER_COUNT = 4; //plus one hidden
     public static final long LIVETIME = 4000;
 
     public static void addNotification(String text) {
-        spawntimes.add(System.currentTimeMillis() + notifications.size() * LIVETIME);
-        notifications.add(text);
+        TESItems.getMinecraft().addScheduledTask(() -> {
+            spawntimes.add(System.currentTimeMillis() + notifications.size() * LIVETIME);
+            notifications.add(text);
+        });
     }
 
     public static void update() {
@@ -30,7 +34,7 @@ public class NotificationManager {
     }
 
     public static float getFirstLivetime() {
-        return Math.max((float) (LIVETIME + spawntimes.get(0) - System.currentTimeMillis()) / LIVETIME, 0);
+        return Math.min((float) (LIVETIME + spawntimes.get(0) - System.currentTimeMillis()) / LIVETIME, 1);
     }
 
     public static List<String> getNotificationsToRender() {
