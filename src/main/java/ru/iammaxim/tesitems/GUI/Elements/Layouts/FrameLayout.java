@@ -9,6 +9,7 @@ import ru.iammaxim.tesitems.GUI.Elements.LayoutBase;
 public class FrameLayout extends LayoutBase {
     protected ElementBase element;
 
+
     public FrameLayout(ElementBase parent) {
         super(parent);
     }
@@ -35,19 +36,19 @@ public class FrameLayout extends LayoutBase {
 
     @Override
     public void doLayout() {
-        element.setBounds(left + padding, top + padding, right - padding, bottom - padding);
+        element.setBounds(left + leftPadding, top + topPadding, right - rightPadding, bottom - bottomPadding);
         if (element instanceof LayoutBase)
             ((LayoutBase) element).doLayout();
     }
 
     @Override
     public int getWidth() {
-        return element.getWidth() + 2 * padding;
+        return element.getWidth() + leftPadding + rightPadding;
     }
 
     @Override
     public int getHeight() {
-        return element.getHeight() + 2 * padding;
+        return element.getHeight() + topPadding + bottomPadding;
     }
 
     @Override
@@ -62,4 +63,6 @@ public class FrameLayout extends LayoutBase {
         else
             System.out.println("no element");
     }
+
+
 }

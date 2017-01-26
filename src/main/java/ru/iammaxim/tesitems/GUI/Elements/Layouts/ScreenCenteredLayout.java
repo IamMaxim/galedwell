@@ -15,7 +15,7 @@ public class ScreenCenteredLayout extends FrameLayout {
     @Override
     public void doLayout() {
         ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
-        int width = (int) Math.min(getWidth(), res.getScaledWidth() * 0.5f - 2 * padding);
+        int width = (int) Math.min(getWidth(), res.getScaledWidth() * 0.5f - leftPadding - rightPadding);
         int height = getHeight();
         setBounds(
                 (res.getScaledWidth() - width)/2,

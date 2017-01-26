@@ -54,13 +54,13 @@ public class HorizontalLayout extends LayoutBase {
     @Override
     public void doLayout() {
         int _w = getWidth();
-        int y = top + padding;
+        int y = top + topPadding;
         int x;
         if (center) x = left + (width - _w) / 2;
-        else x = left + padding;
+        else x = left + leftPadding;
         for (ElementBase element : elements) {
             int w = element.getWidth();
-            int h = height - 2 * padding;
+            int h = height - topPadding - bottomPadding;
             element.setBounds(x, y, x + w, y + h);
             if (element instanceof LayoutBase)
                 ((LayoutBase) element).doLayout();
@@ -74,10 +74,10 @@ public class HorizontalLayout extends LayoutBase {
         for (ElementBase e : elements) {
             int h = e.getHeight();
             if (parent != null)
-                h = (int) Math.min(h, new ScaledResolution(Minecraft.getMinecraft()).getScaledHeight() * 0.8 - 2 * padding);
+                h = (int) Math.min(h, new ScaledResolution(Minecraft.getMinecraft()).getScaledHeight() * 0.8 - topPadding - bottomPadding);
             if (h > height) height = h;
         }
-        height += 2 * padding;
+        height += topPadding + bottomPadding;
         return height;
     }
 
@@ -93,7 +93,7 @@ public class HorizontalLayout extends LayoutBase {
             width += e.getWidth();
         }
         width += (elements.size() - 1) * spacing;
-        width += 2 * padding;
+        width += leftPadding + rightPadding;
         return width;
     }
 

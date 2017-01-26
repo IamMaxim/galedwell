@@ -45,7 +45,7 @@ public class GuiNPCDialog extends Screen {
                         (res.getScaledHeight() - height)/2,
                         (res.getScaledWidth() + width)/2,
                         (res.getScaledHeight() + height)/2);
-                element.setBounds(left + padding, top + padding, right - padding, bottom - padding);
+                element.setBounds(left + leftPadding, top + topPadding, right - rightPadding, bottom - bottomPadding);
                 ((LayoutBase) element).doLayout();
             }
 
@@ -56,6 +56,7 @@ public class GuiNPCDialog extends Screen {
             }
         };
         contentLayout = new FancyFrameLayout(root);
+        contentLayout.setPadding(0);
         root.setElement(contentLayout);
         DialogWindowLayout root1 = new DialogWindowLayout(contentLayout);
         leftElement = new ScrollableLayout(root1) {
@@ -64,11 +65,10 @@ public class GuiNPCDialog extends Screen {
                 int h = element.getHeight();
                 scroll = h - height;
                 if (scroll < 0) scroll = 0;
-                ((VerticalLayout) element).setTop(top + padding - scroll);
+                ((VerticalLayout) element).setTop(top + topPadding - scroll);
                 ((LayoutBase)element).doLayout();
             }
         };
-        leftElement.setHorizontalMargin(8);
         leftElement.setPadding(0);
         VerticalLayout leftLayout = new VerticalLayout(leftElement) {
             @Override
@@ -77,16 +77,16 @@ public class GuiNPCDialog extends Screen {
                 for (ElementBase e : elements) {
                     height += e.getHeight() + spacing;
                 }
-                height += 2 * padding + marginBottom + marginTop;
+                height += topPadding + bottomPadding + marginBottom + marginTop;
                 return height;
             }
         };
         historyElement = new VerticalLayout(leftLayout) {
             @Override
             public void doLayout() {
-                int y = top + padding;
-                int x_left = left + padding;
-                int x_right = x_left + width - 2 * padding;
+                int y = top + topPadding;
+                int x_left = left + leftPadding;
+                int x_right = x_left + width - leftPadding - rightPadding;
                 for (ElementBase e : elements) {
                     int h = ((Text)e).getNonDirtyHeight();
                     e.setBounds(x_left, y, x_right, y + h);
@@ -102,13 +102,14 @@ public class GuiNPCDialog extends Screen {
                     height += h;
                 }
                 height += (elements.size() - 1) * spacing;
-                height += 2 * padding + marginBottom + marginTop;
+                height += topPadding + bottomPadding + marginBottom + marginTop;
                 return height;
             }
         };
+
         leftLayout.add(historyElement);
         leftElement.setElement(leftLayout);
-
+        leftElement.setLeftPadding(8);
         HorizontalLayout rightElement = new HorizontalLayout(root1);
         rightElement.setSpacing(0);
         root1.setLeftElement(leftElement);
@@ -117,15 +118,18 @@ public class GuiNPCDialog extends Screen {
         VerticalLayout rightLayout = new VerticalLayout(rightElement) {
             @Override
             public int getWidth() {
-                return parent.width() - 2 * padding - 2 * marginH;
+                return parent.width() - leftPadding - rightPadding - 2 * marginH;
             }
         };
         rightElement.add(rightLayout);
-        rightLayout.add(new Text(rightLayout, npc.name).setLeftPadding(4)).add(new HorizontalDivider(rightLayout));
+        rightLayout.setVerticalMargin(4);
+        rightLayout.add(new Text(rightLayout, npc.name)/*.setLeftPadding(4)*/.center(true)).add(new HorizontalDivider(rightLayout));
         topics = new VerticalLayout(rightLayout);
-        topics.setHorizontalMargin(4);
+        topics.setHorizontalMargin(2);
         topicsScrollableLayout = new ScrollableLayout(rightLayout);
+        topicsScrollableLayout.setHorizontalMargin(2);
         topicsScrollableLayout.setElement(topics);
+        topicsScrollableLayout.setPadding(0);
         rightLayout.add(topicsScrollableLayout);
         contentLayout.setElement(root1);
 
@@ -133,7 +137,7 @@ public class GuiNPCDialog extends Screen {
 
         contentLayout.doLayout();
         leftElement.setHeight(root1.getHeight());
-        topicsScrollableLayout.setHeight(rightElement.getHeight() - 16);
+        topicsScrollableLayout.setHeight(rightElement.getHeight() - 24);
         contentLayout.doLayout();
     }
 
@@ -229,7 +233,7 @@ public class GuiNPCDialog extends Screen {
     }
 
     private class DialogWindowLayout extends LayoutBase {
-        private static final int rightElementWidth = 100;
+        private static final int rightElementWidth = 140;
         private ScaledResolution res;
 
         private LayoutBase leftElement, rightElement;

@@ -1,6 +1,7 @@
 package ru.iammaxim.tesitems.GUI.Elements;
 
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.Tessellator;
 import ru.iammaxim.tesitems.TESItems;
 
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class Text extends ElementBase {
 
     @Override
     public int getWidth() {
-        return textWidth = fontRenderer.getStringWidth(text) + leftPadding;
+        return (textWidth = fontRenderer.getStringWidth(text)) + leftPadding;
     }
 
     @Override
@@ -79,6 +80,7 @@ public class Text extends ElementBase {
             return;
         }
         strs = fontRenderer.listFormattedStringToWidth(text, width);
+        textWidth = fontRenderer.getStringWidth(strs.get(0));
         dirty = false;
     }
 

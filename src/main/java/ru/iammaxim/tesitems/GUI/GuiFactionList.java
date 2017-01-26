@@ -19,7 +19,9 @@ public class GuiFactionList extends Screen {
     }
 
     public GuiFactionList() {
+        contentLayout.setPadding(0);
         ScrollableLayout root1 = new ScrollableLayout(contentLayout);
+        root1.setPadding(4);
         contentLayout.setElement(root1);
         root1.setHeight((int) (res.getScaledHeight() * 0.8));
         VerticalLayout root2 = new VerticalLayout(root1);

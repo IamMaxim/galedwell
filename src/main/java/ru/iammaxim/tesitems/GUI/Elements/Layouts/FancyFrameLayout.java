@@ -14,7 +14,7 @@ public class FancyFrameLayout extends FrameLayout {
 
     public FancyFrameLayout(ElementBase parent) {
         super(parent);
-        setPadding(8);
+        setPadding(0);
     }
 
     @Override

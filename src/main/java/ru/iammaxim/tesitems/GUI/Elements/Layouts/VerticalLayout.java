@@ -29,7 +29,7 @@ public class VerticalLayout extends LayoutBase {
     }
 
     public void remove(ElementBase element) {
-        System.out.println("removed element: " + elements.remove(element));
+        elements.remove(element);
     }
 
     public void clear() {
@@ -50,10 +50,10 @@ public class VerticalLayout extends LayoutBase {
 
     @Override
     public void doLayout() {
-        int y = top + padding;
-        int x = left + padding;
+        int y = top + topPadding;
+        int x = left + leftPadding;
         for (ElementBase element : elements) {
-            int w = width - 2 * padding;
+            int w = width - leftPadding - rightPadding;
             int h = element.getHeight();
             element.setBounds(x, y, x + w, y + h);
             if (element instanceof LayoutBase)
@@ -69,7 +69,7 @@ public class VerticalLayout extends LayoutBase {
             height += e.getHeight();
         }
         height += (elements.size() - 1) * spacing;
-        height += 2 * padding + marginBottom + marginTop;
+        height += topPadding + bottomPadding + marginBottom + marginTop;
         return height;
     }
 
@@ -84,10 +84,10 @@ public class VerticalLayout extends LayoutBase {
         for (ElementBase e : elements) {
             int w = e.getWidth();
             if (parent != null)
-                w = (int) Math.min(w, new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth() * 0.8 - 2 * padding);
+                w = (int) Math.min(w, new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth() * 0.8 - leftPadding - rightPadding);
             if (w > width) width = w;
         }
-        width += 2 * padding + 2 * marginH;
+        width += leftPadding + rightPadding + 2 * marginH;
         return width;
     }
 

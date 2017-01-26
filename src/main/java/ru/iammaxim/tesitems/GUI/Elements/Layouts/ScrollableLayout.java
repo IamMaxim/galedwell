@@ -18,10 +18,25 @@ public class ScrollableLayout extends FrameLayout {
     protected Minecraft mc;
     protected ScaledResolution res;
 
+    @Override
+    public void doLayout() {
+        //exclude scrollbar width
+        element.setBounds(left + leftPadding, top + topPadding, right - 8 - rightPadding, bottom - bottomPadding);
+        if (element instanceof LayoutBase)
+            ((LayoutBase) element).doLayout();
+    }
+
+    @Override
+    public int getWidth() {
+        //add scrollbar width
+        return super.getWidth() + 8;
+    }
+
     public ScrollableLayout(ElementBase parent) {
         super(parent);
         mc = Minecraft.getMinecraft();
         res = new ScaledResolution(mc);
+        setPadding(4);
     }
 
     @Override
@@ -43,7 +58,7 @@ public class ScrollableLayout extends FrameLayout {
     public void scrollToBottom() {
         scroll = element.getHeight() - height;
         if (scroll < 0) scroll = 0;
-        ((VerticalLayout) element).setTop(top + padding - scroll);
+        ((VerticalLayout) element).setTop(top + topPadding - scroll);
         ((LayoutBase) element).doLayout();
     }
 
@@ -51,16 +66,11 @@ public class ScrollableLayout extends FrameLayout {
     public void draw(int mouseX, int mouseY) {
         //draw scrollbar
         int elementHeight = element.getHeight();
-//        int scrollbarHeight = (int) ((height - 2 * padding) * ((float) (height - 2 * padding) / elementHeight));
-//        if (scrollbarHeight > height - 2 * padding)
-//            scrollbarHeight = height - 2 * padding;
-//        int scrollbarTopOffset = (int) ((float) (height - 2 * padding - scrollbarHeight - 32) * scroll / (element.getHeight() - height + 2 * padding - 32) + 16);
-        int scrollbarTopOffset = (int) (((float) (height - 48 - 2 * padding) * scroll) / (elementHeight - height) + 16);
-//        drawColoredRect(Tessellator.getInstance(), right, top + scrollbarTopOffset, right+8, top + scrollbarTopOffset + scrollbarHeight, 0xffffffff);
-        drawTexturedRect(Tessellator.getInstance(), right, top, right + 8, top + 16, ResManager.inv_scrollbar_bg_top);
-        drawTexturedRect(Tessellator.getInstance(), right, top + 16, right + 8, bottom - 16, ResManager.inv_scrollbar_bg_center);
-        drawTexturedRect(Tessellator.getInstance(), right, bottom - 16, right + 8, bottom, ResManager.inv_scrollbar_bg_bottom);
-        drawTexturedRect(Tessellator.getInstance(), right, top + scrollbarTopOffset, right + 8, top + scrollbarTopOffset + 16, ResManager.inv_scrollbar);
+        int scrollbarTopOffset = (int) (((float) (height - 48 - topPadding - bottomPadding) * scroll) / (elementHeight - height) + 16);
+        drawTexturedRect(Tessellator.getInstance(), right - 8, top, right, top + 16, ResManager.inv_scrollbar_bg_top);
+        drawTexturedRect(Tessellator.getInstance(), right - 8, top + 16, right, bottom - 16, ResManager.inv_scrollbar_bg_center);
+        drawTexturedRect(Tessellator.getInstance(), right - 8, bottom - 16, right, bottom, ResManager.inv_scrollbar_bg_bottom);
+        drawTexturedRect(Tessellator.getInstance(), right - 8, top + scrollbarTopOffset, right, top + scrollbarTopOffset + 16, ResManager.inv_scrollbar);
 
         if (mouseX > left && mouseX < right && mouseY > top && mouseY < bottom) {
             int scr = -Mouse.getDWheel() / 10;
@@ -77,7 +87,7 @@ public class ScrollableLayout extends FrameLayout {
                     scroll = i;
                 }
 
-                ((VerticalLayout) element).setTop(top + padding - scroll);
+                ((VerticalLayout) element).setTop(top + topPadding - scroll);
                 if (element instanceof LayoutBase) {
                     ((LayoutBase) element).doLayout();
                 }
@@ -87,7 +97,7 @@ public class ScrollableLayout extends FrameLayout {
         double scaleW = mc.displayWidth / res.getScaledWidth_double();
         double scaleH = mc.displayHeight / res.getScaledHeight_double();
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        GL11.glScissor((int) (left * scaleW), (int) (top * scaleH), (int) (width * scaleW), (int) (height * scaleH));
+        GL11.glScissor((int) ((left - leftPadding) * scaleW), (int) ((top - topPadding) * scaleH), (int) ((width + leftPadding + rightPadding) * scaleW), (int) ((height + topPadding + bottomPadding) * scaleH));
         element.draw(mouseX, mouseY);
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
     }
