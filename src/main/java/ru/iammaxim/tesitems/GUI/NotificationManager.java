@@ -10,12 +10,12 @@ import java.util.List;
 public class NotificationManager {
     private static ArrayList<String> notifications = new ArrayList<>();
     private static ArrayList<Long> spawntimes = new ArrayList<>();
-    private static final int RENDER_COUNT = 3;
-    private static final long LIVETIME = 2000;
+    public static final int RENDER_COUNT = 3;
+    public static final long LIVETIME = 4000;
 
     public static void addNotification(String text) {
-        notifications.add(text);
         spawntimes.add(System.currentTimeMillis() + notifications.size() * LIVETIME);
+        notifications.add(text);
     }
 
     public static void update() {
@@ -30,7 +30,7 @@ public class NotificationManager {
     }
 
     public static float getFirstLivetime() {
-        return (float) (LIVETIME + spawntimes.get(0) - System.currentTimeMillis()) / LIVETIME;
+        return Math.max((float) (LIVETIME + spawntimes.get(0) - System.currentTimeMillis()) / LIVETIME, 0);
     }
 
     public static List<String> getNotificationsToRender() {

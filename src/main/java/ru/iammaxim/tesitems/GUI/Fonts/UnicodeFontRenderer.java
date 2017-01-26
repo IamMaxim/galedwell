@@ -19,6 +19,7 @@ public class UnicodeFontRenderer extends FontRenderer {
 	private final UnicodeFont font;
 	private static final ResourceLocation fakeTexture = new ResourceLocation("tesitems:textures/fakeTexture.png");
     public static String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'\".,-_!?@#$%*/\\|;:";
+	private Minecraft mc = Minecraft.getMinecraft();
 
 	@SuppressWarnings("unchecked")
 	public UnicodeFontRenderer(Font awtFont) {
@@ -41,8 +42,42 @@ public class UnicodeFontRenderer extends FontRenderer {
 	}
 
 	@Override
+	public int drawString(String text, float x, float y, int color, boolean dropShadow) {
+		mc.getTextureManager().bindTexture(fakeTexture);
+
+		glPushMatrix();
+		glScaled(0.5, 0.5, 0.5);
+
+		boolean blend = glIsEnabled(GL_BLEND);
+		boolean lighting = glIsEnabled(GL_LIGHTING);
+		boolean texture = glIsEnabled(GL_TEXTURE_2D);
+		if(!blend)
+			glEnable(GL_BLEND);
+		if(lighting)
+			glDisable(GL_LIGHTING);
+		if(texture)
+			glDisable(GL_TEXTURE_2D);
+		x *= 2;
+		y *= 2;
+		y -= 8;
+
+		font.drawString(x, y, text, new org.newdawn.slick.Color(color));
+//        GlStateManager.color(1, 1, 1, 1);
+		GlStateManager.color(0, 0, 0, 1);
+
+		if(texture)
+			glEnable(GL_TEXTURE_2D);
+		if(lighting)
+			glEnable(GL_LIGHTING);
+		if(!blend)
+			glDisable(GL_BLEND);
+		glPopMatrix();
+		return (int) x;
+	}
+
+	@Override
 	public int drawString(String string, int x, int y, int color) {
-        Minecraft.getMinecraft().getTextureManager().bindTexture(fakeTexture);
+		/*mc.getTextureManager().bindTexture(fakeTexture);
 
 		glPushMatrix();
 		glScaled(0.5, 0.5, 0.5);
@@ -61,7 +96,8 @@ public class UnicodeFontRenderer extends FontRenderer {
 		y -= 8;
 
 		font.drawString(x, y, string, new org.newdawn.slick.Color(color));
-        GlStateManager.color(0, 0, 0, 0);
+//        GlStateManager.color(1, 1, 1, 1);
+        GlStateManager.color(0, 0, 0, 1);
 
 		if(texture)
 			glEnable(GL_TEXTURE_2D);
@@ -70,7 +106,8 @@ public class UnicodeFontRenderer extends FontRenderer {
 		if(!blend)
 			glDisable(GL_BLEND);
 		glPopMatrix();
-		return x;
+		return x;*/
+		return drawString(string, x, y, color, false);
 	}
 
 	@Override

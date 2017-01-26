@@ -3,8 +3,12 @@ package ru.iammaxim.tesitems;
 import net.minecraft.block.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -454,33 +458,32 @@ public class TESItems {
 
     @SubscribeEvent
     public void onHUDDraw(RenderGameOverlayEvent.Post event) {
+        if (event.getType() != RenderGameOverlayEvent.ElementType.HOTBAR) return;
+
         //update notifications
         NotificationManager.update();
-
         List<String> notifications = NotificationManager.getNotificationsToRender();
 
-        fontRenderer.drawString("Notifications count: " + notifications.size(), 16, 100, 0xFFFFFFFF);
+        fontRenderer.drawString("Notifications count: " + notifications.size(), 16, 100, 0xFFFFFFFF, false);
+        fontRenderer.drawString(event.getType().toString(), 16, 120, 0xFFFFFFFF);
 
         if (notifications.size() > 0) {
-//            GL11.glEnable(GL11.GL_TEXTURE_2D);
-            GlStateManager.color(1, 1, 1, 1);
-            GlStateManager.enableBlend();
-            GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-            int first_alpha = (int) (255 * Math.min(NotificationManager.getFirstLivetime() * 6, 1));
-            fontRenderer.drawString("Alpha: " + first_alpha, 16, 112, 0xFFFFFFFF);
-            int y = (int) (4 + (float) 12 / 255 * first_alpha);
-            fontRenderer.drawString(notifications.get(0), 16, y, 0x00FFFFFF + (first_alpha << 24));
+//            int first_alpha = (int) (255 * Math.min(NotificationManager.getFirstLivetime() * 6, 1));
+            int first_alpha = (int) (255 * NotificationManager.getFirstLivetime());
+            fontRenderer.drawString("Alpha: " + first_alpha + " | " + (((0xFFFFFFFF - (first_alpha << 24)) >> 24) & 0xFF), 8, 112, 0xFFFFFFFF);
+            float y = ((float) 12 / 255 * first_alpha);
+            fontRenderer.drawString(notifications.get(0), 8, y, 0x00FFFFFF + (first_alpha << 24), false);
             y += 12;
-            for (int i = 1; i < notifications.size(); i++) {
-                if (i == notifications.size() - 1) {
-                    fontRenderer.drawString(notifications.get(i), 16, y, 0x00FFFFFF + ((0xFF - first_alpha) << 24));
-                } else {
-                    fontRenderer.drawString(notifications.get(i), 16, y, 0xFFFFFFFF);
-                }
+            for (int i = 1; i < notifications.size() - 1; i++) {
+                fontRenderer.drawString(notifications.get(i), 8, y, 0xFFFFFFFF, false);
                 y += 12;
             }
-            GlStateManager.disableBlend();
-//            GL11.glDisable(GL11.GL_TEXTURE_2D);
+            if (notifications.size() == NotificationManager.RENDER_COUNT)
+                fontRenderer.drawString(notifications.get(notifications.size() - 1), 8, y, 0xFFFFFFFF - (first_alpha << 24), false);
+            else if (notifications.size() > 1)
+                fontRenderer.drawString(notifications.get(notifications.size() - 1), 8, y, 0xFFFFFFFF, false);
         }
+
+        getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
     }
 }
