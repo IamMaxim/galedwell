@@ -14,10 +14,6 @@ import ru.iammaxim.tesitems.TESItems;
 public class GuiFactionList extends Screen {
     private VerticalLayout factionsLayout;
 
-    public void removeFaction(int id) {
-
-    }
-
     public GuiFactionList() {
         contentLayout.setPadding(0);
         ScrollableLayout root1 = new ScrollableLayout(contentLayout);

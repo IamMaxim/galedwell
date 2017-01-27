@@ -1,5 +1,6 @@
 package ru.iammaxim.tesitems.GUI;
 
+import net.minecraft.client.renderer.Tessellator;
 import ru.iammaxim.tesitems.Dialogs.DialogTopic;
 import ru.iammaxim.tesitems.Factions.Faction;
 import ru.iammaxim.tesitems.GUI.Elements.*;
@@ -118,7 +119,13 @@ public class GuiFactionEditor extends Screen {
             }
         };
 
-        VerticalLayout opened = new VerticalLayout(_parent);
+        VerticalLayout opened = new VerticalLayout(_parent) {
+            @Override
+            public void draw(int mouseX, int mouseY) {
+                drawColoredRect(Tessellator.getInstance(), left, top, right, bottom, 0x33000000);
+                super.draw(mouseX, mouseY);
+            }
+        };
         opened.add(new HorizontalDivider(opened));
         opened.add(new Text(opened, "Close") {
             @Override

@@ -23,6 +23,10 @@ public class TextField extends ElementBase {
     private int padding = 4;
     private boolean dirty = false;
     private boolean active = false;
+    private long startTime = 0;
+    private char lastChar = 0;
+    private int lastKey = 0;
+    private FontRenderer fontRenderer = TESItems.fontRenderer;
 
     public TextField(ElementBase parent) {
         super(parent);
@@ -36,6 +40,11 @@ public class TextField extends ElementBase {
         } else {
             active = false;
         }
+    }
+
+    public TextField setFontRenderer(FontRenderer fontRenderer) {
+        this.fontRenderer = fontRenderer;
+        return this;
     }
 
     public String getText() {
@@ -53,7 +62,8 @@ public class TextField extends ElementBase {
         if (width == 0) {
             return;
         }
-        strs = TESItems.fontRenderer.listFormattedStringToWidth(text, width - 2 * padding);
+        System.out.println("updating with width: " + width);
+        strs = fontRenderer.listFormattedStringToWidth(text, width - 2 * padding);
         dirty = false;
     }
 
@@ -68,10 +78,18 @@ public class TextField extends ElementBase {
 
     @Override
     public int getWidth() {
-        if (!text.isEmpty())
-            return TESItems.fontRenderer.getStringWidth(text) + 2 * padding;
+        if (!text.isEmpty()) {
+/*            int maxWidth = 0;
+            for (String s : strs) {
+                int w;
+                if ((w = fontRenderer.getStringWidth(s)) > maxWidth) maxWidth = w;
+            }
+            return maxWidth + 2 * padding;*/
+            System.out.println("returning width: " + (fontRenderer.getStringWidth(text) + 2 * padding));
+            return fontRenderer.getStringWidth(text) + 2 * padding;
+        }
         else
-            return TESItems.fontRenderer.getStringWidth(hint) + 2 * padding;
+            return fontRenderer.getStringWidth(hint) + 2 * padding;
     }
 
     public TextField setOnType(Consumer<TextField> onType) {
@@ -83,21 +101,28 @@ public class TextField extends ElementBase {
     public void keyTyped(char typedChar, int key) {
         if (active) {
             //Left or right control + V
-            if(key == 47 && (Keyboard.isKeyDown(29) || Keyboard.isKeyDown(157))) {
+            if (key == 47 && (Keyboard.isKeyDown(29) || Keyboard.isKeyDown(157))) {
                 String toPaste = Sys.getClipboard();
-                if(toPaste != null) {
+                if (toPaste != null) {
                     text += toPaste;
                 }
                 return;
             }
 
             if (key == Keyboard.KEY_BACK) { //backspace
-                if (text.length() > 0)
+                if (text.length() > 0) {
                     text = text.substring(0, text.length() - 1);
+                    lastKey = key;
+                    lastChar = typedChar;
+                }
             } else if (key == Keyboard.KEY_RETURN) {
                 text = text + '\n';
+                lastKey = key;
+                lastChar = typedChar;
             } else if (typedChar == ' ' || UnicodeFontRenderer.alphabet.contains(typedChar + "")) {
                 text = text + typedChar;
+                lastKey = key;
+                lastChar = typedChar;
             }
             update();
             ((LayoutBase) getRoot()).doLayout();
@@ -123,20 +148,28 @@ public class TextField extends ElementBase {
             ((LayoutBase) getRoot()).doLayout();
         }
 
+        //check if key is still down
+        if (Keyboard.isKeyDown(lastKey)) {
+            if (System.currentTimeMillis() - startTime > 400)
+                keyTyped(lastChar, lastKey);
+        } else {
+            startTime = System.currentTimeMillis();
+        }
+
         Tessellator tess = Tessellator.getInstance();
 
-        drawColoredRect(tess, left, top, right, bottom, 0xff000000);
+//        drawColoredRect(tess, left, top, right, bottom, 0xff000000);
         //System.out.println(left + " " + top + " " + right + " " + bottom);
 
         if (!active)
             drawColoredRect(tess, left, top, right, bottom, 0xFF333333);
         else
             drawColoredRect(tess, left, top, right, bottom, 0xFF7F7F7F);
-        FontRenderer fontRenderer = TESItems.fontRenderer;
         if (text.isEmpty()) //draw hint
             fontRenderer.drawString(hint, left + padding, top + padding, hintColor);
         else //draw text
             for (int i = 0; i < strs.size(); i++) {
+                drawColoredRect(Tessellator.getInstance(), left + padding, top + (lineSpacing + 8) * i + padding, left + fontRenderer.getStringWidth(strs.get(i)) + padding, top + (lineSpacing + 8) * i + 8 + padding, 0x3300ff00);
                 fontRenderer.drawString(strs.get(i), left + padding, top + (lineSpacing + 8) * i + padding, color);
             }
     }

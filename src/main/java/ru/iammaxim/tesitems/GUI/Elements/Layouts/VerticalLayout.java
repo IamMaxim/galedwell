@@ -2,6 +2,7 @@ package ru.iammaxim.tesitems.GUI.Elements.Layouts;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.Tessellator;
 import ru.iammaxim.tesitems.GUI.Elements.ElementBase;
 import ru.iammaxim.tesitems.GUI.Elements.LayoutBase;
 
@@ -75,6 +76,7 @@ public class VerticalLayout extends LayoutBase {
 
     @Override
     public void draw(int mouseX, int mouseY) {
+        drawColoredRect(Tessellator.getInstance(), left, top, right, bottom, 0x55ff0000);
         elements.forEach(e -> e.draw(mouseX, mouseY));
     }
 
