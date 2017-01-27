@@ -23,6 +23,7 @@ public class GuiAlertDialog extends Screen {
         this.text = text;
         FancyFrameLayout fancyFrameLayout = new FancyFrameLayout(root);
         root.setElement(fancyFrameLayout);
+        fancyFrameLayout.setPadding(8);
         VerticalLayout layout = new VerticalLayout(fancyFrameLayout);
         fancyFrameLayout.setElement(layout);
         layout.add(new Text(layout, text));

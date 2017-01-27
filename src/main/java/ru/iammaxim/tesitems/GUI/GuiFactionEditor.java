@@ -3,10 +3,7 @@ package ru.iammaxim.tesitems.GUI;
 import ru.iammaxim.tesitems.Dialogs.DialogTopic;
 import ru.iammaxim.tesitems.Factions.Faction;
 import ru.iammaxim.tesitems.GUI.Elements.*;
-import ru.iammaxim.tesitems.GUI.Elements.Layouts.HeaderLayout;
-import ru.iammaxim.tesitems.GUI.Elements.Layouts.HorizontalLayout;
-import ru.iammaxim.tesitems.GUI.Elements.Layouts.ScrollableLayout;
-import ru.iammaxim.tesitems.GUI.Elements.Layouts.VerticalLayout;
+import ru.iammaxim.tesitems.GUI.Elements.Layouts.*;
 import ru.iammaxim.tesitems.Networking.MessageFaction;
 import ru.iammaxim.tesitems.Networking.MessageFactionRemove;
 import ru.iammaxim.tesitems.TESItems;
@@ -38,7 +35,7 @@ public class GuiFactionEditor extends Screen {
         root2.add(new Button(root2, "Add topic").setOnClick(b -> {
             DialogTopic topic = new DialogTopic();
             topic.name = "New topic";
-            ElementBase element = getTopicElement(topics, topic, false);
+            ElementBase element = getTopicElement(topics, topic);
             elements.put(element, topic);
             topics.add(element);
         }));
@@ -72,7 +69,7 @@ public class GuiFactionEditor extends Screen {
         root3.add(new Button(root3).setText("Back").setOnClick(b -> mc.displayGuiScreen(new GuiFactionList())));
 
         faction.topics.forEach(t -> {
-            ElementBase e = getTopicElement(topics, t, false);
+            ElementBase e = getTopicElement(topics, t);
             elements.put(e, t);
             topics.add(e);
         });
@@ -109,43 +106,43 @@ public class GuiFactionEditor extends Screen {
         return dest;
     }
 
-    private ElementBase getTopicElement(ElementBase _parent, DialogTopic topic, boolean opened) {
-        if (opened) {
-            VerticalLayout layout = new VerticalLayout(_parent);
-            layout.add(new HorizontalDivider(layout));
-            layout.add(new Text(layout, "Close") {
-                @Override
-                public void click(int relativeX, int relativeY) {
-                    VerticalLayout p = ((VerticalLayout) _parent);
-                    ElementBase newElement = getTopicElement(_parent, topic, false);
-                    p.getElements().set(p.getElements().indexOf(layout), newElement);
-                    elements.remove(layout);
-                    elements.put(newElement, topic);
-                    ((LayoutBase) getRoot()).doLayout();
-                }
-            });
-            layout.add(new TextField(layout).setHint("Name").setText(topic.name).setOnType(tf -> topic.name = tf.getText()));
-            layout.add(new TextField(layout).setHint("Dialog line").setText(topic.dialogLine).setOnType(tf -> topic.dialogLine = tf.getText()));
-            layout.add(new TextField(layout).setHint("Script").setText(topic.script).setOnType(tf -> topic.script = tf.getText()));
-            layout.add(new Button(layout).setText("Remove").setOnClick(b -> mc.displayGuiScreen(new GuiConfirmationDialog("Are you sure you want to remove topic " + topic.name + "?", this,
-                    () -> {
-                        ((VerticalLayout) _parent).remove(layout);
-                        elements.remove(layout);
-                    }))));
-            layout.add(new HorizontalDivider(layout));
-            return layout;
-        } else {
-            return new Text(root, topic.name) {
-                @Override
-                public void click(int relativeX, int relativeY) {
-                    VerticalLayout p = ((VerticalLayout) _parent);
-                    ElementBase newElement = getTopicElement(_parent, topic, true);
-                    p.getElements().set(p.getElements().indexOf(this), newElement);
-                    elements.remove(this);
-                    elements.put(newElement, topic);
-                    ((LayoutBase) getRoot()).doLayout();
-                }
-            };
-        }
+    private ElementBase getTopicElement(ElementBase _parent, DialogTopic topic) {
+        DoubleStateFrameLayout layout = new DoubleStateFrameLayout(_parent);
+
+        Text closed = new Text(root, topic.name) {
+            @Override
+            public void click(int relativeX, int relativeY) {
+                //select opened state
+                layout.selectSecond();
+                ((LayoutBase) getRoot()).doLayout();
+            }
+        };
+
+        VerticalLayout opened = new VerticalLayout(_parent);
+        opened.add(new HorizontalDivider(opened));
+        opened.add(new Text(opened, "Close") {
+            @Override
+            public void click(int relativeX, int relativeY) {
+                //select closed state
+                layout.selectFirst();
+                ((LayoutBase) getRoot()).doLayout();
+            }
+        });
+        opened.add(new TextField(opened).setHint("Name").setText(topic.name).setOnType(tf -> {
+            topic.name = tf.getText();
+            closed.setText(tf.getText());
+        }));
+        opened.add(new TextField(opened).setHint("Dialog line").setText(topic.dialogLine).setOnType(tf -> topic.dialogLine = tf.getText()));
+        opened.add(new TextField(opened).setHint("Script").setText(topic.script).setOnType(tf -> topic.script = tf.getText()));
+        opened.add(new Button(opened).setText("Remove").setOnClick(b -> mc.displayGuiScreen(new GuiConfirmationDialog("Are you sure you want to remove topic " + topic.name + "?", this,
+                () -> {
+                    ((VerticalLayout) _parent).remove(opened);
+                    elements.remove(opened);
+                }))));
+        opened.add(new HorizontalDivider(opened));
+
+        layout.setFirstState(closed).setSecondState(opened).selectFirst();
+
+        return layout;
     }
 }
