@@ -62,7 +62,6 @@ public class TextField extends ElementBase {
         if (width == 0) {
             return;
         }
-        System.out.println("updating with width: " + width);
         strs = fontRenderer.listFormattedStringToWidth(text, width - 2 * padding);
         dirty = false;
     }
@@ -79,13 +78,6 @@ public class TextField extends ElementBase {
     @Override
     public int getWidth() {
         if (!text.isEmpty()) {
-/*            int maxWidth = 0;
-            for (String s : strs) {
-                int w;
-                if ((w = fontRenderer.getStringWidth(s)) > maxWidth) maxWidth = w;
-            }
-            return maxWidth + 2 * padding;*/
-            System.out.println("returning width: " + (fontRenderer.getStringWidth(text) + 2 * padding));
             return fontRenderer.getStringWidth(text) + 2 * padding;
         }
         else
@@ -157,9 +149,6 @@ public class TextField extends ElementBase {
         }
 
         Tessellator tess = Tessellator.getInstance();
-
-//        drawColoredRect(tess, left, top, right, bottom, 0xff000000);
-        //System.out.println(left + " " + top + " " + right + " " + bottom);
 
         if (!active)
             drawColoredRect(tess, left, top, right, bottom, 0xFF333333);
