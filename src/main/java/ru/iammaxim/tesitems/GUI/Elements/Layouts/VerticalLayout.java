@@ -76,7 +76,6 @@ public class VerticalLayout extends LayoutBase {
 
     @Override
     public void draw(int mouseX, int mouseY) {
-        drawColoredRect(Tessellator.getInstance(), left, top, right, bottom, 0x55ff0000);
         elements.forEach(e -> e.draw(mouseX, mouseY));
     }
 

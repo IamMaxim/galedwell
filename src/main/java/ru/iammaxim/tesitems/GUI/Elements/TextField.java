@@ -158,7 +158,6 @@ public class TextField extends ElementBase {
             fontRenderer.drawString(hint, left + padding, top + padding, hintColor);
         else //draw text
             for (int i = 0; i < strs.size(); i++) {
-                drawColoredRect(Tessellator.getInstance(), left + padding, top + (lineSpacing + 8) * i + padding, left + fontRenderer.getStringWidth(strs.get(i)) + padding, top + (lineSpacing + 8) * i + 8 + padding, 0x3300ff00);
                 fontRenderer.drawString(strs.get(i), left + padding, top + (lineSpacing + 8) * i + padding, color);
             }
     }
