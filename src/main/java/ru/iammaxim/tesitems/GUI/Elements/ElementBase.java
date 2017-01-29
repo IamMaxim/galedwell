@@ -18,6 +18,11 @@ public abstract class ElementBase {
     protected int bottom;
     protected int width;
     protected int height;
+
+    public void setParent(ElementBase parent) {
+        this.parent = parent;
+    }
+
     protected ElementBase parent;
     protected int marginH = 0;
     protected int marginTop = 0;
@@ -37,9 +42,7 @@ public abstract class ElementBase {
         return height;
     }
 
-    public ElementBase(ElementBase parent) {
-        this.parent = parent;
-    }
+    public ElementBase() {}
 
     public static void drawColoredRect(Tessellator tess, int left, int top, int right, int bottom, int color) {
         float b = (float)(color & 0xFF)/255;
@@ -153,7 +156,9 @@ public abstract class ElementBase {
     public void click(int relativeX, int relativeY) {}
 
     public void drawTexturedRect(Tessellator tess, int left, int top, int right, int bottom, ResourceLocation texture) {
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        boolean isTexture2Denabled = GL11.glIsEnabled(GL11.GL_TEXTURE_2D);
+        if (!isTexture2Denabled)
+            GL11.glEnable(GL11.GL_TEXTURE_2D);
         GlStateManager.color(1, 1, 1, 1);
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
@@ -166,7 +171,8 @@ public abstract class ElementBase {
         vb.pos(left, top, 0).tex(0, 0).endVertex();
         tess.draw();
         GlStateManager.disableBlend();
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        if (!isTexture2Denabled)
+            GL11.glDisable(GL11.GL_TEXTURE_2D);
     }
 
     public void drawTexturedRect(Tessellator tess, int left, int top, int right, int bottom, float UVx, float UVy, ResourceLocation texture) {

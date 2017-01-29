@@ -9,17 +9,17 @@ import ru.iammaxim.tesitems.GUI.Elements.LayoutBase;
 public class DoubleStateFrameLayout extends FrameLayout {
     public ElementBase first, second;
 
-    public DoubleStateFrameLayout(ElementBase parent) {
-        super(parent);
-    }
+    public DoubleStateFrameLayout() {}
 
     public DoubleStateFrameLayout setFirstState(ElementBase element) {
         first = element;
+        element.setParent(this);
         return this;
     }
 
     public DoubleStateFrameLayout setSecondState(ElementBase element) {
         second = element;
+        element.setParent(this);
         return this;
     }
 

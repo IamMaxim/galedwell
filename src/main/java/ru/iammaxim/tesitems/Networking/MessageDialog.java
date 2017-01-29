@@ -45,7 +45,7 @@ public class MessageDialog implements IMessage {
             if (TESItems.getMinecraft().currentScreen instanceof GuiNPCDialog) {
                 GuiNPCDialog gui = (GuiNPCDialog) TESItems.getMinecraft().currentScreen;
                 gui.topics.clear();
-                dialog.topics.forEach((name, topic) -> gui.topics.add(new Text(gui.topics, name)));
+                dialog.topics.forEach((name, topic) -> gui.topics.add(new Text(name)));
                 gui.setUpdated();
             }
             cap.setLatestDialog(dialog);

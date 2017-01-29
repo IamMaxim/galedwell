@@ -9,10 +9,7 @@ import ru.iammaxim.tesitems.GUI.Elements.LayoutBase;
 public class FrameLayout extends LayoutBase {
     protected ElementBase element;
 
-
-    public FrameLayout(ElementBase parent) {
-        super(parent);
-    }
+    public FrameLayout() {}
 
     @Override
     public void keyTyped(char c, int keyCode) {
@@ -31,6 +28,7 @@ public class FrameLayout extends LayoutBase {
 
     public FrameLayout setElement(ElementBase element) {
         this.element = element;
+        element.setParent(this);
         return this;
     }
 

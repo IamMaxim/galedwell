@@ -19,6 +19,7 @@ public class TextField extends ElementBase {
     private List<String> strs = new ArrayList<>();
     private int hintColor = 0xff999999, color = 0xffffffff;
     private int lineSpacing = 4;
+    private int lineHeight = 8;
     private Consumer<TextField> onType;
     private int padding = 4;
     private boolean dirty = false;
@@ -27,10 +28,6 @@ public class TextField extends ElementBase {
     private char lastChar = 0;
     private int lastKey = 0;
     private FontRenderer fontRenderer = TESItems.fontRenderer;
-
-    public TextField(ElementBase parent) {
-        super(parent);
-    }
 
     @Override
     public void checkClick(int mouseX, int mouseY) {
@@ -44,6 +41,11 @@ public class TextField extends ElementBase {
 
     public TextField setFontRenderer(FontRenderer fontRenderer) {
         this.fontRenderer = fontRenderer;
+        if (fontRenderer instanceof UnicodeFontRenderer) {
+            int h = ((UnicodeFontRenderer) fontRenderer).font.getLineHeight();
+            lineHeight = h / 3;
+            System.out.println("given height: " + h);
+        }
         return this;
     }
 
@@ -127,10 +129,10 @@ public class TextField extends ElementBase {
     public int getHeight() {
         if (!text.isEmpty()) {
             if (dirty)
-                return 8 + 2 * padding;
-            return strs.size() * 8 + (strs.size() - 1) * lineSpacing + 2 * padding;
+                return lineHeight + 2 * padding;
+            return strs.size() * lineHeight + (strs.size() - 1) * lineSpacing + 2 * padding;
         } else
-            return 8 + 2 * padding;
+            return lineHeight + 2 * padding;
     }
 
     @Override
@@ -158,7 +160,7 @@ public class TextField extends ElementBase {
             fontRenderer.drawString(hint, left + padding, top + padding, hintColor);
         else //draw text
             for (int i = 0; i < strs.size(); i++) {
-                fontRenderer.drawString(strs.get(i), left + padding, top + (lineSpacing + 8) * i + padding, color);
+                fontRenderer.drawString(strs.get(i), left + padding, top + (lineSpacing + lineHeight) * i + padding, color);
             }
     }
 }

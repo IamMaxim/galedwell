@@ -44,13 +44,12 @@ public class Button extends ElementBase {
         return padding * 2 + 8;
     }
 
-    public Button(ElementBase parent) {
-        super(parent);
+    public Button() {
         fontRenderer = TESItems.fontRenderer;
     }
 
-    public Button(ElementBase parent, String text) {
-        this(parent);
+    public Button(String text) {
+        this();
         setText(text);
     }
 

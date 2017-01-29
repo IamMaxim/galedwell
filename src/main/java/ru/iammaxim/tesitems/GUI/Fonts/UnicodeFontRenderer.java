@@ -18,7 +18,7 @@ import org.newdawn.slick.*;
 import org.newdawn.slick.font.effects.ColorEffect;
 
 public class UnicodeFontRenderer extends FontRenderer {
-    private final UnicodeFont font;
+    public final UnicodeFont font;
     private static final ResourceLocation fakeTexture = new ResourceLocation("tesitems:textures/fakeTexture.png");
     public static String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'\".,-_!?@#$%*/\\|;:";
     private Minecraft mc = Minecraft.getMinecraft();
@@ -116,6 +116,7 @@ public class UnicodeFontRenderer extends FontRenderer {
         if (texture)
             glDisable(GL_TEXTURE_2D);
         x *= 2;
+        y += font.getPaddingTop();
         y *= 2;
         y -= 8;
 

@@ -32,8 +32,7 @@ public class ScrollableLayout extends FrameLayout {
         return super.getWidth() + 8;
     }
 
-    public ScrollableLayout(ElementBase parent) {
-        super(parent);
+    public ScrollableLayout() {
         mc = Minecraft.getMinecraft();
         res = new ScaledResolution(mc);
         setPadding(4);

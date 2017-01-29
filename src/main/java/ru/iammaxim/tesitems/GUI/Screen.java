@@ -28,8 +28,8 @@ public class Screen extends GuiScreen {
     public Screen() {
         mc = Minecraft.getMinecraft();
         res = new ScaledResolution(mc);
-        root = new ScreenCenteredLayout(null);
-        contentLayout = new FancyFrameLayout(root);
+        root = new ScreenCenteredLayout();
+        contentLayout = new FancyFrameLayout();
         root.setElement(contentLayout);
     }
 

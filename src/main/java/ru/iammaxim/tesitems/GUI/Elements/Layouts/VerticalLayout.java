@@ -2,7 +2,9 @@ package ru.iammaxim.tesitems.GUI.Elements.Layouts;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import org.lwjgl.opengl.GL11;
 import ru.iammaxim.tesitems.GUI.Elements.ElementBase;
 import ru.iammaxim.tesitems.GUI.Elements.LayoutBase;
 
@@ -20,12 +22,12 @@ public class VerticalLayout extends LayoutBase {
         return elements;
     }
 
-    public VerticalLayout(ElementBase parent) {
-        super(parent);
+    public VerticalLayout() {
     }
 
     public VerticalLayout add(ElementBase element) {
         elements.add(element);
+        element.setParent(this);
         return this;
     }
 

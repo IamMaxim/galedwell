@@ -12,8 +12,7 @@ import static ru.iammaxim.tesitems.GUI.ResManager.*;
 public class FancyFrameLayout extends FrameLayout {
     private int frameSize = 18;
 
-    public FancyFrameLayout(ElementBase parent) {
-        super(parent);
+    public FancyFrameLayout() {
         setPadding(0);
     }
 

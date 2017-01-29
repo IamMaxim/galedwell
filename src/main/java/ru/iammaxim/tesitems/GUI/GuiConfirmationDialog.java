@@ -21,17 +21,17 @@ public class GuiConfirmationDialog extends Screen {
 
     public GuiConfirmationDialog(String text, Runnable onConfirm) {
         this.text = text;
-        FancyFrameLayout fancyFrameLayout = new FancyFrameLayout(root);
+        FancyFrameLayout fancyFrameLayout = new FancyFrameLayout();
         root.setElement(fancyFrameLayout);
-        VerticalLayout layout = new VerticalLayout(fancyFrameLayout);
+        VerticalLayout layout = new VerticalLayout();
         fancyFrameLayout.setElement(layout);
-        layout.add(new Text(layout, text));
-        layout.add(new Button(layout).setText("Ok").setUseInactiveBackground(false).setOnClick(
+        layout.add(new Text(text));
+        layout.add(new Button("Ok").setUseInactiveBackground(false).setOnClick(
                 b -> {
                     mc.displayGuiScreen(lastScreen);
                     onConfirm.run();
                 }));
-        layout.add(new Button(layout).setText("Cancel").setUseInactiveBackground(false).setOnClick(b -> mc.displayGuiScreen(lastScreen)));
+        layout.add(new Button("Cancel").setUseInactiveBackground(false).setOnClick(b -> mc.displayGuiScreen(lastScreen)));
     }
 
     @Override

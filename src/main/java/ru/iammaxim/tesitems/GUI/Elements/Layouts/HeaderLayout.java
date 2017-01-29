@@ -9,11 +9,10 @@ import ru.iammaxim.tesitems.GUI.Elements.Text;
  */
 public class HeaderLayout extends HorizontalLayout {
 
-    public HeaderLayout(ElementBase parent, String text) {
-        super(parent);
+    public HeaderLayout(String text) {
         center(true);
-        add(new Decor(this, Decor.Side.LEFT));
-        add(new Text(this, text));
-        add(new Decor(this, Decor.Side.RIGHT));
+        add(new Decor(Decor.Side.LEFT));
+        add(new Text(text));
+        add(new Decor(Decor.Side.RIGHT));
     }
 }

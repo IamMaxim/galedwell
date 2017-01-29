@@ -22,10 +22,6 @@ public class CheckBox extends ElementBase {
         return this;
     }
 
-    public CheckBox(ElementBase parent) {
-        super(parent);
-    }
-
     public CheckBox setText(String text) {
         this.text = text;
         return this;

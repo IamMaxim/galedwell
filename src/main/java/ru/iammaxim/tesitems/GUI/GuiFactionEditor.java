@@ -21,53 +21,51 @@ public class GuiFactionEditor extends Screen {
 
     public GuiFactionEditor(Faction faction) {
         Faction finalFaction = cloneFaction(faction);
-        ScrollableLayout root1 = new ScrollableLayout(contentLayout);
-        root1.setHeight((int) (res.getScaledHeight() * 0.8));
-        contentLayout.setElement(root1);
-        VerticalLayout root2 = new VerticalLayout(root1);
-        root1.setElement(root2);
-//        root2.add(new Text(root2, "Faction editor").center(true));
-        root2.add(new HeaderLayout(root2, "Faction editor"));
-        root2.add(new TextField(root2).setHint("Name").setText(finalFaction.name).setOnType(tf -> finalFaction.name = tf.getText()));
-        root2.add(new Text(root2, "id: " + finalFaction.id));
-        root2.add(new HorizontalDivider(root2));
-        root2.add(new HeaderLayout(root2, "Topics"));
-        root2.add(topics = new VerticalLayout(root2));
-        root2.add(new Button(root2, "Add topic").setOnClick(b -> {
-            DialogTopic topic = new DialogTopic();
-            topic.name = "New topic";
-            ElementBase element = getTopicElement(topics, topic);
-            elements.put(element, topic);
-            topics.add(element);
-        }));
-        root2.add(new HorizontalDivider(root2));
-        HorizontalLayout root3 = new HorizontalLayout(root2).center(true);
-        root2.add(root3);
-        root3.add(new Button(root3).setText("Save").setOnClick(b -> {
-            mc.displayGuiScreen(new GuiAlertDialog("Faction saved", this));
+        contentLayout.setElement(new ScrollableLayout()
+                .setHeight((int) (res.getScaledHeight() * 0.8))
+                .setElement(new VerticalLayout()
+                        .add(new HeaderLayout("Faction editor"))
+                        .add(new TextField().setHint("Name").setText(finalFaction.name).setOnType(tf -> finalFaction.name = tf.getText()))
+                        .add(new Text("id: " + finalFaction.id))
+                        .add(new HorizontalDivider())
+                        .add(new HeaderLayout("Topics"))
+                        .add(new WrapFrameLayout().setElement(topics = new VerticalLayout()))
+                        .add(new Button("Add topic").setOnClick(b -> {
+                            DialogTopic topic = new DialogTopic();
+                            topic.name = "New topic";
+                            ElementBase element = getTopicElement(topics, topic);
+                            elements.put(element, topic);
+                            topics.add(element);
+                        }))
+                        .add(new HorizontalDivider())
+                        .add(new HorizontalLayout().center(true)
+                                .add(new Button().setText("Save").setOnClick(b -> {
+                                    mc.displayGuiScreen(new GuiAlertDialog("Faction saved", this));
 
-            //check for empty topics
-            checkForEmptyTopics();
+                                    //check for empty topics
+                                    checkForEmptyTopics();
 
-            finalFaction.topics.clear();
-            elements.forEach((e, t) -> {
-                System.out.println("adding topic " + t.name);
-                finalFaction.topics.add(t);
-            });
+                                    finalFaction.topics.clear();
+                                    elements.forEach((e, t) -> {
+                                        System.out.println("adding topic " + t.name);
+                                        finalFaction.topics.add(t);
+                                    });
 
-            System.out.println("gonna save " + finalFaction.writeToNBT().toString());
+                                    System.out.println("gonna save " + finalFaction.writeToNBT().toString());
 
-            TESItems.networkWrapper.sendToServer(new MessageFaction(finalFaction));
-        }));
-        root3.add(new Button(root3).setText("Remove").setOnClick(b ->
-                mc.displayGuiScreen(new GuiConfirmationDialog("Are you sure you want to remove faction " + finalFaction.name + "?", this,
-                        () -> {
-                            //check if this faction exists or newly created
-                            if (finalFaction.id != -1)
-                                TESItems.networkWrapper.sendToServer(new MessageFactionRemove(finalFaction.id));
-                            mc.displayGuiScreen(new GuiFactionList());
-                        }))));
-        root3.add(new Button(root3).setText("Back").setOnClick(b -> mc.displayGuiScreen(new GuiFactionList())));
+                                    TESItems.networkWrapper.sendToServer(new MessageFaction(finalFaction));
+                                }))
+                                .add(new Button().setText("Remove").setOnClick(b ->
+                                        mc.displayGuiScreen(new GuiConfirmationDialog("Are you sure you want to remove faction " + finalFaction.name + "?", this,
+                                                () -> {
+                                                    //check if this faction exists or newly created
+                                                    if (finalFaction.id != -1)
+                                                        TESItems.networkWrapper.sendToServer(new MessageFactionRemove(finalFaction.id));
+                                                    mc.displayGuiScreen(new GuiFactionList());
+                                                }))))
+                                .add(new Button().setText("Back").setOnClick(b -> mc.displayGuiScreen(new GuiFactionList())))
+                        )
+                ));
 
         faction.topics.forEach(t -> {
             ElementBase e = getTopicElement(topics, t);
@@ -107,10 +105,10 @@ public class GuiFactionEditor extends Screen {
         return dest;
     }
 
-    private ElementBase getTopicElement(ElementBase _parent, DialogTopic topic) {
-        DoubleStateFrameLayout layout = new DoubleStateFrameLayout(_parent);
+    private ElementBase getTopicElement(ElementBase containerLayout, DialogTopic topic) {
+        DoubleStateFrameLayout layout = new DoubleStateFrameLayout();
 
-        Text closed = new Text(root, topic.name) {
+        Text closed = new Text(topic.name) {
             @Override
             public void click(int relativeX, int relativeY) {
                 //select opened state
@@ -119,37 +117,30 @@ public class GuiFactionEditor extends Screen {
             }
         };
 
-        VerticalLayout opened = new VerticalLayout(_parent) {
-            @Override
-            public void draw(int mouseX, int mouseY) {
-                drawColoredRect(Tessellator.getInstance(), left, top, right, bottom, 0x33000000);
-                super.draw(mouseX, mouseY);
-            }
-        };
-        opened.add(new HorizontalDivider(opened));
-        opened.add(new Text(opened, "Close") {
-            @Override
-            public void click(int relativeX, int relativeY) {
-                //select closed state
-                layout.selectFirst();
-                ((LayoutBase) getRoot()).doLayout();
-            }
-        });
-        opened.add(new TextField(opened).setHint("Name").setText(topic.name).setOnType(tf -> {
-            topic.name = tf.getText();
-            closed.setText(tf.getText());
-        }));
-        opened.add(new TextField(opened).setHint("Dialog line").setText(topic.dialogLine).setOnType(tf -> topic.dialogLine = tf.getText()));
-        opened.add(new TextField(opened).setHint("Script").setText(topic.script).setOnType(tf -> topic.script = tf.getText()));
-        opened.add(new Button(opened).setText("Remove").setOnClick(b -> mc.displayGuiScreen(new GuiConfirmationDialog("Are you sure you want to remove topic " + topic.name + "?", this,
-                () -> {
-                    ((VerticalLayout) _parent).remove(opened);
-                    elements.remove(opened);
-                }))));
-        opened.add(new HorizontalDivider(opened));
+        ElementBase opened = new WrapFrameLayout()
+                .setElement(new VerticalLayout()
+                        .add(new Text("Close") {
+                            @Override
+                            public void click(int relativeX, int relativeY) {
+                                //select closed state
+                                layout.selectFirst();
+                                ((LayoutBase) getRoot()).doLayout();
+                            }
+                        })
+                        .add(new TextField().setHint("Name").setText(topic.name).setOnType(tf -> {
+                            topic.name = tf.getText();
+                            closed.setText(tf.getText());
+                        }))
+                        .add(new TextField().setHint("Dialog line").setText(topic.dialogLine).setOnType(tf -> topic.dialogLine = tf.getText()))
+                        .add(new TextField().setHint("Script").setText(topic.script).setFontRenderer(TESItems.monospaceFontRenderer).setOnType(tf -> topic.script = tf.getText()))
+                        .add(new Button().setText("Remove").setOnClick(b -> mc.displayGuiScreen(new GuiConfirmationDialog("Are you sure you want to remove topic " + topic.name + "?", this,
+                                () -> {
+                                    ((VerticalLayout) containerLayout).remove(layout);
+                                    elements.remove(layout);
+                                }))))
+                );
 
         layout.setFirstState(closed).setSecondState(opened).selectFirst();
-
         return layout;
     }
 }

@@ -16,13 +16,13 @@ public class GuiQuestEditor extends Screen {
     public GuiQuestEditor(Quest quest) {
         this.quest = quest;
 
-        ScrollableLayout scrollableLayout = new ScrollableLayout(contentLayout);
+        ScrollableLayout scrollableLayout = new ScrollableLayout();
         contentLayout.setElement(scrollableLayout);
-        layout = new VerticalLayout(scrollableLayout);
+        layout = new VerticalLayout();
         scrollableLayout.setElement(layout);
 
-        layout.add(new Text(layout, "Quest ID:" + quest.id).setColor(0x60ffffff));
-        TextField questName = new TextField(layout).setHint("Quest name").setText(quest.name);
+        layout.add(new Text("Quest ID:" + quest.id).setColor(0x60ffffff));
+        TextField questName = new TextField().setHint("Quest name").setText(quest.name);
         layout.add(questName);
     }
 }

@@ -21,9 +21,7 @@ public class HorizontalLayout extends LayoutBase {
         return this;
     }
 
-    public HorizontalLayout(ElementBase parent) {
-        super(parent);
-    }
+    public HorizontalLayout() {}
 
     public int getSpacing() {
         return spacing;
@@ -35,6 +33,7 @@ public class HorizontalLayout extends LayoutBase {
 
     public HorizontalLayout add(ElementBase element) {
         elements.add(element);
+        element.setParent(this);
         return this;
     }
 

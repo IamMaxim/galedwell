@@ -8,9 +8,8 @@ import ru.iammaxim.tesitems.GUI.Elements.ElementBase;
  * Created by maxim on 11/7/16 at 5:56 PM.
  */
 public class ScreenCenteredLayout extends FrameLayout {
-    public ScreenCenteredLayout(ElementBase parent) {
-        super(parent);
-    }
+
+    public ScreenCenteredLayout() {}
 
     @Override
     public void doLayout() {

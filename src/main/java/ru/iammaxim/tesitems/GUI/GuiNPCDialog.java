@@ -3,6 +3,7 @@ package ru.iammaxim.tesitems.GUI;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
+import org.lwjgl.opengl.GL11;
 import ru.iammaxim.tesitems.Dialogs.DialogTopic;
 import ru.iammaxim.tesitems.GUI.Elements.*;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.*;
@@ -34,7 +35,7 @@ public class GuiNPCDialog extends Screen {
         cap = TESItems.getCapability(player);
         npc = cap.getLatestNPC();
 
-        root = new ScreenCenteredLayout(null) {
+        root = new ScreenCenteredLayout() {
             @Override
             public void doLayout() {
                 ScaledResolution res = new ScaledResolution(mc);
@@ -55,11 +56,11 @@ public class GuiNPCDialog extends Screen {
                     super.checkClick(mouseX, mouseY);
             }
         };
-        contentLayout = new FancyFrameLayout(root);
+        contentLayout = new FancyFrameLayout();
         contentLayout.setPadding(0);
         root.setElement(contentLayout);
-        DialogWindowLayout root1 = new DialogWindowLayout(contentLayout);
-        leftElement = new ScrollableLayout(root1) {
+        DialogWindowLayout root1 = new DialogWindowLayout();
+        leftElement = new ScrollableLayout() {
             @Override
             public void scrollToBottom() {
                 int h = element.getHeight();
@@ -70,7 +71,7 @@ public class GuiNPCDialog extends Screen {
             }
         };
         leftElement.setPadding(0);
-        VerticalLayout leftLayout = new VerticalLayout(leftElement) {
+        VerticalLayout leftLayout = new VerticalLayout() {
             @Override
             public int getHeight() {
                 int height = 0;
@@ -81,7 +82,7 @@ public class GuiNPCDialog extends Screen {
                 return height;
             }
         };
-        historyElement = new VerticalLayout(leftLayout) {
+        historyElement = new VerticalLayout() {
             @Override
             public void doLayout() {
                 int y = top + topPadding;
@@ -110,12 +111,12 @@ public class GuiNPCDialog extends Screen {
         leftLayout.add(historyElement);
         leftElement.setElement(leftLayout);
         leftElement.setLeftPadding(8);
-        HorizontalLayout rightElement = new HorizontalLayout(root1);
+        HorizontalLayout rightElement = new HorizontalLayout();
         rightElement.setSpacing(0);
         root1.setLeftElement(leftElement);
         root1.setRightElement(rightElement);
-        rightElement.add(new VerticalDivider(rightElement));
-        VerticalLayout rightLayout = new VerticalLayout(rightElement) {
+        rightElement.add(new VerticalDivider());
+        VerticalLayout rightLayout = new VerticalLayout() {
             @Override
             public int getWidth() {
                 return parent.width() - leftPadding - rightPadding - 2 * marginH;
@@ -123,10 +124,10 @@ public class GuiNPCDialog extends Screen {
         };
         rightElement.add(rightLayout);
         rightLayout.setVerticalMargin(4);
-        rightLayout.add(new Text(rightLayout, npc.name)/*.setLeftPadding(4)*/.center(true)).add(new HorizontalDivider(rightLayout));
-        topics = new VerticalLayout(rightLayout);
+        rightLayout.add(new Text(npc.name).center(true)).add(new HorizontalDivider());
+        topics = new VerticalLayout();
         topics.setHorizontalMargin(2);
-        topicsScrollableLayout = new ScrollableLayout(rightLayout);
+        topicsScrollableLayout = new ScrollableLayout();
         topicsScrollableLayout.setHorizontalMargin(2);
         topicsScrollableLayout.setElement(topics);
         topicsScrollableLayout.setPadding(0);
@@ -142,7 +143,7 @@ public class GuiNPCDialog extends Screen {
     }
 
     public Text buildTopicElement(ElementBase root, DialogTopic topic) {
-        Text text = new Text(root, topic.name) {
+        Text text = new Text(topic.name) {
             @Override
             public void click(int relativeX, int relativeY) {
                 historyAppendTopic(topic.name);
@@ -156,7 +157,7 @@ public class GuiNPCDialog extends Screen {
     }
 
     public void historyAppendText(String appendStr) {
-        Text t = new Text(historyElement) {
+        Text t = new Text() {
             @Override
             protected void update() {
                 if (width == 0) {
@@ -190,7 +191,7 @@ public class GuiNPCDialog extends Screen {
     }
 
     public void historyAppendTopic(String appendStr) {
-        Text t = new Text(historyElement) {
+        Text t = new Text() {
             @Override
             protected void update() {
                 if (width == 0) {
@@ -238,8 +239,7 @@ public class GuiNPCDialog extends Screen {
 
         private LayoutBase leftElement, rightElement;
 
-        public DialogWindowLayout(ElementBase parent) {
-            super(parent);
+        public DialogWindowLayout() {
             res = new ScaledResolution(mc);
         }
 

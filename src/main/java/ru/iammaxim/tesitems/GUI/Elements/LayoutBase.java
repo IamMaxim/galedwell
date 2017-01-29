@@ -6,9 +6,7 @@ package ru.iammaxim.tesitems.GUI.Elements;
 public abstract class LayoutBase extends ElementBase {
     protected int leftPadding = 0, rightPadding = 0, topPadding = 0, bottomPadding = 0;
 
-    public LayoutBase(ElementBase parent) {
-        super(parent);
-    }
+    public LayoutBase() {}
 
     public abstract void doLayout();
 

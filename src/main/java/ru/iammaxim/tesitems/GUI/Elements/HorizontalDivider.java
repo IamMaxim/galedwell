@@ -12,8 +12,7 @@ public class HorizontalDivider extends ElementBase {
         this.color = color;
     }
 
-    public HorizontalDivider(ElementBase parent) {
-        super(parent);
+    public HorizontalDivider() {
         height = 1;
     }
 

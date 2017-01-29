@@ -39,24 +39,24 @@ public class GuiNPCEditor extends Screen {
         npc = cap.getLatestNPC();
         res = new ScaledResolution(Minecraft.getMinecraft());
 
-        scrollableLayout = new ScrollableLayout(contentLayout);
+        scrollableLayout = new ScrollableLayout();
         contentLayout.setElement(scrollableLayout);
-        VerticalLayout layout = new VerticalLayout(scrollableLayout);
+        VerticalLayout layout = new VerticalLayout();
         scrollableLayout.setElement(layout);
 
 
-        TextField npcName = new TextField(layout).setHint("Name").setText(npc.name).setOnType(tf -> npc.setName(tf.getText()));
-        CheckBox invulnerability = new CheckBox(layout).setChecked(npc.isInvulnerable()).setText("Invulnerable").setOnClick(((cb, newState) -> npc.setInvulnerable(newState)));
+        TextField npcName = new TextField().setHint("Name").setText(npc.name).setOnType(tf -> npc.setName(tf.getText()));
+        CheckBox invulnerability = new CheckBox().setChecked(npc.isInvulnerable()).setText("Invulnerable").setOnClick(((cb, newState) -> npc.setInvulnerable(newState)));
         layout.add(npcName);
         layout.add(invulnerability);
-        layout.add(new HorizontalDivider(layout));
-        layout.add(new Text(layout, "Factions").center(true));
+        layout.add(new HorizontalDivider());
+        layout.add(new Text("Factions").center(true));
 
-        VerticalLayout factionsLayout = new VerticalLayout(layout);
+        VerticalLayout factionsLayout = new VerticalLayout();
         npc.getFactions().forEach(f -> {
-            VerticalLayout fl = new VerticalLayout(factionsLayout);
-            Text factionName = new Text(fl, f.name + "");
-            fl.add(new TextField(fl).setHint("Faction ID").setText(f.id + "").setOnType(tf -> {
+            VerticalLayout fl = new VerticalLayout();
+            Text factionName = new Text(f.name + "");
+            fl.add(new TextField().setHint("Faction ID").setText(f.id + "").setOnType(tf -> {
                 try {
                     Faction newFaction;
                     if ((newFaction = FactionManager.getFaction(Integer.parseInt(tf.getText()))) != null) {
@@ -71,11 +71,11 @@ public class GuiNPCEditor extends Screen {
         });
         layout.add(factionsLayout);
 
-        layout.add(new Button(layout).setText("Add faction").setOnClick(b -> {
+        layout.add(new Button("Add faction").setOnClick(b -> {
             Faction f = new Faction("");
-            VerticalLayout fl = new VerticalLayout(factionsLayout);
-            Text factionName = new Text(fl, "Faction name will be here if all is right");
-            fl.add(new TextField(fl).setHint("Faction ID").setOnType(tf -> {
+            VerticalLayout fl = new VerticalLayout();
+            Text factionName = new Text("Faction name will be here if all is right");
+            fl.add(new TextField().setHint("Faction ID").setOnType(tf -> {
                 try {
                     Faction newFaction;
                     if ((newFaction = FactionManager.getFaction(Integer.parseInt(tf.getText()))) != null) {
@@ -89,8 +89,8 @@ public class GuiNPCEditor extends Screen {
             factionsLayout.add(fl);
         }));
 
-        layout.add(new HorizontalDivider(layout));
-        layout.add(new Button(layout).setText("Save").setOnClick(b -> {
+        layout.add(new HorizontalDivider());
+        layout.add(new Button().setText("Save").setOnClick(b -> {
             npc.getFactions().clear();
             Iterator<VerticalLayout> it = factionEntries.keySet().iterator();
             while (it.hasNext()) {

@@ -1,7 +1,6 @@
 package ru.iammaxim.tesitems.GUI.Elements;
 
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.Tessellator;
 import ru.iammaxim.tesitems.TESItems;
 
 import java.util.ArrayList;
@@ -31,14 +30,14 @@ public class Text extends ElementBase {
         return this;
     }
 
-    public Text(ElementBase parent) {
-        super(parent);
+    public Text() {
         fontRenderer = TESItems.fontRenderer;
     }
 
-    public Text(ElementBase parent, String text) {
-        this(parent);
-        setText(text);
+    public Text(String text) {
+        this();
+        this.text = text;
+        dirty = true;
     }
 
     public Text setText(String text) {
@@ -87,7 +86,6 @@ public class Text extends ElementBase {
     @Override
     public void draw(int mouseX, int mouseY) {
         if (dirty) {
-            ((LayoutBase)getRoot()).doLayout();
             update();
         }
 

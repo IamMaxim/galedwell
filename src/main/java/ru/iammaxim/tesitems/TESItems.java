@@ -135,7 +135,8 @@ public class TESItems {
     public static TESItems instance;
 
     @SideOnly(Side.CLIENT)
-    public static FontRenderer fontRenderer;
+    public static FontRenderer fontRenderer, //used in all mod UI
+            monospaceFontRenderer; //used in script editor
 
     //used for dialog camera orient
     /*
@@ -242,18 +243,32 @@ public class TESItems {
         ItemValueManager.init();
 //        QuestManager.loadFromFile();
 
-        if (event.getSide() == Side.CLIENT)
-            try {
-                Font font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File("oblivion.ttf")));
-                font = font.deriveFont(Font.PLAIN, 24);
-                fontRenderer = new UnicodeFontRenderer(font);
+        if (event.getSide() == Side.CLIENT) {
+            loadFonts();
+        }
+    }
 
-//                todo: add config setting
-//                getMinecraft().fontRendererObj = fontRenderer;
-            } catch (FontFormatException | IOException e) {
-                e.printStackTrace();
-                fontRenderer = getMinecraft().fontRendererObj;
-            }
+    public void loadFonts() {
+        //load main font
+        try {
+            Font font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File("main.ttf")));
+            font = font.deriveFont(Font.PLAIN, 24);
+            fontRenderer = new UnicodeFontRenderer(font);
+        } catch (FontFormatException | IOException e) {
+            e.printStackTrace();
+            fontRenderer = getMinecraft().fontRendererObj;
+        }
+
+        //load monospace font
+        try {
+            Font font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File("monospace.ttf")));
+            font = font.deriveFont(Font.PLAIN, 16);
+            monospaceFontRenderer = new UnicodeFontRenderer(font);
+//            ((UnicodeFontRenderer)monospaceFontRenderer).font.setPaddingTop(4);
+        } catch (FontFormatException | IOException e) {
+            e.printStackTrace();
+            monospaceFontRenderer = getMinecraft().fontRendererObj;
+        }
     }
 
     @SubscribeEvent
@@ -380,6 +395,7 @@ public class TESItems {
         //debug
         event.registerServerCommand(new CommandManageInventory());
         event.registerServerCommand(new CommandManageQuests());
+        event.registerServerCommand(new CommandReloadFonts());
     }
 
     @SubscribeEvent

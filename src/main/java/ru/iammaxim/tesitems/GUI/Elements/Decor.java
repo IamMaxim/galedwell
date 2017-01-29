@@ -13,8 +13,7 @@ public class Decor extends ElementBase {
         LEFT, RIGHT
     }
 
-    public Decor(ElementBase parent, Side side) {
-        super(parent);
+    public Decor(Side side) {
         this.side = side;
     }
 

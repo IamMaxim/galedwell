@@ -12,8 +12,7 @@ public class VerticalDivider extends ElementBase {
         this.color = color;
     }
 
-    public VerticalDivider(ElementBase parent) {
-        super(parent);
+    public VerticalDivider() {
         width = 1;
     }
 

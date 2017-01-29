@@ -21,13 +21,13 @@ public class GuiAlertDialog extends Screen {
     public GuiAlertDialog(String text) {
         super();
         this.text = text;
-        FancyFrameLayout fancyFrameLayout = new FancyFrameLayout(root);
+        FancyFrameLayout fancyFrameLayout = new FancyFrameLayout();
         root.setElement(fancyFrameLayout);
         fancyFrameLayout.setPadding(8);
-        VerticalLayout layout = new VerticalLayout(fancyFrameLayout);
+        VerticalLayout layout = new VerticalLayout();
         fancyFrameLayout.setElement(layout);
-        layout.add(new Text(layout, text));
-        layout.add(new Button(layout).setText("Ok").setUseInactiveBackground(false).setOnClick(
+        layout.add(new Text(text));
+        layout.add(new Button("Ok").setUseInactiveBackground(false).setOnClick(
                 b -> mc.displayGuiScreen(lastScreen)));
     }
 
