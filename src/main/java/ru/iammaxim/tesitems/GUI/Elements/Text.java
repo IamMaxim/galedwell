@@ -36,13 +36,11 @@ public class Text extends ElementBase {
 
     public Text(String text) {
         this();
-        this.text = text;
-        dirty = true;
+        setText(text);
     }
 
     public Text setText(String text) {
         this.text = text;
-        update();
         dirty = true;
         return this;
     }
@@ -54,15 +52,12 @@ public class Text extends ElementBase {
 
     @Override
     public int getWidth() {
-        return (textWidth = fontRenderer.getStringWidth(text)) + leftPadding;
+        return (fontRenderer.getStringWidth(text)) + leftPadding;
     }
 
     @Override
     public int getHeight() {
-        if (dirty) {
-            return 8;
-        }
-        return getNonDirtyHeight();
+        return Math.max(getNonDirtyHeight(), lineHeight + marginBottom + marginTop);
     }
 
     public int getNonDirtyHeight() {
@@ -72,15 +67,16 @@ public class Text extends ElementBase {
     protected void update() {
         try {
             ((LayoutBase) getRoot()).doLayout();
-        } catch (NullPointerException e) {
-//            e.printStackTrace();
+            if (width == 0) {
+                return;
+            }
+            System.out.println("updating with width: " + width);
+            strs = fontRenderer.listFormattedStringToWidth(text, width);
+            textWidth = fontRenderer.getStringWidth(strs.get(0));
+            dirty = false;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        if (width == 0) {
-            return;
-        }
-        strs = fontRenderer.listFormattedStringToWidth(text, width);
-        textWidth = fontRenderer.getStringWidth(strs.get(0));
-        dirty = false;
     }
 
     @Override

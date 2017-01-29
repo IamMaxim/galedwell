@@ -2,9 +2,6 @@ package ru.iammaxim.tesitems.GUI.Elements.Layouts;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import org.lwjgl.opengl.GL11;
 import ru.iammaxim.tesitems.GUI.Elements.ElementBase;
 import ru.iammaxim.tesitems.GUI.Elements.LayoutBase;
 
@@ -53,10 +50,10 @@ public class VerticalLayout extends LayoutBase {
 
     @Override
     public void doLayout() {
-        int y = top + topPadding;
-        int x = left + leftPadding;
+        int y = top + paddingTop;
+        int x = left + paddingLeft;
         for (ElementBase element : elements) {
-            int w = width - leftPadding - rightPadding;
+            int w = width - paddingLeft - paddingRight;
             int h = element.getHeight();
             element.setBounds(x, y, x + w, y + h);
             if (element instanceof LayoutBase)
@@ -72,7 +69,7 @@ public class VerticalLayout extends LayoutBase {
             height += e.getHeight();
         }
         height += (elements.size() - 1) * spacing;
-        height += topPadding + bottomPadding + marginBottom + marginTop;
+        height += paddingTop + paddingBottom + marginBottom + marginTop;
         return height;
     }
 
@@ -87,10 +84,10 @@ public class VerticalLayout extends LayoutBase {
         for (ElementBase e : elements) {
             int w = e.getWidth();
             if (parent != null)
-                w = (int) Math.min(w, new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth() * 0.8 - leftPadding - rightPadding);
+                w = (int) Math.min(w, new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth() * 0.8 - paddingLeft - paddingRight);
             if (w > width) width = w;
         }
-        width += leftPadding + rightPadding + 2 * marginH;
+        width += paddingLeft + paddingRight + marginLeft + marginRight;
         return width;
     }
 

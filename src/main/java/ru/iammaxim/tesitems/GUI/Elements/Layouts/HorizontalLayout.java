@@ -27,8 +27,9 @@ public class HorizontalLayout extends LayoutBase {
         return spacing;
     }
 
-    public void setSpacing(int spacing) {
+    public HorizontalLayout setSpacing(int spacing) {
         this.spacing = spacing;
+        return this;
     }
 
     public HorizontalLayout add(ElementBase element) {
@@ -53,13 +54,13 @@ public class HorizontalLayout extends LayoutBase {
     @Override
     public void doLayout() {
         int _w = getWidth();
-        int y = top + topPadding;
+        int y = top + paddingTop;
         int x;
         if (center) x = left + (width - _w) / 2;
-        else x = left + leftPadding;
+        else x = left + paddingLeft;
         for (ElementBase element : elements) {
             int w = element.getWidth();
-            int h = height - topPadding - bottomPadding;
+            int h = height - paddingTop - paddingBottom;
             element.setBounds(x, y, x + w, y + h);
             if (element instanceof LayoutBase)
                 ((LayoutBase) element).doLayout();
@@ -73,10 +74,10 @@ public class HorizontalLayout extends LayoutBase {
         for (ElementBase e : elements) {
             int h = e.getHeight();
             if (parent != null)
-                h = (int) Math.min(h, new ScaledResolution(Minecraft.getMinecraft()).getScaledHeight() * 0.8 - topPadding - bottomPadding);
+                h = (int) Math.min(h, new ScaledResolution(Minecraft.getMinecraft()).getScaledHeight() * 0.8 - paddingTop - paddingBottom);
             if (h > height) height = h;
         }
-        height += topPadding + bottomPadding;
+        height += paddingTop + paddingBottom;
         return height;
     }
 
@@ -92,7 +93,7 @@ public class HorizontalLayout extends LayoutBase {
             width += e.getWidth();
         }
         width += (elements.size() - 1) * spacing;
-        width += leftPadding + rightPadding;
+        width += paddingLeft + paddingRight;
         return width;
     }
 
@@ -100,8 +101,9 @@ public class HorizontalLayout extends LayoutBase {
         return top;
     }
 
-    public void setTop(int top) {
+    public HorizontalLayout setTop(int top) {
         this.top = top;
+        return this;
     }
 
     @Override

@@ -19,7 +19,55 @@ import java.util.ArrayList;
  * Created by maxim on 7/24/16.
  */
 public class GuiNPCDialog extends Screen {
-    private EntityPlayer player;
+    public VerticalLayout topics;
+    private boolean updated = false;
+
+    public GuiNPCDialog() {
+        EntityPlayer player = mc.thePlayer;
+        IPlayerAttributesCapability cap = TESItems.getCapability(player);
+        NPC npc = cap.getLatestNPC();
+
+        ScrollableLayout historyScrollableLayout;
+        VerticalLayout historyLayout;
+
+        contentLayout.setElement(new TwoPaneLayout()
+                .setLeftElement(historyScrollableLayout = (ScrollableLayout) new ScrollableLayout()
+                        .setElement(historyLayout = new VerticalLayout()))
+                .setRightElement(new HorizontalLayout()
+                        .add(new VerticalDivider())
+                        .add(new VerticalLayout()
+                                .add(new Text(npc.name))
+                                .add(new HorizontalDivider())
+                                .add(new ScrollableLayout()
+                                        .setElement(topics = (VerticalLayout) new VerticalLayout()
+                                                .setPaddingLeft(4)))
+                                .setVerticalMargin(4))
+                        .setSpacing(0))
+                .setRightWidth(160)
+                .setMinHeight(200));
+
+        cap.getLatestDialog().topics.forEach((name, topic) -> topics.add(new Text(topic.name) {
+            @Override
+            public void click(int relativeX, int relativeY) {
+                if (!updated) return;
+
+                historyLayout.add(new Text(topic.name).setColor(0xFF0066CC).setTopMargin(8));
+                historyLayout.add(new Text(topic.name));
+
+                GuiNPCDialog.this.root.doLayout();
+                historyScrollableLayout.scrollToBottom();
+                TESItems.networkWrapper.sendToServer(new MessageDialogSelectTopic(topic));
+            }
+        }));
+
+        root.doLayout();
+    }
+
+    public void setUpdated() {
+        updated = true;
+    }
+
+/*    private EntityPlayer player;
     private IPlayerAttributesCapability cap;
     private NPC npc;
     private VerticalLayout historyElement;
@@ -46,7 +94,7 @@ public class GuiNPCDialog extends Screen {
                         (res.getScaledHeight() - height)/2,
                         (res.getScaledWidth() + width)/2,
                         (res.getScaledHeight() + height)/2);
-                element.setBounds(left + leftPadding, top + topPadding, right - rightPadding, bottom - bottomPadding);
+                element.setBounds(left + paddingLeft, top + paddingTop, right - paddingRight, bottom - paddingBottom);
                 ((LayoutBase) element).doLayout();
             }
 
@@ -66,7 +114,7 @@ public class GuiNPCDialog extends Screen {
                 int h = element.getHeight();
                 scroll = h - height;
                 if (scroll < 0) scroll = 0;
-                ((VerticalLayout) element).setTop(top + topPadding - scroll);
+                ((VerticalLayout) element).setTop(top + paddingTop - scroll);
                 ((LayoutBase)element).doLayout();
             }
         };
@@ -78,16 +126,16 @@ public class GuiNPCDialog extends Screen {
                 for (ElementBase e : elements) {
                     height += e.getHeight() + spacing;
                 }
-                height += topPadding + bottomPadding + marginBottom + marginTop;
+                height += paddingTop + paddingBottom + marginBottom + marginTop;
                 return height;
             }
         };
         historyElement = new VerticalLayout() {
             @Override
             public void doLayout() {
-                int y = top + topPadding;
-                int x_left = left + leftPadding;
-                int x_right = x_left + width - leftPadding - rightPadding;
+                int y = top + paddingTop;
+                int x_left = left + paddingLeft;
+                int x_right = x_left + width - paddingLeft - paddingRight;
                 for (ElementBase e : elements) {
                     int h = ((Text)e).getNonDirtyHeight();
                     e.setBounds(x_left, y, x_right, y + h);
@@ -103,14 +151,14 @@ public class GuiNPCDialog extends Screen {
                     height += h;
                 }
                 height += (elements.size() - 1) * spacing;
-                height += topPadding + bottomPadding + marginBottom + marginTop;
+                height += paddingTop + paddingBottom + marginBottom + marginTop;
                 return height;
             }
         };
 
         leftLayout.add(historyElement);
         leftElement.setElement(leftLayout);
-        leftElement.setLeftPadding(8);
+        leftElement.setPaddingLeft(8);
         HorizontalLayout rightElement = new HorizontalLayout();
         rightElement.setSpacing(0);
         root1.setLeftElement(leftElement);
@@ -119,7 +167,7 @@ public class GuiNPCDialog extends Screen {
         VerticalLayout rightLayout = new VerticalLayout() {
             @Override
             public int getWidth() {
-                return parent.width() - leftPadding - rightPadding - 2 * marginH;
+                return parent.width() - paddingLeft - paddingRight - marginLeft - marginRight;
             }
         };
         rightElement.add(rightLayout);
@@ -170,7 +218,7 @@ public class GuiNPCDialog extends Screen {
 
             @Override
             public void draw(int mouseX, int mouseY) {
-                int x = left + leftPadding;
+                int x = left + paddingLeft;
                 int y = top;
                 for (String str : strs) {
                     if (center) {
@@ -204,7 +252,7 @@ public class GuiNPCDialog extends Screen {
 
             @Override
             public void draw(int mouseX, int mouseY) {
-                int x = left + leftPadding;
+                int x = left + paddingLeft;
                 int y = top;
                 for (String str : strs) {
                     if (center) {
@@ -285,5 +333,5 @@ public class GuiNPCDialog extends Screen {
         public void setRightElement(LayoutBase rightElement) {
             this.rightElement = rightElement;
         }
-    }
+    }*/
 }

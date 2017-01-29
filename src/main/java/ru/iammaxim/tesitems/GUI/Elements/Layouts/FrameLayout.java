@@ -34,19 +34,19 @@ public class FrameLayout extends LayoutBase {
 
     @Override
     public void doLayout() {
-        element.setBounds(left + leftPadding, top + topPadding, right - rightPadding, bottom - bottomPadding);
+        element.setBounds(left + paddingLeft, top + paddingTop, right - paddingRight, bottom - paddingBottom);
         if (element instanceof LayoutBase)
             ((LayoutBase) element).doLayout();
     }
 
     @Override
     public int getWidth() {
-        return element.getWidth() + leftPadding + rightPadding;
+        return element.getWidth() + paddingLeft + paddingRight;
     }
 
     @Override
     public int getHeight() {
-        return element.getHeight() + topPadding + bottomPadding;
+        return element.getHeight() + paddingTop + paddingBottom;
     }
 
     @Override

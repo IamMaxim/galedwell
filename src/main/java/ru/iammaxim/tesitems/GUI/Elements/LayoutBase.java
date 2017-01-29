@@ -4,45 +4,50 @@ package ru.iammaxim.tesitems.GUI.Elements;
  * Created by maxim on 11/7/16 at 4:17 PM.
  */
 public abstract class LayoutBase extends ElementBase {
-    protected int leftPadding = 0, rightPadding = 0, topPadding = 0, bottomPadding = 0;
+    protected int paddingLeft = 0, paddingRight = 0, paddingTop = 0, paddingBottom = 0;
 
     public LayoutBase() {}
 
     public abstract void doLayout();
 
     public LayoutBase setPadding(int padding) {
-        this.leftPadding = this.rightPadding = this.topPadding = this.bottomPadding = padding;
+        this.paddingLeft = this.paddingRight = this.paddingTop = this.paddingBottom = padding;
         return this;
     }
 
-    public int getLeftPadding() {
-        return leftPadding;
+    public int getPaddingLeft() {
+        return paddingLeft;
     }
 
-    public int getRightPadding() {
-        return rightPadding;
+    public int getPaddingRight() {
+        return paddingRight;
     }
 
-    public int getTopPadding() {
-        return topPadding;
+    public int getPaddingTop() {
+        return paddingTop;
     }
 
-    public int getBottomPadding() {
-        return bottomPadding;
+    public int getPaddingBottom() {
+        return paddingBottom;
     }
 
-    public void setLeftPadding(int padding) {
-        this.leftPadding = padding;
-    }
-    public void setRightPadding(int padding) {
-        this.rightPadding = padding;
+    public LayoutBase setPaddingLeft(int padding) {
+        this.paddingLeft = padding;
+        return this;
     }
 
-    public void setTopPadding(int padding) {
-        this.topPadding = padding;
+    public LayoutBase setPaddingRight(int padding) {
+        this.paddingRight = padding;
+        return this;
     }
 
-    public void setBottomPadding(int padding) {
-        this.bottomPadding = padding;
+    public LayoutBase setPaddingTop(int padding) {
+        this.paddingTop = padding;
+        return this;
+    }
+
+    public LayoutBase setPaddingBottom(int padding) {
+        this.paddingBottom = padding;
+        return this;
     }
 }

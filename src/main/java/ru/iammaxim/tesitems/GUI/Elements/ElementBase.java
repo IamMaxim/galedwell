@@ -8,6 +8,8 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
+import java.util.ArrayList;
+
 /**
  * Created by maxim on 11/7/16 at 4:22 PM.
  */
@@ -24,7 +26,8 @@ public abstract class ElementBase {
     }
 
     protected ElementBase parent;
-    protected int marginH = 0;
+    protected int marginLeft = 0;
+    protected int marginRight = 0;
     protected int marginTop = 0;
     protected int marginBottom = 0;
     protected boolean focused;
@@ -97,12 +100,22 @@ public abstract class ElementBase {
         return parent.getRoot();
     }
 
-    public int getHorizontalMargin() {
-        return marginH;
+    public int getLeftMargin() {
+        return marginLeft;
     }
 
-    public void setHorizontalMargin(int margin) {
-        this.marginH = margin;
+    public int getRightMargin() {
+        return marginRight;
+    }
+
+    public ElementBase setLeftMargin(int margin) {
+        this.marginLeft = margin;
+        return this;
+    }
+
+    public ElementBase setRightMargin(int margin) {
+        this.marginRight = margin;
+        return this;
     }
 
     public int getTopMargin() {
@@ -113,40 +126,39 @@ public abstract class ElementBase {
         return marginTop;
     }
 
-    public void setVerticalMargin(int margin) {
+    public ElementBase setVerticalMargin(int margin) {
         this.marginTop = margin;
         this.marginBottom = margin;
+        return this;
     }
 
-    public void setTopMargin(int margin) {
+    public ElementBase setTopMargin(int margin) {
         this.marginTop = margin;
+        return this;
     }
 
-    public void setBottomMargin(int margin) {
+    public ElementBase setBottomMargin(int margin) {
         this.marginBottom = margin;
+        return this;
     }
 
     public int getWidth() {
-        return width + 2 * marginH;
+        return width + marginLeft + marginRight;
     }
 
     public int getHeight() {
         return height + marginBottom + marginTop;
     }
 
-    //calculates width and height
-    public void calculateSize() {
-        this.width = getWidth();
-        this.height = getHeight();
-    }
-
     public void setBounds(int left, int top, int right, int bottom) {
-        this.left = left + marginH;
-        this.right = right - marginH;
+        this.left = left + marginLeft;
+        this.right = right - marginRight;
         this.top = top + marginTop;
         this.bottom = bottom - marginBottom;
         this.width = this.right - this.left;
         this.height = this.bottom - this.top;
+
+        System.out.println(getPath() + "\nset bounds: " + this.left + " " + this.top + " " + this.right + " " + this.bottom + " " + this.width + " " + this.height);
     }
 
     public abstract void draw(int mouseX, int mouseY);
@@ -193,4 +205,24 @@ public abstract class ElementBase {
     }
 
     public void onResize() {}
+
+    public ElementBase setHorizontalMargin(int margin) {
+        this.marginLeft = this.marginRight = margin;
+        return this;
+    }
+
+    public String getPath() {
+        ElementBase e = this;
+        ArrayList<String> path = new ArrayList<>();
+
+        while (e != null) {
+            path.add(e.getClass().getSimpleName());
+            e = e.getParent();
+        }
+
+        ArrayList<String> pathInverted = new ArrayList<>();
+        for (int i = path.size() - 1; i >= 0; i--)
+            pathInverted.add(path.get(i));
+        return String.join(" -> ", pathInverted);
+    }
 }

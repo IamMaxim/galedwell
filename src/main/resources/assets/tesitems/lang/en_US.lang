@@ -1,6 +1,6 @@
 tesitems:NPCEditor.name=Name
 tesitems:NPCEditor.factions=Factions
 tesitems:NPCEditor.factionID=Faction ID
-tesitems:NPCEditor.factionLabel=Faction ID will be here if all is right
+tesitems:NPCEditor.factionLabel=Faction ID will be here if all is rightElement
 tesitems:NPCEditor.addFaction=Add faction
 tesitems:NPCEditor.save=Save

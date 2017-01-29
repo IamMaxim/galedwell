@@ -1,7 +1,6 @@
 package ru.iammaxim.tesitems.GUI.Elements.Layouts;
 
 import net.minecraft.client.renderer.Tessellator;
-import ru.iammaxim.tesitems.GUI.Elements.ElementBase;
 import ru.iammaxim.tesitems.GUI.Elements.LayoutBase;
 
 /**
@@ -54,20 +53,20 @@ public class WrapFrameLayout extends FrameLayout {
     public void draw(int mouseX, int mouseY) {
         Tessellator tess = Tessellator.getInstance();
 
-        drawColoredRect(tess, left + leftPadding, top + topPadding, left + leftPadding + frameWidth, bottom - bottomPadding, frameColor);
-        drawColoredRect(tess, left + leftPadding, top + topPadding, right - rightPadding, top + topPadding + frameWidth, frameColor);
-        drawColoredRect(tess, right - rightPadding - frameWidth, top + topPadding, right - rightPadding, bottom - bottomPadding, frameColor);
-        drawColoredRect(tess, left + leftPadding, bottom - bottomPadding - frameWidth, right - rightPadding, bottom - bottomPadding, frameColor);
+        drawColoredRect(tess, left + paddingLeft, top + paddingTop, left + paddingLeft + frameWidth, bottom - paddingBottom, frameColor);
+        drawColoredRect(tess, left + paddingLeft, top + paddingTop, right - paddingRight, top + paddingTop + frameWidth, frameColor);
+        drawColoredRect(tess, right - paddingRight - frameWidth, top + paddingTop, right - paddingRight, bottom - paddingBottom, frameColor);
+        drawColoredRect(tess, left + paddingLeft, bottom - paddingBottom - frameWidth, right - paddingRight, bottom - paddingBottom, frameColor);
 
         super.draw(mouseX, mouseY);
     }
 
     @Override
     public void doLayout() {
-        element.setBounds(left + leftPadding + frameWidth + innerPaddingHorizontal,
-                top + topPadding + frameWidth + innerPaddingVertical,
-                right - rightPadding - frameWidth - innerPaddingHorizontal,
-                bottom - bottomPadding - frameWidth - innerPaddingVertical);
+        element.setBounds(left + paddingLeft + frameWidth + innerPaddingHorizontal,
+                top + paddingTop + frameWidth + innerPaddingVertical,
+                right - paddingRight - frameWidth - innerPaddingHorizontal,
+                bottom - paddingBottom - frameWidth - innerPaddingVertical);
         if (element instanceof LayoutBase)
             ((LayoutBase) element).doLayout();
     }
