@@ -1,7 +1,9 @@
 package ru.iammaxim.tesitems.GUI.Elements.Layouts;
 
 import ru.iammaxim.tesitems.GUI.Elements.ElementBase;
-import ru.iammaxim.tesitems.GUI.Elements.LayoutBase;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by maxim on 29.01.17.
@@ -50,11 +52,17 @@ public class TwoPaneLayout extends LayoutBase {
 
     @Override
     public int getWidth() {
+        if (widthOverride != -1)
+            return widthOverride;
+
         return leftElement.getWidth() + rightElement.getWidth() + paddingLeft + paddingRight;
     }
 
     @Override
     public int getHeight() {
+        if (heightOverride != -1)
+            return heightOverride;
+
         return Math.max(minHeight, Math.max(leftElement.getHeight(), rightElement.getHeight()) + paddingTop + paddingBottom);
     }
 
@@ -79,6 +87,13 @@ public class TwoPaneLayout extends LayoutBase {
     }
 
     @Override
+    public void checkClick(int mouseX, int mouseY) {
+        super.checkClick(mouseX, mouseY);
+        leftElement.checkClick(mouseX, mouseY);
+        rightElement.checkClick(mouseX, mouseY);
+    }
+
+    @Override
     public void doLayout() {
         int borderX;
 
@@ -97,6 +112,14 @@ public class TwoPaneLayout extends LayoutBase {
         rightElement.setBounds(borderX, top + paddingTop, right - paddingRight, bottom - paddingBottom);
         if (rightElement instanceof LayoutBase)
             ((LayoutBase) rightElement).doLayout();
+    }
+
+    @Override
+    public List<ElementBase> getChildren() {
+        ArrayList<ElementBase> list = new ArrayList<>();
+        list.add(leftElement);
+        list.add(rightElement);
+        return list;
     }
 
     @Override

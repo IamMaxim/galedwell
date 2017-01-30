@@ -1,5 +1,6 @@
 package ru.iammaxim.tesitems.GUI.Elements;
 
+import jdk.nashorn.internal.runtime.ECMAErrors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -9,6 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 /**
  * Created by maxim on 11/7/16 at 4:22 PM.
@@ -20,17 +22,36 @@ public abstract class ElementBase {
     protected int bottom;
     protected int width;
     protected int height;
-
-    public void setParent(ElementBase parent) {
-        this.parent = parent;
-    }
-
+    public Consumer<ElementBase> onClick;
     protected ElementBase parent;
     protected int marginLeft = 0;
     protected int marginRight = 0;
     protected int marginTop = 0;
     protected int marginBottom = 0;
     protected boolean focused;
+    public static final int FILL = -2;
+    protected int widthOverride = -1;
+    protected int heightOverride = -1;
+
+    public ElementBase setOnClick(Consumer<ElementBase> onCLick) {
+        this.onClick = onCLick;
+        return this;
+    }
+
+    public ElementBase setWidth(int width) {
+        widthOverride = width;
+        return this;
+    }
+
+    public ElementBase setHeight(int height) {
+        heightOverride = height;
+        return this;
+    }
+
+
+    public void setParent(ElementBase parent) {
+        this.parent = parent;
+    }
 
     public int width() {
         return width;
@@ -143,29 +164,38 @@ public abstract class ElementBase {
     }
 
     public int getWidth() {
+        if (widthOverride != -1)
+            return widthOverride;
         return width + marginLeft + marginRight;
     }
 
     public int getHeight() {
+        if (heightOverride != -1)
+            return heightOverride;
         return height + marginBottom + marginTop;
     }
 
-    public void setBounds(int left, int top, int right, int bottom) {
+    public ElementBase setBounds(int left, int top, int right, int bottom) {
         this.left = left + marginLeft;
         this.right = right - marginRight;
         this.top = top + marginTop;
         this.bottom = bottom - marginBottom;
         this.width = this.right - this.left;
         this.height = this.bottom - this.top;
-
-        System.out.println(getPath() + "\nset bounds: " + this.left + " " + this.top + " " + this.right + " " + this.bottom + " " + this.width + " " + this.height);
+//        System.out.println(getPath() + "\nset bounds: " + this.left + " " + this.top + " " + this.right + " " + this.bottom + " " + this.width + " " + this.height);
+        return this;
     }
 
     public abstract void draw(int mouseX, int mouseY);
 
     public void keyTyped(char c, int keyCode) {}
 
-    public void click(int relativeX, int relativeY) {}
+    public void click(int relativeX, int relativeY) {
+        if (onClick == null) {
+            return;
+        }
+        onClick.accept(this);
+    }
 
     public void drawTexturedRect(Tessellator tess, int left, int top, int right, int bottom, ResourceLocation texture) {
         boolean isTexture2Denabled = GL11.glIsEnabled(GL11.GL_TEXTURE_2D);
@@ -223,6 +253,22 @@ public abstract class ElementBase {
         ArrayList<String> pathInverted = new ArrayList<>();
         for (int i = path.size() - 1; i >= 0; i--)
             pathInverted.add(path.get(i));
-        return String.join(" -> ", pathInverted);
+        return "\n" + String.join(" -> ", pathInverted);
+    }
+
+    public int left() {
+        return left;
+    }
+
+    public int right() {
+        return right;
+    }
+
+    public int top() {
+        return top;
+    }
+
+    public int bottom() {
+        return bottom;
     }
 }

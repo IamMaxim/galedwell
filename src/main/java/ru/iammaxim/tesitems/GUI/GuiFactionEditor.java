@@ -1,6 +1,5 @@
 package ru.iammaxim.tesitems.GUI;
 
-import net.minecraft.client.renderer.Tessellator;
 import ru.iammaxim.tesitems.Dialogs.DialogTopic;
 import ru.iammaxim.tesitems.Factions.Faction;
 import ru.iammaxim.tesitems.GUI.Elements.*;
@@ -22,7 +21,7 @@ public class GuiFactionEditor extends Screen {
     public GuiFactionEditor(Faction faction) {
         Faction finalFaction = cloneFaction(faction);
         contentLayout.setElement(new ScrollableLayout()
-                .setHeight((int) (res.getScaledHeight() * 0.8))
+                /*.setHeight((int) (res.getScaledHeight() * 0.8))*/
                 .setElement(new VerticalLayout()
                         .add(new HeaderLayout("Faction editor"))
                         .add(new TextField().setHint("Name").setText(finalFaction.name).setOnType(tf -> finalFaction.name = tf.getText()))
@@ -119,14 +118,11 @@ public class GuiFactionEditor extends Screen {
 
         ElementBase opened = new WrapFrameLayout()
                 .setElement(new VerticalLayout()
-                        .add(new Text("Close") {
-                            @Override
-                            public void click(int relativeX, int relativeY) {
-                                //select closed state
-                                layout.selectFirst();
-                                ((LayoutBase) getRoot()).doLayout();
-                            }
-                        })
+                        .add(new Text("Close").setOnClick(e -> {
+                            //select closed state
+                            layout.selectFirst();
+                            ((LayoutBase) e.getRoot()).doLayout();
+                        }))
                         .add(new TextField().setHint("Name").setText(topic.name).setOnType(tf -> {
                             topic.name = tf.getText();
                             closed.setText(tf.getText());

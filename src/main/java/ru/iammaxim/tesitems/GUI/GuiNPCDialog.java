@@ -20,7 +20,7 @@ import java.util.ArrayList;
  */
 public class GuiNPCDialog extends Screen {
     public VerticalLayout topics;
-    private boolean updated = false;
+    private boolean updated = true;
 
     public GuiNPCDialog() {
         EntityPlayer player = mc.thePlayer;
@@ -31,25 +31,34 @@ public class GuiNPCDialog extends Screen {
         VerticalLayout historyLayout;
 
         contentLayout.setElement(new TwoPaneLayout()
-                .setLeftElement(historyScrollableLayout = (ScrollableLayout) new ScrollableLayout()
-                        .setElement(historyLayout = new VerticalLayout()))
-                .setRightElement(new HorizontalLayout()
-                        .add(new VerticalDivider())
-                        .add(new VerticalLayout()
-                                .add(new Text(npc.name))
-                                .add(new HorizontalDivider())
-                                .add(new ScrollableLayout()
-                                        .setElement(topics = (VerticalLayout) new VerticalLayout()
-                                                .setPaddingLeft(4)))
-                                .setVerticalMargin(4))
-                        .setSpacing(0))
-                .setRightWidth(160)
-                .setMinHeight(200));
+                        .setLeftElement(historyScrollableLayout = (ScrollableLayout) new ScrollableLayout()
+                                .setElement(historyLayout = new VerticalLayout()))
+                        .setRightElement(new HorizontalLayout()
+                                .add(new VerticalDivider())
+                                .add(new VerticalLayout()
+                                        .add(new Text(npc.name))
+                                        .add(new HorizontalDivider())
+                                        .add(new ScrollableLayout()
+                                                .setMinHeight(1000000)
+                                                .setElement(topics = (VerticalLayout) new VerticalLayout()
+                                                        .setPaddingLeft(0))
+                                                .setPaddingTop(0)
+                                                .setWidth(ElementBase.FILL))
+                                        .setVerticalMargin(4))
+                                .setSpacing(0))
+                        .setRightWidth(160)
+/*                .setMinHeight(200)*/);
 
-        cap.getLatestDialog().topics.forEach((name, topic) -> topics.add(new Text(topic.name) {
-            @Override
-            public void click(int relativeX, int relativeY) {
-                if (!updated) return;
+        cap.getLatestDialog().topics.forEach((name, topic) -> {
+            System.out.println("adding topic");
+
+            topics.add(new Text(topic.name).setOnClick(e -> {
+                if (!updated) {
+                    System.out.println("not updated yet");
+                    return;
+                }
+
+                System.out.println("updating...");
 
                 historyLayout.add(new Text(topic.name).setColor(0xFF0066CC).setTopMargin(8));
                 historyLayout.add(new Text(topic.name));
@@ -57,8 +66,8 @@ public class GuiNPCDialog extends Screen {
                 GuiNPCDialog.this.root.doLayout();
                 historyScrollableLayout.scrollToBottom();
                 TESItems.networkWrapper.sendToServer(new MessageDialogSelectTopic(topic));
-            }
-        }));
+            }));
+        });
 
         root.doLayout();
     }

@@ -1,7 +1,6 @@
 package ru.iammaxim.tesitems.GUI.Elements.Layouts;
 
 import net.minecraft.client.renderer.Tessellator;
-import ru.iammaxim.tesitems.GUI.Elements.LayoutBase;
 
 /**
  * Created by maxim on 29.01.17.
@@ -41,11 +40,17 @@ public class WrapFrameLayout extends FrameLayout {
 
     @Override
     public int getWidth() {
+        if (widthOverride != -1)
+            return widthOverride;
+
         return super.getWidth() + 2 * (innerPaddingHorizontal + frameWidth);
     }
 
     @Override
     public int getHeight() {
+        if (heightOverride != -1)
+            return heightOverride;
+
         return super.getHeight() + 2 * (innerPaddingVertical + frameWidth);
     }
 

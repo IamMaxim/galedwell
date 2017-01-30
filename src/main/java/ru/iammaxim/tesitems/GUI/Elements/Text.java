@@ -1,6 +1,7 @@
 package ru.iammaxim.tesitems.GUI.Elements;
 
 import net.minecraft.client.gui.FontRenderer;
+import ru.iammaxim.tesitems.GUI.Elements.Layouts.LayoutBase;
 import ru.iammaxim.tesitems.TESItems;
 
 import java.util.ArrayList;
@@ -70,7 +71,6 @@ public class Text extends ElementBase {
             if (width == 0) {
                 return;
             }
-            System.out.println("updating with width: " + width);
             strs = fontRenderer.listFormattedStringToWidth(text, width);
             textWidth = fontRenderer.getStringWidth(strs.get(0));
             dirty = false;
