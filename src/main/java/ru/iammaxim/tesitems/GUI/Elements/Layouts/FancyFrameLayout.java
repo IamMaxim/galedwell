@@ -1,8 +1,6 @@
 package ru.iammaxim.tesitems.GUI.Elements.Layouts;
 
 import net.minecraft.client.renderer.Tessellator;
-import ru.iammaxim.tesitems.GUI.Elements.ElementBase;
-import ru.iammaxim.tesitems.GUI.Elements.LayoutBase;
 
 import static ru.iammaxim.tesitems.GUI.ResManager.*;
 

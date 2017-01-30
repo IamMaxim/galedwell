@@ -19,7 +19,7 @@ public class GuiFactionList extends Screen {
         ScrollableLayout root1 = new ScrollableLayout();
         root1.setPadding(4);
         contentLayout.setElement(root1);
-        root1.setHeight((int) (res.getScaledHeight() * 0.8));
+//        root1.setHeight((int) (res.getScaledHeight() * 0.8));
         VerticalLayout root2 = new VerticalLayout();
         root1.setElement(root2);
         root2.add(new HeaderLayout("Faction list"));

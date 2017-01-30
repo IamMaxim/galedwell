@@ -30,7 +30,7 @@ public class GuiNPCEditor extends Screen {
     @Override
     public void onResize(Minecraft mcIn, int w, int h) {
         super.onResize(mcIn, w, h);
-        scrollableLayout.setHeight((int) (res.getScaledHeight() * 0.8f));
+//        scrollableLayout.setHeight((int) (res.getScaledHeight() * 0.8f));
     }
 
     public GuiNPCEditor(EntityPlayer player) {
@@ -107,7 +107,7 @@ public class GuiNPCEditor extends Screen {
 
         int width = root.getWidth();
         int height = root.getHeight();
-        scrollableLayout.setHeight((int) (res.getScaledHeight() * 0.8f));
+//        scrollableLayout.setHeight((int) (res.getScaledHeight() * 0.8f));
         root.setBounds((res.getScaledWidth() - width)/2, (res.getScaledHeight() - height)/2, (res.getScaledWidth() + width)/2, (res.getScaledHeight() + height)/2);
         root.doLayout();
     }

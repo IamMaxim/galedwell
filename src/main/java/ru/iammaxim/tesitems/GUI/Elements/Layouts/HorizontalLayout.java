@@ -3,10 +3,10 @@ package ru.iammaxim.tesitems.GUI.Elements.Layouts;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import ru.iammaxim.tesitems.GUI.Elements.ElementBase;
-import ru.iammaxim.tesitems.GUI.Elements.LayoutBase;
 
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
+import java.util.List;
 
 /**
  * Created by maxim on 11/7/16 at 4:19 PM.
@@ -46,6 +46,7 @@ public class HorizontalLayout extends LayoutBase {
     @Override
     public void checkClick(int mouseX, int mouseY) {
         try {
+            super.checkClick(mouseX, mouseY);
             elements.forEach(e -> e.checkClick(mouseX, mouseY));
         } catch (ConcurrentModificationException e) {
         }
@@ -56,11 +57,15 @@ public class HorizontalLayout extends LayoutBase {
         int _w = getWidth();
         int y = top + paddingTop;
         int x;
+        int x_max = right - paddingRight;
         if (center) x = left + (width - _w) / 2;
         else x = left + paddingLeft;
         for (ElementBase element : elements) {
-            int w = element.getWidth();
-            int h = height - paddingTop - paddingBottom;
+            int w = Math.min(element.getWidth(), x_max - x);
+            int h = Math.min(height - paddingTop - paddingBottom, element.getHeight());
+            if (h == FILL) {
+                h = height - paddingTop - paddingBottom;
+            }
             element.setBounds(x, y, x + w, y + h);
             if (element instanceof LayoutBase)
                 ((LayoutBase) element).doLayout();
@@ -69,7 +74,15 @@ public class HorizontalLayout extends LayoutBase {
     }
 
     @Override
+    public List<ElementBase> getChildren() {
+        return elements;
+    }
+
+    @Override
     public int getHeight() {
+        if (heightOverride != -1)
+            return heightOverride;
+
         int height = 0;
         for (ElementBase e : elements) {
             int h = e.getHeight();
@@ -88,6 +101,9 @@ public class HorizontalLayout extends LayoutBase {
 
     @Override
     public int getWidth() {
+        if (widthOverride != -1)
+            return widthOverride;
+
         int width = 0;
         for (ElementBase e : elements) {
             width += e.getWidth();

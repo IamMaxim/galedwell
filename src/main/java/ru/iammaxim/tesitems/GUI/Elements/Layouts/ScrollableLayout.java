@@ -5,16 +5,25 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
-import ru.iammaxim.tesitems.GUI.Elements.LayoutBase;
+import ru.iammaxim.tesitems.GUI.Elements.ElementBase;
 import ru.iammaxim.tesitems.GUI.ResManager;
 
 /**
  * Created by maxim on 11/8/16 at 5:18 PM.
  */
 public class ScrollableLayout extends FrameLayout {
-    protected int height;
+    protected int minHeight = 0;
     protected int scroll = 0;
     protected Minecraft mc;
+    protected int elementHeight;
+
+    @Override
+    public FrameLayout setElement(ElementBase element) {
+        if (element instanceof VerticalLayout)
+            ((VerticalLayout) element).setLimitHeight(false);
+        return super.setElement(element);
+    }
+
     protected ScaledResolution res;
 
     @Override
@@ -23,10 +32,15 @@ public class ScrollableLayout extends FrameLayout {
         element.setBounds(left + paddingLeft, top + paddingTop, right - 8 - paddingRight, bottom - paddingBottom);
         if (element instanceof LayoutBase)
             ((LayoutBase) element).doLayout();
+
+        elementHeight = element.getHeight();
     }
 
     @Override
     public int getWidth() {
+        if (widthOverride != -1)
+            return widthOverride;
+
         //add scrollbar width
         return super.getWidth() + 8;
     }
@@ -37,14 +51,21 @@ public class ScrollableLayout extends FrameLayout {
         setPadding(4);
     }
 
-    @Override
-    public int getHeight() {
-        return height;
+    public int getMinHeight() {
+        return minHeight;
     }
 
-    public ScrollableLayout setHeight(int height) {
-        this.height = height;
+    public ScrollableLayout setMinHeight(int minHeight) {
+        this.minHeight = minHeight;
         return this;
+    }
+
+    @Override
+    public int getHeight() {
+        if (heightOverride != -1)
+            return heightOverride;
+
+        return Math.max(super.getHeight(), minHeight);
     }
 
     @Override
@@ -63,7 +84,6 @@ public class ScrollableLayout extends FrameLayout {
     @Override
     public void draw(int mouseX, int mouseY) {
         //draw scrollbar
-        int elementHeight = element.getHeight();
         int scrollbarTopOffset = (int) (((float) (height - 48 - paddingTop - paddingBottom) * scroll) / (elementHeight - height) + 16);
         drawTexturedRect(Tessellator.getInstance(), right - 8, top, right, top + 16, ResManager.inv_scrollbar_bg_top);
         drawTexturedRect(Tessellator.getInstance(), right - 8, top + 16, right, bottom - 16, ResManager.inv_scrollbar_bg_center);
@@ -95,7 +115,7 @@ public class ScrollableLayout extends FrameLayout {
         double scaleW = mc.displayWidth / res.getScaledWidth_double();
         double scaleH = mc.displayHeight / res.getScaledHeight_double();
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        GL11.glScissor((int) ((left - paddingLeft) * scaleW), (int) ((top - paddingTop) * scaleH), (int) ((width + paddingLeft + paddingRight) * scaleW), (int) ((height + paddingTop + paddingBottom) * scaleH));
+        GL11.glScissor((int) ((left) * scaleW), (int) ((top) * scaleH), (int) ((width) * scaleW), (int) ((height) * scaleH));
         element.draw(mouseX, mouseY);
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
     }

@@ -1,7 +1,9 @@
 package ru.iammaxim.tesitems.GUI.Elements.Layouts;
 
 import ru.iammaxim.tesitems.GUI.Elements.ElementBase;
-import ru.iammaxim.tesitems.GUI.Elements.LayoutBase;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by maxim on 11/7/16 at 4:38 PM.
@@ -23,6 +25,7 @@ public class FrameLayout extends LayoutBase {
 
     @Override
     public void checkClick(int mouseX, int mouseY) {
+        super.checkClick(mouseX, mouseY);
         element.checkClick(mouseX, mouseY);
     }
 
@@ -40,13 +43,26 @@ public class FrameLayout extends LayoutBase {
     }
 
     @Override
+    public List<ElementBase> getChildren() {
+        ArrayList<ElementBase> list = new ArrayList<>();
+        list.add(element);
+        return list;
+    }
+
+    @Override
     public int getWidth() {
-        return element.getWidth() + paddingLeft + paddingRight;
+        if (widthOverride != -1)
+            return widthOverride;
+
+        return element.getWidth() + paddingLeft + paddingRight + marginLeft + marginRight;
     }
 
     @Override
     public int getHeight() {
-        return element.getHeight() + paddingTop + paddingBottom;
+        if (heightOverride != -1)
+            return heightOverride;
+
+        return element.getHeight() + paddingTop + paddingBottom + marginTop + marginBottom;
     }
 
     @Override

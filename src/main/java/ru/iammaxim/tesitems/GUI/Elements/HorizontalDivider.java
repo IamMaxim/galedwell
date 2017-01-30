@@ -12,6 +12,11 @@ public class HorizontalDivider extends ElementBase {
         this.color = color;
     }
 
+    @Override
+    public int getWidth() {
+        return FILL;
+    }
+
     public HorizontalDivider() {
         height = 1;
     }

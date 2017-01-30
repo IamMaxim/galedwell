@@ -1,7 +1,6 @@
 package ru.iammaxim.tesitems.GUI.Elements.Layouts;
 
 import ru.iammaxim.tesitems.GUI.Elements.ElementBase;
-import ru.iammaxim.tesitems.GUI.Elements.LayoutBase;
 
 /**
  * Created by maxim on 27.01.2017.

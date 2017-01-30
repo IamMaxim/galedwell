@@ -1,4 +1,8 @@
-package ru.iammaxim.tesitems.GUI.Elements;
+package ru.iammaxim.tesitems.GUI.Elements.Layouts;
+
+import ru.iammaxim.tesitems.GUI.Elements.ElementBase;
+
+import java.util.List;
 
 /**
  * Created by maxim on 11/7/16 at 4:17 PM.
@@ -50,4 +54,6 @@ public abstract class LayoutBase extends ElementBase {
         this.paddingBottom = padding;
         return this;
     }
+
+    public abstract List<ElementBase> getChildren();
 }

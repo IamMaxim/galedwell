@@ -13,7 +13,6 @@ import static ru.iammaxim.tesitems.GUI.ResManager.*;
  * Created by maxim on 11/8/16 at 5:50 PM.
  */
 public class Button extends ElementBase {
-    public Consumer<Button> onClick;
     private String text = "A button";
     private int padding = 4, textColor = 0xff481f09;
     private FontRenderer fontRenderer;
@@ -51,20 +50,6 @@ public class Button extends ElementBase {
     public Button(String text) {
         this();
         setText(text);
-    }
-
-    public Button setOnClick(Consumer<Button> onCLick) {
-        this.onClick = onCLick;
-        return this;
-    }
-
-    @Override
-    public void click(int relativeX, int relativeY) {
-        if (onClick == null) {
-            System.out.println("button action not set");
-            return;
-        }
-        onClick.accept(this);
     }
 
     public Button setText(String text) {
