@@ -10,14 +10,14 @@ public class CheckBox extends ElementBase {
     private boolean checked = false;
     private String text = "";
     private int textColor = 0xff481f09;
-    private CheckBoxOnClick onClick;
+    private OnClick onClick;
 
     public CheckBox setChecked(boolean checked) {
         this.checked = checked;
         return this;
     }
 
-    public CheckBox setOnClick(CheckBoxOnClick onClick) {
+    public CheckBox setOnClick(OnClick onClick) {
         this.onClick = onClick;
         return this;
     }
@@ -51,5 +51,12 @@ public class CheckBox extends ElementBase {
             color = 0xffffffff;
         drawColoredRect(Tessellator.getInstance(), left + 1, top + 1, left + 7, bottom - 1, color);
         TESItems.fontRenderer.drawString(text, left + 8, top, textColor);
+    }
+
+    /**
+     * Created by maxim on 11/9/16 at 6:49 PM.
+     */
+    public static interface OnClick {
+        void click(CheckBox cb, boolean newState);
     }
 }

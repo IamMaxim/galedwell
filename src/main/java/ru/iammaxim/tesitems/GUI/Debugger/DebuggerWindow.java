@@ -44,6 +44,25 @@ public class DebuggerWindow {
                     element.right(),
                     element.bottom(),
                     0x556304b2);
+
+        ElementBase info = new VerticalLayout() {
+            @Override
+            public void draw(int mouseX, int mouseY) {
+                drawColoredRect(Tessellator.getInstance(), left, top, right, bottom, 0x66000000);
+                super.draw(mouseX, mouseY);
+            }
+        }.add(new Text("width: " + element.width()).setColor(0xffffffff))
+                .add(new Text("height: " + element.height()).setColor(0xffffffff))
+                .add(new Text("getWidth(): " + element.getWidth()).setColor(0xffffffff))
+                .add(new Text("getHeight(): " + element.getHeight()).setColor(0xffffffff))
+                .setPadding(4);
+        int w = info.getWidth();
+        int h = info.getHeight();
+        int cx = (element.right() + element.left()) / 2;
+        int cy = (element.bottom() + element.top()) / 2;
+        info.setBounds(cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2);
+        ((LayoutBase) info).doLayout();
+        info.draw(0, 0);
     }
 
     public static ElementBase buildNode(ElementBase element) {

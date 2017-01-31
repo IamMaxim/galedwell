@@ -38,10 +38,8 @@ public class ScrollableLayout extends FrameLayout {
     }
 
     @Override
-    public void click(int relativeX, int relativeY) {
-        if (relativeX > width - scrollbarWidth) {
-
-        }
+    public void checkClick(int mouseX, int mouseY) {
+        super.checkClick(mouseX, mouseY);
     }
 
     @Override
@@ -117,6 +115,15 @@ public class ScrollableLayout extends FrameLayout {
                 }
             }
         }
+
+        if (Mouse.isButtonDown(0))
+            if (elementHeight > height && mouseY > top + paddingTop + scrollbarEndHeight && mouseY < bottom - paddingBottom - scrollbarEndHeight && mouseX > width - scrollbarWidth && mouseX < right) {
+                scroll = (int) ((float) (mouseY - top - scrollbarHandleHeight) / (bottom - top - paddingTop - paddingBottom - 2 * scrollbarEndHeight) * (elementHeight - height + paddingTop + paddingBottom));
+                ((VerticalLayout) element).setTop(top + paddingTop - scroll);
+                if (element instanceof LayoutBase) {
+                    ((LayoutBase) element).doLayout();
+                }
+            }
 
         double scaleW = mc.displayWidth / res.getScaledWidth_double();
         double scaleH = mc.displayHeight / res.getScaledHeight_double();
