@@ -38,12 +38,12 @@ public abstract class ElementBase {
         return this;
     }
 
-    public ElementBase setWidth(int width) {
+    public ElementBase setWidthOverride(int width) {
         widthOverride = width;
         return this;
     }
 
-    public ElementBase setHeight(int height) {
+    public ElementBase setHeightOverride(int height) {
         heightOverride = height;
         return this;
     }
@@ -164,15 +164,19 @@ public abstract class ElementBase {
     }
 
     public int getWidth() {
-        if (widthOverride != -1)
-            return widthOverride;
         return width + marginLeft + marginRight;
     }
 
+    public int getWidthOverride() {
+        return widthOverride;
+    }
+
     public int getHeight() {
-        if (heightOverride != -1)
-            return heightOverride;
         return height + marginBottom + marginTop;
+    }
+
+    public int getHeightOverride() {
+        return heightOverride;
     }
 
     public ElementBase setBounds(int left, int top, int right, int bottom) {

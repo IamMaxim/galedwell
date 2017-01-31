@@ -38,9 +38,6 @@ public class ScrollableLayout extends FrameLayout {
 
     @Override
     public int getWidth() {
-        if (widthOverride != -1)
-            return widthOverride;
-
         //add scrollbar width
         return super.getWidth() + 8;
     }
@@ -62,9 +59,6 @@ public class ScrollableLayout extends FrameLayout {
 
     @Override
     public int getHeight() {
-        if (heightOverride != -1)
-            return heightOverride;
-
         return Math.max(super.getHeight(), minHeight);
     }
 

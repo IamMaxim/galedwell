@@ -13,12 +13,8 @@ public class VerticalDivider extends ElementBase {
     }
 
     public VerticalDivider() {
+        setHeightOverride(FILL);
         width = 1;
-    }
-
-    @Override
-    public int getHeight() {
-        return FILL;
     }
 
     @Override

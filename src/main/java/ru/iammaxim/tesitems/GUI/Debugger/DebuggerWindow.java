@@ -14,7 +14,7 @@ public class DebuggerWindow {
         return new ScrollableLayout()
                 .setMinHeight(1000000)
                 .setElement(new VerticalLayout().add(buildNode(element)))
-                .setWidth(ElementBase.FILL);
+                .setWidthOverride(ElementBase.FILL);
     }
 
     public static void drawElementOverlay(ElementBase element) {

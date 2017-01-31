@@ -52,17 +52,11 @@ public class TwoPaneLayout extends LayoutBase {
 
     @Override
     public int getWidth() {
-        if (widthOverride != -1)
-            return widthOverride;
-
         return leftElement.getWidth() + rightElement.getWidth() + paddingLeft + paddingRight;
     }
 
     @Override
     public int getHeight() {
-        if (heightOverride != -1)
-            return heightOverride;
-
         return Math.max(minHeight, Math.max(leftElement.getHeight(), rightElement.getHeight()) + paddingTop + paddingBottom);
     }
 

@@ -24,18 +24,18 @@ public class GuiFactionEditor extends Screen {
                 /*.setHeight((int) (res.getScaledHeight() * 0.8))*/
                 .setElement(new VerticalLayout()
                         .add(new HeaderLayout("Faction editor"))
-                        .add(new TextField().setHint("Name").setText(finalFaction.name).setOnType(tf -> finalFaction.name = tf.getText()))
+                        .add(new TextField().setHint("Name").setText(finalFaction.name).setOnType(tf -> finalFaction.name = tf.getText()).setWidthOverride(ElementBase.FILL))
                         .add(new Text("id: " + finalFaction.id))
                         .add(new HorizontalDivider())
                         .add(new HeaderLayout("Topics"))
-                        .add(new WrapFrameLayout().setElement(topics = new VerticalLayout()))
-                        .add(new Button("Add topic").setOnClick(b -> {
+                        .add(new WrapFrameLayout().setElement(topics = new VerticalLayout()).setWidthOverride(ElementBase.FILL))
+                        .add(new HorizontalLayout().add(new Button("Add topic").setOnClick(b -> {
                             DialogTopic topic = new DialogTopic();
                             topic.name = "New topic";
                             ElementBase element = getTopicElement(topics, topic);
                             elements.put(element, topic);
                             topics.add(element);
-                        }))
+                        })).center(true).setWidthOverride(ElementBase.FILL))
                         .add(new HorizontalDivider())
                         .add(new HorizontalLayout().center(true)
                                 .add(new Button().setText("Save").setOnClick(b -> {
@@ -123,17 +123,33 @@ public class GuiFactionEditor extends Screen {
                             layout.selectFirst();
                             ((LayoutBase) e.getRoot()).doLayout();
                         }))
-                        .add(new TextField().setHint("Name").setText(topic.name).setOnType(tf -> {
-                            topic.name = tf.getText();
-                            closed.setText(tf.getText());
-                        }))
-                        .add(new TextField().setHint("Dialog line").setText(topic.dialogLine).setOnType(tf -> topic.dialogLine = tf.getText()))
-                        .add(new TextField().setHint("Script").setText(topic.script).setFontRenderer(TESItems.monospaceFontRenderer).setOnType(tf -> topic.script = tf.getText()))
-                        .add(new Button().setText("Remove").setOnClick(b -> mc.displayGuiScreen(new GuiConfirmationDialog("Are you sure you want to remove topic " + topic.name + "?", this,
-                                () -> {
-                                    ((VerticalLayout) containerLayout).remove(layout);
-                                    elements.remove(layout);
-                                }))))
+                        .add(new TextField()
+                                .setHint("Name")
+                                .setText(topic.name)
+                                .setOnType(tf -> {
+                                    topic.name = tf.getText();
+                                    closed.setText(tf.getText());
+                                })
+                                .setWidthOverride(ElementBase.FILL))
+                        .add(new TextField()
+                                .setHint("Dialog line")
+                                .setText(topic.dialogLine)
+                                .setOnType(tf -> topic.dialogLine = tf.getText())
+                                .setWidthOverride(ElementBase.FILL))
+                        .add(new TextField()
+                                .setHint("Script")
+                                .setText(topic.script)
+                                .setFontRenderer(TESItems.monospaceFontRenderer)
+                                .setOnType(tf -> topic.script = tf.getText())
+                                .setWidthOverride(ElementBase.FILL))
+                        .add(new Button()
+                                .setText("Remove")
+                                .setOnClick(b -> mc.displayGuiScreen(
+                                        new GuiConfirmationDialog("Are you sure you want to remove topic " + topic.name + "?", this,
+                                                () -> {
+                                                    ((VerticalLayout) containerLayout).remove(layout);
+                                                    elements.remove(layout);
+                                                }))))
                 );
 
         layout.setFirstState(closed).setSecondState(opened).selectFirst();

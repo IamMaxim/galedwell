@@ -51,17 +51,11 @@ public class FrameLayout extends LayoutBase {
 
     @Override
     public int getWidth() {
-        if (widthOverride != -1)
-            return widthOverride;
-
         return element.getWidth() + paddingLeft + paddingRight + marginLeft + marginRight;
     }
 
     @Override
     public int getHeight() {
-        if (heightOverride != -1)
-            return heightOverride;
-
         return element.getHeight() + paddingTop + paddingBottom + marginTop + marginBottom;
     }
 

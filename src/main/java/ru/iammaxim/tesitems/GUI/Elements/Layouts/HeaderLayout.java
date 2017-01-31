@@ -14,5 +14,6 @@ public class HeaderLayout extends HorizontalLayout {
         add(new Decor(Decor.Side.LEFT));
         add(new Text(text));
         add(new Decor(Decor.Side.RIGHT));
+        setWidthOverride(FILL);
     }
 }

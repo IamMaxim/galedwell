@@ -59,10 +59,13 @@ public class VerticalLayout extends LayoutBase {
         int y_max = bottom - paddingBottom;
         int x = left + paddingLeft;
         for (ElementBase element : elements) {
-            int w = Math.min(width - paddingLeft - paddingRight, element.getWidth());
-            if (w == FILL) {
+            int w;
+            int w_override = element.getWidthOverride();
+            if (w_override == FILL)
                 w = width - paddingLeft - paddingRight;
-            }
+            else
+                w = Math.min(width - paddingLeft - paddingRight, element.getWidth());
+
             int h;
             if (limitHeight) {
                 h = Math.min(element.getHeight(), y_max - y);
@@ -85,9 +88,6 @@ public class VerticalLayout extends LayoutBase {
 
     @Override
     public int getHeight() {
-        if (heightOverride != -1)
-            return heightOverride;
-
         int height = 0;
         for (ElementBase e : elements) {
             height += e.getHeight();
@@ -113,9 +113,6 @@ public class VerticalLayout extends LayoutBase {
 
     @Override
     public int getWidth() {
-        if (widthOverride != -1)
-            return widthOverride;
-
         int width = 0;
         for (ElementBase e : elements) {
             int w = e.getWidth();

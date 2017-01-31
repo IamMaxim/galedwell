@@ -1,19 +1,12 @@
 package ru.iammaxim.tesitems.GUI;
 
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
-import org.lwjgl.opengl.GL11;
-import ru.iammaxim.tesitems.Dialogs.DialogTopic;
 import ru.iammaxim.tesitems.GUI.Elements.*;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.*;
 import ru.iammaxim.tesitems.NPC.NPC;
 import ru.iammaxim.tesitems.Networking.MessageDialogSelectTopic;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.TESItems;
-
-import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * Created by maxim on 7/24/16.
@@ -43,7 +36,7 @@ public class GuiNPCDialog extends Screen {
                                                 .setElement(topics = (VerticalLayout) new VerticalLayout()
                                                         .setPaddingLeft(0))
                                                 .setPaddingTop(0)
-                                                .setWidth(ElementBase.FILL))
+                                                .setWidthOverride(ElementBase.FILL))
                                         .setVerticalMargin(4))
                                 .setSpacing(0))
                         .setRightWidth(160)
