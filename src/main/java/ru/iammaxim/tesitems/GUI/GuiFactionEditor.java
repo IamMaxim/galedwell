@@ -29,13 +29,13 @@ public class GuiFactionEditor extends Screen {
                         .add(new HorizontalDivider())
                         .add(new HeaderLayout("Topics"))
                         .add(new WrapFrameLayout().setElement(topics = new VerticalLayout()).setWidthOverride(ElementBase.FILL))
-                        .add(new HorizontalLayout().add(new Button("Add topic").setOnClick(b -> {
+                        .add(new Button("Add topic").setOnClick(b -> {
                             DialogTopic topic = new DialogTopic();
                             topic.name = "New topic";
                             ElementBase element = getTopicElement(topics, topic);
                             elements.put(element, topic);
                             topics.add(element);
-                        })).center(true).setWidthOverride(ElementBase.FILL))
+                        }).setWidthOverride(ElementBase.FILL))
                         .add(new HorizontalDivider())
                         .add(new HorizontalLayout().center(true)
                                 .add(new Button().setText("Save").setOnClick(b -> {
@@ -67,7 +67,7 @@ public class GuiFactionEditor extends Screen {
                 ));
 
         faction.topics.forEach(t -> {
-            ElementBase e = getTopicElement(topics, t);
+            ElementBase e = getTopicElement(topics, t).setWidthOverride(ElementBase.FILL);
             elements.put(e, t);
             topics.add(e);
         });

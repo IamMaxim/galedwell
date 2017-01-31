@@ -66,6 +66,9 @@ public class TextField extends ElementBase {
             return;
         }
         strs = fontRenderer.listFormattedStringToWidth(text, width - 2 * padding);
+        System.out.println("<strings>");
+
+        System.out.println("</strings>");
         dirty = false;
     }
 

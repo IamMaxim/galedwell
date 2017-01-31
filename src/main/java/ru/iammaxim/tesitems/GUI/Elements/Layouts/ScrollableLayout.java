@@ -16,6 +16,7 @@ public class ScrollableLayout extends FrameLayout {
     protected int scroll = 0;
     protected Minecraft mc;
     protected int elementHeight;
+    private int scrollbarWidth = 8, scrollbarEndHeight = 16, scrollbarHandleHeight = 16;
 
     @Override
     public FrameLayout setElement(ElementBase element) {
@@ -29,7 +30,7 @@ public class ScrollableLayout extends FrameLayout {
     @Override
     public void doLayout() {
         //exclude scrollbar width
-        element.setBounds(left + paddingLeft, top + paddingTop, right - 8 - paddingRight, bottom - paddingBottom);
+        element.setBounds(left + paddingLeft, top + paddingTop, right - scrollbarWidth - paddingRight, bottom - paddingBottom);
         if (element instanceof LayoutBase)
             ((LayoutBase) element).doLayout();
 
@@ -37,9 +38,16 @@ public class ScrollableLayout extends FrameLayout {
     }
 
     @Override
+    public void click(int relativeX, int relativeY) {
+        if (relativeX > width - scrollbarWidth) {
+
+        }
+    }
+
+    @Override
     public int getWidth() {
         //add scrollbar width
-        return super.getWidth() + 8;
+        return super.getWidth() + scrollbarWidth;
     }
 
     public ScrollableLayout() {
@@ -69,7 +77,7 @@ public class ScrollableLayout extends FrameLayout {
     }
 
     public void scrollToBottom() {
-        scroll = element.getHeight() - height;
+        scroll = element.getHeight() - (height - paddingTop - paddingBottom);
         if (scroll < 0) scroll = 0;
         ((VerticalLayout) element).setTop(top + paddingTop - scroll);
         ((LayoutBase) element).doLayout();
@@ -78,11 +86,15 @@ public class ScrollableLayout extends FrameLayout {
     @Override
     public void draw(int mouseX, int mouseY) {
         //draw scrollbar
-        int scrollbarTopOffset = (int) (((float) (height - 48 - paddingTop - paddingBottom) * scroll) / (elementHeight - height) + 16);
-        drawTexturedRect(Tessellator.getInstance(), right - 8, top, right, top + 16, ResManager.inv_scrollbar_bg_top);
-        drawTexturedRect(Tessellator.getInstance(), right - 8, top + 16, right, bottom - 16, ResManager.inv_scrollbar_bg_center);
-        drawTexturedRect(Tessellator.getInstance(), right - 8, bottom - 16, right, bottom, ResManager.inv_scrollbar_bg_bottom);
-        drawTexturedRect(Tessellator.getInstance(), right - 8, top + scrollbarTopOffset, right, top + scrollbarTopOffset + 16, ResManager.inv_scrollbar);
+        int scrollbarTopOffset = (int) (
+                ((float) ((height) - 2 * scrollbarEndHeight - scrollbarHandleHeight) * scroll)
+                        / (elementHeight - (height - paddingTop - paddingBottom))
+                        + scrollbarEndHeight);
+        drawTexturedRect(Tessellator.getInstance(), right - scrollbarWidth, top, right, top + scrollbarEndHeight, ResManager.inv_scrollbar_bg_top);
+        drawTexturedRect(Tessellator.getInstance(), right - scrollbarWidth, top + scrollbarEndHeight, right, bottom - scrollbarEndHeight, ResManager.inv_scrollbar_bg_center);
+        drawTexturedRect(Tessellator.getInstance(), right - scrollbarWidth, bottom - scrollbarEndHeight, right, bottom, ResManager.inv_scrollbar_bg_bottom);
+        //draw handle
+        drawTexturedRect(Tessellator.getInstance(), right - scrollbarWidth, top + scrollbarTopOffset, right, top + scrollbarTopOffset + scrollbarHandleHeight, ResManager.inv_scrollbar);
 
         if (mouseX > left && mouseX < right && mouseY > top && mouseY < bottom) {
             int scr = -Mouse.getDWheel() / 10;
@@ -93,7 +105,7 @@ public class ScrollableLayout extends FrameLayout {
                     scroll = 0;
                 }
 
-                int i = element.getHeight() - height;
+                int i = elementHeight - height + paddingTop + paddingBottom;
                 if (i < 0) i = 0;
                 if (scroll > i) {
                     scroll = i;

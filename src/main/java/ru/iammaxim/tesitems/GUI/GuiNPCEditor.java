@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import ru.iammaxim.tesitems.Factions.Faction;
 import ru.iammaxim.tesitems.Factions.FactionManager;
 import ru.iammaxim.tesitems.GUI.Elements.*;
+import ru.iammaxim.tesitems.GUI.Elements.Layouts.HeaderLayout;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.ScrollableLayout;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.VerticalLayout;
 import ru.iammaxim.tesitems.NPC.EntityNPC;
@@ -39,20 +40,49 @@ public class GuiNPCEditor extends Screen {
         npc = cap.getLatestNPC();
         res = new ScaledResolution(Minecraft.getMinecraft());
 
-        scrollableLayout = new ScrollableLayout();
-        contentLayout.setElement(scrollableLayout);
-        VerticalLayout layout = new VerticalLayout();
-        scrollableLayout.setElement(layout);
+        VerticalLayout factionsLayout;
 
+        contentLayout.setElement(new ScrollableLayout().setElement(
+                new VerticalLayout()
+                        .add(new TextField().setHint("Name").setText(npc.name).setOnType(tf -> npc.setName(tf.getText())).setWidthOverride(ElementBase.FILL))
+                        .add(new CheckBox().setChecked(npc.isInvulnerable()).setText("Invulnerable").setOnClick(((cb, newState) -> npc.setInvulnerable(newState))))
+                        .add(new HorizontalDivider())
+                        .add(new HeaderLayout("Factions").setWidthOverride(ElementBase.FILL))
+                        .add(factionsLayout = new VerticalLayout())
+                        .add(new Button("Add faction").setOnClick(b -> {
+                            Faction f = new Faction("");
+                            VerticalLayout fl = new VerticalLayout();
+                            Text factionName = new Text("Faction name will be here if all is right");
+                            fl.add(new TextField().setHint("Faction ID").setOnType(tf -> {
+                                try {
+                                    Faction newFaction;
+                                    if ((newFaction = FactionManager.getFaction(Integer.parseInt(tf.getText()))) != null) {
+                                        factionName.setText(newFaction.name);
+                                        factionEntries.put(fl, newFaction);
+                                    }
+                                } catch (NumberFormatException e) {
+                                }
+                            }));
+                            fl.add(factionName);
+                            factionEntries.put(fl, f);
+                            factionsLayout.add(fl);
+                        }))
+                        .add(new HorizontalDivider())
+                        .add(new Button().setText("Save").setOnClick(b -> {
+                            npc.getFactions().clear();
+                            Iterator<VerticalLayout> it = factionEntries.keySet().iterator();
+                            while (it.hasNext()) {
+                                VerticalLayout fl = it.next();
+                                Faction f = factionEntries.get(fl);
+                                if (FactionManager.getFaction(f.id) == null)
+                                    it.remove();
+                                else npc.addFaction(f);
+                            }
 
-        TextField npcName = new TextField().setHint("Name").setText(npc.name).setOnType(tf -> npc.setName(tf.getText()));
-        CheckBox invulnerability = new CheckBox().setChecked(npc.isInvulnerable()).setText("Invulnerable").setOnClick(((cb, newState) -> npc.setInvulnerable(newState)));
-        layout.add(npcName);
-        layout.add(invulnerability);
-        layout.add(new HorizontalDivider());
-        layout.add(new Text("Factions").center(true));
+                            TESItems.networkWrapper.sendToServer(new MessageNPCUpdate(npc.getNBT()));
+                            mc.displayGuiScreen(new GuiAlertDialog("Changes updated", this));
+                        }))));
 
-        VerticalLayout factionsLayout = new VerticalLayout();
         npc.getFactions().forEach(f -> {
             VerticalLayout fl = new VerticalLayout();
             Text factionName = new Text(f.name + "");
@@ -63,52 +93,18 @@ public class GuiNPCEditor extends Screen {
                         factionName.setText(newFaction.name);
                         factionEntries.put(fl, newFaction);
                     }
-                } catch (NumberFormatException e) {}
+                } catch (NumberFormatException e) {
+                }
             }));
             fl.add(factionName);
             factionEntries.put(fl, f);
             factionsLayout.add(fl);
         });
-        layout.add(factionsLayout);
-
-        layout.add(new Button("Add faction").setOnClick(b -> {
-            Faction f = new Faction("");
-            VerticalLayout fl = new VerticalLayout();
-            Text factionName = new Text("Faction name will be here if all is right");
-            fl.add(new TextField().setHint("Faction ID").setOnType(tf -> {
-                try {
-                    Faction newFaction;
-                    if ((newFaction = FactionManager.getFaction(Integer.parseInt(tf.getText()))) != null) {
-                        factionName.setText(newFaction.name);
-                        factionEntries.put(fl, newFaction);
-                    }
-                } catch (NumberFormatException e) {}
-            }));
-            fl.add(factionName);
-            factionEntries.put(fl, f);
-            factionsLayout.add(fl);
-        }));
-
-        layout.add(new HorizontalDivider());
-        layout.add(new Button().setText("Save").setOnClick(b -> {
-            npc.getFactions().clear();
-            Iterator<VerticalLayout> it = factionEntries.keySet().iterator();
-            while (it.hasNext()) {
-                VerticalLayout fl = it.next();
-                Faction f = factionEntries.get(fl);
-                if (FactionManager.getFaction(f.id) == null)
-                    it.remove();
-                else npc.addFaction(f);
-            }
-
-            TESItems.networkWrapper.sendToServer(new MessageNPCUpdate(npc.getNBT()));
-            mc.displayGuiScreen(new GuiAlertDialog("Changes updated", this));
-        }));
 
         int width = root.getWidth();
         int height = root.getHeight();
 //        scrollableLayout.setHeight((int) (res.getScaledHeight() * 0.8f));
-        root.setBounds((res.getScaledWidth() - width)/2, (res.getScaledHeight() - height)/2, (res.getScaledWidth() + width)/2, (res.getScaledHeight() + height)/2);
+        root.setBounds((res.getScaledWidth() - width) / 2, (res.getScaledHeight() - height) / 2, (res.getScaledWidth() + width) / 2, (res.getScaledHeight() + height) / 2);
         root.doLayout();
     }
 }

@@ -28,7 +28,7 @@ public class GuiAlertDialog extends Screen {
         fancyFrameLayout.setElement(layout);
         layout.add(new Text(text));
         layout.add(new Button("Ok").setUseInactiveBackground(false).setOnClick(
-                b -> mc.displayGuiScreen(lastScreen)));
+                b -> mc.displayGuiScreen(lastScreen)).setWidthOverride(ElementBase.FILL));
     }
 
     @Override
