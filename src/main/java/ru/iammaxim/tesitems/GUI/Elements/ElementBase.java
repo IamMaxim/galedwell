@@ -275,4 +275,6 @@ public abstract class ElementBase {
     public int bottom() {
         return bottom;
     }
+
+    public abstract String getName();
 }

@@ -97,4 +97,9 @@ public class Text extends ElementBase {
             }
         }
     }
+
+    @Override
+    public String getName() {
+        return "Text";
+    }
 }

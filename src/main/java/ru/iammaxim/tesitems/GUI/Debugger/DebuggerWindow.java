@@ -80,8 +80,9 @@ public class DebuggerWindow {
                                 drawElementOverlay(element);
                         }
                     }
+                            .setSpacing(0)
                             .add(new Arrow(Arrow.Direction.RIGHT))
-                            .add(new Text(element.getClass().getSimpleName()))
+                            .add(new Text(element.getName()))
                             .setOnClick(e -> {
                                 layout.selectSecond();
                                 ((LayoutBase) e.getRoot()).doLayout();
@@ -95,8 +96,9 @@ public class DebuggerWindow {
                                                 drawElementOverlay(element);
                                         }
                                     }
+                                            .setSpacing(0)
                                             .add(new Arrow(Arrow.Direction.DOWN))
-                                            .add(new Text(element.getClass().getSimpleName()))
+                                            .add(new Text(element.getName()))
                                             .setOnClick(e -> {
                                                 layout.selectFirst();
                                                 ((LayoutBase) e.getRoot()).doLayout();
@@ -104,7 +106,7 @@ public class DebuggerWindow {
                                     .add(opened)).selectFirst();
             return layout;
         } else {
-            return new Text(element.getClass().getSimpleName()) {
+            return new Text(element.getName()) {
                 @Override
                 public void checkHover(int mouseX, int mouseY) {
                     if (mouseX > left && mouseX < right && mouseY > top && mouseY < bottom)

@@ -9,6 +9,7 @@ import ru.iammaxim.tesitems.GUI.ResManager;
  */
 public class Arrow extends ElementBase {
     private ResourceLocation texture;
+    private Direction direction;
 
     public enum Direction {
         RIGHT,
@@ -16,6 +17,7 @@ public class Arrow extends ElementBase {
     }
 
     public Arrow(Direction direction) {
+        this.direction = direction;
         if (direction == Direction.RIGHT)
             texture = ResManager.arrow_right;
         else if (direction == Direction.DOWN)
@@ -35,5 +37,10 @@ public class Arrow extends ElementBase {
     @Override
     public void draw(int mouseX, int mouseY) {
         drawTexturedRect(Tessellator.getInstance(), left, top, right, bottom, texture);
+    }
+
+    @Override
+    public String getName() {
+        return "Arrow (" + direction.toString() + ")";
     }
 }

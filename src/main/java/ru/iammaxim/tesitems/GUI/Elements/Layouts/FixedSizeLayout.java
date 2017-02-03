@@ -25,4 +25,9 @@ public class FixedSizeLayout extends FrameLayout {
     public int getHeight() {
         return height + marginTop + marginBottom;
     }
+
+    @Override
+    public String getName() {
+        return "FixedSizeLayout";
+    }
 }

@@ -8,7 +8,7 @@ import static ru.iammaxim.tesitems.GUI.ResManager.*;
  * Created by maxim on 11/7/16 at 4:38 PM.
  */
 public class FancyFrameLayout extends FrameLayout {
-    private int frameSize = 18;
+    public static int frameSize = 18;
 
     public FancyFrameLayout() {
         setPadding(0);
@@ -39,5 +39,10 @@ public class FancyFrameLayout extends FrameLayout {
         drawTexturedRect(tess, right - frameSize, bottom - frameSize, right, bottom, frameBorder_RB);
 
         super.draw(mouseX, mouseY);
+    }
+
+    @Override
+    public String getName() {
+        return "FancyFrameLayout";
     }
 }

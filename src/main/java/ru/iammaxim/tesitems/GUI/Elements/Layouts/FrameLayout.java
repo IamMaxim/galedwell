@@ -65,6 +65,11 @@ public class FrameLayout extends LayoutBase {
     }
 
     @Override
+    public String getName() {
+        return "FrameLayout";
+    }
+
+    @Override
     public void draw(int mouseX, int mouseY) {
         if (element != null)
             element.draw(mouseX, mouseY);

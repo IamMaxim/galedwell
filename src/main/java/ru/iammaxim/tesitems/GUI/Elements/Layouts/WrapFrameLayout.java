@@ -69,4 +69,9 @@ public class WrapFrameLayout extends FrameLayout {
         if (element instanceof LayoutBase)
             ((LayoutBase) element).doLayout();
     }
+
+    @Override
+    public String getName() {
+        return "WrapFrameLayout";
+    }
 }

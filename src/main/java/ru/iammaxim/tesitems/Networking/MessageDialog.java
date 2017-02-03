@@ -42,13 +42,15 @@ public class MessageDialog implements IMessage {
         public IMessage onMessage(MessageDialog message, MessageContext ctx) {
             Dialog dialog = Dialog.loadFromNBT(message.tag);
             IPlayerAttributesCapability cap = TESItems.getCapability(TESItems.getClientPlayer());
+            cap.setLatestDialog(dialog);
             if (TESItems.getMinecraft().currentScreen instanceof GuiNPCDialog) {
                 GuiNPCDialog gui = (GuiNPCDialog) TESItems.getMinecraft().currentScreen;
-                gui.topics.clear();
-                dialog.topics.forEach((name, topic) -> gui.topics.add(new Text(name)));
-                gui.setUpdated();
+                TESItems.getMinecraft().addScheduledTask(() -> {
+                    gui.topics.clear();
+                    dialog.topics.forEach((name, topic) -> gui.addTopic(topic));
+                    gui.setUpdated();
+                });
             }
-            cap.setLatestDialog(dialog);
             return null;
         }
     }

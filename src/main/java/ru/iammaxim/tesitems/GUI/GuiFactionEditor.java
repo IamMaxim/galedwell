@@ -63,6 +63,7 @@ public class GuiFactionEditor extends Screen {
                                                     mc.displayGuiScreen(new GuiFactionList());
                                                 }))))
                                 .add(new Button().setText("Back").setOnClick(b -> mc.displayGuiScreen(new GuiFactionList())))
+                                .setWidthOverride(ElementBase.FILL)
                         )
                 ));
 

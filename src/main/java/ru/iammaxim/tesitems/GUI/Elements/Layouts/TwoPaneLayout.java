@@ -141,4 +141,9 @@ public class TwoPaneLayout extends LayoutBase {
         this.minHeight = minHeight;
         return this;
     }
+
+    @Override
+    public String getName() {
+        return "TwoPaneLayout";
+    }
 }

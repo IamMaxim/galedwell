@@ -41,4 +41,9 @@ public class DoubleStateFrameLayout extends FrameLayout {
             selectFirst();
         return this;
     }
+
+    @Override
+    public String getName() {
+        return "DoubleStateFrameLayout (" + (element == first ? "first" : "second") + ")";
+    }
 }

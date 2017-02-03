@@ -34,4 +34,9 @@ public class Decor extends ElementBase {
         else
             drawTexturedRect(Tessellator.getInstance(), left, top, right, bottom, ResManager.decor_blue_right);
     }
+
+    @Override
+    public String getName() {
+        return "Decor (" + side.toString() + ")";
+    }
 }

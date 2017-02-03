@@ -22,4 +22,9 @@ public class HorizontalDivider extends ElementBase {
     public void draw(int mouseX, int mouseY) {
         drawColoredRect(Tessellator.getInstance(), left, top, right, bottom, color);
     }
+
+    @Override
+    public String getName() {
+        return "HorizontalDivider";
+    }
 }

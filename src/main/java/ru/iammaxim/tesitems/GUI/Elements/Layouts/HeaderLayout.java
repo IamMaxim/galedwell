@@ -16,4 +16,9 @@ public class HeaderLayout extends HorizontalLayout {
         add(new Decor(Decor.Side.RIGHT));
         setWidthOverride(FILL);
     }
+
+    @Override
+    public String getName() {
+        return "HeaderLayout";
+    }
 }

@@ -90,6 +90,11 @@ public class Button extends ElementBase {
         fontRenderer.drawString(text, center ? left + (width - fontRenderer.getStringWidth(text))/2 : left + padding, top + padding, textColor);
     }
 
+    @Override
+    public String getName() {
+        return "Button";
+    }
+
     public float getMultiplier(int width) {
         if (width < 81)
             return 0.58f;

@@ -131,4 +131,9 @@ public class ScrollableLayout extends FrameLayout {
         element.draw(mouseX, mouseY);
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
     }
+
+    @Override
+    public String getName() {
+        return "ScrollableLayout";
+    }
 }

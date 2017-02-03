@@ -134,4 +134,9 @@ public class HorizontalLayout extends LayoutBase {
     public void onResize() {
         elements.forEach(ElementBase::onResize);
     }
+
+    @Override
+    public String getName() {
+        return "HorizontalLayout";
+    }
 }

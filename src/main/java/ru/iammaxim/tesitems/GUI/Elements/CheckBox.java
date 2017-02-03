@@ -40,6 +40,11 @@ public class CheckBox extends ElementBase {
     }
 
     @Override
+    public String getName() {
+        return "Checkbox (" + checked + ")";
+    }
+
+    @Override
     public int getHeight() {
         return 8;
     }

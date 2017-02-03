@@ -1,6 +1,7 @@
 package ru.iammaxim.tesitems.GUI;
 
 import net.minecraft.entity.player.EntityPlayer;
+import ru.iammaxim.tesitems.Dialogs.DialogTopic;
 import ru.iammaxim.tesitems.GUI.Elements.ElementBase;
 import ru.iammaxim.tesitems.GUI.Elements.HorizontalDivider;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.*;
@@ -17,18 +18,21 @@ import ru.iammaxim.tesitems.TESItems;
 public class GuiNPCDialog extends Screen {
     public VerticalLayout topics;
     private boolean updated = true;
+    private int rightPaneWidth = 160;
+    private ScrollableLayout historyScrollableLayout;
+    private VerticalLayout historyLayout;
 
     public GuiNPCDialog() {
         EntityPlayer player = mc.thePlayer;
         IPlayerAttributesCapability cap = TESItems.getCapability(player);
         NPC npc = cap.getLatestNPC();
 
-        ScrollableLayout historyScrollableLayout;
-        VerticalLayout historyLayout;
-
         contentLayout.setElement(new TwoPaneLayout()
-                        .setLeftElement(historyScrollableLayout = (ScrollableLayout) new ScrollableLayout()
-                                .setElement(historyLayout = new VerticalLayout()))
+                        .setLeftElement(new FixedSizeLayout()
+                                .setFixedWidth(res.getScaledWidth() - rightPaneWidth - 2 * FancyFrameLayout.frameSize)
+                                .setFixedHeight((int) (res.getScaledHeight() * 0.9 - 2 * FancyFrameLayout.frameSize))
+                                .setElement(historyScrollableLayout = (ScrollableLayout) new ScrollableLayout()
+                                        .setElement(historyLayout = new VerticalLayout())))
                         .setRightElement(
                                 new HorizontalLayout()
                                         .add(new VerticalDivider())
@@ -44,42 +48,75 @@ public class GuiNPCDialog extends Screen {
                                                 .setVerticalMargin(4)
                                                 .setWidthOverride(ElementBase.FILL))
                                         .setSpacing(0))
-                        .setRightWidth(160)
-/*                .setMinHeight(200)*/);
+                        .setRightWidth(rightPaneWidth));
 
-        cap.getLatestDialog().topics.forEach((name, topic) -> {
-            topics.add(new Text(topic.name).setOnClick(e -> {
-                if (!updated) {
-                    return;
-                }
-
-                historyLayout.add(new Text(topic.name).setColor(0xFF0066CC).setTopMargin(8));
-                Text dialogLine;
-                historyLayout.add(dialogLine = new Text(topic.dialogLine) {
-                    @Override
-                    public void update() {
-                        try {
-                            if (width == 0) {
-                                return;
-                            }
-                            strs = fontRenderer.listFormattedStringToWidth(text, width);
-                            textWidth = fontRenderer.getStringWidth(strs.get(0));
-                            dirty = false;
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                historyLayout.doLayout();
-                dialogLine.update();
-
-                GuiNPCDialog.this.root.doLayout();
-                historyScrollableLayout.scrollToBottom();
-                TESItems.networkWrapper.sendToServer(new MessageDialogSelectTopic(topic));
-            }));
-        });
-
+        cap.getLatestDialog().topics.forEach((name, topic) -> addTopic(topic));
         root.doLayout();
+    }
+
+    public void addTopic(DialogTopic topic) {
+        Text topicElement;
+        topics.add(topicElement = (Text) new Text(topic.name) {
+            @Override
+            public void update() {
+                try {
+                    if (width == 0) {
+                        return;
+                    }
+                    strs = fontRenderer.listFormattedStringToWidth(text, width);
+                    textWidth = fontRenderer.getStringWidth(strs.get(0));
+                    dirty = false;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }.setOnClick(e -> {
+            if (!updated) {
+                return;
+            }
+
+            Text topicName, dialogLine;
+            historyLayout.add(topicName = (Text) new Text(topic.name) {
+                @Override
+                public void update() {
+                    try {
+                        if (width == 0) {
+                            return;
+                        }
+                        strs = fontRenderer.listFormattedStringToWidth(text, width);
+                        textWidth = fontRenderer.getStringWidth(strs.get(0));
+                        dirty = false;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.setColor(0xFF0066CC).setTopMargin(8));
+            historyLayout.add(dialogLine = new Text(topic.dialogLine) {
+                @Override
+                public void update() {
+                    try {
+                        if (width == 0) {
+                            return;
+                        }
+                        strs = fontRenderer.listFormattedStringToWidth(text, width);
+                        textWidth = fontRenderer.getStringWidth(strs.get(0));
+                        dirty = false;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            historyLayout.doLayout();
+            topicName.update();
+            dialogLine.update();
+
+            GuiNPCDialog.this.root.doLayout();
+            historyScrollableLayout.scrollToBottom();
+            TESItems.networkWrapper.sendToServer(new MessageDialogSelectTopic(topic));
+        }));
+        topics.doLayout();
+        topicElement.update();
     }
 
     public void setUpdated() {

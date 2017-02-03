@@ -8,7 +8,6 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import ru.iammaxim.tesitems.GUI.Debugger.DebuggerWindow;
 import ru.iammaxim.tesitems.GUI.Elements.Button;
-import ru.iammaxim.tesitems.GUI.Elements.ElementBase;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.*;
 
 import java.io.IOException;
@@ -23,12 +22,6 @@ public class Screen extends GuiScreen {
     protected FrameLayout contentLayout;
     protected boolean wasClicked = false;
     protected DoubleStateFrameLayout debugWindow;
-    private int lastHash = 0;
-
-    @Override
-    public boolean doesGuiPauseGame() {
-        return false;
-    }
 
     public Screen() {
         mc = Minecraft.getMinecraft();
@@ -36,6 +29,11 @@ public class Screen extends GuiScreen {
         root = new ScreenCenteredLayout();
         contentLayout = new FancyFrameLayout();
         root.setElement(contentLayout);
+    }
+
+    @Override
+    public boolean doesGuiPauseGame() {
+        return false;
     }
 
     @Override
@@ -49,13 +47,6 @@ public class Screen extends GuiScreen {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         if (debugWindow == null) {
-            buildDebugWindow();
-        }
-
-        int hash = root.hashCode();
-        if (lastHash != hash) {
-            lastHash = hash;
-            System.out.println("rebuilding tree");
             buildDebugWindow();
         }
 

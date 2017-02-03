@@ -51,7 +51,7 @@ public class MessageDialogSelectTopic implements IMessage {
                     ScriptEngine.processScript(cap.getLatestNPC(), player, topic.script, cap.getVariableStorage(), inst);
                 }
             });
-            return null;
+            return new MessageDialog(Dialog.createDialogForPlayer(cap.getLatestNPC(), player).saveToNBT());
         }
     }
 }

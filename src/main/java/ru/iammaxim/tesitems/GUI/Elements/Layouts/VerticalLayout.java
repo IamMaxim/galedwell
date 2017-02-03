@@ -133,4 +133,9 @@ public class VerticalLayout extends LayoutBase {
         this.limitHeight = limitHeight;
         return this;
     }
+
+    @Override
+    public String getName() {
+        return "VerticalLayout";
+    }
 }

@@ -22,4 +22,9 @@ public class ScreenCenteredLayout extends FrameLayout {
                 (res.getScaledHeight() + height)/2);
         super.doLayout();
     }
+
+    @Override
+    public String getName() {
+        return "ScreenCenteredLayout";
+    }
 }
