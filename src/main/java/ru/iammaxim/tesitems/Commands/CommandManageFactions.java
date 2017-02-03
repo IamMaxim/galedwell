@@ -6,6 +6,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import ru.iammaxim.tesitems.Networking.MessageFactionList;
 import ru.iammaxim.tesitems.TESItems;
 
 /**
@@ -19,7 +20,7 @@ public class CommandManageFactions extends CommandBase {
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "Used to edit topics";
+        return "Used to edit factions";
     }
 
     @Override
@@ -29,6 +30,8 @@ public class CommandManageFactions extends CommandBase {
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-        ((EntityPlayer)sender).openGui(TESItems.instance, TESItems.guiFactionList, sender.getEntityWorld(), (int) ((EntityPlayer) sender).posX, (int) ((EntityPlayer) sender).posY, (int) ((EntityPlayer) sender).posZ);
+        EntityPlayer player = (EntityPlayer) sender;
+        TESItems.networkWrapper.sendTo(new MessageFactionList(), (EntityPlayerMP) player);
+        player.openGui(TESItems.instance, TESItems.guiFactionList, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
     }
 }

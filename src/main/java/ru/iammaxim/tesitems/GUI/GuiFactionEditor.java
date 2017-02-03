@@ -6,6 +6,7 @@ import ru.iammaxim.tesitems.GUI.Elements.*;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.*;
 import ru.iammaxim.tesitems.Networking.MessageFaction;
 import ru.iammaxim.tesitems.Networking.MessageFactionRemove;
+import ru.iammaxim.tesitems.Player.AdminTemporaryStorage;
 import ru.iammaxim.tesitems.TESItems;
 
 import java.util.HashMap;
@@ -18,8 +19,8 @@ public class GuiFactionEditor extends Screen {
     public VerticalLayout topics;
     public HashMap<ElementBase, DialogTopic> elements = new HashMap<>();
 
-    public GuiFactionEditor(Faction faction) {
-        Faction finalFaction = cloneFaction(faction);
+    public GuiFactionEditor() {
+        Faction finalFaction = cloneFaction(AdminTemporaryStorage.lastEditedFaction);
         contentLayout.setElement(new ScrollableLayout()
                 /*.setHeight((int) (res.getScaledHeight() * 0.8))*/
                 .setElement(new VerticalLayout()
@@ -67,7 +68,7 @@ public class GuiFactionEditor extends Screen {
                         )
                 ));
 
-        faction.topics.forEach(t -> {
+        finalFaction.topics.forEach(t -> {
             ElementBase e = getTopicElement(topics, t).setWidthOverride(ElementBase.FILL);
             elements.put(e, t);
             topics.add(e);
@@ -140,7 +141,7 @@ public class GuiFactionEditor extends Screen {
                         .add(new TextField()
                                 .setHint("Script")
                                 .setText(topic.script)
-                                .setFontRenderer(TESItems.monospaceFontRenderer)
+                                .setFontRenderer(TESItems.ClientThings.monospaceFontRenderer)
                                 .setOnType(tf -> topic.script = tf.getText())
                                 .setWidthOverride(ElementBase.FILL))
                         .add(new Button()

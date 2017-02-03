@@ -38,6 +38,7 @@ public class MessageOpenGui implements IMessage {
         @Override
         public IMessage onMessage(MessageOpenGui message, MessageContext ctx) {
             EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+            System.out.println("opening gui " + message.GuiID);
             player.openGui(TESItems.instance, message.GuiID, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
             return null;
         }

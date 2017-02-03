@@ -34,7 +34,7 @@ public class GuiButton extends RenderableBase {
 
     public void setText(String text) {
         this.text = text;
-        width = padding * 3 + TESItems.fontRenderer.getStringWidth(text);
+        width = padding * 3 + TESItems.ClientThings.fontRenderer.getStringWidth(text);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class GuiButton extends RenderableBase {
         if (mouseX > left && mouseX < right && mouseY > top && mouseY < bottom)
             hovered = true;
         drawTexturedRect(left, top, (int) (right + width * getMultiplier(width)), bottom + height, getTexture(width, clicked || hovered));
-        TESItems.fontRenderer.drawString(text, (int) (left + padding * 1.5f), top + 4, color);
+        TESItems.ClientThings.fontRenderer.drawString(text, (int) (left + padding * 1.5f), top + 4, color);
         clicked = false;
     }
 

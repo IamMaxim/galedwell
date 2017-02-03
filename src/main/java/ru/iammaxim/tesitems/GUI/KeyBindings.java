@@ -12,6 +12,7 @@ public class KeyBindings {
     public static KeyBinding selectSpellKB = new KeyBinding("Open spell selection", Keyboard.KEY_O, "Magic");
     public static KeyBinding openInventoryKB = new KeyBinding("Open inventory", Keyboard.KEY_TAB, "Player");
     public static KeyBinding openJournalKB = new KeyBinding("Open journal", Keyboard.KEY_J, "Player");
+
     public static void register() {
         ClientRegistry.registerKeyBinding(castSpellKB);
         ClientRegistry.registerKeyBinding(selectSpellKB);

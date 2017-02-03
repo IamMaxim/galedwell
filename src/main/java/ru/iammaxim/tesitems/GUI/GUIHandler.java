@@ -25,6 +25,9 @@ public class GUIHandler implements IGuiHandler {
             case TESItems.guiJournal: return new GuiJournal();
             case TESItems.guiNPCEditor: return new GuiNPCEditor(player);
             case TESItems.guiFactionList: return new GuiFactionList();
+            case TESItems.guiQuestList: return new GuiQuestList();
+            case TESItems.guiFactionEditor: return new GuiFactionEditor();
+            case TESItems.guiQuestEditor: return new GuiQuestEditor();
         }
         return null;
     }

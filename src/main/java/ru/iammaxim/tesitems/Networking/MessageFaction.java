@@ -8,6 +8,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import ru.iammaxim.tesitems.Factions.Faction;
 import ru.iammaxim.tesitems.Factions.FactionManager;
+import ru.iammaxim.tesitems.Player.AdminTemporaryStorage;
 
 /**
  * Created by maxim on 01.01.2017.
@@ -50,6 +51,7 @@ public class MessageFaction implements IMessage {
         @Override
         public IMessage onMessage(MessageFaction message, MessageContext ctx) {
             FactionManager.addFaction(message.faction);
+            AdminTemporaryStorage.lastEditedFaction = message.faction;
             return null;
         }
     }

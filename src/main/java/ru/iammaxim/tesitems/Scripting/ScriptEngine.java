@@ -1,14 +1,19 @@
 package ru.iammaxim.tesitems.Scripting;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import ru.iammaxim.tesitems.NPC.NPC;
+import ru.iammaxim.tesitems.Networking.MessageJournal;
+import ru.iammaxim.tesitems.Networking.MessageJournalAppend;
+import ru.iammaxim.tesitems.Networking.MessageShowNotification;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.Questing.QuestInstance;
 import ru.iammaxim.tesitems.TESItems;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -46,7 +51,14 @@ public class ScriptEngine {
                             variableStorage.setVar(tokens[1], tokens[2]);
                             break;
                         case "printVar":
-
+                            TESItems.networkWrapper.sendTo(new MessageShowNotification(tokens[1] + ": " + variableStorage.getVar(tokens[1])), (EntityPlayerMP) caller);
+                            break;
+                        case "appendJournal":
+                            String app = String.join(" ", Arrays.copyOfRange(tokens, 1, tokens.length));
+                            cap.journalAppend(app);
+                            TESItems.networkWrapper.sendTo(new MessageJournalAppend(app), (EntityPlayerMP) caller);
+                            System.out.println("appending " + app);
+                            break;
                     }
                 }
             }

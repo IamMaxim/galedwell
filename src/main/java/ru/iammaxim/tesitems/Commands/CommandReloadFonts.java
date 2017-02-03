@@ -22,6 +22,6 @@ public class CommandReloadFonts extends CommandBase {
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-        TESItems.getMinecraft().addScheduledTask(() -> TESItems.instance.loadFonts());
+        TESItems.getMinecraft().addScheduledTask(TESItems.ClientThings::loadFonts);
     }
 }

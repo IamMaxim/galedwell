@@ -12,7 +12,6 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentString;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -191,7 +190,7 @@ public class GuiInventoryItemList {
 
     public void drawTopIcons() {
         int t = top + 8;
-        TESItems.fontRenderer.drawString("Name", left + (nameWidth - TESItems.fontRenderer.getStringWidth("Name"))/2, t, textColor);
+        TESItems.ClientThings.fontRenderer.drawString("Name", left + (nameWidth - TESItems.ClientThings.fontRenderer.getStringWidth("Name"))/2, t, textColor);
         t = top + 4;
         int l = left + 8 + nameWidth;
         int tmp;
@@ -244,21 +243,21 @@ public class GuiInventoryItemList {
             drawSelectedSlotBackground(entryRight, slotTop, slotBuffer, tess);
         }
         String s;
-        TESItems.fontRenderer.drawString(
-                TESItems.fontRenderer.trimStringToWidth("(" + stack.stackSize + ") " + stack.getDisplayName(), nameWidth),
+        TESItems.ClientThings.fontRenderer.drawString(
+                TESItems.ClientThings.fontRenderer.trimStringToWidth("(" + stack.stackSize + ") " + stack.getDisplayName(), nameWidth),
                 left + 4, slotTop + 8, textColor);
-        s = TESItems.fontRenderer.trimStringToWidth(ItemValueManager.getValue(stack) + "", valueWidth);
-        TESItems.fontRenderer.drawString(s, left + 4 + nameWidth + (valueWidth - TESItems.fontRenderer.getStringWidth(s))/2, slotTop + 8, textColor);
-        s = TESItems.fontRenderer.trimStringToWidth(ItemWeightManager.getWeightString(stack), weightWidth);
-        TESItems.fontRenderer.drawString(s, left + 8 + nameWidth + valueWidth + (weightWidth - TESItems.fontRenderer.getStringWidth(s))/2, slotTop + 8, textColor);
+        s = TESItems.ClientThings.fontRenderer.trimStringToWidth(ItemValueManager.getValue(stack) + "", valueWidth);
+        TESItems.ClientThings.fontRenderer.drawString(s, left + 4 + nameWidth + (valueWidth - TESItems.ClientThings.fontRenderer.getStringWidth(s))/2, slotTop + 8, textColor);
+        s = TESItems.ClientThings.fontRenderer.trimStringToWidth(ItemWeightManager.getWeightString(stack), weightWidth);
+        TESItems.ClientThings.fontRenderer.drawString(s, left + 8 + nameWidth + valueWidth + (weightWidth - TESItems.ClientThings.fontRenderer.getStringWidth(s))/2, slotTop + 8, textColor);
         if (stack.getItem() instanceof Weapon) {
             Weapon weapon = (Weapon) stack.getItem();
-            s = TESItems.fontRenderer.trimStringToWidth(weapon.getDamageVsEntity() + "", damageWidth);
-            TESItems.fontRenderer.drawString(s, left + 12 + nameWidth + valueWidth + weightWidth + (damageWidth - TESItems.fontRenderer.getStringWidth(s))/2, slotTop + 8, textColor);
+            s = TESItems.ClientThings.fontRenderer.trimStringToWidth(weapon.getDamageVsEntity() + "", damageWidth);
+            TESItems.ClientThings.fontRenderer.drawString(s, left + 12 + nameWidth + valueWidth + weightWidth + (damageWidth - TESItems.ClientThings.fontRenderer.getStringWidth(s))/2, slotTop + 8, textColor);
         }
         if (stack.isItemStackDamageable()) {
-            s = TESItems.fontRenderer.trimStringToWidth((int)(100 * (1 - (float) stack.getItemDamage() / stack.getMaxDamage())) + "", durabilityWidth);
-            TESItems.fontRenderer.drawString(s, left + 16 + nameWidth + valueWidth + weightWidth + damageWidth + (durabilityWidth - TESItems.fontRenderer.getStringWidth(s))/2, slotTop + 8, textColor);
+            s = TESItems.ClientThings.fontRenderer.trimStringToWidth((int)(100 * (1 - (float) stack.getItemDamage() / stack.getMaxDamage())) + "", durabilityWidth);
+            TESItems.ClientThings.fontRenderer.drawString(s, left + 16 + nameWidth + valueWidth + weightWidth + damageWidth + (durabilityWidth - TESItems.ClientThings.fontRenderer.getStringWidth(s))/2, slotTop + 8, textColor);
         }
     }
 
@@ -449,7 +448,7 @@ public class GuiInventoryItemList {
         vb.pos(l + 4, t + 4, 0.0D).tex(0.0D, 0.0D).endVertex();
         tess.draw();
 
-        TESItems.fontRenderer.drawString((int) (inv.carryweight) + "/" + (int) (TESItems.getCapability(inv.player).getMaxCarryWeight()), l + 24, t + 8, textColor);
+        TESItems.ClientThings.fontRenderer.drawString((int) (inv.carryweight) + "/" + (int) (TESItems.getCapability(inv.player).getMaxCarryWeight()), l + 24, t + 8, textColor);
     }
 
     private void clampScale() {

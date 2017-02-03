@@ -5,8 +5,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
 import ru.iammaxim.tesitems.TESItems;
 
-import java.util.function.Consumer;
-
 import static ru.iammaxim.tesitems.GUI.ResManager.*;
 
 /**
@@ -44,7 +42,7 @@ public class Button extends ElementBase {
     }
 
     public Button() {
-        fontRenderer = TESItems.fontRenderer;
+        fontRenderer = TESItems.ClientThings.fontRenderer;
     }
 
     public Button(String text) {

@@ -65,7 +65,6 @@ import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.Player.PlayerAttributesCapabilityDefaultImpl;
 import ru.iammaxim.tesitems.Player.PlayerAttributesCapabilityProvider;
 import ru.iammaxim.tesitems.Player.PlayerAttributesStorage;
-import ru.iammaxim.tesitems.Questing.QuestManager;
 import ru.iammaxim.tesitems.World.IWorldCapability;
 import ru.iammaxim.tesitems.World.WorldCapabilityDefaultImpl;
 import ru.iammaxim.tesitems.World.WorldCapabilityProvider;
@@ -123,7 +122,8 @@ public class TESItems {
             guiQuestEditor = 4,
             guiJournal = 5,
             guiFactionList = 6,
-            guiFactionEditor = 7;
+            guiFactionEditor = 7,
+            guiQuestList = 8;
 
     @CapabilityInject(IPlayerAttributesCapability.class)
     public static Capability<IPlayerAttributesCapability> attributesCapability;
@@ -135,8 +135,33 @@ public class TESItems {
     public static TESItems instance;
 
     @SideOnly(Side.CLIENT)
-    public static FontRenderer fontRenderer, //used in all mod UI
-            monospaceFontRenderer; //used in script editor
+    public static class ClientThings {
+        public static FontRenderer fontRenderer; //used in all mod UI
+        public static FontRenderer monospaceFontRenderer; //used in script editor
+
+        public static void loadFonts() {
+            //load main font
+            try {
+                Font font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File("main.ttf")));
+                font = font.deriveFont(Font.PLAIN, 24);
+                ClientThings.fontRenderer = new UnicodeFontRenderer(font);
+            } catch (FontFormatException | IOException e) {
+                e.printStackTrace();
+                ClientThings.fontRenderer = getMinecraft().fontRendererObj;
+            }
+
+            //load monospace font
+            try {
+                Font font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File("monospace.ttf")));
+                font = font.deriveFont(Font.PLAIN, 16);
+                ClientThings.monospaceFontRenderer = new UnicodeFontRenderer(font);
+//            ((UnicodeFontRenderer)monospaceFontRenderer).font.setPaddingTop(4);
+            } catch (FontFormatException | IOException e) {
+                e.printStackTrace();
+                ClientThings.monospaceFontRenderer = getMinecraft().fontRendererObj;
+            }
+        }
+    }
 
     //used for dialog camera orient
     /*
@@ -192,6 +217,8 @@ public class TESItems {
         networkWrapper.registerMessage(MessageFactionRemove.ServerHandler.class, MessageFactionRemove.class, 19, Side.SERVER);
         networkWrapper.registerMessage(MessageDialogSelectTopic.ServerHandler.class, MessageDialogSelectTopic.class, 20, Side.SERVER);
         networkWrapper.registerMessage(MessageShowNotification.Handler.class, MessageShowNotification.class, 21, Side.CLIENT);
+        networkWrapper.registerMessage(MessageQuestList.Handler.class, MessageQuestList.class, 22, Side.CLIENT);
+        networkWrapper.registerMessage(MessageOpenEditFaction.ServerHandler.class, MessageOpenEditFaction.class, 23, Side.SERVER);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GUIHandler());
         EntityRegistry.registerModEntity(EntityRangedSpellEffect.class, "EntityRangedSpellEffect", 0, instance, 100, 1, false);
@@ -244,30 +271,7 @@ public class TESItems {
 //        QuestManager.loadFromFile();
 
         if (event.getSide() == Side.CLIENT) {
-            loadFonts();
-        }
-    }
-
-    public void loadFonts() {
-        //load main font
-        try {
-            Font font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File("main.ttf")));
-            font = font.deriveFont(Font.PLAIN, 24);
-            fontRenderer = new UnicodeFontRenderer(font);
-        } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
-            fontRenderer = getMinecraft().fontRendererObj;
-        }
-
-        //load monospace font
-        try {
-            Font font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File("monospace.ttf")));
-            font = font.deriveFont(Font.PLAIN, 16);
-            monospaceFontRenderer = new UnicodeFontRenderer(font);
-//            ((UnicodeFontRenderer)monospaceFontRenderer).font.setPaddingTop(4);
-        } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
-            monospaceFontRenderer = getMinecraft().fontRendererObj;
+            ClientThings.loadFonts();
         }
     }
 
@@ -348,9 +352,6 @@ public class TESItems {
                 networkWrapper.sendTo(new MessageInventory(cap.getInventory().writeToNBT()), (EntityPlayerMP) event.getEntity());
                 networkWrapper.sendTo(new MessageJournal(cap.getJournal()), (EntityPlayerMP) event.getEntity());
 
-                //todo: replace with quest instances
-                networkWrapper.sendTo(new MessageQuestList(QuestManager.writeToNBT()), (EntityPlayerMP) event.getEntity());
-
                 player.addChatComponentMessage(new TextComponentString(getMOTD()));
             }
         }
@@ -390,11 +391,11 @@ public class TESItems {
         event.registerServerCommand(new CommandRemoveSpell());
         event.registerServerCommand(new CommandGiveMe());
         event.registerServerCommand(new CommandManageFactions());
+        event.registerServerCommand(new CommandManageQuests());
         event.registerServerCommand(new CommandStatus());
 
         //debug
         event.registerServerCommand(new CommandManageInventory());
-        event.registerServerCommand(new CommandManageQuests());
         event.registerServerCommand(new CommandReloadFonts());
     }
 
@@ -484,20 +485,20 @@ public class TESItems {
             float y = ((float) 12 / 255 * first_alpha);
 
             //draw first string
-            fontRenderer.drawString(notifications.get(0), 8, y, 0x00FFFFFF + (first_alpha << 24), false);
+            ClientThings.fontRenderer.drawString(notifications.get(0), 8, y, 0x00FFFFFF + (first_alpha << 24), false);
             y += 12;
 
             //draw strings between first and last
             for (int i = 1; i < notifications.size() - 1; i++) {
-                fontRenderer.drawString(notifications.get(i), 8, y, 0xFFFFFFFF, false);
+                ClientThings.fontRenderer.drawString(notifications.get(i), 8, y, 0xFFFFFFFF, false);
                 y += 12;
             }
 
             //draw last string
             if (notifications.size() == NotificationManager.RENDER_COUNT)
-                fontRenderer.drawString(notifications.get(notifications.size() - 1), 8, y, 0xFFFFFFFF - (first_alpha << 24), false);
+                ClientThings.fontRenderer.drawString(notifications.get(notifications.size() - 1), 8, y, 0xFFFFFFFF - (first_alpha << 24), false);
             else if (notifications.size() > 1)
-                fontRenderer.drawString(notifications.get(notifications.size() - 1), 8, y, 0xFFFFFFFF, false);
+                ClientThings.fontRenderer.drawString(notifications.get(notifications.size() - 1), 8, y, 0xFFFFFFFF, false);
         }
 
         getMinecraft().getTextureManager().bindTexture(Gui.ICONS);

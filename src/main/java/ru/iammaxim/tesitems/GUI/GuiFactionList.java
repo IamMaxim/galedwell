@@ -2,10 +2,14 @@ package ru.iammaxim.tesitems.GUI;
 
 import ru.iammaxim.tesitems.Factions.Faction;
 import ru.iammaxim.tesitems.Factions.FactionManager;
-import ru.iammaxim.tesitems.GUI.Elements.*;
+import ru.iammaxim.tesitems.GUI.Elements.Button;
+import ru.iammaxim.tesitems.GUI.Elements.HorizontalDivider;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.HeaderLayout;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.ScrollableLayout;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.VerticalLayout;
+import ru.iammaxim.tesitems.GUI.Elements.Text;
+import ru.iammaxim.tesitems.Networking.MessageOpenEditFaction;
+import ru.iammaxim.tesitems.Player.AdminTemporaryStorage;
 import ru.iammaxim.tesitems.TESItems;
 
 /**
@@ -27,18 +31,17 @@ public class GuiFactionList extends Screen {
         factionsLayout = new VerticalLayout();
         root2.add(factionsLayout);
         root2.add(new HorizontalDivider());
-        root2.add(new Button("Create new faction").setOnClick(b -> {
+        root2.add(new Button("New faction").setOnClick(b -> {
             Faction f = new Faction("");
             f.id = -1;
-            TESItems.getMinecraft().displayGuiScreen(new GuiFactionEditor(f));
+            AdminTemporaryStorage.lastEditedFaction = f;
+            TESItems.getMinecraft().displayGuiScreen(new GuiFactionEditor());
         }));
 
-        FactionManager.factions.forEach((id, f) -> factionsLayout.add(new Text("[Edit: " + f.name + "]") {
-            @Override
-            public void click(int relativeX, int relativeY) {
-                mc.displayGuiScreen(new GuiFactionEditor(f));
-            }
-        }));
+        FactionManager.factions.forEach((id, f) -> factionsLayout.add(new Text(f.name).setColor(0xFF0066CC).setOnClick(e ->
+                /*mc.displayGuiScreen(new GuiFactionEditor(f))*/
+                TESItems.networkWrapper.sendToServer(new MessageOpenEditFaction(id))
+        )));
 
         root.doLayout();
     }

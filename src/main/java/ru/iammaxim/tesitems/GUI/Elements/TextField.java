@@ -28,7 +28,7 @@ public class TextField extends ElementBase {
     private long startTime = 0;
     private char lastChar = 0;
     private int lastKey = 0;
-    private FontRenderer fontRenderer = TESItems.fontRenderer;
+    private FontRenderer fontRenderer = TESItems.ClientThings.fontRenderer;
 
     @Override
     public void checkClick(int mouseX, int mouseY) {
@@ -45,7 +45,6 @@ public class TextField extends ElementBase {
         if (fontRenderer instanceof UnicodeFontRenderer) {
             int h = ((UnicodeFontRenderer) fontRenderer).font.getLineHeight();
             lineHeight = h / 3;
-            System.out.println("given height: " + h);
         }
         return this;
     }

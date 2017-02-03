@@ -4,11 +4,14 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
+import ru.iammaxim.tesitems.Networking.MessageFactionList;
+import ru.iammaxim.tesitems.Networking.MessageQuestList;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.Questing.Quest;
 import ru.iammaxim.tesitems.Questing.QuestManager;
@@ -22,50 +25,23 @@ import ru.iammaxim.tesitems.TESItems;
 public class CommandManageQuests extends CommandBase {
     @Override
     public String getCommandName() {
-        return "manquests";
+        return "openQuestsList";
     }
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "";
+        return "Used to edit quests";
+    }
+
+    @Override
+    public int getRequiredPermissionLevel() {
+        return 4;
     }
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-        switch (args[0]) {
-            case "show":
-                StringBuilder sb = new StringBuilder();
-                sb.append("All quests:\n");
-                QuestManager.questList.forEach((k, v) -> sb.append("id: ").append(k).append(": {").append(v.toString()).append("}").append('\n'));
-                sb.append("Your instances:\n");
-                IPlayerAttributesCapability cap = TESItems.getCapability((EntityPlayer) sender);
-                cap.getQuests().forEach((k, q) -> sb.append(q.toString()).append('\n'));
-                ((EntityPlayer) sender).addChatComponentMessage(new TextComponentString(sb.toString()));
-                break;
-            case "add":
-                Quest quest = new Quest("testQuest");
-                //quest.itemsReward.add(new ItemStack(Item.getItemFromBlock(Blocks.COBBLESTONE)));
-                QuestStage stage1 = new QuestStage();
-                stage1.journalLine = "journal line 1";
-                stage1.targets.add(new QuestTargetGather(new ItemStack(Item.getItemFromBlock(Blocks.DIRT))));
-                quest.stages.add(stage1);
-                QuestStage stage2 = new QuestStage();
-                stage2.journalLine = "journal line 2";
-                stage2.targets.add(new QuestTargetGather(new ItemStack(Item.getItemFromBlock(Blocks.COBBLESTONE))));
-                quest.stages.add(stage2);
-                QuestManager.questList.put(quest.id, quest);
-
-                sender.addChatMessage(new TextComponentString("Quest added"));
-                break;
-            case "remove":
-                QuestManager.questList.remove(Integer.valueOf(args[1]));
-                break;
-            case "start":
-                QuestManager.startQuest((EntityPlayer) sender, QuestManager.getByID(Integer.parseInt(args[1])));
-                break;
-            default:
-
-                break;
-        }
+        EntityPlayer player = (EntityPlayer) sender;
+        TESItems.networkWrapper.sendTo(new MessageQuestList(), (EntityPlayerMP) player);
+        player.openGui(TESItems.instance, TESItems.guiQuestList, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
     }
 }

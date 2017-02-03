@@ -22,6 +22,7 @@ public class MessageFactionList implements IMessage {
 
     @Override
     public void fromBytes(ByteBuf buf) {
+        factions = new HashMap<>();
         int size = buf.readInt();
         for (int i = size; i > 0; i--) {
             int id = buf.readInt();

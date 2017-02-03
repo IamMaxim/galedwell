@@ -96,7 +96,7 @@ public class GuiTextField extends RenderableBase {
             drawColoredRect(tess, top, left, bottom, right, 0xFF333333);
         else
             drawColoredRect(tess, top, left, bottom, right, 0xFF7F7F7F);
-        FontRenderer fontRenderer = TESItems.fontRenderer;
+        FontRenderer fontRenderer = TESItems.ClientThings.fontRenderer;
         if (text.isEmpty()) //draw hint
             fontRenderer.drawString(hint, left + padding, top + padding, hintColor);
         else //draw text

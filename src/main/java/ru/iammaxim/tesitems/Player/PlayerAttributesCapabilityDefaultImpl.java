@@ -102,7 +102,6 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
         return quests.get(id);
     }
 
-    @SideOnly(Side.CLIENT)
     @Override
     public Dialog getLatestDialog() {
         return dialog;
@@ -113,7 +112,6 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
         return variableStorage;
     }
 
-    @SideOnly(Side.CLIENT)
     @Override
     public void setLatestDialog(Dialog dialog) {
         this.dialog = dialog;

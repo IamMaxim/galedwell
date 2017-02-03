@@ -32,7 +32,7 @@ public class Text extends ElementBase {
     }
 
     public Text() {
-        fontRenderer = TESItems.fontRenderer;
+        fontRenderer = TESItems.ClientThings.fontRenderer;
     }
 
     public Text(String text) {

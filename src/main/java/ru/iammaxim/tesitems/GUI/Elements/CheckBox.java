@@ -29,7 +29,7 @@ public class CheckBox extends ElementBase {
 
     @Override
     public int getWidth() {
-        return TESItems.fontRenderer.getStringWidth(text) + 8;
+        return TESItems.ClientThings.fontRenderer.getStringWidth(text) + 8;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class CheckBox extends ElementBase {
         if (checked)
             color = 0xffffffff;
         drawColoredRect(Tessellator.getInstance(), left + 1, top + 1, left + 7, bottom - 1, color);
-        TESItems.fontRenderer.drawString(text, left + 8, top, textColor);
+        TESItems.ClientThings.fontRenderer.drawString(text, left + 8, top, textColor);
     }
 
     /**
