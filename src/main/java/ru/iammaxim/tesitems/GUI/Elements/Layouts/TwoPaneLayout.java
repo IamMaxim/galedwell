@@ -52,7 +52,18 @@ public class TwoPaneLayout extends LayoutBase {
 
     @Override
     public int getWidth() {
-        return leftElement.getWidth() + rightElement.getWidth() + paddingLeft + paddingRight;
+        int w = 0;
+
+        if (leftWidth != -1)
+            w += leftWidth;
+        else w += leftElement.getWidth();
+
+        if (rightWidth != -1)
+            w += rightWidth;
+        else w += rightElement.getWidth();
+
+        w += paddingLeft + paddingRight;
+        return w;
     }
 
     @Override

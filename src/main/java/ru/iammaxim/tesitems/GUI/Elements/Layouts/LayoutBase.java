@@ -55,5 +55,15 @@ public abstract class LayoutBase extends ElementBase {
         return this;
     }
 
+    public LayoutBase setTop(int top) {
+        this.top = top;
+        return this;
+    }
+
+    public LayoutBase setLeft(int left) {
+        this.left = left;
+        return this;
+    }
+
     public abstract List<ElementBase> getChildren();
 }

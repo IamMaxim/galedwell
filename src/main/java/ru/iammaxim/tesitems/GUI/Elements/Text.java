@@ -65,7 +65,7 @@ public class Text extends ElementBase {
         return strs.size() * lineHeight + (strs.size() - 1) * lineSpacing + marginBottom + marginTop;
     }
 
-    protected void update() {
+    public void update() {
         try {
             ((LayoutBase) getRoot()).doLayout();
             if (width == 0) {

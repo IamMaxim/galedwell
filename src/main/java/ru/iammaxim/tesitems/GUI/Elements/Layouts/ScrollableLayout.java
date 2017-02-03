@@ -16,7 +16,14 @@ public class ScrollableLayout extends FrameLayout {
     protected int scroll = 0;
     protected Minecraft mc;
     protected int elementHeight;
+    protected ScaledResolution res;
     private int scrollbarWidth = 8, scrollbarEndHeight = 16, scrollbarHandleHeight = 16;
+
+    public ScrollableLayout() {
+        mc = Minecraft.getMinecraft();
+        res = new ScaledResolution(mc);
+        setPadding(4);
+    }
 
     @Override
     public FrameLayout setElement(ElementBase element) {
@@ -24,8 +31,6 @@ public class ScrollableLayout extends FrameLayout {
             ((VerticalLayout) element).setLimitHeight(false);
         return super.setElement(element);
     }
-
-    protected ScaledResolution res;
 
     @Override
     public void doLayout() {
@@ -46,12 +51,6 @@ public class ScrollableLayout extends FrameLayout {
     public int getWidth() {
         //add scrollbar width
         return super.getWidth() + scrollbarWidth;
-    }
-
-    public ScrollableLayout() {
-        mc = Minecraft.getMinecraft();
-        res = new ScaledResolution(mc);
-        setPadding(4);
     }
 
     public int getMinHeight() {
@@ -77,7 +76,7 @@ public class ScrollableLayout extends FrameLayout {
     public void scrollToBottom() {
         scroll = element.getHeight() - (height - paddingTop - paddingBottom);
         if (scroll < 0) scroll = 0;
-        ((VerticalLayout) element).setTop(top + paddingTop - scroll);
+        ((LayoutBase) element).setTop(top + paddingTop - scroll);
         ((LayoutBase) element).doLayout();
     }
 

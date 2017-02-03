@@ -61,13 +61,19 @@ public class HorizontalLayout extends LayoutBase {
         if (center) x = left + (width - _w) / 2;
         else x = left + paddingLeft;
         for (ElementBase element : elements) {
-            int w = Math.min(element.getWidth(), x_max - x);
+            int w;
             int h;
             int h_override = element.getHeightOverride();
             if (h_override == FILL)
                 h = height - paddingTop - paddingBottom;
             else
                 h = Math.min(height - paddingTop - paddingBottom, element.getHeight());
+
+            int w_override = element.getWidthOverride();
+            if (w_override == FILL)
+                w = x_max - x - paddingRight;
+            else
+                w = Math.min(element.getWidth(), x_max - x);
             
             element.setBounds(x, y, x + w, y + h);
             if (element instanceof LayoutBase)

@@ -77,8 +77,6 @@ public class VerticalLayout extends LayoutBase {
                 ((LayoutBase) element).doLayout();
             y += h + spacing;
         }
-        y -= spacing;
-        System.out.println("doLayout final height: " + (y - top - paddingTop));
     }
 
     @Override
@@ -94,15 +92,6 @@ public class VerticalLayout extends LayoutBase {
         }
         height += (elements.size() - 1) * spacing;
         height += paddingTop + paddingBottom;
-/*        System.out.println("returning height: " + height + "\n" + String.join("\n\t",
-                Arrays.asList(
-                        Arrays.asList(
-                                Thread.currentThread().getStackTrace()
-                        ).stream().map(
-                                in -> in.toString()
-                        ).toArray())));*/
-
-        System.out.println("verticalLayout height: " + height);
         return height;
     }
 
@@ -124,10 +113,6 @@ public class VerticalLayout extends LayoutBase {
 
     public int getTop() {
         return top;
-    }
-
-    public void setTop(int top) {
-        this.top = top;
     }
 
     @Override

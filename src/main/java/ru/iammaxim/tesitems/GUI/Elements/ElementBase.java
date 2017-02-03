@@ -144,7 +144,7 @@ public abstract class ElementBase {
     }
 
     public int getBottomMargin() {
-        return marginTop;
+        return marginBottom;
     }
 
     public ElementBase setVerticalMargin(int margin) {
