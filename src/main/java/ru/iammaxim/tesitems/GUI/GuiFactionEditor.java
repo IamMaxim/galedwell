@@ -46,10 +46,7 @@ public class GuiFactionEditor extends Screen {
                                     checkForEmptyTopics();
 
                                     finalFaction.topics.clear();
-                                    elements.forEach((e, t) -> {
-                                        System.out.println("adding topic " + t.name);
-                                        finalFaction.topics.add(t);
-                                    });
+                                    elements.forEach((e, t) -> finalFaction.topics.add(t));
 
                                     System.out.println("gonna save " + finalFaction.writeToNBT().toString());
 
@@ -64,7 +61,6 @@ public class GuiFactionEditor extends Screen {
                                                     mc.displayGuiScreen(new GuiFactionList());
                                                 }))))
                                 .add(new Button().setText("Back").setOnClick(b -> mc.displayGuiScreen(new GuiFactionList())))
-                                .setWidthOverride(ElementBase.FILL)
                         )
                 ));
 
@@ -102,6 +98,7 @@ public class GuiFactionEditor extends Screen {
             destTopic.dialogLine = t.dialogLine;
             destTopic.npcName = t.npcName;
             t.conditions.forEach(c -> destTopic.conditions.add(c.clone()));
+            dest.topics.add(destTopic);
         });
         return dest;
     }
@@ -155,6 +152,7 @@ public class GuiFactionEditor extends Screen {
                 );
 
         layout.setFirstState(closed).setSecondState(opened).selectFirst();
+        layout.setWidthOverride(ElementBase.FILL);
         return layout;
     }
 }

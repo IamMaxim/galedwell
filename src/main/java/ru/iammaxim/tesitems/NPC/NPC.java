@@ -21,7 +21,7 @@ public class NPC {
     public boolean isInvulnerable = false;
     public Inventory inventory;
     public EnumHandSide primaryHand = EnumHandSide.RIGHT;
-    public List<Faction> factions = new ArrayList<>();
+    public List<Integer> factions = new ArrayList<>();
     public ArrayList<Quest> attachedQuests = new ArrayList<>();
 
     public NPC() {
@@ -37,14 +37,16 @@ public class NPC {
     }
 
     public List<Faction> getFactions() {
-        return factions;
+        ArrayList<Faction> factions1 = new ArrayList<>();
+        factions.forEach(id -> factions1.add(FactionManager.getFaction(id)));
+        return factions1;
     }
 
-    public void addFaction(Faction faction) {
+    public void addFaction(int faction) {
         factions.add(faction);
     }
 
-    public void removeFaction(Faction faction) {
+    public void removeFaction(int faction) {
         factions.remove(faction);
     }
 
@@ -76,7 +78,7 @@ public class NPC {
         NBTTagList list = new NBTTagList();
         factions.forEach(f -> {
             NBTTagCompound idTag = new NBTTagCompound();
-            idTag.setInteger("id", f.id);
+            idTag.setInteger("id", f);
             list.appendTag(idTag);
         });
         return list;
@@ -84,7 +86,7 @@ public class NPC {
 
     public void loadFactions(NBTTagList list) {
         for (int i = 0; i < list.tagCount(); i++) {
-            factions.add(FactionManager.getFaction(list.getCompoundTagAt(i).getInteger("id")));
+            factions.add(list.getCompoundTagAt(i).getInteger("id"));
         }
     }
 }

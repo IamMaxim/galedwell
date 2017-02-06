@@ -82,6 +82,8 @@ public class UnicodeFontRenderer extends FontRenderer {
                     break;
             }
 
+            if (k < 0)
+                return 0;
             int width = font.getWidth(str.substring(0, k));
 
             if (c0 == '\n') {

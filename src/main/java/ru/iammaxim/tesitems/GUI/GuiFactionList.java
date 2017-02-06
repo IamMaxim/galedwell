@@ -39,7 +39,6 @@ public class GuiFactionList extends Screen {
         }));
 
         FactionManager.factions.forEach((id, f) -> factionsLayout.add(new Text(f.name).setColor(0xFF0066CC).setOnClick(e ->
-                /*mc.displayGuiScreen(new GuiFactionEditor(f))*/
                 TESItems.networkWrapper.sendToServer(new MessageOpenEditFaction(id))
         )));
 

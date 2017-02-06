@@ -76,7 +76,7 @@ public class GuiNPCEditor extends Screen {
                                 Faction f = factionEntries.get(fl);
                                 if (FactionManager.getFaction(f.id) == null)
                                     it.remove();
-                                else npc.addFaction(f);
+                                else npc.addFaction(f.id);
                             }
 
                             TESItems.networkWrapper.sendToServer(new MessageNPCUpdate(npc.getNBT()));
@@ -101,10 +101,9 @@ public class GuiNPCEditor extends Screen {
             factionsLayout.add(fl);
         });
 
-        int width = root.getWidth();
+/*        int width = root.getWidth();
         int height = root.getHeight();
-//        scrollableLayout.setHeight((int) (res.getScaledHeight() * 0.8f));
-        root.setBounds((res.getScaledWidth() - width) / 2, (res.getScaledHeight() - height) / 2, (res.getScaledWidth() + width) / 2, (res.getScaledHeight() + height) / 2);
+        root.setBounds((res.getScaledWidth() - width) / 2, (res.getScaledHeight() - height) / 2, (res.getScaledWidth() + width) / 2, (res.getScaledHeight() + height) / 2);*/
         root.doLayout();
     }
 }

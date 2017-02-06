@@ -29,6 +29,7 @@ public class TextField extends ElementBase {
     private char lastChar = 0;
     private int lastKey = 0;
     private FontRenderer fontRenderer = TESItems.ClientThings.fontRenderer;
+    private int cursorPos = 0;
 
     @Override
     public void checkClick(int mouseX, int mouseY) {
@@ -56,7 +57,6 @@ public class TextField extends ElementBase {
     public TextField setText(String s) {
         text = s;
         dirty = true;
-//        strs = Minecraft.getMinecraft().fontRendererObj.listFormattedStringToWidth(text, width);
         return this;
     }
 
@@ -65,6 +65,15 @@ public class TextField extends ElementBase {
             return;
         }
         strs = fontRenderer.listFormattedStringToWidth(text, width - 2 * padding);
+        for (int i = text.length() - 1; i >= 0; i--) {
+            if (text.charAt(i) == '\n') {
+                ArrayList<String> tmp = new ArrayList<>();
+                tmp.addAll(strs);
+                tmp.add("\n");
+                strs = tmp;
+            }
+            else break;
+        }
         dirty = false;
     }
 
@@ -81,8 +90,7 @@ public class TextField extends ElementBase {
     public int getWidth() {
         if (!text.isEmpty()) {
             return fontRenderer.getStringWidth(text) + 2 * padding;
-        }
-        else
+        } else
             return fontRenderer.getStringWidth(hint) + 2 * padding;
     }
 
@@ -93,31 +101,43 @@ public class TextField extends ElementBase {
 
     @Override
     public void keyTyped(char typedChar, int key) {
+        if (cursorPos < 0) cursorPos = 0;
+        else if (cursorPos > text.length()) cursorPos = text.length();
+
         if (active) {
+            System.out.println("typed key: " + typedChar + " " + key);
             //Left or right control + V
             if (key == 47 && (Keyboard.isKeyDown(29) || Keyboard.isKeyDown(157))) {
                 String toPaste = Sys.getClipboard();
                 if (toPaste != null) {
-                    text += toPaste;
+                    text = text.substring(0, cursorPos) + toPaste + text.substring(cursorPos, text.length());
+                    cursorPos += toPaste.length();
                 }
                 return;
             }
 
             if (key == Keyboard.KEY_BACK) { //backspace
-                if (text.length() > 0) {
-                    text = text.substring(0, text.length() - 1);
-                    lastKey = key;
-                    lastChar = typedChar;
+                if (text.length() > 0 && cursorPos > 0) {
+                    text = text.substring(0, cursorPos - 1) + text.substring(cursorPos, text.length());
+                    cursorPos--;
                 }
             } else if (key == Keyboard.KEY_RETURN) {
-                text = text + '\n';
-                lastKey = key;
-                lastChar = typedChar;
+                text = text.substring(0, cursorPos) + '\n' + text.substring(cursorPos, text.length());
+                cursorPos++;
             } else if (typedChar == ' ' || UnicodeFontRenderer.alphabet.contains(typedChar + "")) {
-                text = text + typedChar;
-                lastKey = key;
-                lastChar = typedChar;
+                text = text.substring(0, cursorPos) + typedChar + text.substring(cursorPos, text.length());
+                cursorPos++;
+            } else if (key == 203 && cursorPos > 0) { //arrow left
+                cursorPos--;
+            } else if (key == 205 && cursorPos < text.length()) { //arrow right
+                cursorPos++;
             }
+
+            if (lastKey != key)
+                startTime = System.currentTimeMillis();
+            lastKey = key;
+            lastChar = typedChar;
+
             update();
             ((LayoutBase) getRoot()).doLayout();
             if (onType != null)
@@ -167,5 +187,25 @@ public class TextField extends ElementBase {
             for (int i = 0; i < strs.size(); i++) {
                 fontRenderer.drawString(strs.get(i), left + padding, top + (lineSpacing + lineHeight) * i + padding, color);
             }
+
+        try {
+            //draw cursor
+            int cursor_line = 0;
+            int cursor_column = 0;
+            int cursor_pos = cursorPos;
+            for (int i = 0; cursor_pos > 0; i++) {
+                cursor_column = cursor_pos;
+                cursor_pos -= strs.get(i).length();
+                if (cursor_pos <= 0) {
+                    cursor_line = i;
+                    break;
+                }
+            }
+            int x = left + padding + fontRenderer.getStringWidth(strs.get(cursor_line).substring(0, cursor_column)),
+                    y = top + (lineSpacing + lineHeight) * cursor_line + padding;
+            drawColoredRect(tess, x, y - 2, x + 1, y + lineHeight + 2, color);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

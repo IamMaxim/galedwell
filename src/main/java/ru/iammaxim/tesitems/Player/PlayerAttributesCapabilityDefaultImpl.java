@@ -42,7 +42,6 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     //player quest journal; quest lines are saved here
     private String journal = "";
     //latest dialog with NPC
-    @SideOnly(Side.CLIENT)
     private Dialog dialog;
     private VariableStorage variableStorage = new VariableStorage();
 

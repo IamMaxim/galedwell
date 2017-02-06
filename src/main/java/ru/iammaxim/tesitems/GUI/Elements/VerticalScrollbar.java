@@ -36,7 +36,6 @@ public class VerticalScrollbar extends LayoutBase {
     @Override
     public void checkClick(int mouseX, int mouseY) {
         super.checkClick(mouseX, mouseY);
-        System.out.println("checking click");
         arrowUp.checkClick(mouseX, mouseY);
         arrowDown.checkClick(mouseX, mouseY);
     }

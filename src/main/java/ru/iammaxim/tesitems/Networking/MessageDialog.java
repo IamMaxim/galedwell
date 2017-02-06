@@ -41,6 +41,7 @@ public class MessageDialog implements IMessage {
         @Override
         public IMessage onMessage(MessageDialog message, MessageContext ctx) {
             Dialog dialog = Dialog.loadFromNBT(message.tag);
+            System.out.println("setting dialog to " + dialog.saveToNBT().toString());
             IPlayerAttributesCapability cap = TESItems.getCapability(TESItems.getClientPlayer());
             cap.setLatestDialog(dialog);
             if (TESItems.getMinecraft().currentScreen instanceof GuiNPCDialog) {

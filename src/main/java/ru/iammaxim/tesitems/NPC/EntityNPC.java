@@ -13,10 +13,12 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import ru.iammaxim.tesitems.Dialogs.Dialog;
 import ru.iammaxim.tesitems.Items.mItems;
 import ru.iammaxim.tesitems.Networking.MessageDialog;
+import ru.iammaxim.tesitems.Networking.MessageFactionList;
 import ru.iammaxim.tesitems.Networking.MessageNPCUpdate;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.TESItems;
@@ -115,8 +117,7 @@ public class EntityNPC extends EntityLivingBase {
         }
         if (player.getHeldItemOffhand() != null && player.getHeldItemOffhand().getItem() == mItems.itemNPCEditorTool) {
             //let the player edit this NPC
-            //todo: uncomment this
-//            TESItems.networkWrapper.sendTo(new MessageFactionList(), (EntityPlayerMP) player);
+            TESItems.networkWrapper.sendTo(new MessageFactionList(), (EntityPlayerMP) player);
             player.openGui(TESItems.instance, TESItems.guiNPCEditor, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
         } else {
             //open dialog GUI
@@ -128,6 +129,6 @@ public class EntityNPC extends EntityLivingBase {
 
     @Override
     public ITextComponent getDisplayName() {
-        return super.getDisplayName();
+        return new TextComponentString(npc.name);
     }
 }

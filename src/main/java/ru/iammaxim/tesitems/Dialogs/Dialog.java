@@ -26,8 +26,9 @@ public class Dialog {
                 if (t.npcName.equals(npc.name)) dialog.addTopic(t.name, t);
             });
         });
-        npc.getFactions().forEach(faction ->
-                faction.topics.forEach(t -> {
+        npc.getFactions().forEach(f ->
+                f.topics.forEach(t -> {
+                    System.out.println("adding topic " + t.name);
                     dialog.addTopic(t.name, t);
                 }));
         cap.setLatestDialog(dialog);
