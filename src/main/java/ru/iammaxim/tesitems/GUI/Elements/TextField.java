@@ -9,6 +9,7 @@ import ru.iammaxim.tesitems.GUI.Fonts.UnicodeFontRenderer;
 import ru.iammaxim.tesitems.TESItems;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -65,15 +66,6 @@ public class TextField extends ElementBase {
             return;
         }
         strs = fontRenderer.listFormattedStringToWidth(text, width - 2 * padding);
-        for (int i = text.length() - 1; i >= 0; i--) {
-            if (text.charAt(i) == '\n') {
-                ArrayList<String> tmp = new ArrayList<>();
-                tmp.addAll(strs);
-                tmp.add("\n");
-                strs = tmp;
-            }
-            else break;
-        }
         dirty = false;
     }
 
@@ -121,6 +113,8 @@ public class TextField extends ElementBase {
                     text = text.substring(0, cursorPos - 1) + text.substring(cursorPos, text.length());
                     cursorPos--;
                 }
+            } else if (key == Keyboard.KEY_DELETE && cursorPos < text.length()) { //delete
+                text = text.substring(0, cursorPos) + text.substring(cursorPos + 1, text.length());
             } else if (key == Keyboard.KEY_RETURN) {
                 text = text.substring(0, cursorPos) + '\n' + text.substring(cursorPos, text.length());
                 cursorPos++;
@@ -184,9 +178,8 @@ public class TextField extends ElementBase {
         if (text.isEmpty()) //draw hint
             fontRenderer.drawString(hint, left + padding, top + padding, hintColor);
         else //draw text
-            for (int i = 0; i < strs.size(); i++) {
+            for (int i = 0; i < strs.size(); i++)
                 fontRenderer.drawString(strs.get(i), left + padding, top + (lineSpacing + lineHeight) * i + padding, color);
-            }
 
         try {
             //draw cursor
@@ -195,14 +188,14 @@ public class TextField extends ElementBase {
             int cursor_pos = cursorPos;
             for (int i = 0; cursor_pos > 0; i++) {
                 cursor_column = cursor_pos;
-                cursor_pos -= strs.get(i).length();
+                cursor_pos -= strs.get(i).length() + 1;
                 if (cursor_pos <= 0) {
                     cursor_line = i;
                     break;
                 }
             }
-            int x = left + padding + fontRenderer.getStringWidth(strs.get(cursor_line).substring(0, cursor_column)),
-                    y = top + (lineSpacing + lineHeight) * cursor_line + padding;
+            int x = left + padding + (cursor_pos == 0 ? 0 : fontRenderer.getStringWidth(strs.get(cursor_line).substring(0, cursor_column))),
+                    y = top + (lineSpacing + lineHeight) * (cursor_pos == 0 && cursorPos > 0 ? cursor_line + 1 : cursor_line) + padding;
             drawColoredRect(tess, x, y - 2, x + 1, y + lineHeight + 2, color);
         } catch (Exception e) {
             e.printStackTrace();
