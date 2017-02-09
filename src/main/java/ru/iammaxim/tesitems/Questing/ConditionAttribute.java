@@ -55,7 +55,7 @@ public class ConditionAttribute extends Condition {
     }
 
     @Override
-    public ru.iammaxim.tesitems.Questing.Condition clone() {
+    public ru.iammaxim.tesitems.Questing.Condition copy() {
         return new ConditionAttribute(attributeName, this.condition, value);
     }
 

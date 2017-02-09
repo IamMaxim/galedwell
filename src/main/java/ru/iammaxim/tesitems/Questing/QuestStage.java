@@ -12,12 +12,14 @@ import java.util.stream.Collectors;
  * Created by Maxim on 20.07.2016.
  */
 public class QuestStage {
-    public String journalLine;
+    public int id = -1;
+    public String journalLine = "";
     public List<QuestTarget> targets = new ArrayList<>();
     public ArrayList<DialogTopic> topics = new ArrayList<>();
 
     public NBTTagCompound saveToNBT() {
         NBTTagCompound tag = new NBTTagCompound();
+        tag.setInteger("id", id);
         tag.setString("journalLine", journalLine);
         NBTTagList targetsList = new NBTTagList();
         targets.forEach(t -> targetsList.appendTag(t.saveToNBT()));
@@ -30,6 +32,7 @@ public class QuestStage {
 
     public static QuestStage loadFromNBT(NBTTagCompound tag) {
         QuestStage stage = new QuestStage();
+        stage.id = tag.getInteger("id");
         stage.journalLine = tag.getString("journalLine");
         NBTTagList targetsList = (NBTTagList) tag.getTag("targets");
         for (int i = 0; i < targetsList.tagCount(); i++) {
@@ -44,7 +47,16 @@ public class QuestStage {
 
     @Override
     public String toString() {
-        return "journalLine: " + journalLine +
+        return "id: " + id + " journalLine: " + journalLine +
                 " targets: [" + targets.stream().map(QuestTarget::toString).collect(Collectors.joining(", ")) + "]";
+    }
+
+    public QuestStage copy() {
+        QuestStage dest = new QuestStage();
+        dest.id = id;
+        dest.journalLine = journalLine;
+        targets.forEach(t -> dest.targets.add(t));
+        topics.forEach(t -> dest.topics.add(t.copy()));
+        return dest;
     }
 }

@@ -3,6 +3,7 @@ package ru.iammaxim.tesitems.GUI.Elements;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
+import ru.iammaxim.tesitems.GUI.ResManager;
 import ru.iammaxim.tesitems.TESItems;
 
 import static ru.iammaxim.tesitems.GUI.ResManager.*;
@@ -12,7 +13,7 @@ import static ru.iammaxim.tesitems.GUI.ResManager.*;
  */
 public class Button extends ElementBase {
     private String text = "A button";
-    private int padding = 4, textColor = 0xff481f09;
+    private int padding = 4, textColor = ResManager.MAIN_COLOR;
     private FontRenderer fontRenderer;
     private boolean useInactiveBackground = true, center = true;
     private int textWidth;

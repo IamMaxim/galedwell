@@ -29,7 +29,7 @@ public class DialogTopic {
     }
 
     public void attachTo(Quest quest) {
-
+        attachedTo = quest;
     }
 
     public NBTTagCompound writeToNBT() {
@@ -55,5 +55,16 @@ public class DialogTopic {
             topic.conditions.add(Condition.loadFromNBT(conditionsList.getCompoundTagAt(i)));
         }
         return topic;
+    }
+
+    public DialogTopic copy() {
+        DialogTopic dest = new DialogTopic();
+        dest.name = name;
+        dest.script = script;
+        dest.attachedTo = attachedTo;
+        dest.dialogLine = dialogLine;
+        dest.npcName = npcName;
+        conditions.forEach(c -> dest.conditions.add(c.copy()));
+        return dest;
     }
 }

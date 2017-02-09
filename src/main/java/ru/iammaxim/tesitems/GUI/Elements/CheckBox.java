@@ -1,6 +1,7 @@
 package ru.iammaxim.tesitems.GUI.Elements;
 
 import net.minecraft.client.renderer.Tessellator;
+import ru.iammaxim.tesitems.GUI.ResManager;
 import ru.iammaxim.tesitems.TESItems;
 
 /**
@@ -9,7 +10,7 @@ import ru.iammaxim.tesitems.TESItems;
 public class CheckBox extends ElementBase {
     private boolean checked = false;
     private String text = "";
-    private int textColor = 0xff481f09;
+    private int textColor = ResManager.MAIN_COLOR;
     private OnClick onClick;
 
     public CheckBox setChecked(boolean checked) {

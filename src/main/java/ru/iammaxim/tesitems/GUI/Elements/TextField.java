@@ -9,7 +9,6 @@ import ru.iammaxim.tesitems.GUI.Fonts.UnicodeFontRenderer;
 import ru.iammaxim.tesitems.TESItems;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -181,7 +180,7 @@ public class TextField extends ElementBase {
             for (int i = 0; i < strs.size(); i++)
                 fontRenderer.drawString(strs.get(i), left + padding, top + (lineSpacing + lineHeight) * i + padding, color);
 
-        try {
+        if (active) {
             //draw cursor
             int cursor_line = 0;
             int cursor_column = 0;
@@ -197,8 +196,6 @@ public class TextField extends ElementBase {
             int x = left + padding + (cursor_pos == 0 ? 0 : fontRenderer.getStringWidth(strs.get(cursor_line).substring(0, cursor_column))),
                     y = top + (lineSpacing + lineHeight) * (cursor_pos == 0 && cursorPos > 0 ? cursor_line + 1 : cursor_line) + padding;
             drawColoredRect(tess, x, y - 2, x + 1, y + lineHeight + 2, color);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }

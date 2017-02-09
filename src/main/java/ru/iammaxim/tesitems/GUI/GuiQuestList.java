@@ -1,12 +1,16 @@
 package ru.iammaxim.tesitems.GUI;
 
+import com.google.common.collect.HashBiMap;
+import net.minecraft.client.Minecraft;
 import ru.iammaxim.tesitems.GUI.Elements.Button;
+import ru.iammaxim.tesitems.GUI.Elements.ElementBase;
 import ru.iammaxim.tesitems.GUI.Elements.HorizontalDivider;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.DoubleStateFrameLayout;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.HeaderLayout;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.ScrollableLayout;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.VerticalLayout;
 import ru.iammaxim.tesitems.GUI.Elements.Text;
+import ru.iammaxim.tesitems.Player.AdminTemporaryStorage;
 import ru.iammaxim.tesitems.Questing.Quest;
 import ru.iammaxim.tesitems.Questing.QuestManager;
 
@@ -15,6 +19,7 @@ import ru.iammaxim.tesitems.Questing.QuestManager;
  */
 public class GuiQuestList extends Screen {
     VerticalLayout quests;
+    HashBiMap<ElementBase, Quest> questMap = HashBiMap.create();
 
     public GuiQuestList() {
         contentLayout.setElement(
@@ -24,17 +29,20 @@ public class GuiQuestList extends Screen {
                                 .add(new HorizontalDivider())
                                 .add(quests = new VerticalLayout())
                                 .add(new HorizontalDivider())
-                                .add(new Button("New quest").setOnClick(e -> {
-
+                                .add(new Button("New quest").center(true).setOnClick(e -> {
+                                    AdminTemporaryStorage.lastEditedQuest = new Quest();
+                                    Minecraft.getMinecraft().displayGuiScreen(new GuiQuestEditor());
                                 }))));
 
         QuestManager.questList.forEach((id, quest) -> addQuest(quest));
     }
 
     public void addQuest(Quest quest) {
-        quests.add(new DoubleStateFrameLayout()
-        .setFirstState(new Text(quest.name).setColor(0xFF0066CC).setOnClick(e -> {
+        ElementBase element = new DoubleStateFrameLayout()
+                .setFirstState(new Text(quest.name).setColor(0xFF0066CC).setOnClick(e -> {
 
-        })));
+                }));
+        quests.add(element);
+        questMap.put(element, quest);
     }
 }

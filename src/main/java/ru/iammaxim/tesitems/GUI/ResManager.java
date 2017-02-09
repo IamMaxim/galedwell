@@ -6,6 +6,8 @@ import net.minecraft.util.ResourceLocation;
  * Created by maxim on 11/10/16 at 7:13 PM.
  */
 public class ResManager {
+    public static final int MAIN_COLOR = 0xff481f09, CLICKABLE_TEXT_COLOR = 0xFF0066CC;
+
     public static ResourceLocation
             button_short = new ResourceLocation("tesitems:textures/gui/button_short.png"),
             button_short_on = new ResourceLocation("tesitems:textures/gui/button_short_on.png"),

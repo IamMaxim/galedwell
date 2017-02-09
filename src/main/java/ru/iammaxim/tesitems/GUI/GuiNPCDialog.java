@@ -90,7 +90,7 @@ public class GuiNPCDialog extends Screen {
                         e.printStackTrace();
                     }
                 }
-            }.setColor(0xFF0066CC).setTopMargin(8));
+            }.setColor(ResManager.CLICKABLE_TEXT_COLOR).setTopMargin(8));
             historyLayout.add(dialogLine = new Text(topic.dialogLine) {
                 @Override
                 public void update() {

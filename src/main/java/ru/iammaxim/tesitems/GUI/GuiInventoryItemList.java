@@ -48,7 +48,7 @@ public class GuiInventoryItemList {
             damageWidth = 40,
             durabilityWidth = 40,
             topIconsHeight = 24,
-            textColor = 0xff481f09;
+            textColor = ResManager.MAIN_COLOR;
     private final int screenWidth;
     private final int screenHeight;
     private final int top;

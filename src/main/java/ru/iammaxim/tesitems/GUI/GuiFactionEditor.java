@@ -97,7 +97,7 @@ public class GuiFactionEditor extends Screen {
             destTopic.script = t.script;
             destTopic.dialogLine = t.dialogLine;
             destTopic.npcName = t.npcName;
-            t.conditions.forEach(c -> destTopic.conditions.add(c.clone()));
+            t.conditions.forEach(c -> destTopic.conditions.add(c.copy()));
             dest.topics.add(destTopic);
         });
         return dest;

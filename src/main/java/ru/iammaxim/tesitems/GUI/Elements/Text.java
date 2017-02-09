@@ -2,6 +2,7 @@ package ru.iammaxim.tesitems.GUI.Elements;
 
 import net.minecraft.client.gui.FontRenderer;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.LayoutBase;
+import ru.iammaxim.tesitems.GUI.ResManager;
 import ru.iammaxim.tesitems.TESItems;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public class Text extends ElementBase {
     protected List<String> strs = new ArrayList<>();
     protected boolean dirty = false;
     protected int lineSpacing = 4, lineHeight = 8;
-    protected int color = 0xff481f09;
+    protected int color = ResManager.MAIN_COLOR;
     protected boolean center = false;
     protected int textWidth = 0;
     public int leftPadding = 0;

@@ -1,6 +1,7 @@
 package ru.iammaxim.tesitems.GUI.Elements.Layouts;
 
 import net.minecraft.client.renderer.Tessellator;
+import ru.iammaxim.tesitems.GUI.ResManager;
 
 /**
  * Created by maxim on 29.01.17.
@@ -20,7 +21,7 @@ public class WrapFrameLayout extends FrameLayout {
         this.frameColor = frameColor;
     }
 
-    private int frameColor = 0xff481f09;
+    private int frameColor = ResManager.MAIN_COLOR;
 
     public int getInnerPaddingVertical() {
         return innerPaddingVertical;
