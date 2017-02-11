@@ -31,7 +31,7 @@ public class GuiQuestList extends Screen {
                                 .add(new HorizontalDivider())
                                 .add(new Button("New quest").center(true).setOnClick(e -> {
                                     AdminTemporaryStorage.lastEditedQuest = new Quest();
-                                    Minecraft.getMinecraft().displayGuiScreen(new GuiQuestEditor());
+                                    ScreenStack.addScreen(new GuiQuestEditor());
                                 }))));
 
         QuestManager.questList.forEach((id, quest) -> addQuest(quest));

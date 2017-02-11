@@ -80,7 +80,7 @@ public class GuiNPCEditor extends Screen {
                             }
 
                             TESItems.networkWrapper.sendToServer(new MessageNPCUpdate(npc.getNBT()));
-                            mc.displayGuiScreen(new GuiAlertDialog("Changes updated", this));
+                            ScreenStack.addScreen(new GuiAlertDialog("Changes updated"));
                         }))));
 
         npc.getFactions().forEach(f -> {

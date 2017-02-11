@@ -35,7 +35,7 @@ public class GuiFactionList extends Screen {
             Faction f = new Faction("");
             f.id = -1;
             AdminTemporaryStorage.lastEditedFaction = f;
-            TESItems.getMinecraft().displayGuiScreen(new GuiFactionEditor());
+            ScreenStack.addScreen(new GuiFactionEditor());
         }));
 
         FactionManager.factions.forEach((id, f) -> factionsLayout.add(new Text(f.name).setColor(0xFF0066CC).setOnClick(e ->

@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import ru.iammaxim.tesitems.Dialogs.Dialog;
 import ru.iammaxim.tesitems.GUI.Elements.Text;
 import ru.iammaxim.tesitems.GUI.GuiNPCDialog;
+import ru.iammaxim.tesitems.GUI.ScreenStack;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.TESItems;
 
@@ -44,8 +45,8 @@ public class MessageDialog implements IMessage {
             System.out.println("setting dialog to " + dialog.saveToNBT().toString());
             IPlayerAttributesCapability cap = TESItems.getCapability(TESItems.getClientPlayer());
             cap.setLatestDialog(dialog);
-            if (TESItems.getMinecraft().currentScreen instanceof GuiNPCDialog) {
-                GuiNPCDialog gui = (GuiNPCDialog) TESItems.getMinecraft().currentScreen;
+            if (ScreenStack.lastScreen() instanceof GuiNPCDialog) {
+                GuiNPCDialog gui = (GuiNPCDialog) ScreenStack.lastScreen();
                 TESItems.getMinecraft().addScheduledTask(() -> {
                     gui.topics.clear();
                     dialog.topics.forEach((name, topic) -> gui.addTopic(topic));

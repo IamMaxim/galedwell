@@ -12,12 +12,6 @@ import ru.iammaxim.tesitems.GUI.Elements.Layouts.VerticalLayout;
  */
 public class GuiConfirmationDialog extends Screen {
     private String text;
-    private GuiScreen lastScreen;
-
-    public GuiConfirmationDialog(String text, GuiScreen lastScreen, Runnable onConfirm) {
-        this(text, onConfirm);
-        this.lastScreen = lastScreen;
-    }
 
     public GuiConfirmationDialog(String text, Runnable onConfirm) {
         this.text = text;
@@ -28,10 +22,10 @@ public class GuiConfirmationDialog extends Screen {
         layout.add(new Text(text));
         layout.add(new Button("Ok").setUseInactiveBackground(false).setOnClick(
                 b -> {
-                    mc.displayGuiScreen(lastScreen);
+                    ScreenStack.close();
                     onConfirm.run();
                 }));
-        layout.add(new Button("Cancel").setUseInactiveBackground(false).setOnClick(b -> mc.displayGuiScreen(lastScreen)));
+        layout.add(new Button("Cancel").setUseInactiveBackground(false).setOnClick(b -> ScreenStack.close()));
     }
 
     @Override

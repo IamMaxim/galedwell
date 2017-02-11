@@ -40,7 +40,7 @@ public class GuiFactionEditor extends Screen {
                         .add(new HorizontalDivider())
                         .add(new HorizontalLayout().center(true)
                                 .add(new Button().setText("Save").setOnClick(b -> {
-                                    mc.displayGuiScreen(new GuiAlertDialog("Faction saved", this));
+                                    ScreenStack.addScreen(new GuiAlertDialog("Faction saved"));
 
                                     //check for empty topics
                                     checkForEmptyTopics();
@@ -53,14 +53,15 @@ public class GuiFactionEditor extends Screen {
                                     TESItems.networkWrapper.sendToServer(new MessageFaction(finalFaction));
                                 }))
                                 .add(new Button().setText("Remove").setOnClick(b ->
-                                        mc.displayGuiScreen(new GuiConfirmationDialog("Are you sure you want to remove faction " + finalFaction.name + "?", this,
+                                        ScreenStack.addScreen(new GuiConfirmationDialog("Are you sure you want to remove faction " + finalFaction.name + "?",
                                                 () -> {
                                                     //check if this faction exists or newly created
                                                     if (finalFaction.id != -1)
                                                         TESItems.networkWrapper.sendToServer(new MessageFactionRemove(finalFaction.id));
-                                                    mc.displayGuiScreen(new GuiFactionList());
+                                                    ScreenStack.close();
                                                 }))))
-                                .add(new Button().setText("Back").setOnClick(b -> mc.displayGuiScreen(new GuiFactionList())))
+                                .add(new Button().setText("Back").setOnClick(b -> ScreenStack.close()))
+                                .setWidthOverride(ElementBase.FILL)
                         )
                 ));
 
@@ -143,8 +144,8 @@ public class GuiFactionEditor extends Screen {
                                 .setWidthOverride(ElementBase.FILL))
                         .add(new Button()
                                 .setText("Remove")
-                                .setOnClick(b -> mc.displayGuiScreen(
-                                        new GuiConfirmationDialog("Are you sure you want to remove topic " + topic.name + "?", this,
+                                .setOnClick(b -> ScreenStack.addScreen(
+                                        new GuiConfirmationDialog("Are you sure you want to remove topic " + topic.name + "?",
                                                 () -> {
                                                     ((VerticalLayout) containerLayout).remove(layout);
                                                     elements.remove(layout);

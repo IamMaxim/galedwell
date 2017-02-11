@@ -30,7 +30,9 @@ public class GuiQuestEditor extends Screen {
         layout.add(new HorizontalDivider());
 
         layout.add(new HeaderLayout("Quest stages"));
-        layout.add(new WrapFrameLayout().setElement((stages = new VerticalLayout()).setWidthOverride(ElementBase.FILL)));
+        layout.add(new WrapFrameLayout().setElement(
+                (stages = new VerticalLayout()).setWidthOverride(ElementBase.FILL))
+                .setWidthOverride(ElementBase.FILL));
         layout.add(new Button("Add stage").center(true).setWidthOverride(ElementBase.FILL).setOnClick(e -> {
             stages.add(getStageElement(new QuestStage()));
         }));
@@ -39,7 +41,7 @@ public class GuiQuestEditor extends Screen {
         layout.add(new HorizontalLayout().add(new Button("Save").setOnClick(e -> {
             TESItems.networkWrapper.sendToServer(new MessageQuest(quest));
         })).add(new Button("Back").setOnClick(e -> {
-            mc.displayGuiScreen(new GuiQuestList());
+            ScreenStack.addScreen(new GuiQuestList());
         })).center(true).setWidthOverride(ElementBase.FILL));
     }
 
@@ -51,9 +53,14 @@ public class GuiQuestEditor extends Screen {
                         int id = Integer.parseInt(e.getText());
                         name.setText("ID " + id);
                         stage.id = id;
-                    } catch (Exception ex) {}
+                    } catch (Exception ex) {
+                    }
                 })).setWidthOverride(ElementBase.FILL)));
 
         return layout;
+    }
+
+    private class StagesEditor extends Screen {
+
     }
 }

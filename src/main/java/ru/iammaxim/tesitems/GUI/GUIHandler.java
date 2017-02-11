@@ -19,7 +19,7 @@ public class GUIHandler implements IGuiHandler {
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         switch (ID) {
-            case TESItems.guiSpellSelect: return new GuiSpellSelect();
+            /*case TESItems.guiSpellSelect: return new GuiSpellSelect();
             case TESItems.guiNpcDialog: return new GuiNPCDialog();
             case TESItems.guiInventory: return new GuiInventory(player);
             case TESItems.guiJournal: return new GuiJournal();
@@ -27,7 +27,17 @@ public class GUIHandler implements IGuiHandler {
             case TESItems.guiFactionList: return new GuiFactionList();
             case TESItems.guiQuestList: return new GuiQuestList();
             case TESItems.guiFactionEditor: return new GuiFactionEditor();
-            case TESItems.guiQuestEditor: return new GuiQuestEditor();
+            case TESItems.guiQuestEditor: return new GuiQuestEditor();*/
+
+            case TESItems.guiSpellSelect: ScreenStack.addScreen(new GuiSpellSelect()); return ScreenStack.instance;
+            case TESItems.guiNpcDialog: ScreenStack.addScreen(new GuiNPCDialog()); return ScreenStack.instance;
+            case TESItems.guiJournal: ScreenStack.addScreen(new GuiJournal()); return ScreenStack.instance;
+            case TESItems.guiNPCEditor: ScreenStack.addScreen(new GuiNPCEditor(player)); return ScreenStack.instance;
+            case TESItems.guiFactionList: ScreenStack.addScreen(new GuiFactionList()); return ScreenStack.instance;
+            case TESItems.guiQuestList: ScreenStack.addScreen(new GuiQuestList()); return ScreenStack.instance;
+            case TESItems.guiFactionEditor: ScreenStack.addScreen(new GuiFactionEditor()); return ScreenStack.instance;
+            case TESItems.guiQuestEditor: ScreenStack.addScreen(new GuiQuestEditor()); return ScreenStack.instance;
+            case TESItems.guiInventory: return new GuiInventory(player);
         }
         return null;
     }

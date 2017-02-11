@@ -1,7 +1,6 @@
 package ru.iammaxim.tesitems.GUI;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import org.lwjgl.input.Mouse;
 import ru.iammaxim.tesitems.GUI.Debugger.DebuggerWindow;
@@ -13,7 +12,7 @@ import java.io.IOException;
 /**
  * Created by maxim on 11/9/16 at 9:34 PM.
  */
-public class Screen extends GuiScreen {
+public class Screen {
     protected Minecraft mc;
     protected ScaledResolution res;
     protected ScreenCenteredLayout root;
@@ -29,14 +28,7 @@ public class Screen extends GuiScreen {
         root.setElement(contentLayout);
     }
 
-    @Override
-    public boolean doesGuiPauseGame() {
-        return false;
-    }
-
-    @Override
     public void onResize(Minecraft mcIn, int w, int h) {
-        super.onResize(mcIn, w, h);
         res = new ScaledResolution(mcIn);
         root.doLayout();
         root.onResize();
@@ -44,7 +36,6 @@ public class Screen extends GuiScreen {
         ResManager.gaussianBlurShader.createBindFramebuffers(w, h);
     }
 
-    @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         if (debugWindow == null) {
             buildDebugWindow();
@@ -82,10 +73,12 @@ public class Screen extends GuiScreen {
         debugWindow.draw(mouseX, mouseY);
     }
 
-    @Override
-    protected void keyTyped(char typedChar, int keyCode) throws IOException {
-        super.keyTyped(typedChar, keyCode);
+    public void keyTyped(char typedChar, int keyCode) throws IOException {
         root.keyTyped(typedChar, keyCode);
+    }
+
+    public boolean close() {
+        return true;
     }
 
     public void buildDebugWindow() {

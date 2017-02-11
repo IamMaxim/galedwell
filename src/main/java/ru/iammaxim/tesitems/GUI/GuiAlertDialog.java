@@ -11,12 +11,6 @@ import ru.iammaxim.tesitems.GUI.Elements.Layouts.VerticalLayout;
  */
 public class GuiAlertDialog extends Screen {
     private String text;
-    private GuiScreen lastScreen;
-
-    public GuiAlertDialog(String text, GuiScreen lastScreen) {
-        this(text);
-        this.lastScreen = lastScreen;
-    }
 
     public GuiAlertDialog(String text) {
         super();
@@ -27,8 +21,8 @@ public class GuiAlertDialog extends Screen {
         VerticalLayout layout = new VerticalLayout();
         fancyFrameLayout.setElement(layout);
         layout.add(new Text(text));
-        layout.add(new Button("Ok").setUseInactiveBackground(false).setOnClick(
-                b -> mc.displayGuiScreen(lastScreen)).setWidthOverride(ElementBase.FILL));
+        layout.add(new Button("Ok").setUseInactiveBackground(false).setOnClick(e -> ScreenStack.close())
+                .setWidthOverride(ElementBase.FILL));
     }
 
     @Override
