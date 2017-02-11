@@ -1,12 +1,37 @@
 package ru.iammaxim.tesitems.GUI;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.shader.ShaderGroup;
 import net.minecraft.util.ResourceLocation;
+
+import java.io.IOException;
 
 /**
  * Created by maxim on 11/10/16 at 7:13 PM.
  */
 public class ResManager {
-    public static final int MAIN_COLOR = 0xff481f09, CLICKABLE_TEXT_COLOR = 0xFF0066CC;
+    public static final int MAIN_COLOR = 0xff481f09,
+            CLICKABLE_TEXT_COLOR = 0xFF0066CC,
+            DARK_TRANSPARENT_BG_COLOR = 0x80000000,
+            DARK_FRAME_COLOR = 0xBB000000,
+            BRIGHT_TEXT_COLOR = 0xffffffff;
+
+    public static boolean enableBlur = true;
+    public static ShaderGroup gaussianBlurShader;
+
+    public static void loadShaders() {
+        try {
+            gaussianBlurShader = new ShaderGroup(Minecraft.getMinecraft().getTextureManager(),
+                    Minecraft.getMinecraft().getResourceManager(),
+                    Minecraft.getMinecraft().getFramebuffer(),
+                    new ResourceLocation("shaders/post/gaussian_blur.json"));
+            gaussianBlurShader.createBindFramebuffers(
+                    Minecraft.getMinecraft().displayWidth,
+                    Minecraft.getMinecraft().displayHeight);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static ResourceLocation
             button_short = new ResourceLocation("tesitems:textures/gui/button_short.png"),

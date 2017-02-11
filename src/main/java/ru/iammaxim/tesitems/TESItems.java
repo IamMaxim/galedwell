@@ -55,6 +55,7 @@ import ru.iammaxim.tesitems.GUI.Fonts.UnicodeFontRenderer;
 import ru.iammaxim.tesitems.GUI.GUIHandler;
 import ru.iammaxim.tesitems.GUI.KeyBindings;
 import ru.iammaxim.tesitems.GUI.NotificationManager;
+import ru.iammaxim.tesitems.GUI.ResManager;
 import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.Items.*;
 import ru.iammaxim.tesitems.Magic.*;
@@ -272,6 +273,7 @@ public class TESItems {
 
         if (event.getSide() == Side.CLIENT) {
             ClientThings.loadFonts();
+            ResManager.loadShaders();
         }
     }
 

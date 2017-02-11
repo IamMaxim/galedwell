@@ -5,6 +5,7 @@ import ru.iammaxim.tesitems.GUI.Elements.Arrow;
 import ru.iammaxim.tesitems.GUI.Elements.ElementBase;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.*;
 import ru.iammaxim.tesitems.GUI.Elements.Text;
+import ru.iammaxim.tesitems.GUI.ResManager;
 
 /**
  * Created by maxim on 30.01.17.
@@ -82,7 +83,7 @@ public class DebuggerWindow {
                     }
                             .setSpacing(0)
                             .add(new Arrow(Arrow.Direction.RIGHT))
-                            .add(new Text(element.getName()))
+                            .add(new Text(element.getName()).setColor(ResManager.BRIGHT_TEXT_COLOR))
                             .setOnClick(e -> {
                                 layout.selectSecond();
                                 ((LayoutBase) e.getRoot()).doLayout();
@@ -98,7 +99,7 @@ public class DebuggerWindow {
                                     }
                                             .setSpacing(0)
                                             .add(new Arrow(Arrow.Direction.DOWN))
-                                            .add(new Text(element.getName()))
+                                            .add(new Text(element.getName()).setColor(ResManager.BRIGHT_TEXT_COLOR))
                                             .setOnClick(e -> {
                                                 layout.selectFirst();
                                                 ((LayoutBase) e.getRoot()).doLayout();
@@ -112,7 +113,7 @@ public class DebuggerWindow {
                     if (mouseX > left && mouseX < right && mouseY > top && mouseY < bottom)
                         drawElementOverlay(element);
                 }
-            };
+            }.setColor(ResManager.BRIGHT_TEXT_COLOR);
         }
     }
 }

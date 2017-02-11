@@ -3,9 +3,7 @@ package ru.iammaxim.tesitems.GUI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
 import ru.iammaxim.tesitems.GUI.Debugger.DebuggerWindow;
 import ru.iammaxim.tesitems.GUI.Elements.Button;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.*;
@@ -42,6 +40,8 @@ public class Screen extends GuiScreen {
         res = new ScaledResolution(mcIn);
         root.doLayout();
         root.onResize();
+
+        ResManager.gaussianBlurShader.createBindFramebuffers(w, h);
     }
 
     @Override
@@ -59,6 +59,22 @@ public class Screen extends GuiScreen {
         } else {
             wasClicked = false;
         }
+
+        if (ResManager.enableBlur) {
+            if (ResManager.gaussianBlurShader == null) {
+                ResManager.loadShaders();
+
+                if (ResManager.gaussianBlurShader == null) {
+                    System.out.println("ERROR! Shader wasn't loaded!");
+                    return;
+                }
+            }
+
+            ResManager.gaussianBlurShader.createBindFramebuffers(mc.displayWidth, mc.displayHeight);
+            ResManager.gaussianBlurShader.loadShaderGroup(partialTicks);
+            mc.getFramebuffer().bindFramebuffer(false);
+        }
+
         root.checkHover(mouseX, mouseY);
         root.draw(mouseX, mouseY);
 
@@ -81,29 +97,22 @@ public class Screen extends GuiScreen {
                                     debugWindow.doLayout();
                                 })))
                 .setSecondState(
-                        new FancyFrameLayout() {
-                            @Override
-                            public void draw(int mouseX, int mouseY) {
-                                GlStateManager.color(1, 1, 1, 1);
-                                GL11.glColor4f(1, 1, 1, 0.5f);
-                                super.draw(mouseX, mouseY);
-                                GL11.glColor4f(1, 1, 1, 1);
-                            }
-                        }.setElement(
-                                new VerticalLayout()
-                                        .add(new HorizontalLayout()
-                                                .add(new Button("Hide debug window").setOnClick(e -> {
-                                                    debugWindow.selectFirst();
-                                                    debugWindow.doLayout();
-                                                }))
-                                                .add(new Button("Rebuild tree").setOnClick(e -> {
-                                                    buildDebugWindow();
-                                                    debugWindow.selectSecond();
-                                                    debugWindow.doLayout();
-                                                }))
-                                        )
-                                        .add(DebuggerWindow.buildForElement(root))
-                        )).selectFirst()
+                        new BlurBackgroundFrameLayout().setElement(
+                                new DarkBackgroundFrameLayout().setElement(
+                                        new VerticalLayout()
+                                                .add(new HorizontalLayout()
+                                                        .add(new Button("Hide debug window").setOnClick(e -> {
+                                                            debugWindow.selectFirst();
+                                                            debugWindow.doLayout();
+                                                        }))
+                                                        .add(new Button("Rebuild tree").setOnClick(e -> {
+                                                            buildDebugWindow();
+                                                            debugWindow.selectSecond();
+                                                            debugWindow.doLayout();
+                                                        }))
+                                                )
+                                                .add(DebuggerWindow.buildForElement(root))
+                                ))).selectFirst()
                 .setBounds(8, 8, 308, res.getScaledHeight() - 8);
         debugWindow.doLayout();
     }
