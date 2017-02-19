@@ -18,7 +18,7 @@ public class OperationCall extends Operation {
     }
 
     @Override
-    public Value run(Runtime runtime) throws InvalidOperationException {
+    public void run(Runtime runtime) throws InvalidOperationException {
         //cleanup return value
         runtime.returnValueTmp = null;
 
@@ -40,11 +40,10 @@ public class OperationCall extends Operation {
         int currentPosBackup = runtime.currentCursorPos;
         ((ValueFunction) parent.getField(id)).call(runtime, newArgs);
         runtime.currentCursorPos = currentPosBackup;
-        return null;
     }
 
     @Override
-    public String toString(Runtime runtime, int indent) {
+    public String toString() {
         return "call";
     }
 }

@@ -8,14 +8,16 @@ import java.util.ArrayList;
 public class ExpressionCondition extends Expression {
     @Override
     public String toString() {
-        return "condition";
+        return "condition: if (" + cond.toString() + ") {" + body.toString() + "}";
     }
 
     public Expression cond;
     public ArrayList<Expression> body;
+    public ArrayList<Expression> elseBody;
 
-    public ExpressionCondition(Expression exp, ArrayList<Expression> body) {
+    public ExpressionCondition(Expression exp, ArrayList<Expression> body, ArrayList<Expression> elseBody) {
         this.cond = exp;
         this.body = body;
+        this.elseBody = elseBody;
     }
 }

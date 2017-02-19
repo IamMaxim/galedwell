@@ -78,7 +78,7 @@ public class NPC {
         NBTTagList list = new NBTTagList();
         factions.forEach(f -> {
             NBTTagCompound idTag = new NBTTagCompound();
-            idTag.setInteger("id", f);
+            idTag.setInteger("index", f);
             list.appendTag(idTag);
         });
         return list;
@@ -86,7 +86,7 @@ public class NPC {
 
     public void loadFactions(NBTTagList list) {
         for (int i = 0; i < list.tagCount(); i++) {
-            factions.add(list.getCompoundTagAt(i).getInteger("id"));
+            factions.add(list.getCompoundTagAt(i).getInteger("index"));
         }
     }
 }

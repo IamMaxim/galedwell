@@ -1,6 +1,7 @@
 package ru.iammaxim.tesitems.Scripting.GaledwellLang.Values;
 
 import net.minecraft.nbt.NBTTagCompound;
+import ru.iammaxim.tesitems.Scripting.GaledwellLang.Operations.InvalidOperationException;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Runtime;
 
 /**
@@ -24,7 +25,7 @@ public class ValueFloat extends Value {
     }
 
     @Override
-    public Value operatorMinus(Value right) {
+    public Value operatorSubtract(Value right) {
         return new ValueFloat(value + ((ValueFloat)right).value);
     }
 
@@ -44,8 +45,28 @@ public class ValueFloat extends Value {
     }
 
     @Override
+    public Value operatorLess(Value right) throws InvalidOperationException {
+        return new ValueBoolean(value < ((ValueFloat)right).value);
+    }
+
+    @Override
+    public Value operatorLessEquals(Value right) throws InvalidOperationException {
+        return new ValueBoolean(value <= ((ValueFloat)right).value);
+    }
+
+    @Override
     public Value operatorEquals(Value right) {
         return new ValueBoolean(value == ((ValueFloat)right).value);
+    }
+
+    @Override
+    public Value operatorMoreEquals(Value right) throws InvalidOperationException {
+        return new ValueBoolean(value >= ((ValueFloat)right).value);
+    }
+
+    @Override
+    public Value operatorMore(Value right) throws InvalidOperationException {
+        return new ValueBoolean(value > ((ValueFloat)right).value);
     }
 
     @Override

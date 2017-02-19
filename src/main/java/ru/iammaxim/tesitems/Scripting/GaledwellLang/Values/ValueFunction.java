@@ -48,7 +48,7 @@ public abstract class ValueFunction extends Value {
     }
 
     @Override
-    public Value operatorMinus(Value right) throws InvalidOperationException {
+    public Value operatorSubtract(Value right) throws InvalidOperationException {
         throw new InvalidOperationException("Not implemented");
     }
 
@@ -63,7 +63,27 @@ public abstract class ValueFunction extends Value {
     }
 
     @Override
+    public Value operatorLess(Value right) throws InvalidOperationException {
+        throw new InvalidOperationException("Not implemented");
+    }
+
+    @Override
+    public Value operatorLessEquals(Value right) throws InvalidOperationException {
+        throw new InvalidOperationException("Not implemented");
+    }
+
+    @Override
     public Value operatorEquals(Value right) throws InvalidOperationException {
+        throw new InvalidOperationException("Not implemented");
+    }
+
+    @Override
+    public Value operatorMoreEquals(Value right) throws InvalidOperationException {
+        throw new InvalidOperationException("Not implemented");
+    }
+
+    @Override
+    public Value operatorMore(Value right) throws InvalidOperationException {
         throw new InvalidOperationException("Not implemented");
     }
 

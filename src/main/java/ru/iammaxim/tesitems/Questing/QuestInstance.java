@@ -22,14 +22,14 @@ public class QuestInstance {
 
     public NBTTagCompound writeToNBT() {
         NBTTagCompound tag = new NBTTagCompound();
-        tag.setInteger("id", quest.id);
+        tag.setInteger("index", quest.id);
         tag.setInteger("stage", stage);
         tag.setTag("vars", variableStorage.writeToNBT());
         return tag;
     }
 
     public void loadFromNBT(NBTTagCompound tag) {
-        quest_id = tag.getInteger("id");
+        quest_id = tag.getInteger("index");
         stage = tag.getInteger("stage");
         quest = QuestManager.getByID(quest_id);
         variableStorage.loadFromNBT(tag.getCompoundTag("vars"));

@@ -17,11 +17,16 @@ public class Stack {
     }
 
     public void push(Value o) {
+        System.out.println("pushed " + o);
         stack[++cursor] = o;
     }
 
     public Value pop() {
-        return stack[cursor--];
+        Value value = stack[cursor];
+        stack[cursor] = null;
+        cursor--;
+        System.out.println("popped " + value);
+        return value;
     }
 
     public Value get() {
@@ -30,6 +35,6 @@ public class Stack {
 
     @Override
     public String toString() {
-        return Arrays.toString(stack).replace("\n", " ");
+        return "cursor: " + cursor + "; " + Arrays.toString(stack).replace("\n", " ");
     }
 }

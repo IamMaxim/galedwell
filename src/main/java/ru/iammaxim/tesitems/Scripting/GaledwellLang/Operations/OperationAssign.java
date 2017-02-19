@@ -11,17 +11,17 @@ import ru.iammaxim.tesitems.Scripting.GaledwellLang.Runtime;
  */
 public class OperationAssign extends Operation {
     @Override
-    public Value run(Runtime runtime) {
+    public void run(Runtime runtime) {
         int name = ((ValueReference) runtime.stack.pop()).id;
         ValueObject parent = (ValueObject) runtime.stack.pop();
-        Value value = runtime.stack.pop();
+//        Value value = runtime.stack.pop();
+        Value value = runtime.stack.get();
         parent.setField(name, value);
-        runtime.stack.push(value);
-        return value;
+//        runtime.stack.push(value);
     }
 
     @Override
-    public String toString(Runtime runtime, int indent) {
+    public String toString() {
         return "assign";
     }
 }

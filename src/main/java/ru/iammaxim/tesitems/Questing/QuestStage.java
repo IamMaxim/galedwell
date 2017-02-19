@@ -19,7 +19,7 @@ public class QuestStage {
 
     public NBTTagCompound saveToNBT() {
         NBTTagCompound tag = new NBTTagCompound();
-        tag.setInteger("id", id);
+        tag.setInteger("index", id);
         tag.setString("journalLine", journalLine);
         NBTTagList targetsList = new NBTTagList();
         targets.forEach(t -> targetsList.appendTag(t.saveToNBT()));
@@ -32,7 +32,7 @@ public class QuestStage {
 
     public static QuestStage loadFromNBT(NBTTagCompound tag) {
         QuestStage stage = new QuestStage();
-        stage.id = tag.getInteger("id");
+        stage.id = tag.getInteger("index");
         stage.journalLine = tag.getString("journalLine");
         NBTTagList targetsList = (NBTTagList) tag.getTag("targets");
         for (int i = 0; i < targetsList.tagCount(); i++) {
@@ -47,7 +47,7 @@ public class QuestStage {
 
     @Override
     public String toString() {
-        return "id: " + id + " journalLine: " + journalLine +
+        return "index: " + id + " journalLine: " + journalLine +
                 " targets: [" + targets.stream().map(QuestTarget::toString).collect(Collectors.joining(", ")) + "]";
     }
 

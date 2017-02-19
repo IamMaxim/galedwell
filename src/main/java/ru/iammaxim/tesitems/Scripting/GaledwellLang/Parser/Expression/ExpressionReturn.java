@@ -12,6 +12,6 @@ public class ExpressionReturn extends Expression {
 
     @Override
     public String toString() {
-        return "return";
+        return "return: " + returnExp.toString();
     }
 }

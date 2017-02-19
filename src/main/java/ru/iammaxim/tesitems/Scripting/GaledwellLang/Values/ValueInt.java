@@ -31,7 +31,7 @@ public class ValueInt extends Value {
     }
 
     @Override
-    public Value operatorMinus(Value right) throws InvalidOperationException {
+    public Value operatorSubtract(Value right) throws InvalidOperationException {
         return new ValueInt(value - ((ValueInt)right).value);
     }
 
@@ -46,8 +46,28 @@ public class ValueInt extends Value {
     }
 
     @Override
+    public Value operatorLess(Value right) throws InvalidOperationException {
+        return new ValueBoolean(value < ((ValueInt)right).value);
+    }
+
+    @Override
+    public Value operatorLessEquals(Value right) throws InvalidOperationException {
+        return new ValueBoolean(value <= ((ValueInt)right).value);
+    }
+
+    @Override
     public Value operatorEquals(Value right) throws InvalidOperationException {
         return new ValueBoolean(value == ((ValueInt)right).value);
+    }
+
+    @Override
+    public Value operatorMoreEquals(Value right) throws InvalidOperationException {
+        return new ValueBoolean(value >= ((ValueInt)right).value);
+    }
+
+    @Override
+    public Value operatorMore(Value right) throws InvalidOperationException {
+        return new ValueBoolean(value > ((ValueInt)right).value);
     }
 
     @Override

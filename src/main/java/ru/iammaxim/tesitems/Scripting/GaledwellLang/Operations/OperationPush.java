@@ -15,13 +15,12 @@ public class OperationPush extends Operation {
     }
 
     @Override
-    public Value run(Runtime runtime) {
+    public void run(Runtime runtime) {
         runtime.stack.push(value);
-        return value;
     }
 
     @Override
-    public String toString(Runtime runtime, int indent) {
-        return "push: " + value.toString(runtime, 0);
+    public String toString() {
+        return "push: " + value;
     }
 }

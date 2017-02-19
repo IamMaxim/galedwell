@@ -34,15 +34,21 @@ public class Token {
                         t.equals("*") ||
                         t.equals("/") ||
                         t.equals("=") ||
-                        t.equals("++") ||
-                        t.equals("--");
+/*                        t.equals("++") ||
+                        t.equals("--") ||*/
+                        t.equals("<") ||
+                        t.equals("<=") ||
+                        t.equals(">=") ||
+                        t.equals(">") ||
+                        t.equals("!=");
             case DELIMITER:
                 return t.equals(";") ||
                         t.equals(",");
             case KEYWORD:
                 return t.equals("global") ||
                         t.equals("if") ||
-                        t.equals("return");
+                        t.equals("return") ||
+                        t.equals("else");
             case IDENTIFIER:
                 return true;
             default:

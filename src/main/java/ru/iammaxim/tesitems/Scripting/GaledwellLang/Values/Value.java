@@ -11,7 +11,6 @@ import ru.iammaxim.tesitems.Scripting.GaledwellLang.Runtime;
  */
 public abstract class Value {
     public abstract String toString(Runtime runtime, int indent);
-    public Value(String value) {}
     public Value() {}
     public static Value get(String value) {
         if (ValueInt.isValid(value))
@@ -23,17 +22,21 @@ public abstract class Value {
         else if (ValueObject.isValid(value))
             return new ValueObject();
         else return new ValueReference(value);
-//        else return null;
     }
     public abstract Value operatorPlus(Value right) throws InvalidOperationException;
-    public abstract Value operatorMinus(Value right) throws InvalidOperationException;
+    public abstract Value operatorSubtract(Value right) throws InvalidOperationException;
     public abstract Value operatorMultiply(Value right) throws InvalidOperationException;
     public abstract Value operatorDivide(Value right) throws InvalidOperationException;
+    public abstract Value operatorLess(Value right) throws InvalidOperationException;
+    public abstract Value operatorLessEquals(Value right) throws InvalidOperationException;
     public abstract Value operatorEquals(Value right) throws InvalidOperationException;
+    public abstract Value operatorMoreEquals(Value right) throws InvalidOperationException;
+    public abstract Value operatorMore(Value right) throws InvalidOperationException;
 
     public abstract NBTTagCompound writeToNBT();
 
     public static Value loadFromNBT(NBTTagCompound tag) {
         return null;
     }
+
 }

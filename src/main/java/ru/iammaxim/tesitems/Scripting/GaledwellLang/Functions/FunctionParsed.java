@@ -22,9 +22,18 @@ public class FunctionParsed extends ValueFunction {
 
     @Override
     public void call(Runtime runtime, Value... arguments) throws InvalidOperationException {
+        ArrayList<Integer> savedValuesArgs = new ArrayList<>();
+        ArrayList<Value> savedValues = new ArrayList<>(arguments.length);
+
         //add args
-        for (int i = 0; i < arguments.length; i++)
+        for (int i = 0; i < arguments.length; i++) {
+            Value v = runtime.variableStorage.getField(args[i]);
+            if (v != null) {
+                savedValues.add(v);
+                savedValuesArgs.add(args[i]);
+            }
             runtime.variableStorage.setField(args[i], arguments[i]);
+        }
 
         //run program
         //iterate over all operators
@@ -32,6 +41,8 @@ public class FunctionParsed extends ValueFunction {
         int size = operations.size();
         runtime.currentFunctionLength = size;
         while (runtime.currentCursorPos < size) {
+            System.out.println("exec op: " + runtime.currentCursorPos);
+            System.out.println("stack: " + runtime.stack);
             Operation op = operations.get(runtime.currentCursorPos);
             op.run(runtime);
             runtime.currentCursorPos++;
@@ -40,6 +51,10 @@ public class FunctionParsed extends ValueFunction {
         //remove args
         for (int i = 0; i < arguments.length; i++) {
             runtime.variableStorage.removeField(args[i]);
+        }
+
+        for (int i = savedValues.size() - 1; i >= 0; i--) {
+            runtime.variableStorage.setField(savedValuesArgs.get(i), savedValues.get(i));
         }
     }
 }

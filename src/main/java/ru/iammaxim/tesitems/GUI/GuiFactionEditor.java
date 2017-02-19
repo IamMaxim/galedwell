@@ -32,7 +32,7 @@ public class GuiFactionEditor extends Screen {
                 .setElement(new VerticalLayout()
                         .add(new HeaderLayout("Faction editor"))
                         .add(new TextField().setHint("Name").setText(finalFaction.name).setOnType(tf -> finalFaction.name = tf.getText()).setWidthOverride(ElementBase.FILL))
-                        .add(new Text("id: " + finalFaction.id))
+                        .add(new Text("index: " + finalFaction.id))
                         .add(new HorizontalDivider())
                         .add(new HeaderLayout("Topics"))
                         .add(new WrapFrameLayout().setElement(topics = new VerticalLayout()).setWidthOverride(ElementBase.FILL))

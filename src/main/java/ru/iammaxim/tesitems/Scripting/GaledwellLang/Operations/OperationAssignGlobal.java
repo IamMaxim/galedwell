@@ -17,13 +17,12 @@ public class OperationAssignGlobal extends Operation {
     }
 
     @Override
-    public Value run(Runtime runtime) {
+    public void run(Runtime runtime) {
         runtime.variableStorage.setGlobalVar(left, right);
-        return right;
     }
 
     @Override
-    public String toString(Runtime runtime, int indent) {
-        return "assignGlobal: " + left + " <- " + right.toString(runtime, indent + 4);
+    public String toString() {
+        return "assignGlobal: " + left + " <- " + right;
     }
 }

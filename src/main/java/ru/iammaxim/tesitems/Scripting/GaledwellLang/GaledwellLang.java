@@ -1,6 +1,7 @@
 package ru.iammaxim.tesitems.Scripting.GaledwellLang;
 
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Functions.FunctionParsed;
+import ru.iammaxim.tesitems.Scripting.GaledwellLang.Operations.Operation;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.*;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.ValueFunction;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Compiler.Compiler;
@@ -10,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by maxim on 2/18/17 at 11:30 PM.
@@ -62,14 +64,17 @@ public class GaledwellLang {
 
         funcs.forEach(f -> {
             try {
-                ops.write(("function: " + f.id + "\n").getBytes());
-                ((FunctionParsed)f).operations.forEach(o -> {
+                ops.write((">>> function: " + f.id + "\n").getBytes());
+                ops.write((">>> args: " + Arrays.toString(f.args) + "\n").getBytes());
+
+                int opIndex = 0;
+                for (Operation o : ((FunctionParsed) f).operations) {
                     try {
-                        ops.write((o.toString(runtime, 0) + "\n").getBytes());
+                        ops.write(((opIndex++) + ": " + o.toString() + "\n").getBytes());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                });
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

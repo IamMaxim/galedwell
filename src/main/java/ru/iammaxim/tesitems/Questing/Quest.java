@@ -41,7 +41,7 @@ public class Quest {
 
     public NBTTagCompound writeToNBT() {
         NBTTagCompound questTag = new NBTTagCompound();
-        questTag.setInteger("id", id);
+        questTag.setInteger("index", id);
         questTag.setString("name", name);
         NBTTagList stagesTag = new NBTTagList();
         for (QuestStage stage : stages) {
@@ -53,7 +53,7 @@ public class Quest {
 
     public static Quest readFromNBT(NBTTagCompound tag) {
         Quest quest = new Quest();
-        quest.id = tag.getInteger("id");
+        quest.id = tag.getInteger("index");
         quest.idGen.update(quest.id);
         quest.name = tag.getString("name");
         NBTTagList stagesListNbt = (NBTTagList) tag.getTag("stages");

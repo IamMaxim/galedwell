@@ -7,6 +7,6 @@ public enum TokenType {
     IDENTIFIER,
     DELIMITER, //;,
     SCOPE, // (){}[]
-    OPERATOR, // +-*/= == !=
+    OPERATOR, // +-*/= != < <= == >= >
     KEYWORD
 }

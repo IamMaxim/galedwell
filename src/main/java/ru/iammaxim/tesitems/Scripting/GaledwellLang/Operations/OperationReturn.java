@@ -1,7 +1,6 @@
 package ru.iammaxim.tesitems.Scripting.GaledwellLang.Operations;
 
 
-import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.Value;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Runtime;
 
 /**
@@ -12,13 +11,12 @@ public class OperationReturn extends Operation {
     }
 
     @Override
-    public Value run(Runtime runtime) {
+    public void run(Runtime runtime) {
         runtime.goToFunctionEnd();
-        return null;
     }
 
     @Override
-    public String toString(Runtime runtime, int indent) {
+    public String toString() {
         return "return";
     }
 }

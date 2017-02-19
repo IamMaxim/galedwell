@@ -26,6 +26,7 @@ public class ExpressionFunctionCall extends Expression {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
+        sb.append("call: ");
         sb.append(functionName);
         sb.append("(");
         for (int i = 0; i < args.size(); i++) {

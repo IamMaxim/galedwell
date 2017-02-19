@@ -61,7 +61,24 @@ public class FunctionParser {
                 for (Tokener t : bodyTokeners) {
                     bodyExps.add(parseExpression(t));
                 }
-                return new ExpressionCondition(parseExpression(condition), bodyExps);
+
+                ArrayList<Expression> elseBodyExps = new ArrayList<>();
+                if (tokener.left() > 2 /* else, {, } */ && tokener.get().equals(new Token("else"))) {
+                    tokener.eat(); //eat else
+                    if (!tokener.eat().equals(new Token("{")))
+                        throw new InvalidTokenException("excepted {");
+
+                    Tokener elseBody = tokener.readToSkippingBraces(new Token("}"));
+                    ArrayList<Tokener> elseBodyTokeners = elseBody.splitSkippingBraces(new Token(";"));
+
+                    GaledwellLang.log("parsed elseBody: " + elseBodyTokeners);
+
+                    for (Tokener t : elseBodyTokeners) {
+                        elseBodyExps.add(parseExpression(t));
+                    }
+                }
+
+                return new ExpressionCondition(parseExpression(condition), bodyExps, elseBodyExps);
             }
         }
 
@@ -71,18 +88,6 @@ public class FunctionParser {
         for (int i = 0; tokener.left() > 0; i++) {
             t = tokener.eat();
             if (t.equals(new Token("("))) {
-                //check if this is function call
-                if (highest == null && i > 0 && tokener.tokens.get(i - 1).type == TokenType.IDENTIFIER)
-                    try {
-                        int index = tokener.index;
-                        Tokener argsTokener = tokener.readTo(new Token(")"));
-                        ArrayList<Tokener> args = argsTokener.split(new Token(","));
-                        tokener.index = index;
-                        return new ExpressionFunctionCall(tokener.tokens.get(i - 1), args);
-                    } catch (InvalidTokenException e) {
-                        e.printStackTrace();
-                    }
-
                 level++;
             } else if (t.equals(new Token(")"))) {
                 level--;
@@ -102,8 +107,25 @@ public class FunctionParser {
             }
         }
 
-        if (highest == null)
+        if (highest == null) {
+            //check if this is function call
+            tokener.index = 0;
+            for (int i = 0; tokener.left() > 0; i++) {
+                t = tokener.eat();
+                if (t.equals(new Token("(")) && i > 0 && tokener.tokens.get(i - 1).type == TokenType.IDENTIFIER)
+                    try {
+                        int index = tokener.index;
+                        Tokener argsTokener = tokener.readTo(new Token(")"));
+                        ArrayList<Tokener> args = argsTokener.split(new Token(","));
+                        tokener.index = index;
+                        return new ExpressionFunctionCall(tokener.tokens.get(i - 1), args);
+                    } catch (InvalidTokenException e) {
+                        e.printStackTrace();
+                    }
+            }
+
             return new ExpressionTree(tokener.tokens.get(0));
+        }
 
         return new ExpressionTree(highest,
                 parseExpression(tokener.subtokener(0, highestPriorityIndex)),

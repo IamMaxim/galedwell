@@ -1,5 +1,6 @@
 package ru.iammaxim.tesitems.Scripting.GaledwellLang;
 
+import ru.iammaxim.tesitems.Scripting.GaledwellLang.Functions.FunctionPrint;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Operations.InvalidOperationException;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.InvalidTokenException;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.ValueFunction;
@@ -18,6 +19,7 @@ public class Main {
 
             Runtime runtime = new Runtime();
 
+            runtime.variableStorage.setField("print", new FunctionPrint());
             GaledwellLang.loadSrcInto(src, runtime);
 
             long start = System.currentTimeMillis();
