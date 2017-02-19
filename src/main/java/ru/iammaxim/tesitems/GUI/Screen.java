@@ -2,7 +2,6 @@ package ru.iammaxim.tesitems.GUI;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
-import org.lwjgl.input.Mouse;
 import ru.iammaxim.tesitems.GUI.Debugger.DebuggerWindow;
 import ru.iammaxim.tesitems.GUI.Elements.Button;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.*;
@@ -17,7 +16,7 @@ public class Screen {
     protected ScaledResolution res;
     protected ScreenCenteredLayout root;
     protected FrameLayout contentLayout;
-    protected boolean wasClicked = false;
+
     protected DoubleStateFrameLayout debugWindow;
 
     public Screen() {
@@ -41,16 +40,6 @@ public class Screen {
             buildDebugWindow();
         }
 
-        if (Mouse.isButtonDown(0)) {
-            if (!wasClicked) {
-                root.checkClick(mouseX, mouseY);
-                debugWindow.checkClick(mouseX, mouseY);
-                wasClicked = true;
-            }
-        } else {
-            wasClicked = false;
-        }
-
         if (ResManager.enableBlur) {
             if (ResManager.gaussianBlurShader == null) {
                 ResManager.loadShaders();
@@ -71,6 +60,11 @@ public class Screen {
 
         debugWindow.checkHover(mouseX, mouseY);
         debugWindow.draw(mouseX, mouseY);
+    }
+
+    public void checkClick(int mouseX, int mouseY) {
+        root.checkClick(mouseX, mouseY);
+        debugWindow.checkClick(mouseX, mouseY);
     }
 
     public void keyTyped(char typedChar, int keyCode) throws IOException {

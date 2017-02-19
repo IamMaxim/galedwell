@@ -47,7 +47,7 @@ public class RenderNPC extends RenderLivingBase<EntityNPC> {
 
             /* //never sneaking
             if (entity.isSneaking()) {
-                d0 = y - 0.125D;
+                d0 = top - 0.125D;
             }
             */
         setModelVisibilities(entity);

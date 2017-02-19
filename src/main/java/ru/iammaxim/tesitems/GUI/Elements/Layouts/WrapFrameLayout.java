@@ -27,16 +27,18 @@ public class WrapFrameLayout extends FrameLayout {
         return innerPaddingVertical;
     }
 
-    public void setInnerPaddingVertical(int innerPaddingVertical) {
+    public WrapFrameLayout setInnerPaddingVertical(int innerPaddingVertical) {
         this.innerPaddingVertical = innerPaddingVertical;
+        return this;
     }
 
     public int getInnerPaddingHorizontal() {
         return innerPaddingHorizontal;
     }
 
-    public void setInnerPaddingHorizontal(int innerPaddingHorizontal) {
+    public WrapFrameLayout setInnerPaddingHorizontal(int innerPaddingHorizontal) {
         this.innerPaddingHorizontal = innerPaddingHorizontal;
+        return this;
     }
 
     @Override

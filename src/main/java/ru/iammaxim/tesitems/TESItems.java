@@ -217,6 +217,8 @@ public class TESItems {
         networkWrapper.registerMessage(MessageShowNotification.Handler.class, MessageShowNotification.class, 21, Side.CLIENT);
         networkWrapper.registerMessage(MessageQuestList.Handler.class, MessageQuestList.class, 22, Side.CLIENT);
         networkWrapper.registerMessage(MessageOpenEditFaction.ServerHandler.class, MessageOpenEditFaction.class, 23, Side.SERVER);
+        networkWrapper.registerMessage(MessageQuest.ServerHandler.class, MessageQuest.class, 24, Side.SERVER);
+        networkWrapper.registerMessage(MessageQuest.ClientHandler.class, MessageQuest.class, 25, Side.CLIENT);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GUIHandler());
         EntityRegistry.registerModEntity(EntityRangedSpellEffect.class, "EntityRangedSpellEffect", 0, instance, 100, 1, false);

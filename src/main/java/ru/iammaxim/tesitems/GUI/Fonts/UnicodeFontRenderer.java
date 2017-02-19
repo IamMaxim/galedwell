@@ -1,26 +1,23 @@
 package ru.iammaxim.tesitems.GUI.Fonts;
 
-import static org.lwjgl.opengl.GL11.*;
-
-import java.awt.Color;
-import java.awt.Font;
-import java.nio.IntBuffer;
-import java.util.Arrays;
-import java.util.List;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.BufferUtils;
-import org.newdawn.slick.*;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
+
+import java.awt.*;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.lwjgl.opengl.GL11.*;
 
 public class UnicodeFontRenderer extends FontRenderer {
     public final UnicodeFont font;
     private static final ResourceLocation fakeTexture = new ResourceLocation("tesitems:textures/fakeTexture.png");
-    public static String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'\".,-_!?@#$%*/\\|;:";
+    public static String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'\".,-_!?@#$%*/\\|;:(){}";
     private Minecraft mc = Minecraft.getMinecraft();
 
     @SuppressWarnings("unchecked")

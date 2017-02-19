@@ -2,6 +2,7 @@ package ru.iammaxim.tesitems.GUI;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import org.lwjgl.input.Mouse;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 public class ScreenStack extends GuiScreen {
     public static ScreenStack instance;
     private ArrayList<Screen> screens = new ArrayList<>();
+    protected boolean wasClicked = false;
 
     public ScreenStack() {
         mc = Minecraft.getMinecraft();
@@ -27,7 +29,11 @@ public class ScreenStack extends GuiScreen {
     }
 
     public static void close() {
-        Minecraft.getMinecraft().addScheduledTask(() -> instance._close());
+        instance._close();
+    }
+
+    public static void forceClose() {
+        instance.screens.remove(instance.screens.size() - 1);
     }
 
     private void _addScreen(Screen screen) {
@@ -47,6 +53,16 @@ public class ScreenStack extends GuiScreen {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         for (int i = 0; i < screens.size(); i++)
             screens.get(i).drawScreen(mouseX, mouseY, partialTicks);
+
+        if (lastScreen() != null)
+            if (Mouse.isButtonDown(0)) {
+                if (!wasClicked) {
+                    lastScreen().checkClick(mouseX, mouseY);
+                    wasClicked = true;
+                }
+            } else {
+                wasClicked = false;
+            }
     }
 
     @Override

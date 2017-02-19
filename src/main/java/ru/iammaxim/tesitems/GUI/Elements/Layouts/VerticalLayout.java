@@ -25,6 +25,11 @@ public class VerticalLayout extends LayoutBase {
     public VerticalLayout() {
     }
 
+    public VerticalLayout setSpacing(int spacing) {
+        this.spacing = spacing;
+        return this;
+    }
+
     public VerticalLayout add(ElementBase element) {
         elements.add(element);
         element.setParent(this);

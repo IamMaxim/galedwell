@@ -1,6 +1,7 @@
 package ru.iammaxim.tesitems.Factions;
 
 import net.minecraft.nbt.NBTTagList;
+import ru.iammaxim.tesitems.Utils.IDGen;
 
 import java.util.HashMap;
 
@@ -9,7 +10,7 @@ import java.util.HashMap;
  */
 public class FactionManager {
     public static HashMap<Integer, Faction> factions = new HashMap<>();
-    private static int nextID = -1;
+    public static IDGen idGen = new IDGen();
 
     public static void addFaction(Faction faction) {
         factions.put(faction.id, faction);
@@ -30,12 +31,7 @@ public class FactionManager {
         for (int i = tagList.tagCount() - 1; i >= 0; i--) {
             Faction faction = Faction.loadFromNBT(tagList.getCompoundTagAt(i));
             factions.put(faction.id, faction);
-            if (faction.id > nextID)
-                nextID = faction.id;
+            idGen.update(faction.id);
         }
-    }
-
-    public static int nextID() {
-        return ++nextID;
     }
 }

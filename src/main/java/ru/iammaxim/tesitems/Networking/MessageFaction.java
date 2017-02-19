@@ -58,7 +58,7 @@ public class MessageFaction implements IMessage {
             //todo: add permission check
 //            if (player.per)
             if (FactionManager.factions.get(message.faction.id) == null || message.faction.id == -1)
-                message.faction.id = FactionManager.nextID();
+                message.faction.id = FactionManager.idGen.genID();
             System.out.println("setting faction " + message.faction.writeToNBT().toString());
             FactionManager.addFaction(message.faction);
 

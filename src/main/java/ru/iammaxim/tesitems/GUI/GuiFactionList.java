@@ -3,6 +3,7 @@ package ru.iammaxim.tesitems.GUI;
 import ru.iammaxim.tesitems.Factions.Faction;
 import ru.iammaxim.tesitems.Factions.FactionManager;
 import ru.iammaxim.tesitems.GUI.Elements.Button;
+import ru.iammaxim.tesitems.GUI.Elements.ElementBase;
 import ru.iammaxim.tesitems.GUI.Elements.HorizontalDivider;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.HeaderLayout;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.ScrollableLayout;
@@ -36,7 +37,7 @@ public class GuiFactionList extends Screen {
             f.id = -1;
             AdminTemporaryStorage.lastEditedFaction = f;
             ScreenStack.addScreen(new GuiFactionEditor());
-        }));
+        }).setWidthOverride(ElementBase.FILL));
 
         FactionManager.factions.forEach((id, f) -> factionsLayout.add(new Text(f.name).setColor(0xFF0066CC).setOnClick(e ->
                 TESItems.networkWrapper.sendToServer(new MessageOpenEditFaction(id))

@@ -19,6 +19,12 @@ public class GuiFactionEditor extends Screen {
     public VerticalLayout topics;
     public HashMap<ElementBase, DialogTopic> elements = new HashMap<>();
 
+    @Override
+    public boolean close() {
+        ScreenStack.addScreen(new GuiConfirmationDialog("Are you sure you don't want to save changes?", ScreenStack::forceClose));
+        return false;
+    }
+
     public GuiFactionEditor() {
         Faction finalFaction = cloneFaction(AdminTemporaryStorage.lastEditedFaction);
         contentLayout.setElement(new ScrollableLayout()

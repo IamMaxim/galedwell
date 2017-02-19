@@ -1,17 +1,13 @@
 package ru.iammaxim.tesitems.Questing;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.TESItems;
+import ru.iammaxim.tesitems.Utils.IDGen;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.Scanner;
 
 /**
  * Created by Maxim on 20.07.2016.
@@ -20,6 +16,7 @@ public class QuestManager {
 //    private static final String FILEDIRECTORY = "questSystem";
 //    private static final String FILEPATH = FILEDIRECTORY + "/quests.nbt";
     public static HashMap<Integer, Quest> questList = new HashMap<>();
+    public static IDGen idGen = new IDGen();
 
     public static Quest getByID(int ID) {
         return questList.get(ID);
@@ -43,6 +40,7 @@ public class QuestManager {
             for (int i = 0; i < tag.tagCount(); i++) {
                 NBTTagCompound questTag = tag.getCompoundTagAt(i);
                 Quest q = Quest.readFromNBT(questTag);
+                idGen.update(q.id);
                 questList.put(q.id, q);
             }
         } catch (ClassCastException e) {

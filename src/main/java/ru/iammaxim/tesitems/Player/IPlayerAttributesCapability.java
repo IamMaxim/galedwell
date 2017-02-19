@@ -2,15 +2,12 @@ package ru.iammaxim.tesitems.Player;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import ru.iammaxim.tesitems.Dialogs.Dialog;
 import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.Magic.SpellBase;
-import ru.iammaxim.tesitems.NPC.EntityNPC;
 import ru.iammaxim.tesitems.NPC.NPC;
 import ru.iammaxim.tesitems.Questing.QuestInstance;
-import ru.iammaxim.tesitems.Scripting.VariableStorage;
+import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.VariableStorage;
 
 import java.util.HashMap;
 import java.util.List;

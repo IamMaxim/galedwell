@@ -2,19 +2,19 @@ package ru.iammaxim.tesitems.Questing;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import ru.iammaxim.tesitems.Utils.IDGen;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * Created by Maxim on 20.07.2016.
  */
 public class Quest {
-    private static int idGen = -1;
-    public int id;
-    public List<QuestStage> stages = new ArrayList<>();
+    public int id = -1;
+    public ArrayList<QuestStage> stages = new ArrayList<>();
     public String name;
+    public IDGen idGen = new IDGen();
 
     public Quest() {
         id = -1;
@@ -22,12 +22,7 @@ public class Quest {
     }
 
     public Quest(String name) {
-        id = genID();
         this.name = name;
-    }
-
-    public static int genID() {
-        return ++idGen;
     }
 
     @Override
@@ -39,9 +34,8 @@ public class Quest {
         Quest dest = new Quest();
         dest.id = id;
         dest.name = name;
-        stages.forEach(stage -> {
-            dest.stages.add(stage.copy());
-        });
+        stages.forEach(stage ->
+                dest.stages.add(stage.copy()));
         return dest;
     }
 
@@ -60,18 +54,12 @@ public class Quest {
     public static Quest readFromNBT(NBTTagCompound tag) {
         Quest quest = new Quest();
         quest.id = tag.getInteger("id");
-        if (quest.id > idGen)
-            idGen = quest.id;
+        quest.idGen.update(quest.id);
         quest.name = tag.getString("name");
         NBTTagList stagesListNbt = (NBTTagList) tag.getTag("stages");
         for (int j = 0; j < stagesListNbt.tagCount(); j++) {
             NBTTagCompound questStageNbt = stagesListNbt.getCompoundTagAt(j);
-            QuestStage stage = new QuestStage();
-            stage.journalLine = questStageNbt.getString("journalLine");
-            NBTTagList targetsNbt = (NBTTagList) questStageNbt.getTag("targets");
-            for (int k = 0; k < targetsNbt.tagCount(); k++) {
-                stage.targets.add(QuestTarget.getTargetFromNBT(targetsNbt.getCompoundTagAt(k)));
-            }
+            QuestStage stage = QuestStage.loadFromNBT(questStageNbt);
             quest.stages.add(stage);
         }
         return quest;

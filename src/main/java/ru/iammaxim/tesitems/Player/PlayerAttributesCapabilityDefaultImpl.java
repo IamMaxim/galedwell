@@ -16,7 +16,7 @@ import ru.iammaxim.tesitems.Magic.SpellEffectManager;
 import ru.iammaxim.tesitems.NPC.NPC;
 import ru.iammaxim.tesitems.Questing.QuestInstance;
 import ru.iammaxim.tesitems.ReflectionUtils;
-import ru.iammaxim.tesitems.Scripting.VariableStorage;
+import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.VariableStorage;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
