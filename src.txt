@@ -13,5 +13,6 @@ fibonacci(depth) {
         return 1;
     };
     print("condition not passed");
+    dumpVarStorage();
     return fibonacci(depth - 1) + fibonacci(depth - 2);
 }

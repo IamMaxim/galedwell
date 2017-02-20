@@ -1,6 +1,7 @@
 package ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser;
 
 
+import ru.iammaxim.tesitems.Scripting.GaledwellLang.Compiler.CompilerDebugRuntime;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.GaledwellLang;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.Expression.*;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.Value;
@@ -116,7 +117,7 @@ public class FunctionParser {
                     try {
                         int index = tokener.index;
                         Tokener argsTokener = tokener.readTo(new Token(")"));
-                        ArrayList<Tokener> args = argsTokener.split(new Token(","));
+                        ArrayList<Tokener> args = argsTokener.splitSkippingParentheses(new Token(","));
                         tokener.index = index;
                         return new ExpressionFunctionCall(tokener.tokens.get(i - 1), args);
                     } catch (InvalidTokenException e) {
@@ -187,16 +188,22 @@ public class FunctionParser {
                 throw new InvalidTokenException("Excepted (");
             Tokener argsTokener = tokener.readToSkippingParentheses(new Token(")"));
 
-            GaledwellLang.log("parsed function args: " + argsTokener);
+//            GaledwellLang.log("parsed function args: " + argsTokener);
 
-            ArrayList<Tokener> argsTokeners = argsTokener.split(new Token(","));
+            ArrayList<Tokener> argsTokeners = argsTokener.splitSkippingParentheses(new Token(","));
+
+            GaledwellLang.log("parsed function args: " + argsTokeners);
+
             args = new int[argsTokeners.size()];
             for (int i = 0; i < argsTokeners.size(); i++) {
                 Tokener argTokener1 = argsTokeners.get(i);
                 if (argTokener1.size() > 1)
                     throw new InvalidTokenException("Excepted 1 identifier, got " + argTokener1.size() + " while parsing argument");
-                if (argTokener1.size() > 0)
+                if (argTokener1.size() > 0) {
+                    CompilerDebugRuntime.addName(args[i], argTokener1.tokens.get(0).token);
+
                     args[i] = argTokener1.tokens.get(0).token.hashCode();
+                }
             }
 
             //read function body
@@ -224,6 +231,7 @@ public class FunctionParser {
             }
 
             //build function
+            CompilerDebugRuntime.addName(functionName.token.hashCode(), functionName.token);
             functions.add(new ParsedFunction(functionName.token.hashCode(), args, exps));
         }
 

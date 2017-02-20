@@ -2,9 +2,8 @@ package ru.iammaxim.tesitems.Scripting.GaledwellLang.Values;
 
 
 import net.minecraft.nbt.NBTTagCompound;
+import ru.iammaxim.tesitems.Scripting.GaledwellLang.Compiler.CompilerDebugRuntime;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Operations.InvalidOperationException;
-import ru.iammaxim.tesitems.Scripting.GaledwellLang.Runtime;
-
 
 import java.util.HashMap;
 
@@ -21,7 +20,7 @@ public class ValueObject extends Value {
 
     @Override
     public String toString() {
-        return "value: " + this.toString(null, 0);
+        return "object: " + fields.toString();
     }
 
     @Override
@@ -84,6 +83,8 @@ public class ValueObject extends Value {
     }
 
     public void setField(String name, Value value) {
+        CompilerDebugRuntime.addName(name.hashCode(), name);
+
         setField(name.hashCode(), value);
     }
 
@@ -91,21 +92,25 @@ public class ValueObject extends Value {
         return fields.get(id);
     }
 
+    public Value getField(String name) {
+        return fields.get(name.hashCode());
+    }
+
     public void removeField(int id) {
         fields.remove(id);
     }
 
-    @Override
+/*    @Override
     public String toString(Runtime runtime, int indent) {
-/*        StringJoiner sj = new StringJoiner(",\n" + Utils.indent(indent + 3));
+*//*        StringJoiner sj = new StringJoiner(",\n" + Utils.indent(indent + 3));
         fields.forEach((path, value) -> sj.add("\"" + path + "\"" + ": " + value.toString(runtime, indent + 3)));
         return "\"object\":\n" +
                 Utils.indent(indent + 1) + "{\n" +
                 Utils.indent(indent + 2) + sj.toString() + "\n" +
-                Utils.indent(indent + 1) + "}";*/
+                Utils.indent(indent + 1) + "}";*//*
 
         return "object";
-    }
+    }*/
 
     public static boolean isValid(String value) {
         return value.equals("Object");

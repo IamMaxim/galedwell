@@ -4,7 +4,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Operations.InvalidOperationException;
-import ru.iammaxim.tesitems.Scripting.GaledwellLang.Runtime;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.Value;
 import ru.iammaxim.tesitems.TESItems;
 
@@ -21,7 +20,7 @@ public class ValuePlayer extends Value {
     }
 
     @Override
-    public String toString(Runtime runtime, int indent) {
+    public String toString() {
         return "player: " + player.getName();
     }
 

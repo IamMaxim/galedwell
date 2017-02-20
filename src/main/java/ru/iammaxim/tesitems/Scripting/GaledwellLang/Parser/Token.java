@@ -70,7 +70,8 @@ public class Token {
 
     @Override
     public String toString() {
-        return "{\"type\": \"" + type + "\", \"token\": \"" + token + "\"}";
+//        return "{\"type\": \"" + type + "\", \"token\": \"" + token + "\"}";
+        return "\"" + token + "\"";
     }
 
     public String toShortString() {

@@ -8,6 +8,7 @@ import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.ValueFunction;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Runtime;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by maxim on 2/12/17 at 12:29 PM.
@@ -27,6 +28,8 @@ public class FunctionParsed extends ValueFunction {
 
         //add args
         for (int i = 0; i < arguments.length; i++) {
+            System.out.println(Arrays.toString(args));
+
             Value v = runtime.variableStorage.getField(args[i]);
             if (v != null) {
                 savedValues.add(v);

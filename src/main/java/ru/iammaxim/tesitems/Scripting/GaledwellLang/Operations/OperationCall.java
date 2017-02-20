@@ -26,6 +26,7 @@ public class OperationCall extends Operation {
         ValueObject parent = (ValueObject) runtime.stack.pop();
 
         Value[] newArgs = new Value[argsCount];
+        System.out.println("calling function with " + argsCount + " arguments");
         for (int i = 0; i < newArgs.length; i++) {
             Value arg = runtime.stack.pop();
             if (arg instanceof ValueReference) {

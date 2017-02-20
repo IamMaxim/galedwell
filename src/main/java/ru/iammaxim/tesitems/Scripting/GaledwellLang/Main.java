@@ -1,5 +1,6 @@
 package ru.iammaxim.tesitems.Scripting.GaledwellLang;
 
+import ru.iammaxim.tesitems.Scripting.GaledwellLang.Functions.FunctionDumpVariableStorage;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Functions.FunctionPrint;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Operations.InvalidOperationException;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.InvalidTokenException;
@@ -20,11 +21,12 @@ public class Main {
             Runtime runtime = new Runtime();
 
             runtime.variableStorage.setField("print", new FunctionPrint());
+            runtime.variableStorage.setField("dumpVarStorage", new FunctionDumpVariableStorage());
             GaledwellLang.loadSrcInto(src, runtime);
 
             long start = System.currentTimeMillis();
             for (int i = 0; i < 10000000; i++)
-            ((ValueFunction) runtime.variableStorage.getField("main".hashCode())).call(runtime);
+            ((ValueFunction) runtime.variableStorage.getField("main")).call(runtime);
             System.out.println("elapsed time: " + (float)(System.currentTimeMillis() - start)/1000 + "sec");
 
             long freeMemory = java.lang.Runtime.getRuntime().freeMemory();

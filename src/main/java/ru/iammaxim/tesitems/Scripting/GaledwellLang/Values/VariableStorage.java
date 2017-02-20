@@ -1,7 +1,6 @@
 package ru.iammaxim.tesitems.Scripting.GaledwellLang.Values;
 
 import net.minecraft.nbt.NBTTagCompound;
-import ru.iammaxim.tesitems.Scripting.GaledwellLang.Runtime;
 
 import java.util.HashMap;
 
@@ -25,9 +24,9 @@ public class VariableStorage extends ValueObject {
         return globalVariables.get(id);
     }
 
-    @Override
+/*    @Override
     public String toString(Runtime runtime, int indent) {
-        /*StringJoiner sj1 = new StringJoiner(",\n" + Utils.indent(indent + 2));
+        *//*StringJoiner sj1 = new StringJoiner(",\n" + Utils.indent(indent + 2));
         StringJoiner sj2 = new StringJoiner(",\n" + Utils.indent(indent + 2));
         fields.forEach((path, value) -> sj1.add("\"" + path + "\"" + ": " + value.toString(runtime, indent + 2)));
         globalVariables.forEach((path, value) -> sj2.add("\"" + path + "\"" + ": " + value.toString(runtime, indent + 2)));
@@ -39,10 +38,10 @@ public class VariableStorage extends ValueObject {
                 Utils.indent(indent + 1) + "\"globalVariables\": {\n" +
                 Utils.indent(indent + 2) + sj2.toString() + "\n" +
                 Utils.indent(indent + 1) + "}\n" +
-                Utils.indent(indent) + "}";*/
+                Utils.indent(indent) + "}";*//*
 
         return "variableStorage";
-    }
+    }*/
 
     public NBTTagCompound writeToNBT() {
         NBTTagCompound tag = new NBTTagCompound();

@@ -2,7 +2,6 @@ package ru.iammaxim.tesitems.Scripting.GaledwellLang.Values;
 
 import net.minecraft.nbt.NBTTagCompound;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Operations.InvalidOperationException;
-import ru.iammaxim.tesitems.Scripting.GaledwellLang.Runtime;
 
 /**
  * Created by maxim on 2/12/17 at 12:59 PM.
@@ -14,10 +13,10 @@ public class ValueFloat extends Value {
         this.value = value;
     }
 
-    @Override
+/*    @Override
     public String toString(Runtime runtime, int indent) {
         return String.valueOf(value);
-    }
+    }*/
 
     @Override
     public Value operatorPlus(Value right) {

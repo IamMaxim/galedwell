@@ -102,14 +102,15 @@ public class Tokener {
         index = 0;
         while (left() > 0) {
             Token t = eat();
-            if (t.equals(token)) {
+            if (t.equals(token) && !parts.isEmpty()) {
                 parts.add(new Tokener(tokens));
                 tokens = new ArrayList<>();
             } else
                 tokens.add(t);
         }
         //add last part that is not followed by delimiter
-        parts.add(new Tokener(tokens));
+        if (!parts.isEmpty())
+            parts.add(new Tokener(tokens));
         return parts;
     }
 
@@ -242,10 +243,11 @@ public class Tokener {
     }
 
     public void trimParentheses() throws InvalidTokenException {
-        while (tokens.get(0).equals(new Token("(")) && tokens.get(tokens.size() - 1).equals(new Token(")"))) {
-            tokens.remove(0);
-            tokens.remove(tokens.size() - 1);
-        }
+        if (size() >= 2)
+            while (tokens.get(0).equals(new Token("(")) && tokens.get(tokens.size() - 1).equals(new Token(")"))) {
+                tokens.remove(0);
+                tokens.remove(tokens.size() - 1);
+            }
     }
 
     public Token get() {
@@ -254,5 +256,37 @@ public class Tokener {
 
     public Token get(int i) {
         return tokens.get(i);
+    }
+
+    public ArrayList<Tokener> splitSkippingParentheses(Token token) throws InvalidTokenException {
+        ArrayList<Tokener> parts = new ArrayList<>();
+        ArrayList<Token> tokens = new ArrayList<>();
+        index = 0;
+        int level = 0;
+        while (left() > 0) {
+            Token t = eat();
+
+            if (t.equals(new Token("(")))
+                level++;
+            if (t.equals(new Token(")")))
+                level--;
+
+            if (level > 0) {
+                tokens.add(t);
+                continue;
+            }
+
+            if (t.equals(token)) {
+                if (tokens.size() > 0) {
+                    parts.add(new Tokener(tokens));
+                    tokens = new ArrayList<>();
+                }
+            } else
+                tokens.add(t);
+        }
+        //add last part that is not followed by delimiter
+        if (tokens.size() > 0)
+            parts.add(new Tokener(tokens));
+        return parts;
     }
 }

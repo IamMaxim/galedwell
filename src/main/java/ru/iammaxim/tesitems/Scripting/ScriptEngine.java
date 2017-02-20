@@ -15,7 +15,7 @@ public class ScriptEngine {
 
     static {
         runtime = new Runtime();
-        runtime.variableStorage.setField("print".hashCode(), new FunctionPrint());
+        runtime.variableStorage.setField("print", new FunctionPrint());
     }
 
     public static void processScript(NPC npc, EntityPlayer caller, String script, VariableStorage variableStorage, QuestInstance questInst) {

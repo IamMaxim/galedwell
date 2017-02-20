@@ -27,6 +27,16 @@ public class Compiler {
         return compiler.operations;
     }
 
+    private void addOperation(Operation op) {
+        GaledwellLang.log("        adding op: " + op);
+        operations.add(op);
+    }
+
+    private void addOperation(int index, Operation op) {
+        GaledwellLang.log("        adding op: " + op);
+        operations.add(index, op);
+    }
+
     private void _compileFunction() throws InvalidTokenException {
         for (int i = 0; i < exps.size(); i++) {
             Expression exp = exps.get(i);
@@ -48,7 +58,7 @@ public class Compiler {
     }
 
     private void compileExpression(Expression exp, int depth) throws InvalidTokenException {
-        GaledwellLang.log("compiling: " + exp.toString());
+        GaledwellLang.log("    compiling: " + exp.toString());
 
         //check if this is function call
         if (exp instanceof ExpressionFunctionCall) {
@@ -62,16 +72,16 @@ public class Compiler {
             }
 
             compilePathToVar(call.functionName);
-            operations.add(new OperationCall(call.args.size()));
+            addOperation(new OperationCall(call.args.size()));
             if (depth == 0)
-                operations.add(new OperationPop()); //pop return value of function if it won't be used
+                addOperation(new OperationPop()); //pop return value of function if it won't be used
 
             GaledwellLang.log("compiled function call");
         } else if (exp instanceof ExpressionReturn) { //check if this is return statement
             GaledwellLang.log("compiling return");
 
             compileExpression(((ExpressionReturn) exp).returnExp, depth + 1);
-            operations.add(new OperationReturn());
+            addOperation(new OperationReturn());
 
             GaledwellLang.log("compiled return");
         } else if (exp instanceof ExpressionValue) { //check if this is value expression
@@ -81,7 +91,7 @@ public class Compiler {
             if (val.value instanceof ValueReference) { //if this is reference, push parent and field index, so value can be got during execution
                 compilePathToVar(((ValueReference) val.value).path);
             } else
-                operations.add(new OperationPush(val.value)); //this is constant, just push it every time
+                addOperation(new OperationPush(val.value)); //this is constant, just push it every time
 
             GaledwellLang.log("compiled value");
         } else if (exp instanceof ExpressionTree) { //check if this is tree expression (left + operator + right)
@@ -95,35 +105,47 @@ public class Compiler {
 
                 if (tree.operator.equals(new Token("+"))) {
                     convertLastReferencesToValues();
-                    operations.add(new OperationAdd());
+                    addOperation(new OperationAdd());
                 } else if (tree.operator.equals(new Token("-"))) {
                     convertLastReferencesToValues();
-                    operations.add(new OperationSub());
+                    addOperation(new OperationSub());
                 } else if (tree.operator.equals(new Token("*"))) {
                     convertLastReferencesToValues();
-                    operations.add(new OperationMul());
+                    addOperation(new OperationMul());
                 } else if (tree.operator.equals(new Token("/"))) {
                     convertLastReferencesToValues();
-                    operations.add(new OperationDiv());
+                    addOperation(new OperationDiv());
                 } else if (tree.operator.equals(new Token("<"))) {
                     convertLastReferencesToValues();
-                    operations.add(new OperationLess());
+                    addOperation(new OperationLess());
                 } else if (tree.operator.equals(new Token("<="))) {
                     convertLastReferencesToValues();
-                    operations.add(new OperationLessEquals());
+                    addOperation(new OperationLessEquals());
                 } else if (tree.operator.equals(new Token("=="))) {
                     convertLastReferencesToValues();
-                    operations.add(new OperationEquals());
+                    addOperation(new OperationEquals());
                 } else if (tree.operator.equals(new Token(">="))) {
                     convertLastReferencesToValues();
-                    operations.add(new OperationMoreEquals());
+                    addOperation(new OperationMoreEquals());
                 } else if (tree.operator.equals(new Token(">"))) {
                     convertLastReferencesToValues();
-                    operations.add(new OperationMore());
+                    addOperation(new OperationMore());
                 } else if (tree.operator.equals(new Token("="))) {
-                    operations.add(new OperationAssign());
+                    //check if we assigning a reference: if so, replace it with value
+                    {
+                        Operation op = operations.get(operations.size() - 3);
+                        if (op instanceof OperationPush)
+                            if (((OperationPush) op).value instanceof ValueReference) {
+                                GaledwellLang.log("replacing reference with value in assignment");
+
+                                operations.remove(operations.size() - 2);
+                                operations.add(operations.size() - 2, new OperationGetAndPush(((ValueReference) ((OperationPush) op).value).id));
+                            }
+                    }
+
+                    addOperation(new OperationAssign());
                     if (depth == 0)
-                        operations.add(new OperationPop()); //pop value if it won't be used
+                        addOperation(new OperationPop()); //pop value if it won't be used
                 }
             }
             GaledwellLang.log("compiled tree");
@@ -139,27 +161,27 @@ public class Compiler {
             }
 
             compileExpression(cond.cond, depth + 1); //compile condition
-            operations.add(new OperationIf(ifNotLabel));
+            addOperation(new OperationIf(ifNotLabel));
 
             for (Expression expression : cond.body) {
                 compileExpression(expression, depth + 1);
             }
 
             if (elseExists) //skip else block from if block
-                operations.add(new OperationGoTo(endIfLabel));
+                addOperation(new OperationGoTo(endIfLabel));
 
-            operations.add(ifNotLabel); //add label after body
+            addOperation(ifNotLabel); //add label after body
 
             if (elseExists) {
                 for (Expression expression : cond.elseBody) {
                     compileExpression(expression, depth + 1);
                 }
-                operations.add(endIfLabel);
+                addOperation(endIfLabel);
             }
 
-        GaledwellLang.log("compiled condition");
+            GaledwellLang.log("compiled condition");
+        }
     }
-}
 
     private void convertLastReferencesToValues() {
         int lastOpOffset = 1, preLastOpOffset = 2;
@@ -167,7 +189,7 @@ public class Compiler {
             OperationPush v1 = (OperationPush) operations.get(operations.size() - lastOpOffset); //get last push operation
             if (v1.value instanceof ValueReference) { //check if it pushes reference to variable
                 operations.remove(operations.size() - lastOpOffset); //remove this push
-                operations.add(new OperationGetAndPush(((ValueReference) v1.value).id)); //replace it with getAndPush, so reference's value is pushed to stack
+                addOperation(new OperationGetAndPush(((ValueReference) v1.value).id)); //replace it with getAndPush, so reference's value is pushed to stack
 
                 preLastOpOffset = 3;
             } else {
@@ -179,7 +201,7 @@ public class Compiler {
             OperationPush v2 = (OperationPush) operations.get(operations.size() - preLastOpOffset); //get pre-last push operation
             if (v2.value instanceof ValueReference) { //check if it pushes reference to variable
                 operations.remove(operations.size() - preLastOpOffset); //remove this push
-                operations.add(operations.size() - preLastOpOffset, new OperationGetAndPush(((ValueReference) v2.value).id)); //replace it with getAndPush, so reference's value is pushed to stack
+                addOperation(operations.size() - preLastOpOffset, new OperationGetAndPush(((ValueReference) v2.value).id)); //replace it with getAndPush, so reference's value is pushed to stack
             }
         }
     }
@@ -187,13 +209,15 @@ public class Compiler {
     private void compilePathToVar(String path) {
         GaledwellLang.log("compiling path to var");
 
-        operations.add(new OperationPushVariableStorage());
+        addOperation(new OperationPushVariableStorage());
         String[] tokens = path.split("\\.");
         for (int i = 0; i < tokens.length; i++) {
+            CompilerDebugRuntime.addName(tokens[i].hashCode(), tokens[i]);
+
             if (i == tokens.length - 1) {
-                operations.add(new OperationPush(new ValueReference(tokens[i].hashCode())));
+                addOperation(new OperationPush(new ValueReference(tokens[i].hashCode())));
             } else {
-                operations.add(new OperationGetAndPush(tokens[i].hashCode()));
+                addOperation(new OperationGetAndPush(tokens[i].hashCode()));
             }
         }
     }

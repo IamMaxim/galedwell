@@ -2,8 +2,8 @@ package ru.iammaxim.tesitems.Scripting.GaledwellLang.Values;
 
 
 import net.minecraft.nbt.NBTTagCompound;
+import ru.iammaxim.tesitems.Scripting.GaledwellLang.Compiler.CompilerDebugRuntime;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Operations.InvalidOperationException;
-import ru.iammaxim.tesitems.Scripting.GaledwellLang.Runtime;
 
 
 /**
@@ -79,11 +79,11 @@ public class ValueReference extends Value {
     public String toString() {
         if (path != null)
             return "reference: " + path;
-        return "reference: " + id;
+        return "reference: " + CompilerDebugRuntime.getName(id);
     }
 
-    @Override
+/*    @Override
     public String toString(Runtime runtime, int indent) {
-        return "reference: " + id;
-    }
+        return "reference: " + CompilerDebugRuntime.getName(id);
+    }*/
 }

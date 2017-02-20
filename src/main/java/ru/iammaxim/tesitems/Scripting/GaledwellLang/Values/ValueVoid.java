@@ -2,16 +2,15 @@ package ru.iammaxim.tesitems.Scripting.GaledwellLang.Values;
 
 import net.minecraft.nbt.NBTTagCompound;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Operations.InvalidOperationException;
-import ru.iammaxim.tesitems.Scripting.GaledwellLang.Runtime;
 
 /**
  * Created by maxim on 2/18/17 at 10:30 PM.
  */
 public class ValueVoid extends Value {
-    @Override
+/*    @Override
     public String toString(Runtime runtime, int indent) {
         return "void";
-    }
+    }*/
 
     @Override
     public Value operatorPlus(Value right) throws InvalidOperationException {

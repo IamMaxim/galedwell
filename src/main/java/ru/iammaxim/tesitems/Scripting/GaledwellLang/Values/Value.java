@@ -3,14 +3,13 @@ package ru.iammaxim.tesitems.Scripting.GaledwellLang.Values;
 
 import net.minecraft.nbt.NBTTagCompound;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Operations.InvalidOperationException;
-import ru.iammaxim.tesitems.Scripting.GaledwellLang.Runtime;
 
 
 /**
  * Created by maxim on 2/12/17 at 10:09 AM.
  */
 public abstract class Value {
-    public abstract String toString(Runtime runtime, int indent);
+//    public abstract String toString(Runtime runtime, int indent);
     public Value() {}
     public static Value get(String value) {
         if (ValueInt.isValid(value))

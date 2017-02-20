@@ -10,7 +10,7 @@ public class ExpressionValue extends Expression {
 
     @Override
     public String toString() {
-        return value.toString(null, 0);
+        return value.toString();
     }
 
     public ExpressionValue(Value value) {

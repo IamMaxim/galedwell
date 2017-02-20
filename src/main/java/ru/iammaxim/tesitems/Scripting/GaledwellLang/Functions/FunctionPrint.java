@@ -11,14 +11,14 @@ import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.ValueVoid;
  */
 public class FunctionPrint extends ValueFunction {
     public FunctionPrint() {
-        super("print".hashCode(), "values".hashCode());
+        super("print", "values");
     }
 
     @Override
     public void call(Runtime runtime, Value... arguments) {
         String[] newArgs = new String[arguments.length];
         for (int i = 0; i < arguments.length; i++) {
-            newArgs[i] = arguments[i].toString(runtime, 0);
+            newArgs[i] = arguments[i].toString();
         }
         System.out.println(String.join(" ", newArgs));
 

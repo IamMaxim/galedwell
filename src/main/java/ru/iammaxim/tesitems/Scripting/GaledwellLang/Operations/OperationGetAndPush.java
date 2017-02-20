@@ -1,5 +1,6 @@
 package ru.iammaxim.tesitems.Scripting.GaledwellLang.Operations;
 
+import ru.iammaxim.tesitems.Scripting.GaledwellLang.Compiler.CompilerDebugRuntime;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Runtime;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.ValueObject;
 
@@ -20,6 +21,6 @@ public class OperationGetAndPush extends Operation {
 
     @Override
     public String toString() {
-        return "getAndPush: " + id;
+        return "getAndPush: " + CompilerDebugRuntime.getName(id);
     }
 }
