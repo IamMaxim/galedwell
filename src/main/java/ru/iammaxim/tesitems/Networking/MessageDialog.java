@@ -7,7 +7,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import ru.iammaxim.tesitems.Dialogs.Dialog;
-import ru.iammaxim.tesitems.GUI.Elements.Text;
 import ru.iammaxim.tesitems.GUI.GuiNPCDialog;
 import ru.iammaxim.tesitems.GUI.ScreenStack;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
@@ -42,7 +41,6 @@ public class MessageDialog implements IMessage {
         @Override
         public IMessage onMessage(MessageDialog message, MessageContext ctx) {
             Dialog dialog = Dialog.loadFromNBT(message.tag);
-            System.out.println("setting dialog to " + dialog.saveToNBT().toString());
             IPlayerAttributesCapability cap = TESItems.getCapability(TESItems.getClientPlayer());
             cap.setLatestDialog(dialog);
             if (ScreenStack.lastScreen() instanceof GuiNPCDialog) {

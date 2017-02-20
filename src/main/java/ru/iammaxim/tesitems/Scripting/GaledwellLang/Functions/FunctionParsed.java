@@ -42,6 +42,7 @@ public class FunctionParsed extends ValueFunction {
         runtime.currentFunctionLength = size;
         while (runtime.currentCursorPos < size) {
             Operation op = operations.get(runtime.currentCursorPos);
+//            System.out.println("executing " + runtime.currentCursorPos + ": " + op);
             op.run(runtime);
             runtime.currentCursorPos++;
         }

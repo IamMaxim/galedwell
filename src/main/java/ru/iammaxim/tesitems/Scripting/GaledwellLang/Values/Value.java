@@ -20,6 +20,8 @@ public abstract class Value {
             return new ValueString(value.substring(1, value.length() - 1)); //remove quotes
         else if (ValueObject.isValid(value))
             return new ValueObject();
+        else if (ValueNull.isValid(value))
+            return new ValueNull();
         else return new ValueReference(value);
     }
     public abstract Value operatorPlus(Value right) throws InvalidOperationException;
@@ -34,7 +36,7 @@ public abstract class Value {
 
     public abstract NBTTagCompound writeToNBT();
 
-    public static Value loadFromNBT(NBTTagCompound tag) {
+    public static Value loadValueFromNBT(NBTTagCompound tag) {
         return null;
     }
 

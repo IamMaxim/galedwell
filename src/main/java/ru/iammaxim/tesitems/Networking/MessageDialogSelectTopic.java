@@ -48,7 +48,7 @@ public class MessageDialogSelectTopic implements IMessage {
                     QuestInstance inst = null;
                     if (attachedTo != null)
                         inst = cap.getQuest(attachedTo.id);
-                    ScriptEngine.processScript(cap.getLatestNPC(), player, topic.script, cap.getVariableStorage(), inst);
+                    ScriptEngine.processScript(cap.getLatestNPC(), player, topic.object, cap.getVariableStorage(), inst);
                 }
             });
             return new MessageDialog(Dialog.createDialogForPlayer(cap.getLatestNPC(), player).saveToNBT());

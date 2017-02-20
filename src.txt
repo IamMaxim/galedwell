@@ -1,18 +1,7 @@
-//comment demonstration
-
 main() {
-    f = fibonacci(3);
-    print(f);
-}
-
-fibonacci(depth) {
-    print("executing with depth:", depth);
-    if (depth <= 2) {
-        print("condition passed");
-        tmp = depth;
-        return 1;
-    };
-    print("condition not passed");
-    dumpVarStorage();
-    return fibonacci(depth - 1) + fibonacci(depth - 2);
+    if (testVar == testVar2) {
+        print("true");
+    } else {
+        print("false");
+    }
 }

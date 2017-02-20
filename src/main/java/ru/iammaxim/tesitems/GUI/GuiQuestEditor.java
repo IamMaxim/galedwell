@@ -81,7 +81,6 @@ public class GuiQuestEditor extends Screen {
             public StagesElement() {
                 quest.stages.forEach(s -> stages.add(new StageElement(s)));
 
-
                 buttons = new HorizontalLayout()
                         .add(new Button("Add stage").setOnClick(b -> {
                             QuestStage s = new QuestStage();
@@ -191,6 +190,16 @@ public class GuiQuestEditor extends Screen {
                     fontRenderer.drawString(stage.id + "", (2 * left + w - fontRenderer.getStringWidth(stage.id + "")) / 2, (2 * top + h - 8) / 2, FG_COLOR);
                 }
             }
+        }
+    }
+
+    private class StageEditor extends Screen {
+
+        public StageEditor(QuestStage stage) {
+            stage = stage.copy();
+
+            VerticalLayout layout = new VerticalLayout();
+//            layout.add()
         }
     }
 }

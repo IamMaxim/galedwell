@@ -8,6 +8,11 @@ import ru.iammaxim.tesitems.Scripting.GaledwellLang.Runtime;
 public class OperationGoTo extends Operation {
     public OperationLabel labelToGo;
 
+    @Override
+    public String toString() {
+        return "goto: " + labelToGo.index;
+    }
+
     public OperationGoTo(OperationLabel label) {
         this.labelToGo = label;
     }

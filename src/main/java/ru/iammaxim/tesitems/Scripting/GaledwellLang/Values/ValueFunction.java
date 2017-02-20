@@ -5,6 +5,7 @@ import ru.iammaxim.tesitems.Scripting.GaledwellLang.Compiler.CompilerDebugRuntim
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.GaledwellLang;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Operations.InvalidOperationException;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Runtime;
+import ru.iammaxim.tesitems.Scripting.GaledwellLang.Utils;
 
 import java.util.Arrays;
 
@@ -49,13 +50,7 @@ public abstract class ValueFunction extends Value {
 
     @Override
     public String toString() {
-        String[] argNames = new String[args.length];
-
-        for (int i = 0; i < args.length; i++) {
-            argNames[i] = CompilerDebugRuntime.getName(args[i]);
-        }
-
-        return "function: " + CompilerDebugRuntime.getName(id) + " (" + Arrays.toString(argNames) + ")";
+        return "function: " + CompilerDebugRuntime.getName(id) + " (" + Arrays.toString(Utils.getNames(args)) + ")";
     }
 
     @Override

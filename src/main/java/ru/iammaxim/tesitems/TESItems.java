@@ -51,8 +51,8 @@ import ru.iammaxim.tesitems.Blocks.mBlocks;
 import ru.iammaxim.tesitems.Commands.*;
 import ru.iammaxim.tesitems.Craft.CraftRecipe;
 import ru.iammaxim.tesitems.Craft.CraftRecipes;
-import ru.iammaxim.tesitems.GUI.*;
 import ru.iammaxim.tesitems.GUI.Fonts.UnicodeFontRenderer;
+import ru.iammaxim.tesitems.GUI.*;
 import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.Items.*;
 import ru.iammaxim.tesitems.Magic.*;
@@ -131,36 +131,6 @@ public class TESItems {
 
     @Mod.Instance
     public static TESItems instance;
-
-    @SideOnly(Side.CLIENT)
-    public static class ClientThings {
-        public static FontRenderer fontRenderer; //used in all mod UI
-        public static FontRenderer monospaceFontRenderer; //used in script editor
-
-        public static void loadFonts() {
-            //load main font
-            try {
-                Font font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File("main.ttf")));
-                font = font.deriveFont(Font.PLAIN, 24);
-                ClientThings.fontRenderer = new UnicodeFontRenderer(font);
-            } catch (FontFormatException | IOException e) {
-                e.printStackTrace();
-                ClientThings.fontRenderer = getMinecraft().fontRendererObj;
-            }
-
-            //load monospace font
-            try {
-                Font font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File("monospace.ttf")));
-                font = font.deriveFont(Font.PLAIN, 16);
-                ClientThings.monospaceFontRenderer = new UnicodeFontRenderer(font);
-//            ((UnicodeFontRenderer)monospaceFontRenderer).font.setPaddingTop(4);
-            } catch (FontFormatException | IOException e) {
-                e.printStackTrace();
-                ClientThings.monospaceFontRenderer = getMinecraft().fontRendererObj;
-            }
-        }
-    }
-
     //used for dialog camera orient
     /*
     @SideOnly(Side.CLIENT)
@@ -504,5 +474,35 @@ public class TESItems {
         }
 
         getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static class ClientThings {
+        public static FontRenderer fontRenderer; //used in all mod UI
+        public static FontRenderer monospaceFontRenderer; //used in script editor
+
+        public static void loadFonts() {
+            //load main font
+            try {
+                Font font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File("main.ttf")));
+                font = font.deriveFont(Font.PLAIN, 24);
+                ClientThings.fontRenderer = new UnicodeFontRenderer(font);
+            } catch (FontFormatException | IOException e) {
+                e.printStackTrace();
+                ClientThings.fontRenderer = getMinecraft().fontRendererObj;
+            }
+
+            //load monospace font
+            try {
+                Font font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File("monospace.ttf")));
+                font = font.deriveFont(Font.PLAIN, 16);
+                ClientThings.monospaceFontRenderer = new UnicodeFontRenderer(font);
+                ((UnicodeFontRenderer) ClientThings.monospaceFontRenderer).setTopOffset(3);
+//            ((UnicodeFontRenderer)monospaceFontRenderer).font.setPaddingTop(4);
+            } catch (FontFormatException | IOException e) {
+                e.printStackTrace();
+                ClientThings.monospaceFontRenderer = getMinecraft().fontRendererObj;
+            }
+        }
     }
 }

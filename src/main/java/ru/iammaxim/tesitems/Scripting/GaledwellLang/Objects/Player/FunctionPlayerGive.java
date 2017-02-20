@@ -14,11 +14,13 @@ import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.ValueString;
  */
 public class FunctionPlayerGive extends ValueFunction {
     public FunctionPlayerGive() {
-        super("give", "player", "itemName", "count");
+        super("give", "itemName", "count");
     }
 
     @Override
     public void call(Runtime runtime, Value... args) throws InvalidOperationException {
-        ((ValuePlayer)args[0]).cap.getInventory().addItem(new ItemStack(Item.getByNameOrId(((ValueString) args[1]).value), ((ValueInt)args[2]).value));
+        ((ValuePlayer)runtime.variableStorage.getField("player")).cap.getInventory().addItem(new ItemStack(Item.getByNameOrId(((ValueString) args[0]).value), ((ValueInt)args[1]).value));
+
+        runtime.stack.push(null);
     }
 }

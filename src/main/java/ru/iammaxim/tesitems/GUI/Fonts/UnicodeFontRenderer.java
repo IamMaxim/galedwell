@@ -9,7 +9,7 @@ import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
 
 import java.awt.*;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -17,8 +17,13 @@ import static org.lwjgl.opengl.GL11.*;
 public class UnicodeFontRenderer extends FontRenderer {
     public final UnicodeFont font;
     private static final ResourceLocation fakeTexture = new ResourceLocation("tesitems:textures/fakeTexture.png");
-    public static String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'\".,-_!?@#$%*/\\|;:(){}";
+    public static String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'\".,+-_!?@#$%*/\\|;:(){}=<>";
     private Minecraft mc = Minecraft.getMinecraft();
+    private int topOffset = 0;
+
+    public void setTopOffset(int offset) {
+        this.topOffset = offset;
+    }
 
     @SuppressWarnings("unchecked")
     public UnicodeFontRenderer(Font awtFont) {
@@ -42,7 +47,25 @@ public class UnicodeFontRenderer extends FontRenderer {
 
     @Override
     public List<String> listFormattedStringToWidth(String str, int wrapWidth) {
-        return Arrays.asList(this.wrapFormattedStringToWidth(str, wrapWidth).split("\n"));
+        str = wrapFormattedStringToWidth(str, wrapWidth);
+
+        ArrayList<String> strs = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+
+            if (c == '\n') {
+                strs.add(sb.toString());
+                sb = new StringBuilder();
+            } else {
+                sb.append(c);
+            }
+        }
+        strs.add(sb.toString());
+
+        return strs;
+        //Arrays.asList(this.wrapFormattedStringToWidth(str, wrapWidth).split("\n"))
     }
 
     String wrapFormattedStringToWidth(String str, int wrapWidth) {
@@ -121,6 +144,7 @@ public class UnicodeFontRenderer extends FontRenderer {
         y += font.getPaddingTop();
         y *= 2;
         y -= 8;
+        y += topOffset;
 
         font.drawString(x, y, text, new org.newdawn.slick.Color(color));
         GlStateManager.color(0, 0, 0, 1);

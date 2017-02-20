@@ -22,12 +22,10 @@ public class Main {
 
             runtime.variableStorage.setField("print", new FunctionPrint());
             runtime.variableStorage.setField("dumpVarStorage", new FunctionDumpVariableStorage());
-            GaledwellLang.loadSrcInto(src, runtime);
+            GaledwellLang.loadSrcInto(src, runtime.variableStorage);
 
-//            long start = System.currentTimeMillis();
-//            for (int i = 0; i < 10000000; i++)
-            ((ValueFunction) runtime.variableStorage.getField("main")).call(runtime);
-//            System.out.println("elapsed time: " + (float)(System.currentTimeMillis() - start)/1000 + "sec");
+            run(runtime);
+//            benchmark(runtime);
 
 //            long freeMemory = java.lang.Runtime.getRuntime().freeMemory();
 //            long totalMemory = java.lang.Runtime.getRuntime().totalMemory();
@@ -36,5 +34,19 @@ public class Main {
         } catch (FileNotFoundException | InvalidTokenException | InvalidOperationException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void benchmark(Runtime runtime) throws InvalidOperationException {
+        long start = System.nanoTime();
+        int runCount = 10000000;
+        for (int i = 0; i < runCount; i++)
+            ((ValueFunction) runtime.variableStorage.getField("main")).call(runtime);
+        double runTime = System.nanoTime() - start;
+        System.out.println("elapsed time: " + (runTime/1000000000) + "sec");
+        System.out.println("one execution time: " + (runTime/runCount) + "ns");
+    }
+
+    public static void run(Runtime runtime) throws InvalidOperationException {
+        ((ValueFunction) runtime.variableStorage.getField("main")).call(runtime);
     }
 }

@@ -124,7 +124,8 @@ public class TextField extends ElementBase {
                 cursorPos--;
             } else if (key == 205 && cursorPos < text.length()) { //arrow right
                 cursorPos++;
-            }
+            } else if (key == 15) //tab
+                for (int i = 0; i < 4; i++) keyTyped(' ', 57);
 
             if (lastKey != key)
                 startTime = System.currentTimeMillis();
@@ -148,6 +149,13 @@ public class TextField extends ElementBase {
         if (!text.isEmpty()) {
             if (dirty)
                 return lineHeight + 2 * padding;
+
+            int newLineCount = 0;
+            for (int i = 0; i < text.length(); i++) {
+                if (text.charAt(i) == '\n')
+                    newLineCount++;
+            }
+
             return strs.size() * lineHeight + (strs.size() - 1) * lineSpacing + 2 * padding;
         } else
             return lineHeight + 2 * padding;
@@ -180,22 +188,26 @@ public class TextField extends ElementBase {
             for (int i = 0; i < strs.size(); i++)
                 fontRenderer.drawString(strs.get(i), left + padding, top + (lineSpacing + lineHeight) * i + padding, color);
 
-        if (active) {
-            //draw cursor
-            int cursor_line = 0;
-            int cursor_column = 0;
-            int cursor_pos = cursorPos;
-            for (int i = 0; cursor_pos > 0; i++) {
-                cursor_column = cursor_pos;
-                cursor_pos -= strs.get(i).length() + 1;
-                if (cursor_pos <= 0) {
-                    cursor_line = i;
-                    break;
+        try {
+            if (active) {
+                //draw cursor
+                int cursor_line = 0;
+                int cursor_column = 0;
+                int cursor_pos = cursorPos;
+                for (int i = 0; cursor_pos > 0; i++) {
+                    cursor_column = cursor_pos;
+                    cursor_pos -= strs.get(i).length() + 1;
+                    if (cursor_pos <= 0) {
+                        cursor_line = i;
+                        break;
+                    }
                 }
+                int x = left + padding + (cursor_pos == 0 ? 0 : fontRenderer.getStringWidth(strs.get(cursor_line).substring(0, cursor_column))),
+                        y = top + (lineSpacing + lineHeight) * (cursor_pos == 0 && cursorPos > 0 ? cursor_line + 1 : cursor_line) + padding;
+                drawColoredRect(tess, x, y - 2, x + 1, y + lineHeight + 2, color);
             }
-            int x = left + padding + (cursor_pos == 0 ? 0 : fontRenderer.getStringWidth(strs.get(cursor_line).substring(0, cursor_column))),
-                    y = top + (lineSpacing + lineHeight) * (cursor_pos == 0 && cursorPos > 0 ? cursor_line + 1 : cursor_line) + padding;
-            drawColoredRect(tess, x, y - 2, x + 1, y + lineHeight + 2, color);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

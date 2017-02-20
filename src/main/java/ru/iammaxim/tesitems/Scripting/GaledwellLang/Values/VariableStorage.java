@@ -52,7 +52,7 @@ public class VariableStorage extends ValueObject {
         return tag;
     }
 
-/*    public void loadFromNBT(NBTTagCompound tag) {
-        tag.getKeySet().forEach(key -> globalVariables.put(Integer.parseInt(key), Value.loadFromNBT((NBTTagCompound) tag.getTag(key))));
+/*    public void loadValueFromNBT(NBTTagCompound tag) {
+        tag.getKeySet().forEach(key -> globalVariables.put(Integer.parseInt(key), Value.loadValueFromNBT((NBTTagCompound) tag.getTag(key))));
     }*/
 }

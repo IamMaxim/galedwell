@@ -20,7 +20,7 @@ public class ValueString extends Value {
 
     @Override
     public Value operatorPlus(Value right) throws InvalidOperationException {
-        return new ValueString(value + ((ValueString)right).value);
+        return new ValueString(value + right.valueToString());
     }
 
     @Override

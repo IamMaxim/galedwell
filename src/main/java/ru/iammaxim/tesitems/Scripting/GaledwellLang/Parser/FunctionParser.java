@@ -187,9 +187,6 @@ public class FunctionParser {
             if (!eat().equals(new Token("(")))
                 throw new InvalidTokenException("Excepted (");
             Tokener argsTokener = tokener.readToSkippingParentheses(new Token(")"));
-
-//            GaledwellLang.log("parsed function args: " + argsTokener);
-
             ArrayList<Tokener> argsTokeners = argsTokener.splitSkippingParentheses(new Token(","));
 
             GaledwellLang.log("parsed function args: " + argsTokeners);
@@ -226,8 +223,6 @@ public class FunctionParser {
                     continue;
                 Expression exp = parseExpression(statement);
                 exps.add(exp);
-
-//                System.out.println("tree: " + exp);
             }
 
             //build function

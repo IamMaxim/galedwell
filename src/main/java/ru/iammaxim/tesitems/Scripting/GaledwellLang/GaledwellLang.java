@@ -6,6 +6,7 @@ import ru.iammaxim.tesitems.Scripting.GaledwellLang.Operations.Operation;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.*;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.ValueFunction;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Compiler.Compiler;
+import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.ValueObject;
 
 
 import java.io.FileNotFoundException;
@@ -30,17 +31,20 @@ public class GaledwellLang {
         }
     }
 
-    static {
+    public static void loadSrcInto(String src, ValueObject object) throws InvalidTokenException {
+        System.out.println("compiling script");
+
+        if (src.isEmpty())
+            return;
+
         try {
             GaledwellLang.tokens = new FileOutputStream("tokens.txt");
-            GaledwellLang.ops = new FileOutputStream("ops.txt");
+            GaledwellLang.ops = new FileOutputStream("operations.txt");
             GaledwellLang.log = new FileOutputStream("log.txt");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-    }
 
-    public static void loadSrcInto(String src, Runtime runtime) throws InvalidTokenException {
         ArrayList<Token> tokens = TokenParser.parse(src);
 
         tokens.forEach(t -> {
@@ -60,13 +64,13 @@ public class GaledwellLang {
         }
 
         for (ValueFunction f : funcs) {
-            runtime.variableStorage.setField(f.id, f);
+            object.setField(f.id, f);
         }
 
         funcs.forEach(f -> {
             try {
-                ops.write((">>> function: " + f.id + "\n").getBytes());
-                ops.write((">>> args: " + Arrays.toString(f.args) + "\n").getBytes());
+                ops.write((">>> function: " + CompilerDebugRuntime.getName(f.id) + "\n").getBytes());
+                ops.write((">>> args: " + Arrays.toString(Utils.getNames(f.args)) + "\n").getBytes());
 
                 int opIndex = 0;
                 for (Operation o : ((FunctionParsed) f).operations) {
