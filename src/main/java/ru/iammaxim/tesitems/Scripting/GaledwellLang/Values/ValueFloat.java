@@ -19,6 +19,11 @@ public class ValueFloat extends Value {
     }*/
 
     @Override
+    public String valueToString() {
+        return String.valueOf(value);
+    }
+
+    @Override
     public Value operatorPlus(Value right) {
         return new ValueFloat(value + ((ValueFloat)right).value);
     }

@@ -16,11 +16,22 @@ public class ValueObject extends Value {
     public ValueObject(String value) {
     }
 
+    @Override
+    public String valueToString() {
+        StringBuilder sb = new StringBuilder();
+
+        fields.forEach((id, value) -> {
+            sb.append("\n    ").append(CompilerDebugRuntime.getName(id)).append("=").append(value);
+        });
+
+        return "object: {" + sb.toString() + "\n}";
+    }
+
     public ValueObject() {}
 
     @Override
     public String toString() {
-        return "object: " + fields.toString();
+        return "object: " + fields;
     }
 
     @Override

@@ -14,6 +14,11 @@ public class ValueString extends Value {
     }
 
     @Override
+    public String valueToString() {
+        return value;
+    }
+
+    @Override
     public Value operatorPlus(Value right) throws InvalidOperationException {
         return new ValueString(value + ((ValueString)right).value);
     }

@@ -110,5 +110,10 @@ public abstract class ValueFunction extends Value {
         return tag;
     }
 
+    @Override
+    public String valueToString() {
+        return toString();
+    }
+
     public abstract void call(Runtime runtime, Value... args) throws InvalidOperationException;
 }

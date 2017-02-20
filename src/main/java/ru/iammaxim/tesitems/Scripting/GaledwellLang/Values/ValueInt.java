@@ -25,6 +25,11 @@ public class ValueInt extends Value {
     }*/
 
     @Override
+    public String valueToString() {
+        return String.valueOf(value);
+    }
+
+    @Override
     public Value operatorPlus(Value right) throws InvalidOperationException {
         return new ValueInt(value + ((ValueInt)right).value);
     }

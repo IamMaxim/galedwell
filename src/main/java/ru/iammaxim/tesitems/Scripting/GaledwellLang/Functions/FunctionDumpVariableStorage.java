@@ -17,7 +17,7 @@ public class FunctionDumpVariableStorage extends ValueFunction {
     @Override
     public void call(Runtime runtime, Value... args) throws InvalidOperationException {
         System.out.println(">>> dump variable storage <<<");
-        System.out.println(runtime.variableStorage);
+        System.out.println(runtime.variableStorage.valueToString());
         runtime.stack.push(new ValueVoid());
     }
 }

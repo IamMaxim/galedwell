@@ -24,14 +24,14 @@ public class Main {
             runtime.variableStorage.setField("dumpVarStorage", new FunctionDumpVariableStorage());
             GaledwellLang.loadSrcInto(src, runtime);
 
-            long start = System.currentTimeMillis();
-            for (int i = 0; i < 10000000; i++)
+//            long start = System.currentTimeMillis();
+//            for (int i = 0; i < 10000000; i++)
             ((ValueFunction) runtime.variableStorage.getField("main")).call(runtime);
-            System.out.println("elapsed time: " + (float)(System.currentTimeMillis() - start)/1000 + "sec");
+//            System.out.println("elapsed time: " + (float)(System.currentTimeMillis() - start)/1000 + "sec");
 
-            long freeMemory = java.lang.Runtime.getRuntime().freeMemory();
-            long totalMemory = java.lang.Runtime.getRuntime().totalMemory();
-            System.out.println("Occupied memory: " + ((double) (totalMemory - freeMemory) / 1024 / 1024) + "MB (" + ((1 - (double) freeMemory / totalMemory) * 100) + "%)");
+//            long freeMemory = java.lang.Runtime.getRuntime().freeMemory();
+//            long totalMemory = java.lang.Runtime.getRuntime().totalMemory();
+//            System.out.println("Occupied memory: " + ((double) (totalMemory - freeMemory) / 1024 / 1024) + "MB (" + ((1 - (double) freeMemory / totalMemory) * 100) + "%)");
 
         } catch (FileNotFoundException | InvalidTokenException | InvalidOperationException e) {
             e.printStackTrace();

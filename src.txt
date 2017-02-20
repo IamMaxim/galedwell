@@ -7,7 +7,7 @@ main() {
 
 fibonacci(depth) {
     print("executing with depth:", depth);
-    if (depth < 2) {
+    if (depth <= 2) {
         print("condition passed");
         tmp = depth;
         return 1;

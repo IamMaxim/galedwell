@@ -19,14 +19,10 @@ public class OperationCall extends Operation {
 
     @Override
     public void run(Runtime runtime) throws InvalidOperationException {
-        //cleanup return value
-        runtime.returnValueTmp = null;
+        int id = ((ValueReference) runtime.stack.pop()).id; //function ID
+        ValueObject parent = (ValueObject) runtime.stack.pop(); //object that contains this function
 
-        int id = ((ValueReference) runtime.stack.pop()).id;
-        ValueObject parent = (ValueObject) runtime.stack.pop();
-
-        Value[] newArgs = new Value[argsCount];
-        System.out.println("calling function with " + argsCount + " arguments");
+        Value[] newArgs = new Value[argsCount]; //arguments to pass
         for (int i = 0; i < newArgs.length; i++) {
             Value arg = runtime.stack.pop();
             if (arg instanceof ValueReference) {
@@ -39,8 +35,10 @@ public class OperationCall extends Operation {
         }
 
         int currentPosBackup = runtime.currentCursorPos;
+        int currentFunctionLengthBackup = runtime.currentFunctionLength;
         ((ValueFunction) parent.getField(id)).call(runtime, newArgs);
         runtime.currentCursorPos = currentPosBackup;
+        runtime.currentFunctionLength = currentFunctionLengthBackup;
     }
 
     @Override

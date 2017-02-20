@@ -15,6 +15,11 @@ public class ValueBoolean extends Value {
     }
 
     @Override
+    public String valueToString() {
+        return String.valueOf(value);
+    }
+
+    @Override
     public Value operatorPlus(Value right) throws InvalidOperationException {
         throw new InvalidOperationException("Not implemented");
     }

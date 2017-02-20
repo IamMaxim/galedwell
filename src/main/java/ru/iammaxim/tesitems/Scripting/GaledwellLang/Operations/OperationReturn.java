@@ -12,6 +12,7 @@ public class OperationReturn extends Operation {
 
     @Override
     public void run(Runtime runtime) {
+        System.out.println("function returned " + runtime.stack.get());
         runtime.goToFunctionEnd();
     }
 

@@ -15,7 +15,7 @@ public class OperationIf extends Operation {
 
     @Override
     public String toString() {
-        return "if";
+        return "if: labelID " + labelToGo.index;
     }
 
     @Override

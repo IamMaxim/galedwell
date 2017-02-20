@@ -25,6 +25,11 @@ public class ValuePlayer extends Value {
     }
 
     @Override
+    public String valueToString() {
+        return toString();
+    }
+
+    @Override
     public Value operatorPlus(Value right) throws InvalidOperationException {
         throw new InvalidOperationException("Not implemented");
     }

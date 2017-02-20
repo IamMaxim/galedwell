@@ -13,6 +13,11 @@ public class ValueVoid extends Value {
     }*/
 
     @Override
+    public String valueToString() {
+        return "void";
+    }
+
+    @Override
     public Value operatorPlus(Value right) throws InvalidOperationException {
         throw new InvalidOperationException("Not implemented");
     }

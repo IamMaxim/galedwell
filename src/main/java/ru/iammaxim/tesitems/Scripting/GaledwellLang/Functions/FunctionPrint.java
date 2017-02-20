@@ -18,7 +18,7 @@ public class FunctionPrint extends ValueFunction {
     public void call(Runtime runtime, Value... arguments) {
         String[] newArgs = new String[arguments.length];
         for (int i = 0; i < arguments.length; i++) {
-            newArgs[i] = arguments[i].toString();
+            newArgs[i] = arguments[i].valueToString();
         }
         System.out.println(String.join(" ", newArgs));
 

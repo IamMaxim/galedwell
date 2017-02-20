@@ -15,6 +15,11 @@ public class OperationLabel extends Operation {
     }
 
     @Override
+    public String toString() {
+        return "label ID " + index;
+    }
+
+    @Override
     public void run(Runtime runtime) throws InvalidOperationException {
         throw new InvalidOperationException("Heeeey, labels shouldn't be executed!");
     }
