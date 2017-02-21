@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
  */
 public class QuestStage {
     public int id = -1;
+    public String textID = "textID";
     public String journalLine = "";
     public List<QuestTarget> targets = new ArrayList<>();
     public ArrayList<DialogTopic> topics = new ArrayList<>();
@@ -20,6 +21,7 @@ public class QuestStage {
     public NBTTagCompound saveToNBT() {
         NBTTagCompound tag = new NBTTagCompound();
         tag.setInteger("index", id);
+        tag.setString("textID", textID);
         tag.setString("journalLine", journalLine);
         NBTTagList targetsList = new NBTTagList();
         targets.forEach(t -> targetsList.appendTag(t.saveToNBT()));
@@ -33,6 +35,7 @@ public class QuestStage {
     public static QuestStage loadFromNBT(NBTTagCompound tag) {
         QuestStage stage = new QuestStage();
         stage.id = tag.getInteger("index");
+        stage.textID = tag.getString("textID");
         stage.journalLine = tag.getString("journalLine");
         NBTTagList targetsList = (NBTTagList) tag.getTag("targets");
         for (int i = 0; i < targetsList.tagCount(); i++) {

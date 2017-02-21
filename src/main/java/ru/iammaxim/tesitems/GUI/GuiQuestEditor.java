@@ -14,6 +14,7 @@ import ru.iammaxim.tesitems.TESItems;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Created by maxim on 11/7/16 at 4:14 PM.
@@ -42,8 +43,8 @@ public class GuiQuestEditor extends Screen {
         layout.add(new HorizontalDivider());
         layout.add(new HorizontalLayout()
                 .add(new Button("Save").setOnClick(e -> {
-                        TESItems.networkWrapper.sendToServer(new MessageQuest(quest));
-                        ScreenStack.addScreen(new GuiAlertDialog("Quest saved"));
+                    TESItems.networkWrapper.sendToServer(new MessageQuest(quest));
+                    ScreenStack.addScreen(new GuiAlertDialog("Quest saved"));
                 })).add(new Button("Back").setOnClick(e ->
                         ScreenStack.close()))
                 .center(true).setWidthOverride(ElementBase.FILL));
@@ -72,11 +73,13 @@ public class GuiQuestEditor extends Screen {
         }
 
         private class StagesElement extends LayoutBase {
+            public ArrayList<StageElement> stages = new ArrayList<>();
             private FontRenderer fontRenderer = TESItems.ClientThings.fontRenderer;
-            private ArrayList<StageElement> stages = new ArrayList<>();
             private int offsetX = 0, offsetY = 0;
             private HorizontalLayout buttons;
             private int lastMouseX = -1, lastMouseY = -1;
+            private int startX = -1, startY = -1;
+            private boolean ignoreUntilReleased = false;
 
             public StagesElement() {
                 quest.stages.forEach(s -> stages.add(new StageElement(s)));
@@ -95,6 +98,8 @@ public class GuiQuestEditor extends Screen {
                 int cx = res.getScaledWidth() / 2;
                 buttons.setBounds(cx - w / 2, 4, cx + w / 2, 4 + buttons.getHeight());
                 buttons.doLayout();
+
+                ignoreUntilReleased = true; //mouse is down while creating this screen, so ignore this click
             }
 
             @Override
@@ -126,11 +131,15 @@ public class GuiQuestEditor extends Screen {
 
             @Override
             public void draw(int mouseX, int mouseY) {
-                if (Mouse.isButtonDown(0)) {
-                    if (lastMouseX == -1)
+                if (!ignoreUntilReleased && Mouse.isButtonDown(0) && ScreenStack.lastScreen() == StagesEditor.this) {
+                    if (lastMouseX == -1) {
                         lastMouseX = mouseX;
-                    if (lastMouseY == -1)
+                        startX = mouseX;
+                    }
+                    if (lastMouseY == -1) {
                         lastMouseY = mouseY;
+                        startY = mouseY;
+                    }
 
                     int deltaX = lastMouseX - mouseX;
                     int deltaY = lastMouseY - mouseY;
@@ -142,8 +151,21 @@ public class GuiQuestEditor extends Screen {
                     lastMouseX = mouseX;
                     lastMouseY = mouseY;
                 } else {
+                    if (lastMouseX != -1) {
+                        int deltaX = lastMouseX - startX;
+                        if (deltaX < 0) deltaX = -deltaX;
+                        int deltaY = lastMouseY - startY;
+                        if (deltaY < 0) deltaY = -deltaY;
+
+                        if (!ignoreUntilReleased && deltaX < 2 && deltaY < 2)
+                            stages.forEach(s -> s.checkClick(lastMouseX, lastMouseY));
+                    }
+
                     lastMouseX = -1;
                     lastMouseY = -1;
+
+                    if (!Mouse.isButtonDown(0))
+                        ignoreUntilReleased = false;
                 }
 
                 GL11.glEnable(GL11.GL_SCISSOR_TEST);
@@ -165,13 +187,26 @@ public class GuiQuestEditor extends Screen {
 
                 public QuestStage stage;
                 public int left, top, w, h;
+                public Consumer<StageElement> onClick;
 
                 public StageElement(QuestStage stage) {
                     this.stage = stage;
+                    this.setOnClick(e -> {
+                        ScreenStack.addScreen(new StageEditor(StagesElement.this, this));
+                    });
+                }
+
+                public void setOnClick(Consumer<StageElement> onClick) {
+                    this.onClick = onClick;
+                }
+
+                public void checkClick(int mouseX, int mouseY) {
+                    if (onClick != null && mouseX > left && mouseX < right && mouseY > top && mouseY < bottom)
+                        onClick.accept(this);
                 }
 
                 public int getWidth() {
-                    return 32;
+                    return fontRenderer.getStringWidth(stage.textID) + 8;
                 }
 
                 public int getHeight() {
@@ -187,19 +222,53 @@ public class GuiQuestEditor extends Screen {
 
                 public void draw() {
                     ElementBase.drawColoredRect(Tessellator.getInstance(), left, top, left + w, top + h, BG_COLOR);
-                    fontRenderer.drawString(stage.id + "", (2 * left + w - fontRenderer.getStringWidth(stage.id + "")) / 2, (2 * top + h - 8) / 2, FG_COLOR);
+                    fontRenderer.drawString(stage.textID, (2 * left + w - fontRenderer.getStringWidth(stage.textID)) / 2, (2 * top + h - 8) / 2, FG_COLOR);
                 }
             }
         }
+
+
     }
 
     private class StageEditor extends Screen {
+        StagesEditor.StagesElement parent;
 
-        public StageEditor(QuestStage stage) {
-            stage = stage.copy();
+        public StageEditor(StagesEditor.StagesElement parent, StagesEditor.StagesElement.StageElement element) {
+            QuestStage copy = element.stage.copy();
+
+            this.parent = parent;
 
             VerticalLayout layout = new VerticalLayout();
-//            layout.add()
+            layout.setPadding(4);
+            layout.add(new HeaderLayout("Quest stage editor"));
+            layout.add(new TextField().setHint("textID").setText(copy.textID).setOnType(tf -> copy.textID = tf.getText()));
+
+
+            layout.add(new HorizontalLayout().add(new Button("Save").setOnClick(b -> {
+                System.out.println("Setting " + quest.stages.get(quest.stages.indexOf(element.stage)) + " to " + copy);
+                quest.stages.set(quest.stages.indexOf(element.stage), copy);
+                element.stage = copy;
+                parent.doLayout();
+                parent.ignoreUntilReleased = true;
+                ScreenStack.forceClose();
+            })).add(new Button("Back").setOnClick(b -> {
+                ScreenStack.addScreen(new GuiConfirmationDialog("Are you sure you don't want to save changes?", () -> {
+                    parent.ignoreUntilReleased = true;
+                    ScreenStack.forceClose();
+                }));
+            })));
+
+            contentLayout.setElement(layout);
+            root.doLayout();
+        }
+
+        @Override
+        public boolean close() {
+            ScreenStack.addScreen(new GuiConfirmationDialog("Are you sure you don't want to save changes?", () -> {
+                parent.ignoreUntilReleased = true;
+                ScreenStack.forceClose();
+            }));
+            return false;
         }
     }
 }
