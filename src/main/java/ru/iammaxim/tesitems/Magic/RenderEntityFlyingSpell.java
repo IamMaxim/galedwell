@@ -26,7 +26,7 @@ public class RenderEntityFlyingSpell<T extends Entity> extends Render<T> {
 
     @Override
     public void doRender(T entity, double x, double y, double z, float entityYaw, float partialTicks) {
-        for(SpellEffectBase effect : spell.effects) {
+        for(SpellEffect effect : spell.effects) {
             effect.renderInWorld(renderManager, x, y, z, partialTicks);
         }
     }

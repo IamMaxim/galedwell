@@ -22,7 +22,7 @@ public class mBlocks {
             wood_block_4;
 
     public static void register(Side side) {
-        hay_block_1 = registerBlock("hay_block_1", Material.PLANTS, MapColor.YELLOW, side);
+        hay_block_1 = registerBlock("hay_block_1", Material.GRASS, MapColor.YELLOW, side);
         wood_block_1 = registerBlock("wood_block_1", Material.WOOD, MapColor.WOOD, side);
         wood_block_2 = registerBlock("wood_block_2", Material.WOOD, MapColor.WOOD, side);
         wood_block_3 = registerBlock("wood_block_3", Material.WOOD, MapColor.WOOD, side);

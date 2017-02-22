@@ -10,10 +10,6 @@ import java.util.HashMap;
 public class VariableStorage extends ValueObject {
     private HashMap<Integer, Value> globalVariables = new HashMap<>();
 
-    public VariableStorage(String value) {
-        super(value);
-    }
-
     public VariableStorage() {}
 
     public void setGlobalVar(int id, Value value) {

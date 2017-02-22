@@ -13,7 +13,7 @@ import java.util.List;
  * Created by Maxim on 11.07.2016.
  */
 public class EntityRangedSpellEffect extends Entity {
-    private SpellEffectBase effect;
+    private SpellEffect effect;
     private float range;
     private EntityPlayer caster;
 
@@ -25,7 +25,7 @@ public class EntityRangedSpellEffect extends Entity {
         this.caster = caster;
     }
 
-    public void setEffect(SpellEffectBase effect) {
+    public void setEffect(SpellEffect effect) {
         this.effect = effect;
     }
 
@@ -46,7 +46,8 @@ public class EntityRangedSpellEffect extends Entity {
     public void onEntityUpdate() {
         super.onEntityUpdate();
         List<EntityLivingBase> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(posX - range, posY - range, posZ - range, posX + range, posY + range, posZ + range));
-        entities.forEach(entity -> effect.castTargetEntity(caster, entity));
-        kill();
+        entities.forEach(entity -> effect.castTargetEntity(caster, entity, (float) Math.sqrt(getDistanceSqToEntity(entity)) / range));
+        effect.castTargetTerrain(caster, getPositionVector());
+//        kill();
     }
 }

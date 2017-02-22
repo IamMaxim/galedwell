@@ -6,17 +6,19 @@ import net.minecraft.nbt.NBTTagList;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.TESItems;
 import ru.iammaxim.tesitems.Utils.IDGen;
+import ru.iammaxim.tesitems.Utils.NBTFileStorage;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 /**
  * Created by Maxim on 20.07.2016.
  */
 public class QuestManager {
-//    private static final String FILEDIRECTORY = "questSystem";
-//    private static final String FILEPATH = FILEDIRECTORY + "/quests.nbt";
     public static HashMap<Integer, Quest> questList = new HashMap<>();
     public static IDGen idGen = new IDGen();
+    public static NBTFileStorage nbtFileStorage = new NBTFileStorage("questSystem", "questSystem/quests.nbt");
+    private static boolean dirty = false;
 
     public static Quest getByID(int ID) {
         return questList.get(ID);
@@ -49,33 +51,43 @@ public class QuestManager {
         }
     }
 
-/*    public static void loadFromFile() {
+    public static void loadFromFile() {
         try {
-            File f = new File(FILEPATH);
-            if (!f.exists()) return;
-            Scanner scanner = new Scanner(f).useDelimiter("\\A");
-            String s = scanner.next();
-            NBTTagCompound tag = JsonToNBT.getTagFromJson(s);
-            readFromNBT(tag);
-            scanner.close();
-        } catch (Exception e) {
+            NBTTagList list = (NBTTagList) nbtFileStorage.loadFromFile().getTag("questList");
+            if (list != null)
+                readFromNBT(list);
+        } catch (IOException e) {
             e.printStackTrace();
         }
-    }*/
 
-/*    public static void saveToFile() throws IOException {
-        File f = new File(FILEDIRECTORY);
-        f.mkdirs();
-        File f2 = new File(FILEPATH);
-        FileOutputStream fos = new FileOutputStream(f2);
-        fos.write(writeToNBT().toString().getBytes());
-        fos.close();
-    }*/
+    }
+
+    public static void saveToFile() {
+        if (!dirty)
+            return;
+
+        try {
+            NBTTagCompound tag = new NBTTagCompound();
+            tag.setTag("questList", writeToNBT());
+            nbtFileStorage.saveToFile(tag);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void startQuest(EntityPlayer player, Quest quest) {
         IPlayerAttributesCapability cap = TESItems.getCapability(player);
         QuestInstance inst = new QuestInstance(quest, 0);
         cap.addQuest(inst);
         cap.setQuestStage(quest.id, 0);
+    }
+
+    public void addQuest(Quest quest) {
+        dirty = true;
+        questList.put(quest.id, quest);
+    }
+
+    public Quest getQuest(int id) {
+        return questList.get(id);
     }
 }

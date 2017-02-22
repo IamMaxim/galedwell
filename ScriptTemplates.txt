@@ -1,0 +1,18 @@
+onTopicClick(npc, player, object, varStorage, questInst) {
+
+}
+
+
+castTarget(object, caster, target, power, range) {
+
+}
+
+
+castTerrain(object, caster, power) {
+
+}
+
+
+castSelf(object, caster, power) {
+
+}

@@ -16,7 +16,7 @@ public class PlayerAttributesStorage implements Capability.IStorage<IPlayerAttri
         for (String s : TESItems.ATTRIBUTES) {
             nbttag.setFloat(s, cap.getAttribute(s));
         }
-        nbttag.setTag("spellbook", cap.saveSpellbook());
+        nbttag.setTag("spellbook", cap.saveSpellbook(true));
         nbttag.setTag("inventory", cap.getInventory().writeToNBT());
         nbttag.setTag("quests", cap.saveQuests());
         nbttag.setString("journal", cap.getJournal());

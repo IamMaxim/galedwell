@@ -11,8 +11,6 @@ import ru.iammaxim.tesitems.TESItems;
 public class GUIHandler implements IGuiHandler {
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        //todo: check if this is needed
-//        TESItems.getCapability(player).getInventory().checkInventory();
         return new DummyContainer();
     }
 
@@ -38,6 +36,7 @@ public class GUIHandler implements IGuiHandler {
             case TESItems.guiFactionEditor: ScreenStack.addScreen(new GuiFactionEditor()); return ScreenStack.instance;
             case TESItems.guiQuestEditor: ScreenStack.addScreen(new GuiQuestEditor()); return ScreenStack.instance;
             case TESItems.guiInventory: return new GuiInventory(player);
+            case TESItems.guiEditSpells: ScreenStack.addScreen(new GuiSpellEditorList()); return ScreenStack.instance;
         }
         return null;
     }

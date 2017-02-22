@@ -16,13 +16,15 @@ public class WorldCapabilityStorage implements Capability.IStorage<IWorldCapabil
     public NBTBase writeNBT(Capability<IWorldCapability> capability, IWorldCapability instance, EnumFacing side) {
         NBTTagCompound tag = new NBTTagCompound();
         tag.setTag("factions", FactionManager.writeToNBT());
-        tag.setTag("quests", QuestManager.writeToNBT());
+//        tag.setTag("quests", QuestManager.writeToNBT());
+        QuestManager.saveToFile();
         return tag;
     }
 
     @Override
     public void readNBT(Capability<IWorldCapability> capability, IWorldCapability instance, EnumFacing side, NBTBase nbt) {
         FactionManager.readFromNBT((NBTTagList) ((NBTTagCompound)nbt).getTag("factions"));
-        QuestManager.readFromNBT((NBTTagList) ((NBTTagCompound)nbt).getTag("quests"));
+//        QuestManager.readFromNBT((NBTTagList) ((NBTTagCompound)nbt).getTag("quests"));
+        QuestManager.loadFromFile();
     }
 }

@@ -39,18 +39,17 @@ public class EntityFlyingSpell extends Entity {
     @Override
     public void onUpdate() {
         super.onUpdate();
-        if (liveTime == 0) {
-            if (worldObj.getBlockState(new BlockPos(posX, posY, posZ)).getBlock() != Blocks.AIR) {
-                System.out.println("Collision detected at " + posX + " " + posY + " " + posZ);
-                for (SpellEffectBase effect : spell.effects) {
-                    EntityRangedSpellEffect entity = new EntityRangedSpellEffect(worldObj);
-                    entity.setPosition(posX, posY, posZ);
-                    entity.setRange(effect.getRange());
-                    entity.setEffect(effect);
-                    worldObj.spawnEntityInWorld(entity);
-                }
+        if (worldObj.getBlockState(new BlockPos(posX, posY, posZ)).getBlock() != Blocks.AIR) {
+            System.out.println("Collision detected at " + posX + " " + posY + " " + posZ);
+            for (SpellEffect effect : spell.effects) {
+                EntityRangedSpellEffect entity = new EntityRangedSpellEffect(worldObj);
+                entity.setPosition(posX, posY, posZ);
+                entity.setRange(effect.getRange());
+                entity.setEffect(effect);
+                worldObj.spawnEntityInWorld(entity);
             }
-        } else if (liveTime == 5) kill();
+        }
+        if (liveTime == 80) kill();
         liveTime++;
     }
 }

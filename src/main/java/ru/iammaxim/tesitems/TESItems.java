@@ -33,6 +33,7 @@ import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -121,7 +122,8 @@ public class TESItems {
             guiJournal = 5,
             guiFactionList = 6,
             guiFactionEditor = 7,
-            guiQuestList = 8;
+            guiQuestList = 8,
+            guiEditSpells = 9;
 
     @CapabilityInject(IPlayerAttributesCapability.class)
     public static Capability<IPlayerAttributesCapability> attributesCapability;
@@ -157,7 +159,6 @@ public class TESItems {
         CapabilityManager.INSTANCE.register(IPlayerAttributesCapability.class, new PlayerAttributesStorage(), PlayerAttributesCapabilityDefaultImpl::new);
         CapabilityManager.INSTANCE.register(IWorldCapability.class, new WorldCapabilityStorage(), WorldCapabilityDefaultImpl::new);
         MinecraftForge.EVENT_BUS.register(this);
-        SpellEffectManager.register();
         mItems.register(event.getSide());
         mBlocks.register(event.getSide());
         mArmor.register();
@@ -320,7 +321,7 @@ public class TESItems {
             cap.getInventory().calculateCarryweight();
             if (!event.getWorld().isRemote) {
                 networkWrapper.sendTo(new MessageAttributes(cap.getAttributes()), (EntityPlayerMP) event.getEntity());
-                networkWrapper.sendTo(new MessageSpellbook(cap.saveSpellbook()), (EntityPlayerMP) event.getEntity());
+                networkWrapper.sendTo(new MessageSpellbook(cap.saveSpellbook(false)), (EntityPlayerMP) event.getEntity());
                 networkWrapper.sendTo(new MessageInventory(cap.getInventory().writeToNBT()), (EntityPlayerMP) event.getEntity());
                 networkWrapper.sendTo(new MessageJournal(cap.getJournal()), (EntityPlayerMP) event.getEntity());
 
@@ -369,6 +370,7 @@ public class TESItems {
         //debug
         event.registerServerCommand(new CommandManageInventory());
         event.registerServerCommand(new CommandReloadFonts());
+        event.registerServerCommand(new CommandCreateMap());
     }
 
     @SubscribeEvent
@@ -505,4 +507,13 @@ public class TESItems {
             }
         }
     }
+
+    public static Side getSide() {
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER || Thread.currentThread().getName().startsWith("Netty Epoll Server IO"))
+            return Side.SERVER; else return Side.CLIENT;
+    }
+
+/*    @SubscribeEvent
+    public void onChunkSave(ChunkDataEvent.Save event) {
+    }*/
 }

@@ -3,13 +3,13 @@ package ru.iammaxim.tesitems.Dialogs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import ru.iammaxim.tesitems.Questing.Condition;
 import ru.iammaxim.tesitems.Questing.Quest;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.GaledwellLang;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.InvalidTokenException;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.ValueObject;
+import ru.iammaxim.tesitems.TESItems;
 
 import java.util.ArrayList;
 
@@ -32,8 +32,7 @@ public class DialogTopic {
         topic.script = tag.getString("script");
 
         topic.object = new ValueObject();
-        if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER ||
-                Thread.currentThread().getName().startsWith("Netty Epoll Server IO"))
+        if (TESItems.getSide() == Side.SERVER)
             try {
                 System.out.println("loading topic script");
                 GaledwellLang.loadSrcInto(topic.script, topic.object);

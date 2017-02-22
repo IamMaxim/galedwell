@@ -13,9 +13,6 @@ import java.util.HashMap;
 public class ValueObject extends Value {
     protected HashMap<Integer, Value> fields = new HashMap<>();
 
-    public ValueObject(String value) {
-    }
-
     @Override
     public String valueToString() {
         StringBuilder sb = new StringBuilder();
@@ -110,18 +107,6 @@ public class ValueObject extends Value {
     public void removeField(int id) {
         fields.remove(id);
     }
-
-/*    @Override
-    public String toString(Runtime runtime, int indent) {
-*//*        StringJoiner sj = new StringJoiner(",\n" + Utils.indent(indent + 3));
-        fields.forEach((path, value) -> sj.add("\"" + path + "\"" + ": " + value.toString(runtime, indent + 3)));
-        return "\"object\":\n" +
-                Utils.indent(indent + 1) + "{\n" +
-                Utils.indent(indent + 2) + sj.toString() + "\n" +
-                Utils.indent(indent + 1) + "}";*//*
-
-        return "object";
-    }*/
 
     public static boolean isValid(String value) {
         return value.equals("Object");

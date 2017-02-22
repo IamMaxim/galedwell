@@ -27,7 +27,7 @@ public interface IPlayerAttributesCapability {
     void loadSpellbook(NBTTagCompound nbttag);
     int getCurrentSpell();
     void setCurrentSpell(int index);
-    NBTTagCompound saveSpellbook();
+    NBTTagCompound saveSpellbook(boolean sendScripts);
     void addQuest(QuestInstance quest);
     HashMap<Integer, QuestInstance> getQuests();
     float getCarryWeight();

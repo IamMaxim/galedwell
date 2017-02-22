@@ -11,6 +11,10 @@ import ru.iammaxim.tesitems.Dialogs.DialogTopic;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.Questing.Quest;
 import ru.iammaxim.tesitems.Questing.QuestInstance;
+import ru.iammaxim.tesitems.Scripting.GaledwellLang.Objects.NPC.ValueNPC;
+import ru.iammaxim.tesitems.Scripting.GaledwellLang.Objects.Player.ValuePlayer;
+import ru.iammaxim.tesitems.Scripting.GaledwellLang.Objects.Quest.ValueQuestInstance;
+import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.ValueFunction;
 import ru.iammaxim.tesitems.Scripting.ScriptEngine;
 import ru.iammaxim.tesitems.TESItems;
 
@@ -48,7 +52,15 @@ public class MessageDialogSelectTopic implements IMessage {
                     QuestInstance inst = null;
                     if (attachedTo != null)
                         inst = cap.getQuest(attachedTo.id);
-                    ScriptEngine.processScript(cap.getLatestNPC(), player, topic.object, cap.getVariableStorage(), inst);
+
+                    try {
+                        ValueFunction onTopicClick = (ValueFunction) topic.object.getField("onTopicClick");
+                        if (onTopicClick != null) {
+                            onTopicClick.call(ScriptEngine.runtime, new ValueNPC(cap.getLatestNPC()), new ValuePlayer(player), topic.object, cap.getVariableStorage(), new ValueQuestInstance(inst));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
             return new MessageDialog(Dialog.createDialogForPlayer(cap.getLatestNPC(), player).saveToNBT());

@@ -4,13 +4,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
 import ru.iammaxim.tesitems.Magic.EntityFlyingSpell;
 import ru.iammaxim.tesitems.Magic.SpellBase;
-import ru.iammaxim.tesitems.Magic.SpellEffectBase;
+import ru.iammaxim.tesitems.Magic.SpellEffect;
 
 /**
  * Created by Maxim on 17.07.2016.
  */
 public class SpellBaseTarget extends SpellBase {
-    public SpellBaseTarget(String name, SpellEffectBase... effects) {
+    public SpellBaseTarget(String name, SpellEffect... effects) {
         super(name, effects);
     }
 

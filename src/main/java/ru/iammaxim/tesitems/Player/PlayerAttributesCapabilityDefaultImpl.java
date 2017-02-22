@@ -11,14 +11,11 @@ import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.Inventory.InventoryClient;
 import ru.iammaxim.tesitems.Inventory.InventoryServer;
 import ru.iammaxim.tesitems.Magic.SpellBase;
-import ru.iammaxim.tesitems.Magic.SpellEffectBase;
-import ru.iammaxim.tesitems.Magic.SpellEffectManager;
+import ru.iammaxim.tesitems.Magic.SpellEffect;
 import ru.iammaxim.tesitems.NPC.NPC;
 import ru.iammaxim.tesitems.Questing.QuestInstance;
-import ru.iammaxim.tesitems.ReflectionUtils;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.VariableStorage;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -190,17 +187,19 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
             String spellName = tag1.getString("name");
             int spellType = tag1.getInteger("type");
             NBTTagList list1 = (NBTTagList) tag1.getTag("effects");
-            SpellEffectBase[] effects = new SpellEffectBase[list1.tagCount()];
+            SpellEffect[] effects = new SpellEffect[list1.tagCount()];
             for (int j = 0; j < list1.tagCount(); j++) {
-                NBTTagCompound tag2 = (NBTTagCompound) list1.get(j);
+                effects[j] = SpellEffect.readFromNBT(list1.getCompoundTagAt(j));
+
+                /*NBTTagCompound tag2 = (NBTTagCompound) list1.get(j);
                 String effectName = tag2.getString("name");
                 float power = tag2.getFloat("power");
                 float range = tag2.getFloat("range");
                 try {
-                    effects[j] = (SpellEffectBase) ReflectionUtils.createInstance(SpellEffectManager.getEffectByName(effectName), power, range);
+                    effects[j] = (SpellEffect) ReflectionUtils.createInstance(SpellEffectManager.getEffectByName(effectName), power, range);
                 } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException | ClassNotFoundException e) {
                     e.printStackTrace();
-                }
+                }*/
             }
             SpellBase spell = SpellBase.createSpell(spellType, spellName, effects);
             spellbook.add(spell);
@@ -208,7 +207,7 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     }
 
     @Override
-    public NBTTagCompound saveSpellbook() {
+    public NBTTagCompound saveSpellbook(boolean writeScripts) {
         NBTTagCompound tagCompound = new NBTTagCompound();
         NBTTagList list = new NBTTagList();
         for (SpellBase spell : spellbook) {
@@ -217,12 +216,14 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
             tag.setInteger("type", spell.getSpellType());
             NBTTagList list1 = new NBTTagList();
             for (int j = 0; j < spell.effects.length; j++) {
-                SpellEffectBase effect = spell.effects[j];
-                NBTTagCompound tag1 = new NBTTagCompound();
+                SpellEffect effect = spell.effects[j];
+                /*NBTTagCompound tag1 = new NBTTagCompound();
                 tag1.setFloat("power", effect.getPower());
                 tag1.setFloat("range", effect.getRange());
-                tag1.setString("name", SpellEffectManager.getNameByEffect(effect.getClass()));
-                list1.appendTag(tag1);
+                tag1.setString("name", SpellEffectManager.getNameByEffect(effect.getClass()));*/
+//                list1.appendTag(tag1);
+
+                list1.appendTag(effect.writeToNBT(writeScripts));
             }
             tag.setTag("effects", list1);
             list.appendTag(tag);

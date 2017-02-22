@@ -40,6 +40,9 @@ public class MessageSpellbook implements IMessage {
         public IMessage onMessage(MessageSpellbook message, MessageContext ctx) {
             Minecraft.getMinecraft().addScheduledTask(() -> {
                 IPlayerAttributesCapability cap = Minecraft.getMinecraft().thePlayer.getCapability(TESItems.attributesCapability, null);
+
+                System.out.println("loading spellbook: " + message.tag);
+
                 cap.loadSpellbook(message.tag);
             });
             return null;

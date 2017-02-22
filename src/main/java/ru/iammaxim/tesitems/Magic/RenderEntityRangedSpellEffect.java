@@ -9,13 +9,13 @@ import net.minecraft.util.ResourceLocation;
  * Created by Maxim on 19.07.2016.
  */
 public class RenderEntityRangedSpellEffect<T extends Entity> extends Render<T> {
-    private SpellEffectBase effect;
+    private SpellEffect effect;
 
     public RenderEntityRangedSpellEffect(RenderManager renderManagerIn) {
         super(renderManagerIn);
     }
 
-    public void setEffect(SpellEffectBase effect) {
+    public void setEffect(SpellEffect effect) {
         this.effect = effect;
     }
 
