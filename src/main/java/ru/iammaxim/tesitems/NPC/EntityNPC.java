@@ -62,18 +62,7 @@ public class EntityNPC extends EntityLivingBase {
     @Nullable
     @Override
     public ItemStack getItemStackFromSlot(EntityEquipmentSlot slotIn) {
-        return slotIn == EntityEquipmentSlot.MAINHAND ? npc.inventory.getMainhandItem() :
-                (slotIn == EntityEquipmentSlot.OFFHAND ? npc.inventory.getOffhandItem() :
-                        (slotIn
-                                .getSlotType()
-                                == EntityEquipmentSlot
-                                .Type
-                                .ARMOR ? npc
-                                .inventory
-                                .armorInventory
-                                [slotIn
-                                .getIndex()]
-                                : null));
+        return slotIn == EntityEquipmentSlot.MAINHAND ? npc.inventory.getMainhandItem() : (slotIn == EntityEquipmentSlot.OFFHAND ? npc.inventory.getOffhandItem() : (slotIn.getSlotType() == EntityEquipmentSlot.Type.ARMOR ? npc.inventory.armorInventory[slotIn.getIndex()] : null));
     }
 
     @Override
