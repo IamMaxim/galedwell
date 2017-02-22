@@ -51,11 +51,17 @@ public class FunctionParser {
 
                 GaledwellLang.log("parsed condition: " + condition);
 
-                if (!tokener.eat().equals(new Token("{")))
-                    throw new InvalidTokenException("Excepted {");
-                Tokener body = tokener.readToSkippingBraces(new Token("}"));
+                Tokener body;
                 ArrayList<Expression> bodyExps = new ArrayList<>();
-                ArrayList<Tokener> bodyTokeners = body.splitSkippingBraces(new Token(";"));
+                ArrayList<Tokener> bodyTokeners;
+                if (!tokener.eat().equals(new Token("{"))) {
+                    body = tokener.readTo(new Token(";"));
+                    bodyTokeners = new ArrayList<>();
+                    bodyTokeners.add(body);
+                } else {
+                    body = tokener.readToSkippingScopes(new Token("}"));
+                    bodyTokeners = body.splitSkippingBraces(new Token(";"));
+                }
 
                 GaledwellLang.log("parsed body: " + bodyTokeners);
 
@@ -66,17 +72,33 @@ public class FunctionParser {
                 ArrayList<Expression> elseBodyExps = new ArrayList<>();
                 if (tokener.left() > 2 /* else, {, } */ && tokener.get().equals(new Token("else"))) {
                     tokener.eat(); //eat else
-                    if (!tokener.eat().equals(new Token("{")))
-                        throw new InvalidTokenException("excepted {");
 
-                    Tokener elseBody = tokener.readToSkippingBraces(new Token("}"));
-                    ArrayList<Tokener> elseBodyTokeners = elseBody.splitSkippingBraces(new Token(";"));
+                    Tokener elseBody;
+                    ArrayList<Tokener> elseBodyTokeners;
+                    if (!tokener.eat().equals(new Token("{"))) {
+                        elseBody = tokener.readTo(new Token(";"));
+                        elseBodyTokeners = new ArrayList<>();
+                        elseBodyTokeners.add(elseBody);
+                    } else {
+                        elseBody = tokener.readToSkippingScopes(new Token("}"));
+                        elseBodyTokeners = elseBody.splitSkippingBraces(new Token(";"));
+                    }
 
                     GaledwellLang.log("parsed elseBody: " + elseBodyTokeners);
 
                     for (Tokener t : elseBodyTokeners) {
                         elseBodyExps.add(parseExpression(t));
                     }
+
+                    //check situation when semicolon is not set after if(){}else{}
+                    Tokener nextExpr = tokener.readTo(new Token(";"));
+                    if (!nextExpr.isEmpty())
+                        throw new InvalidTokenException("Excepted ;");
+                } else {
+                    //check situation when semicolon is not set after if(){}
+                    Tokener nextExpr = tokener.readTo(new Token(";"));
+                    if (!nextExpr.isEmpty())
+                        throw new InvalidTokenException("Excepted ;");
                 }
 
                 return new ExpressionCondition(parseExpression(condition), bodyExps, elseBodyExps);
@@ -206,7 +228,7 @@ public class FunctionParser {
             //read function body
             if (!eat().equals(new Token("{")))
                 throw new InvalidTokenException("Excepted { while parsing function body");
-            Tokener body = tokener.readToSkippingBraces(new Token("}"));
+            Tokener body = tokener.readToSkippingScopes(new Token("}"));
 
             GaledwellLang.log("parsed function body: " + body);
 

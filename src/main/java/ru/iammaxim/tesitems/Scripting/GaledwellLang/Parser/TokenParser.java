@@ -67,7 +67,7 @@ public class TokenParser {
             }
 
             // check if this is scope
-            if (Token.is(TokenType.SCOPE, s)) {
+            if (Token.is(TokenType.SCOPE_OPEN, s) || Token.is(TokenType.SCOPE_CLOSE, s)) {
                 cutOffToken();
                 tokens.add(new Token(s));
                 continue;

@@ -9,10 +9,15 @@ public class GuiSpellEditor extends Screen {
     public SpellBase spell;
 
     public GuiSpellEditor(SpellBase spell) {
-        if (spell != null)
+        if (spell != null) {
             this.spell = spell;
-        else {
+            init();
+        } else {
 
         }
+    }
+
+    public void init() {
+
     }
 }

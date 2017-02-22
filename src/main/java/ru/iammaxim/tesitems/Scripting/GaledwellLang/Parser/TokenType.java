@@ -6,7 +6,8 @@ package ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser;
 public enum TokenType {
     IDENTIFIER,
     DELIMITER, //;,
-    SCOPE, // (){}[]
+    SCOPE_OPEN, // ({
+    SCOPE_CLOSE, // )}
     OPERATOR, // +-*/= != < <= == >= >
     KEYWORD
 }

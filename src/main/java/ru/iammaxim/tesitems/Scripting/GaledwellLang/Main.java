@@ -20,9 +20,9 @@ public class Main {
 
             Runtime runtime = new Runtime();
 
+            GaledwellLang.loadSrcInto(src, runtime.variableStorage);
             runtime.variableStorage.setField("print", new FunctionPrint());
             runtime.variableStorage.setField("dumpVarStorage", new FunctionDumpVariableStorage());
-            GaledwellLang.loadSrcInto(src, runtime.variableStorage);
 
             run(runtime);
 //            benchmark(runtime);

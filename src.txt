@@ -1,7 +1,7 @@
 main() {
+    testVar = 1;
     if (testVar == testVar2) {
         print("true");
-    } else {
-        print("false");
     }
+    print("after if{}");
 }

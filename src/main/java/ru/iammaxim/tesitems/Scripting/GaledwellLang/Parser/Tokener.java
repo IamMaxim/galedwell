@@ -70,15 +70,15 @@ public class Tokener {
         return new Tokener(tokens);
     }
 
-    public Tokener readToSkippingBraces(Token token) throws InvalidTokenException {
+    public Tokener readToSkippingScopes(Token token) throws InvalidTokenException {
         ArrayList<Token> tokens = new ArrayList<>();
-        int level = 1; //because first brace already read
+        int level = 1; //because first brace/paren already read
         while (left() > 0) {
             Token t = eat();
 
-            if (t.equals(new Token("{")))
+            if (t.type == TokenType.SCOPE_OPEN)
                 level++;
-            if (t.equals(new Token("}")))
+            if (t.type == TokenType.SCOPE_CLOSE)
                 level--;
 
             if (level > 0) {

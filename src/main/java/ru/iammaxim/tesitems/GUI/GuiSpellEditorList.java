@@ -1,5 +1,6 @@
 package ru.iammaxim.tesitems.GUI;
 
+import ru.iammaxim.tesitems.GUI.Elements.Button;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.HeaderLayout;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.ScrollableLayout;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.VerticalLayout;
@@ -14,7 +15,9 @@ public class GuiSpellEditorList extends Screen {
         layout.add(new HeaderLayout("Spell list"));
 
 
-//        layout.add(new Button("Create new spell").setOnClick());
+        layout.add(new Button("Create new spell").setOnClick(b -> {
+
+        }));
 
         contentLayout.setElement(new ScrollableLayout().setElement(new VerticalLayout().add(layout)));
         root.doLayout();

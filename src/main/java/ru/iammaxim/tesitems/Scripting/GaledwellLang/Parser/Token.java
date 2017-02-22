@@ -22,10 +22,11 @@ public class Token {
 
     public static boolean is(TokenType type, String t) throws InvalidTokenException {
         switch (type) {
-            case SCOPE:
+            case SCOPE_OPEN:
                 return t.equals("(") ||
-                        t.equals(")") ||
-                        t.equals("{") ||
+                        t.equals("{");
+            case SCOPE_CLOSE:
+                return t.equals(")") ||
                         t.equals("}");
             case OPERATOR:
                 return t.equals("==") ||
@@ -79,8 +80,10 @@ public class Token {
     }
 
     public static TokenType getType(String token) throws InvalidTokenException {
-        if (is(TokenType.SCOPE, token))
-            return TokenType.SCOPE;
+        if (is(TokenType.SCOPE_OPEN, token))
+            return TokenType.SCOPE_OPEN;
+        else if (is(TokenType.SCOPE_CLOSE, token))
+            return TokenType.SCOPE_CLOSE;
         else if (is(TokenType.OPERATOR, token))
             return TokenType.OPERATOR;
         else if (is(TokenType.DELIMITER, token))
