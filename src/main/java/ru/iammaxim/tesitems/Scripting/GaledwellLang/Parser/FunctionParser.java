@@ -55,7 +55,7 @@ public class FunctionParser {
                 ArrayList<Expression> bodyExps = new ArrayList<>();
                 ArrayList<Tokener> bodyTokeners;
                 if (!tokener.eat().equals(new Token("{"))) {
-                    body = tokener.readTo(new Token(";"));
+                    body = tokener.back(1).readTo(new Token(";"));
                     bodyTokeners = new ArrayList<>();
                     bodyTokeners.add(body);
                 } else {
@@ -76,7 +76,7 @@ public class FunctionParser {
                     Tokener elseBody;
                     ArrayList<Tokener> elseBodyTokeners;
                     if (!tokener.eat().equals(new Token("{"))) {
-                        elseBody = tokener.readTo(new Token(";"));
+                        elseBody = tokener.back(1).readTo(new Token(";"));
                         elseBodyTokeners = new ArrayList<>();
                         elseBodyTokeners.add(elseBody);
                     } else {

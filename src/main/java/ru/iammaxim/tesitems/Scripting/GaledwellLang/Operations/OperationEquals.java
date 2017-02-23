@@ -24,7 +24,9 @@ public class OperationEquals extends Operation {
                 left == null && right == null)
             runtime.stack.push(new ValueBoolean(true));
         else {
-            if (left.getClass() != right.getClass())
+            if (left == null || right == null)
+                runtime.stack.push(new ValueBoolean(false));
+            else if (left.getClass() != right.getClass())
                 runtime.stack.push(new ValueBoolean(false));
             else
                 runtime.stack.push(left.operatorEquals(right));

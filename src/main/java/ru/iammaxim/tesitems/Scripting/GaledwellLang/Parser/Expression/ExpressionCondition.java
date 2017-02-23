@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class ExpressionCondition extends Expression {
     @Override
     public String toString() {
-        return "condition: if (" + cond.toString() + ") {" + body.toString() + "}";
+        return "condition: if (" + cond.toString() + ") {" + body.toString() + "}" + (elseBody != null ? " else {" + elseBody.toString() + "}" : "");
     }
 
     public Expression cond;

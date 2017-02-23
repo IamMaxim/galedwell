@@ -19,6 +19,6 @@ public class OperationGoTo extends Operation {
 
     @Override
     public void run(Runtime runtime) throws InvalidOperationException {
-        runtime.currentCursorPos = labelToGo.index;
+        runtime.currentCursorPos = labelToGo.index - 1; //because operation index will increment after this call
     }
 }

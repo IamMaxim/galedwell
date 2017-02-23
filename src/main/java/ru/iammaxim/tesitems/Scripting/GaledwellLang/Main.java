@@ -24,14 +24,20 @@ public class Main {
             runtime.variableStorage.setField("print", new FunctionPrint());
             runtime.variableStorage.setField("dumpVarStorage", new FunctionDumpVariableStorage());
 
-            run(runtime);
+            try {
+                run(runtime);
+            } catch (Exception e) {
+                System.err.println("Error while executing operation: " + runtime.currentCursorPos);
+                e.printStackTrace();
+            }
+
 //            benchmark(runtime);
 
 //            long freeMemory = java.lang.Runtime.getRuntime().freeMemory();
 //            long totalMemory = java.lang.Runtime.getRuntime().totalMemory();
 //            System.out.println("Occupied memory: " + ((double) (totalMemory - freeMemory) / 1024 / 1024) + "MB (" + ((1 - (double) freeMemory / totalMemory) * 100) + "%)");
 
-        } catch (FileNotFoundException | InvalidTokenException | InvalidOperationException e) {
+        } catch (FileNotFoundException | InvalidTokenException e) {
             e.printStackTrace();
         }
     }

@@ -17,20 +17,17 @@ public class Stack {
     }
 
     public void push(Value o) {
-//        System.out.println("        pushed " + o);
+//        System.out.println("pushed " + o);
         stack[++cursor] = o;
     }
 
     public Value pop() {
-//        Value value = stack[cursor];
-//        stack[cursor] = null;
-//        cursor--;
-//        System.out.println("        popped " + value);
+//        System.out.println("popped " + stack[cursor]);
         return stack[cursor--];
     }
 
     public Value get() {
-//        System.out.println("        got " + stack[cursor]);
+//        System.out.println("got " + stack[cursor]);
         return stack[cursor];
     }
 

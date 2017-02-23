@@ -115,6 +115,7 @@ public class Tokener {
     }
 
     public ArrayList<Tokener> splitSkippingBraces(Token token) throws InvalidTokenException {
+        int toIgnore = 0; //skip delimiter in: if exp1; else exp2;
         ArrayList<Tokener> parts = new ArrayList<>();
         ArrayList<Token> tokens = new ArrayList<>();
         index = 0;
@@ -124,8 +125,10 @@ public class Tokener {
 
             if (t.equals(new Token("{")))
                 level++;
-            if (t.equals(new Token("}")))
+            else if (t.equals(new Token("}")))
                 level--;
+            else if (t.equals(new Token("if")))
+                toIgnore++;
 
             if (level > 0) {
                 tokens.add(t);
@@ -133,7 +136,11 @@ public class Tokener {
             }
 
             if (t.equals(token)) {
-                if (tokens.size() > 0) {
+                if (toIgnore > 0) {
+                    tokens.add(t);
+                    toIgnore--;
+                }
+                else if (tokens.size() > 0) {
                     parts.add(new Tokener(tokens));
                     tokens = new ArrayList<>();
                 }
@@ -288,5 +295,10 @@ public class Tokener {
         if (tokens.size() > 0)
             parts.add(new Tokener(tokens));
         return parts;
+    }
+
+    public Tokener back(int count) {
+        index -= count;
+        return this;
     }
 }
