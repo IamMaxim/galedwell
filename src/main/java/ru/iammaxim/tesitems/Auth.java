@@ -13,7 +13,6 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.minecart.MinecartInteractEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -29,7 +28,7 @@ public class Auth {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+/*    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void playerMoveEvent(PlayerEvent.LivingUpdateEvent event) {
         if (!(event.getEntityLiving() instanceof EntityPlayer))
             return;
@@ -41,10 +40,9 @@ public class Auth {
 
         IPlayerAttributesCapability cap = TESItems.getCapability(player);
 
-        if (!cap.isAuthorized()) {
 
-        }
-    }
+    }*/
+
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void serverChatEvent(ServerChatEvent event) {
