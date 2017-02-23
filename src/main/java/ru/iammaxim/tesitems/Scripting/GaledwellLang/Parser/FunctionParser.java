@@ -54,11 +54,12 @@ public class FunctionParser {
                 Tokener body;
                 ArrayList<Expression> bodyExps = new ArrayList<>();
                 ArrayList<Tokener> bodyTokeners;
-                if (!tokener.eat().equals(new Token("{"))) {
-                    body = tokener.back(1).readTo(new Token(";"));
+                if (!tokener.get().equals(new Token("{"))) {
+                    body = tokener.readTo(new Token(";"));
                     bodyTokeners = new ArrayList<>();
                     bodyTokeners.add(body);
                 } else {
+                    tokener.eat(); //eat {
                     body = tokener.readToSkippingScopes(new Token("}"));
                     bodyTokeners = body.splitSkippingBraces(new Token(";"));
                 }
@@ -75,11 +76,12 @@ public class FunctionParser {
 
                     Tokener elseBody;
                     ArrayList<Tokener> elseBodyTokeners;
-                    if (!tokener.eat().equals(new Token("{"))) {
-                        elseBody = tokener.back(1).readTo(new Token(";"));
+                    if (!tokener.get().equals(new Token("{"))) {
+                        elseBody = tokener.readTo(new Token(";"));
                         elseBodyTokeners = new ArrayList<>();
                         elseBodyTokeners.add(elseBody);
                     } else {
+                        tokener.eat(); //eat {
                         elseBody = tokener.readToSkippingScopes(new Token("}"));
                         elseBodyTokeners = elseBody.splitSkippingBraces(new Token(";"));
                     }
