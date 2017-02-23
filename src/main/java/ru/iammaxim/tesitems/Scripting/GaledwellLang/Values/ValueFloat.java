@@ -81,6 +81,10 @@ public class ValueFloat extends Value {
         return tag;
     }
 
+    public static ValueFloat loadValueFromNBT(NBTTagCompound tag) {
+        return new ValueFloat(tag.getFloat("value"));
+    }
+
     public static boolean isValid(String value) {
         return value.endsWith("f") && value.matches("[0-9]*.[0-9]*f");
     }

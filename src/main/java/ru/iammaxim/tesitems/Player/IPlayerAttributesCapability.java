@@ -8,7 +8,7 @@ import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.Magic.SpellBase;
 import ru.iammaxim.tesitems.NPC.NPC;
 import ru.iammaxim.tesitems.Questing.QuestInstance;
-import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.VariableStorage;
+import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.ValueObject;
 
 import java.util.HashMap;
 import java.util.List;
@@ -47,10 +47,10 @@ public interface IPlayerAttributesCapability {
     QuestInstance getQuest(int id);
     void setLatestDialog(Dialog dialog);
     Dialog getLatestDialog();
-    VariableStorage getVariableStorage();
+    ValueObject getVariableStorage();
     boolean isAuthorized();
     void authorize(EntityPlayerMP player);
     void setPassword(String pass);
     String getPassword();
-    void setVariableStorage(VariableStorage variableStorage);
+    void setVariableStorage(ValueObject variableStorage);
 }

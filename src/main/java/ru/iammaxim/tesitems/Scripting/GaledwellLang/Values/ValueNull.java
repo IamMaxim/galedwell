@@ -18,48 +18,8 @@ public class ValueNull extends Value {
     }
 
     @Override
-    public Value operatorPlus(Value right) throws InvalidOperationException {
-        throw new InvalidOperationException("Not implemented");
-    }
-
-    @Override
-    public Value operatorSubtract(Value right) throws InvalidOperationException {
-        throw new InvalidOperationException("Not implemented");
-    }
-
-    @Override
-    public Value operatorMultiply(Value right) throws InvalidOperationException {
-        throw new InvalidOperationException("Not implemented");
-    }
-
-    @Override
-    public Value operatorDivide(Value right) throws InvalidOperationException {
-        throw new InvalidOperationException("Not implemented");
-    }
-
-    @Override
-    public Value operatorLess(Value right) throws InvalidOperationException {
-        throw new InvalidOperationException("Not implemented");
-    }
-
-    @Override
-    public Value operatorLessEquals(Value right) throws InvalidOperationException {
-        throw new InvalidOperationException("Not implemented");
-    }
-
-    @Override
     public Value operatorEquals(Value right) throws InvalidOperationException {
         return new ValueBoolean(right instanceof ValueNull);
-    }
-
-    @Override
-    public Value operatorMoreEquals(Value right) throws InvalidOperationException {
-        throw new InvalidOperationException("Not implemented");
-    }
-
-    @Override
-    public Value operatorMore(Value right) throws InvalidOperationException {
-        throw new InvalidOperationException("Not implemented");
     }
 
     @Override

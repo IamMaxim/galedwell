@@ -24,7 +24,7 @@ import ru.iammaxim.tesitems.Networking.MessageInventory;
 import ru.iammaxim.tesitems.Networking.MessageJournal;
 import ru.iammaxim.tesitems.Networking.MessageSpellbook;
 import ru.iammaxim.tesitems.Questing.QuestInstance;
-import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.VariableStorage;
+import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.ValueObject;
 import ru.iammaxim.tesitems.TESItems;
 
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     private String journal = "";
     //latest dialog with NPC
     private Dialog dialog;
-    private VariableStorage variableStorage = new VariableStorage();
+    private ValueObject variableStorage = new ValueObject();
     private String password = "";
     private boolean isAuthorized = false;
 
@@ -117,7 +117,7 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     }
 
     @Override
-    public VariableStorage getVariableStorage() {
+    public ValueObject getVariableStorage() {
         return variableStorage;
     }
 
@@ -156,7 +156,7 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     }
 
     @Override
-    public void setVariableStorage(VariableStorage variableStorage) {
+    public void setVariableStorage(ValueObject variableStorage) {
         this.variableStorage = variableStorage;
     }
 

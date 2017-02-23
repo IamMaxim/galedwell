@@ -82,6 +82,10 @@ public class ValueInt extends Value {
         return tag;
     }
 
+    public static ValueInt loadValueFromNBT(NBTTagCompound tag) {
+        return new ValueInt(tag.getInteger("value"));
+    }
+
     public static boolean isValid(String value) {
         return value.matches("[0-9]*");
     }

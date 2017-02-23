@@ -3,7 +3,7 @@ package ru.iammaxim.tesitems.Questing;
 import net.minecraft.nbt.NBTTagCompound;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Operations.InvalidOperationException;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.Value;
-import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.VariableStorage;
+import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.ValueObject;
 
 /**
  * Created by Maxim on 20.07.2016.
@@ -11,7 +11,7 @@ import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.VariableStorage;
 public class QuestInstance extends Value {
     public Quest quest;
     public int stage, quest_id;
-    public VariableStorage variableStorage;
+    public ValueObject variableStorage;
 
     public QuestInstance() {
     }
@@ -84,7 +84,7 @@ public class QuestInstance extends Value {
         quest_id = tag.getInteger("index");
         stage = tag.getInteger("stage");
         quest = QuestManager.getByID(quest_id);
-        variableStorage = (VariableStorage) Value.loadValueFromNBT(tag.getCompoundTag("vars"));
+        variableStorage = ValueObject.loadValueFromNBT(tag.getCompoundTag("vars"));
     }
 
     @Override

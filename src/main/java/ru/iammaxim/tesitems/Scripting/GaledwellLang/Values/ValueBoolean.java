@@ -20,36 +20,6 @@ public class ValueBoolean extends Value {
     }
 
     @Override
-    public Value operatorPlus(Value right) throws InvalidOperationException {
-        throw new InvalidOperationException("Not implemented");
-    }
-
-    @Override
-    public Value operatorSubtract(Value right) throws InvalidOperationException {
-        throw new InvalidOperationException("Not implemented");
-    }
-
-    @Override
-    public Value operatorMultiply(Value right) throws InvalidOperationException {
-        throw new InvalidOperationException("Not implemented");
-    }
-
-    @Override
-    public Value operatorDivide(Value right) throws InvalidOperationException {
-        throw new InvalidOperationException("Not implemented");
-    }
-
-    @Override
-    public Value operatorLess(Value right) throws InvalidOperationException {
-        throw new InvalidOperationException("Not implemented");
-    }
-
-    @Override
-    public Value operatorLessEquals(Value right) throws InvalidOperationException {
-        throw new InvalidOperationException("Not implemented");
-    }
-
-    @Override
     public String toString() {
         return "bool: " + value;
     }
@@ -62,20 +32,14 @@ public class ValueBoolean extends Value {
     }
 
     @Override
-    public Value operatorMoreEquals(Value right) throws InvalidOperationException {
-        throw new InvalidOperationException("Not implemented");
-    }
-
-    @Override
-    public Value operatorMore(Value right) throws InvalidOperationException {
-        throw new InvalidOperationException("Not implemented");
-    }
-
-    @Override
     public NBTTagCompound writeToNBT() {
         NBTTagCompound tag = new NBTTagCompound();
         tag.setString("type", "boolean");
         tag.setBoolean("value", value);
         return tag;
+    }
+
+    public static ValueBoolean loadValueFromNBT(NBTTagCompound tag) {
+        return new ValueBoolean(tag.getBoolean("value"));
     }
 }

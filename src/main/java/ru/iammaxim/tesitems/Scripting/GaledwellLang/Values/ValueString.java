@@ -19,36 +19,6 @@ public class ValueString extends Value {
     }
 
     @Override
-    public Value operatorPlus(Value right) throws InvalidOperationException {
-        return new ValueString(value + right.valueToString());
-    }
-
-    @Override
-    public Value operatorSubtract(Value right) throws InvalidOperationException {
-        throw new InvalidOperationException("Not implemented");
-    }
-
-    @Override
-    public Value operatorMultiply(Value right) throws InvalidOperationException {
-        throw new InvalidOperationException("Not implemented");
-    }
-
-    @Override
-    public Value operatorDivide(Value right) throws InvalidOperationException {
-        throw new InvalidOperationException("Not implemented");
-    }
-
-    @Override
-    public Value operatorLess(Value right) throws InvalidOperationException {
-        throw new InvalidOperationException("Not implemented");
-    }
-
-    @Override
-    public Value operatorLessEquals(Value right) throws InvalidOperationException {
-        throw new InvalidOperationException("Not implemented");
-    }
-
-    @Override
     public String toString() {
         return "string: \"" + value + "\"";
     }
@@ -59,21 +29,15 @@ public class ValueString extends Value {
     }
 
     @Override
-    public Value operatorMoreEquals(Value right) throws InvalidOperationException {
-        throw new InvalidOperationException("Not implemented");
-    }
-
-    @Override
-    public Value operatorMore(Value right) throws InvalidOperationException {
-        throw new InvalidOperationException("Not implemented");
-    }
-
-    @Override
     public NBTTagCompound writeToNBT() {
         NBTTagCompound tag = new NBTTagCompound();
         tag.setString("type", "string");
         tag.setString("value", value);
         return tag;
+    }
+
+    public static ValueString loadValueFromNBT(NBTTagCompound tag) {
+        return new ValueString(tag.getString("value"));
     }
 
     public static boolean isValid(String value) {

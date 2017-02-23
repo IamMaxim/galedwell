@@ -1,14 +1,14 @@
 package ru.iammaxim.tesitems.Scripting.GaledwellLang;
 
 
-import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.VariableStorage;
+import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.ValueObject;
 
 /**
  * Created by maxim on 2/12/17 at 1:33 AM.
  */
 public class Runtime {
     public Stack stack = new Stack(128);
-    public VariableStorage variableStorage = new VariableStorage();
+    public ValueObject variableStorage = new ValueObject();
 
     //this variable stores current operation index
     public int currentCursorPos = -1;

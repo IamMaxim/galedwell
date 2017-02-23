@@ -32,58 +32,26 @@ public class ValueObject extends Value {
     }
 
     @Override
-    public Value operatorPlus(Value right) throws InvalidOperationException {
-        throw new InvalidOperationException("Not implemented");
-    }
-
-    @Override
-    public Value operatorSubtract(Value right) throws InvalidOperationException {
-        throw new InvalidOperationException("Not implemented");
-    }
-
-    @Override
-    public Value operatorMultiply(Value right) throws InvalidOperationException {
-        throw new InvalidOperationException("Not implemented");
-    }
-
-    @Override
-    public Value operatorDivide(Value right) throws InvalidOperationException {
-        throw new InvalidOperationException("Not implemented");
-    }
-
-    @Override
-    public Value operatorLess(Value right) throws InvalidOperationException {
-        throw new InvalidOperationException("Not implemented");
-    }
-
-    @Override
-    public Value operatorLessEquals(Value right) throws InvalidOperationException {
-        throw new InvalidOperationException("Not implemented");
-    }
-
-    @Override
-    public Value operatorEquals(Value right) throws InvalidOperationException {
-        throw new InvalidOperationException("Not implemented");
-    }
-
-    @Override
-    public Value operatorMoreEquals(Value right) throws InvalidOperationException {
-        throw new InvalidOperationException("Not implemented");
-    }
-
-    @Override
-    public Value operatorMore(Value right) throws InvalidOperationException {
-        throw new InvalidOperationException("Not implemented");
-    }
-
-    @Override
     public NBTTagCompound writeToNBT() {
         NBTTagCompound tag = new NBTTagCompound();
         tag.setString("type", "object");
         NBTTagCompound fieldsTag = new NBTTagCompound();
-        fields.forEach((id, val) -> fieldsTag.setTag(String.valueOf(id), val.writeToNBT()));
+        fields.forEach((id, val) -> {
+            NBTTagCompound v = val.writeToNBT();
+            if (v != null)
+                fieldsTag.setTag(String.valueOf(id), v);
+        });
         tag.setTag("fields", fieldsTag);
         return tag;
+    }
+
+    public static ValueObject loadValueFromNBT(NBTTagCompound tag) {
+        ValueObject object = new ValueObject();
+        NBTTagCompound fields = tag.getCompoundTag("fields");
+        for (String name : fields.getKeySet()) {
+            object.setField(Integer.parseInt(name), Value.loadValueFromNBT(fields.getCompoundTag(name)));
+        }
+        return object;
     }
 
     public void setField(int id, Value value) {

@@ -4,7 +4,7 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
-import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.VariableStorage;
+import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.ValueObject;
 import ru.iammaxim.tesitems.TESItems;
 
 /**
@@ -39,7 +39,7 @@ public class PlayerAttributesStorage implements Capability.IStorage<IPlayerAttri
         cap.getInventory().loadFromNBT(tag.getCompoundTag("inventory"));
         cap.loadQuests(tag.getCompoundTag("quests"));
         cap.setJournal(tag.getString("journal"));
-        cap.setVariableStorage((VariableStorage) VariableStorage.loadValueFromNBT(tag.getCompoundTag("variableStorage")));
+        cap.setVariableStorage(ValueObject.loadValueFromNBT(tag.getCompoundTag("variableStorage")));
         cap.setPassword(tag.getString("password"));
     }
 }
