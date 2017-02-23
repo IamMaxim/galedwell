@@ -254,19 +254,9 @@ public class TESItems {
         EntityPlayer player = event.player;
         IPlayerAttributesCapability cap = getCapability(player);
 
-        if (!cap.isAuthorized()) {
-            player.posX = cap.getLoginX();
-            player.posY = cap.getLoginY();
-            player.posZ = cap.getLoginZ();
-            player.prevPosX = cap.getLoginX();
-            player.prevPosY = cap.getLoginY();
-            player.prevPosZ = cap.getLoginZ();
-            player.motionX = 0;
-            player.motionY = 0;
-            player.motionZ = 0;
-            player.chasingPosX = cap.getLoginX();
-            player.chasingPosY = cap.getLoginY();
-            player.chasingPosZ = cap.getLoginZ();
+        if (!cap.isAuthorized() && cap.getLoginY() != 0) {
+            player.setPositionAndUpdate(cap.getLoginX(), cap.getLoginY(), cap.getLoginZ());
+            return;
         }
 
         if (cap.getCarryWeight() > cap.getMaxCarryWeight())

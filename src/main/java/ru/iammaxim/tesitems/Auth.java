@@ -42,13 +42,7 @@ public class Auth {
         IPlayerAttributesCapability cap = TESItems.getCapability(player);
 
         if (!cap.isAuthorized()) {
-//            event.setCanceled(true);
-//            System.out.println("current pos: " + player.posX + " " + player.posY + " " + player.posZ);
-//            System.out.println("prev pos: " + player.lastTickPosX + " " + player.lastTickPosY + " " + player.lastTickPosZ);
-            player.addChatComponentMessage(new TextComponentString("setting pos to: " + cap.getLoginX() + " " + cap.getLoginY() + " " + cap.getLoginZ()));
-//            player.setPosition(cap.getLoginX(), cap.getLoginY(), cap.getLoginZ());
 
-            player.addChatComponentMessage(new TextComponentString("new pos: " + player.posX + " " + player.posY + " " + player.posZ));
         }
     }
 

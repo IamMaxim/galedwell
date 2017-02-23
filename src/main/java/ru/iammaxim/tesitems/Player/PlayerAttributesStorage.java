@@ -22,10 +22,7 @@ public class PlayerAttributesStorage implements Capability.IStorage<IPlayerAttri
         nbttag.setTag("inventory", cap.getInventory().writeToNBT());
         nbttag.setTag("quests", cap.saveQuests());
         nbttag.setString("journal", cap.getJournal());
-        nbttag.setTag("variableStorage",
-                cap
-                        .getVariableStorage()
-                        .writeToNBT());
+        nbttag.setTag("variableStorage", cap.getVariableStorage().writeToNBT());
         return nbttag;
     }
 

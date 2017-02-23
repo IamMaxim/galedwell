@@ -3,7 +3,6 @@ package ru.iammaxim.tesitems.Player;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.text.TextComponentBase;
@@ -15,7 +14,6 @@ import ru.iammaxim.tesitems.Dialogs.Dialog;
 import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.Inventory.InventoryClient;
 import ru.iammaxim.tesitems.Inventory.InventoryServer;
-import ru.iammaxim.tesitems.Items.mItems;
 import ru.iammaxim.tesitems.Magic.SpellBase;
 import ru.iammaxim.tesitems.Magic.SpellEffect;
 import ru.iammaxim.tesitems.NPC.NPC;
@@ -54,7 +52,7 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     private ValueObject variableStorage = new ValueObject();
     private String password = "";
     private boolean isAuthorized = false;
-    private double loginX, loginY, loginZ;
+    private double loginX = 0, loginY = 0, loginZ = 0;
 
     public PlayerAttributesCapabilityDefaultImpl() {
     }
