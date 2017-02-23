@@ -9,13 +9,11 @@ import ru.iammaxim.tesitems.GUI.Elements.*;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.HeaderLayout;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.ScrollableLayout;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.VerticalLayout;
-import ru.iammaxim.tesitems.NPC.EntityNPC;
 import ru.iammaxim.tesitems.NPC.NPC;
 import ru.iammaxim.tesitems.Networking.MessageNPCUpdate;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.TESItems;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -80,7 +78,7 @@ public class GuiNPCEditor extends Screen {
                             }
 
                             TESItems.networkWrapper.sendToServer(new MessageNPCUpdate(npc.getNBT()));
-                            ScreenStack.addScreen(new GuiAlertDialog("Changes updated"));
+                            new GuiAlertDialog("Changes updated").show();
                         }))));
 
         npc.getFactions().forEach(f -> {

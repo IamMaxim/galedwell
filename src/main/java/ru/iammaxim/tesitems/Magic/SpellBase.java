@@ -8,7 +8,7 @@ import ru.iammaxim.tesitems.Magic.SpellTypes.SpellBaseSelf;
 import ru.iammaxim.tesitems.Magic.SpellTypes.SpellBaseTarget;
 
 public abstract class SpellBase {
-    private String name;
+    public String name;
     public SpellEffect[] effects;
 
     /*
@@ -16,6 +16,7 @@ public abstract class SpellBase {
     1 - self
     2 - target
      */
+    public static final int SELF = 1, TARGET = 2;
 
     private int spellType;
 
@@ -27,9 +28,7 @@ public abstract class SpellBase {
         this.effects = effects;
     }
 
-    public String getName() {
-        return name;
-    }
+    public SpellBase() {}
 
 /*    public RayTraceResult rayTrace(EntityPlayer player, double distance) {
         Vec3d vec3 = getPosition(player, PARTIAL_TICK_TIME);
@@ -97,12 +96,24 @@ public abstract class SpellBase {
         }
 
         switch (type) {
-            case 1: //self
+            case SELF:
                 return new SpellBaseSelf(name, effects);
-            case 2: //target
+            case TARGET:
                 return new SpellBaseTarget(name, effects);
             default:
                 return null;
         }
+    }
+
+    public SpellBase copy() {
+        try {
+            SpellBase spellBase = this.getClass().newInstance();
+            spellBase.name = name;
+            spellBase.effects = new SpellEffect[effects.length];
+            System.arraycopy(effects, 0, spellBase.effects, 0, effects.length);
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

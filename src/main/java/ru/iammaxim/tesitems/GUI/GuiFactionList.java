@@ -36,7 +36,7 @@ public class GuiFactionList extends Screen {
             Faction f = new Faction("");
             f.id = -1;
             AdminTemporaryStorage.lastEditedFaction = f;
-            ScreenStack.addScreen(new GuiFactionEditor());
+            new GuiFactionEditor().show();
         }).setWidthOverride(ElementBase.FILL));
 
         FactionManager.factions.forEach((id, f) -> factionsLayout.add(new Text(f.name).setColor(0xFF0066CC).setOnClick(e ->

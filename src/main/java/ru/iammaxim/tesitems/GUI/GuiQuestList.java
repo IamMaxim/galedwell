@@ -1,7 +1,6 @@
 package ru.iammaxim.tesitems.GUI;
 
 import com.google.common.collect.HashBiMap;
-import net.minecraft.client.Minecraft;
 import ru.iammaxim.tesitems.GUI.Elements.Button;
 import ru.iammaxim.tesitems.GUI.Elements.ElementBase;
 import ru.iammaxim.tesitems.GUI.Elements.HorizontalDivider;
@@ -31,7 +30,7 @@ public class GuiQuestList extends Screen {
                                 .add(new HorizontalDivider())
                                 .add(new Button("New quest").center(true).setOnClick(e -> {
                                     AdminTemporaryStorage.lastEditedQuest = new Quest();
-                                    ScreenStack.addScreen(new GuiQuestEditor());
+                                    new GuiQuestEditor().show();
                                 }))));
 
         QuestManager.questList.forEach((id, quest) -> addQuest(quest));

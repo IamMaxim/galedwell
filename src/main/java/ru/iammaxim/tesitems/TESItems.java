@@ -7,7 +7,6 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -18,8 +17,6 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
@@ -56,7 +53,10 @@ import ru.iammaxim.tesitems.GUI.Fonts.UnicodeFontRenderer;
 import ru.iammaxim.tesitems.GUI.*;
 import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.Items.*;
-import ru.iammaxim.tesitems.Magic.*;
+import ru.iammaxim.tesitems.Magic.EntityFlyingSpell;
+import ru.iammaxim.tesitems.Magic.EntityRangedSpellEffect;
+import ru.iammaxim.tesitems.Magic.RenderEntityFlyingSpell;
+import ru.iammaxim.tesitems.Magic.RenderEntityRangedSpellEffect;
 import ru.iammaxim.tesitems.NPC.EntityNPC;
 import ru.iammaxim.tesitems.NPC.RenderNPC;
 import ru.iammaxim.tesitems.Networking.*;
@@ -159,6 +159,7 @@ public class TESItems {
         CapabilityManager.INSTANCE.register(IPlayerAttributesCapability.class, new PlayerAttributesStorage(), PlayerAttributesCapabilityDefaultImpl::new);
         CapabilityManager.INSTANCE.register(IWorldCapability.class, new WorldCapabilityStorage(), WorldCapabilityDefaultImpl::new);
         MinecraftForge.EVENT_BUS.register(this);
+        new Auth().register();
         mItems.register(event.getSide());
         mBlocks.register(event.getSide());
         mArmor.register();
@@ -304,9 +305,6 @@ public class TESItems {
         }
     }
 
-    public String getMOTD() {
-        return TextFormatting.YELLOW + "Добро пожаловать на тестовый сервер Галедвелл!\n" + TextFormatting.RESET + "Доступные команды:\n/giveme <название предмета> <кол-во (необязательно)>\nЧтобы ломать любые блоки, используйте предмет breakingTool";
-    }
 
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
@@ -319,14 +317,6 @@ public class TESItems {
                 cap.setAttribute("strength", 10);
             cap.createInventory(player, cap.getInventory());
             cap.getInventory().calculateCarryweight();
-            if (!event.getWorld().isRemote) {
-                networkWrapper.sendTo(new MessageAttributes(cap.getAttributes()), (EntityPlayerMP) event.getEntity());
-                networkWrapper.sendTo(new MessageSpellbook(cap.saveSpellbook(false)), (EntityPlayerMP) event.getEntity());
-                networkWrapper.sendTo(new MessageInventory(cap.getInventory().writeToNBT()), (EntityPlayerMP) event.getEntity());
-                networkWrapper.sendTo(new MessageJournal(cap.getJournal()), (EntityPlayerMP) event.getEntity());
-
-                player.addChatComponentMessage(new TextComponentString(getMOTD()));
-            }
         }
     }
 

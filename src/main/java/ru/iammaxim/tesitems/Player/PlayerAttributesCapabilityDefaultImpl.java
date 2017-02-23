@@ -2,19 +2,30 @@ package ru.iammaxim.tesitems.Player;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.text.TextComponentBase;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import ru.iammaxim.tesitems.Dialogs.Dialog;
 import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.Inventory.InventoryClient;
 import ru.iammaxim.tesitems.Inventory.InventoryServer;
+import ru.iammaxim.tesitems.Items.mItems;
 import ru.iammaxim.tesitems.Magic.SpellBase;
 import ru.iammaxim.tesitems.Magic.SpellEffect;
 import ru.iammaxim.tesitems.NPC.NPC;
+import ru.iammaxim.tesitems.Networking.MessageAttributes;
+import ru.iammaxim.tesitems.Networking.MessageInventory;
+import ru.iammaxim.tesitems.Networking.MessageJournal;
+import ru.iammaxim.tesitems.Networking.MessageSpellbook;
 import ru.iammaxim.tesitems.Questing.QuestInstance;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.VariableStorage;
+import ru.iammaxim.tesitems.TESItems;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,6 +52,8 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     //latest dialog with NPC
     private Dialog dialog;
     private VariableStorage variableStorage = new VariableStorage();
+    private String password = "";
+    private boolean isAuthorized = false;
 
     public PlayerAttributesCapabilityDefaultImpl() {
     }
@@ -106,6 +119,45 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     @Override
     public VariableStorage getVariableStorage() {
         return variableStorage;
+    }
+
+    @Override
+    public boolean isAuthorized() {
+        return isAuthorized;
+    }
+
+    @Override
+    public void authorize(EntityPlayerMP player) {
+        isAuthorized = true;
+
+        //send player data to client
+        TESItems.networkWrapper.sendTo(new MessageAttributes(getAttributes()), player);
+        TESItems.networkWrapper.sendTo(new MessageSpellbook(saveSpellbook(false)), player);
+        TESItems.networkWrapper.sendTo(new MessageInventory(getInventory().writeToNBT()), player);
+        TESItems.networkWrapper.sendTo(new MessageJournal(getJournal()), player);
+
+        //send MOTD
+        TextComponentBase motd = new TextComponentString(TextFormatting.YELLOW + "Добро пожаловать на тестовый сервер Галедвелл!\n" +
+                TextFormatting.RESET + "Полезные команды:\n" +
+                TextFormatting.BLUE + "/giveme <название предмета> <кол-во (необязательно)>\n" +
+                TextFormatting.RESET + "Чтобы ломать любые блоки, используйте предмет " + TextFormatting.AQUA + "breakingTool");
+        motd.appendSibling(new ItemStack(mItems.itemBreakingTool).getTextComponent());
+        player.addChatComponentMessage(motd);
+    }
+
+    @Override
+    public void setPassword(String pass) {
+        this.password = pass;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public void setVariableStorage(VariableStorage variableStorage) {
+        this.variableStorage = variableStorage;
     }
 
     @Override
@@ -212,7 +264,7 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
         NBTTagList list = new NBTTagList();
         for (SpellBase spell : spellbook) {
             NBTTagCompound tag = new NBTTagCompound();
-            tag.setString("name", spell.getName());
+            tag.setString("name", spell.name);
             tag.setInteger("type", spell.getSpellType());
             NBTTagList list1 = new NBTTagList();
             for (int j = 0; j < spell.effects.length; j++) {

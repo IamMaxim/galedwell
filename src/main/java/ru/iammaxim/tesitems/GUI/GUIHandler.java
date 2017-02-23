@@ -27,16 +27,16 @@ public class GUIHandler implements IGuiHandler {
             case TESItems.guiFactionEditor: return new GuiFactionEditor();
             case TESItems.guiQuestEditor: return new GuiQuestEditor();*/
 
-            case TESItems.guiSpellSelect: ScreenStack.addScreen(new GuiSpellSelect()); return ScreenStack.instance;
-            case TESItems.guiNpcDialog: ScreenStack.addScreen(new GuiNPCDialog()); return ScreenStack.instance;
-            case TESItems.guiJournal: ScreenStack.addScreen(new GuiJournal()); return ScreenStack.instance;
-            case TESItems.guiNPCEditor: ScreenStack.addScreen(new GuiNPCEditor(player)); return ScreenStack.instance;
-            case TESItems.guiFactionList: ScreenStack.addScreen(new GuiFactionList()); return ScreenStack.instance;
-            case TESItems.guiQuestList: ScreenStack.addScreen(new GuiQuestList()); return ScreenStack.instance;
-            case TESItems.guiFactionEditor: ScreenStack.addScreen(new GuiFactionEditor()); return ScreenStack.instance;
-            case TESItems.guiQuestEditor: ScreenStack.addScreen(new GuiQuestEditor()); return ScreenStack.instance;
             case TESItems.guiInventory: return new GuiInventory(player);
-            case TESItems.guiEditSpells: ScreenStack.addScreen(new GuiSpellEditorList()); return ScreenStack.instance;
+            case TESItems.guiSpellSelect: new GuiSpellSelect().show(); return ScreenStack.instance;
+            case TESItems.guiNpcDialog: new GuiNPCDialog().show(); return ScreenStack.instance;
+            case TESItems.guiJournal: new GuiJournal().show(); return ScreenStack.instance;
+            case TESItems.guiNPCEditor: new GuiNPCEditor(player).show(); return ScreenStack.instance;
+            case TESItems.guiFactionList: new GuiFactionList().show(); return ScreenStack.instance;
+            case TESItems.guiQuestList: new GuiQuestList().show(); return ScreenStack.instance;
+            case TESItems.guiFactionEditor: new GuiFactionEditor().show(); return ScreenStack.instance;
+            case TESItems.guiQuestEditor: new GuiQuestEditor().show(); return ScreenStack.instance;
+            case TESItems.guiEditSpells: new GuiSpellEditorList().show(); return ScreenStack.instance;
         }
         return null;
     }

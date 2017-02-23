@@ -66,7 +66,7 @@ public class ScrollableLayout extends FrameLayout {
     }
 
     public int getMinHeight() {
-        return minHeight;
+        return Math.max(minHeight, scrollbar.getMinHeight());
     }
 
     public ScrollableLayout setMinHeight(int minHeight) {
@@ -76,7 +76,7 @@ public class ScrollableLayout extends FrameLayout {
 
     @Override
     public int getHeight() {
-        return Math.max(super.getHeight(), minHeight);
+        return Math.max(super.getHeight(), getMinHeight());
     }
 
     @Override

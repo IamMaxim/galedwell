@@ -16,7 +16,7 @@ public class GuiSpellEditorList extends Screen {
 
 
         layout.add(new Button("Create new spell").setOnClick(b -> {
-
+            new GuiSpellEditor(null);
         }));
 
         contentLayout.setElement(new ScrollableLayout().setElement(new VerticalLayout().add(layout)));

@@ -1,10 +1,6 @@
 package ru.iammaxim.tesitems.GUI.Elements.Layouts;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.Tessellator;
 import ru.iammaxim.tesitems.GUI.Elements.ElementBase;
-import scala.actors.threadpool.Arrays;
 
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
@@ -13,7 +9,7 @@ import java.util.List;
 /**
  * Created by maxim on 11/7/16 at 4:19 PM.
  */
-public class VerticalLayout extends LayoutBase {
+public class VerticalLayout extends LayoutBase implements LayoutWithList {
     protected int spacing = 4;
     protected ArrayList<ElementBase> elements = new ArrayList<>();
     private boolean limitHeight = true;
@@ -30,16 +26,19 @@ public class VerticalLayout extends LayoutBase {
         return this;
     }
 
+    @Override
     public VerticalLayout add(ElementBase element) {
         elements.add(element);
         element.setParent(this);
         return this;
     }
 
+    @Override
     public void remove(ElementBase element) {
         elements.remove(element);
     }
 
+    @Override
     public void clear() {
         elements.clear();
     }

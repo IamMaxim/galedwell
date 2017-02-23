@@ -10,6 +10,11 @@ import ru.iammaxim.tesitems.Magic.SpellEffect;
 public class SpellBaseSelf extends SpellBase {
     public SpellBaseSelf(String name, SpellEffect... effects) {
         super(name, effects);
+        setSpellType(SELF);
+    }
+
+    public SpellBaseSelf() {
+        setSpellType(SELF);
     }
 
     @Override

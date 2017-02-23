@@ -1,6 +1,7 @@
 package ru.iammaxim.tesitems.Player;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import ru.iammaxim.tesitems.Dialogs.Dialog;
 import ru.iammaxim.tesitems.Inventory.Inventory;
@@ -47,4 +48,9 @@ public interface IPlayerAttributesCapability {
     void setLatestDialog(Dialog dialog);
     Dialog getLatestDialog();
     VariableStorage getVariableStorage();
+    boolean isAuthorized();
+    void authorize(EntityPlayerMP player);
+    void setPassword(String pass);
+    String getPassword();
+    void setVariableStorage(VariableStorage variableStorage);
 }

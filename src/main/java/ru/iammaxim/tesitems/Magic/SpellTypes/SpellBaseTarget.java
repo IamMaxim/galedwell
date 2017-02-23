@@ -12,6 +12,11 @@ import ru.iammaxim.tesitems.Magic.SpellEffect;
 public class SpellBaseTarget extends SpellBase {
     public SpellBaseTarget(String name, SpellEffect... effects) {
         super(name, effects);
+        setSpellType(TARGET);
+    }
+
+    public SpellBaseTarget() {
+        setSpellType(TARGET);
     }
 
     @Override

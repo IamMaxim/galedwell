@@ -103,4 +103,8 @@ public class Screen {
                 .setBounds(8, 8, 308, res.getScaledHeight() - 8);
         debugWindow.doLayout();
     }
+
+    public void show() {
+        ScreenStack.addScreen(this);
+    }
 }

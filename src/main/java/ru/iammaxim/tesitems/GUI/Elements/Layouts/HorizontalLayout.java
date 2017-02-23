@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by maxim on 11/7/16 at 4:19 PM.
  */
-public class HorizontalLayout extends LayoutBase {
+public class HorizontalLayout extends LayoutBase implements LayoutWithList {
     private int spacing = 4;
     private ArrayList<ElementBase> elements = new ArrayList<>();
     private boolean center = false;
@@ -32,10 +32,21 @@ public class HorizontalLayout extends LayoutBase {
         return this;
     }
 
+    @Override
     public HorizontalLayout add(ElementBase element) {
         elements.add(element);
         element.setParent(this);
         return this;
+    }
+
+    @Override
+    public void remove(ElementBase element) {
+        elements.remove(element);
+    }
+
+    @Override
+    public void clear() {
+        elements.clear();
     }
 
     @Override

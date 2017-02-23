@@ -117,6 +117,10 @@ public class VerticalScrollbar extends LayoutBase {
         return "VerticalScrollbar";
     }
 
+    public int getMinHeight() {
+        return scrollbarEndHeight * 2 + scrollbarHandleHeight;
+    }
+
     public enum Direction {
         UP,
         DOWN

@@ -30,12 +30,14 @@ import ru.iammaxim.tesitems.TESItems;
  * Created by Maxim on 11.07.2016.
  */
 public class SpellEffect {
+    private String name;
     protected float power, range;
     private ValueObject object;
     private ResourceLocation texture;
     private String script;
 
-    public SpellEffect(String script, ValueObject object, ResourceLocation texture, Float power, Float range) {
+    public SpellEffect(String name, String script, ValueObject object, ResourceLocation texture, Float power, Float range) {
+        this.name = name;
         this.script = script;
         this.power = power;
         this.range = range;
@@ -48,6 +50,7 @@ public class SpellEffect {
 
     public static SpellEffect readFromNBT(NBTTagCompound tag) {
         SpellEffect effect = new SpellEffect();
+        effect.name = tag.getString("name");
         effect.script = tag.getString("script");
         effect.power = tag.getFloat("power");
         effect.range = tag.getFloat("range");
@@ -160,9 +163,18 @@ public class SpellEffect {
             tag.setString("script", script);
         else
             tag.setString("script", "");
+        tag.setString("name", name);
         tag.setFloat("power", power);
         tag.setFloat("range", range);
         tag.setString("texture", texture.toString());
         return tag;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

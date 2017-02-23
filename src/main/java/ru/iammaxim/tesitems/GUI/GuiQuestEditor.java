@@ -38,13 +38,13 @@ public class GuiQuestEditor extends Screen {
         layout.add(new HorizontalDivider());
 
         layout.add(new Button("Edit stages").center(true).setWidthOverride(ElementBase.FILL).setOnClick(e ->
-                ScreenStack.addScreen(new StagesEditor(quest))));
+                new StagesEditor(quest).show()));
 
         layout.add(new HorizontalDivider());
         layout.add(new HorizontalLayout()
                 .add(new Button("Save").setOnClick(e -> {
                     TESItems.networkWrapper.sendToServer(new MessageQuest(quest));
-                    ScreenStack.addScreen(new GuiAlertDialog("Quest saved"));
+                    new GuiAlertDialog("Quest saved").show();
                 })).add(new Button("Back").setOnClick(e ->
                         ScreenStack.close()))
                 .center(true).setWidthOverride(ElementBase.FILL));
@@ -52,7 +52,7 @@ public class GuiQuestEditor extends Screen {
 
     @Override
     public boolean close() {
-        ScreenStack.addScreen(new GuiConfirmationDialog("Are you sure you don't want to save changes?", ScreenStack::forceClose));
+        new GuiConfirmationDialog("Are you sure you don't want to save changes?", ScreenStack::forceClose).show();
         return false;
     }
 
@@ -192,7 +192,7 @@ public class GuiQuestEditor extends Screen {
                 public StageElement(QuestStage stage) {
                     this.stage = stage;
                     this.setOnClick(e -> {
-                        ScreenStack.addScreen(new StageEditor(StagesElement.this, this));
+                        new StageEditor(StagesElement.this, this).show();
                     });
                 }
 
@@ -252,10 +252,10 @@ public class GuiQuestEditor extends Screen {
                 parent.ignoreUntilReleased = true;
                 ScreenStack.forceClose();
             })).add(new Button("Back").setOnClick(b -> {
-                ScreenStack.addScreen(new GuiConfirmationDialog("Are you sure you don't want to save changes?", () -> {
+                new GuiConfirmationDialog("Are you sure you don't want to save changes?", () -> {
                     parent.ignoreUntilReleased = true;
                     ScreenStack.forceClose();
-                }));
+                }).show();
             })));
 
             contentLayout.setElement(layout);
@@ -264,10 +264,10 @@ public class GuiQuestEditor extends Screen {
 
         @Override
         public boolean close() {
-            ScreenStack.addScreen(new GuiConfirmationDialog("Are you sure you don't want to save changes?", () -> {
+            new GuiConfirmationDialog("Are you sure you don't want to save changes?", () -> {
                 parent.ignoreUntilReleased = true;
                 ScreenStack.forceClose();
-            }));
+            }).show();
             return false;
         }
     }

@@ -51,8 +51,10 @@ public class ScreenStack extends GuiScreen {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        for (int i = 0; i < screens.size(); i++)
-            screens.get(i).drawScreen(mouseX, mouseY, partialTicks);
+        for (int i = 0; i < screens.size() - 1; i++)
+            screens.get(i).drawScreen(-1, -1, partialTicks);
+        if (screens.size() > 0)
+            screens.get(screens.size() - 1).drawScreen(mouseX, mouseY, partialTicks);
 
         if (lastScreen() != null)
             if (Mouse.isButtonDown(0)) {
