@@ -37,7 +37,9 @@ public abstract class Value {
     public abstract NBTTagCompound writeToNBT();
 
     public static Value loadValueFromNBT(NBTTagCompound tag) {
-        return null;
+        VariableStorage storage = new VariableStorage();
+
+        return storage;
     }
 
 }
