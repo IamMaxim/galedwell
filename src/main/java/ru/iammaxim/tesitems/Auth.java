@@ -29,25 +29,36 @@ public class Auth {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    public static boolean isPlayer(Object player) {
-        return player != null && player.getClass().equals(EntityPlayerMP.class);
-    }
-
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void playerMoveEvent(PlayerEvent.LivingUpdateEvent event) {
         if (!(event.getEntityLiving() instanceof EntityPlayer))
             return;
 
         EntityPlayer player = (EntityPlayer) event.getEntityLiving();
+
+        if (player.worldObj.isRemote)
+            return;
+
         IPlayerAttributesCapability cap = TESItems.getCapability(player);
 
-        if (!cap.isAuthorized())
-            event.setCanceled(true);
+        if (!cap.isAuthorized()) {
+//            event.setCanceled(true);
+//            System.out.println("current pos: " + player.posX + " " + player.posY + " " + player.posZ);
+//            System.out.println("prev pos: " + player.lastTickPosX + " " + player.lastTickPosY + " " + player.lastTickPosZ);
+            player.addChatComponentMessage(new TextComponentString("setting pos to: " + cap.getLoginX() + " " + cap.getLoginY() + " " + cap.getLoginZ()));
+//            player.setPosition(cap.getLoginX(), cap.getLoginY(), cap.getLoginZ());
+
+            player.addChatComponentMessage(new TextComponentString("new pos: " + player.posX + " " + player.posY + " " + player.posZ));
+        }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void serverChatEvent(ServerChatEvent event) {
         EntityPlayer player = event.getPlayer();
+
+        if (player.getEntityWorld().isRemote)
+            return;
+
         IPlayerAttributesCapability cap = TESItems.getCapability(player);
         if (!cap.isAuthorized()) {
             event.setCanceled(true);
@@ -58,6 +69,13 @@ public class Auth {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void commandEvent(CommandEvent event) {
         EntityPlayer player = (EntityPlayer) event.getSender();
+
+        if (player.worldObj.isRemote)
+            return;
+
+        if (event.getCommand().getCommandName().equals("login"))
+            return; //let the player log in
+
         IPlayerAttributesCapability cap = TESItems.getCapability(player);
         if (!cap.isAuthorized()) {
             event.setCanceled(true);
@@ -68,9 +86,14 @@ public class Auth {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void playerInteractEvent(PlayerInteractEvent event) {
         EntityPlayer player = event.getEntityPlayer();
+
+        if (player.worldObj.isRemote)
+            return;
+
         IPlayerAttributesCapability cap = TESItems.getCapability(player);
         if (!cap.isAuthorized()) {
-            event.setCanceled(true);
+            if (event.isCancelable())
+                event.setCanceled(true);
             player.addChatComponentMessage(new TextComponentString(TextFormatting.RED + "Login required."));
         }
     }
@@ -78,6 +101,10 @@ public class Auth {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void entityInteractEvent(PlayerInteractEvent.EntityInteract event) {
         EntityPlayer player = event.getEntityPlayer();
+
+        if (player.worldObj.isRemote)
+            return;
+
         IPlayerAttributesCapability cap = TESItems.getCapability(player);
         if (!cap.isAuthorized()) {
             event.setCanceled(true);
@@ -88,6 +115,10 @@ public class Auth {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void minecartInteractEvent(MinecartInteractEvent event) {
         EntityPlayer player = event.getPlayer();
+
+        if (player.worldObj.isRemote)
+            return;
+
         IPlayerAttributesCapability cap = TESItems.getCapability(player);
         if (!cap.isAuthorized()) {
             event.setCanceled(true);
@@ -98,6 +129,10 @@ public class Auth {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void itemTossEvent(ItemTossEvent event) {
         EntityPlayer player = event.getPlayer();
+
+        if (player.worldObj.isRemote)
+            return;
+
         IPlayerAttributesCapability cap = TESItems.getCapability(player);
         if (!cap.isAuthorized()) {
             // add the item back to the inventory
@@ -111,6 +146,10 @@ public class Auth {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void entityItemPickupEvent(EntityItemPickupEvent event) {
         EntityPlayer player = event.getEntityPlayer();
+
+        if (player.worldObj.isRemote)
+            return;
+
         IPlayerAttributesCapability cap = TESItems.getCapability(player);
         if (!cap.isAuthorized()) {
             event.setCanceled(true);
@@ -123,6 +162,10 @@ public class Auth {
         if (!(event.getEntityLiving() instanceof EntityPlayer))
             return;
         EntityPlayer player = (EntityPlayer) event.getEntityLiving();
+
+        if (player.worldObj.isRemote)
+            return;
+
         IPlayerAttributesCapability cap = TESItems.getCapability(player);
         if (!cap.isAuthorized()) {
             event.setCanceled(true);
@@ -143,10 +186,18 @@ public class Auth {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void playerLoggedInEvent(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent event) {
         EntityPlayer player = event.player;
+
+        if (player.worldObj.isRemote)
+            return;
+
         IPlayerAttributesCapability cap = TESItems.getCapability(player);
 
+        cap.setLoginX(player.posX);
+        cap.setLoginY(player.posY);
+        cap.setLoginZ(player.posZ);
+
         if (cap.getPassword().isEmpty()) {
-            player.addChatComponentMessage(new TextComponentString(TextFormatting.RED + "It's recommended to you to " + TextFormatting.YELLOW + "/register <password> <repeatPassword>" + TextFormatting.RED + ", so no one can login from your account."));
+            player.addChatComponentMessage(new TextComponentString(TextFormatting.RED + "You are not registered.\n" + TextFormatting.RED + "It's recommended to you to " + TextFormatting.YELLOW + "/setPassword <password> <repeatPassword>" + TextFormatting.RED + ", so no one can login from your account."));
             cap.authorize((EntityPlayerMP) player);
         } else {
             player.addChatComponentMessage(new TextComponentString(TextFormatting.YELLOW + "/login <password>" + TextFormatting.RED + " required."));

@@ -251,7 +251,24 @@ public class TESItems {
 
     @SubscribeEvent
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        IPlayerAttributesCapability cap = getCapability(event.player);
+        EntityPlayer player = event.player;
+        IPlayerAttributesCapability cap = getCapability(player);
+
+        if (!cap.isAuthorized()) {
+            player.posX = cap.getLoginX();
+            player.posY = cap.getLoginY();
+            player.posZ = cap.getLoginZ();
+            player.prevPosX = cap.getLoginX();
+            player.prevPosY = cap.getLoginY();
+            player.prevPosZ = cap.getLoginZ();
+            player.motionX = 0;
+            player.motionY = 0;
+            player.motionZ = 0;
+            player.chasingPosX = cap.getLoginX();
+            player.chasingPosY = cap.getLoginY();
+            player.chasingPosZ = cap.getLoginZ();
+        }
+
         if (cap.getCarryWeight() > cap.getMaxCarryWeight())
             event.player.addPotionEffect(new PotionEffect(Potion.getPotionById(2), 5, 3));
     }
@@ -356,6 +373,8 @@ public class TESItems {
         event.registerServerCommand(new CommandManageFactions());
         event.registerServerCommand(new CommandManageQuests());
         event.registerServerCommand(new CommandStatus());
+        event.registerServerCommand(new CommandSetPassword());
+        event.registerServerCommand(new CommandLogin());
 
         //debug
         event.registerServerCommand(new CommandManageInventory());
@@ -500,7 +519,8 @@ public class TESItems {
 
     public static Side getSide() {
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER || Thread.currentThread().getName().startsWith("Netty Epoll Server IO"))
-            return Side.SERVER; else return Side.CLIENT;
+            return Side.SERVER;
+        else return Side.CLIENT;
     }
 
 /*    @SubscribeEvent

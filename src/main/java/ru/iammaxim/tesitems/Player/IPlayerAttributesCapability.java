@@ -53,4 +53,10 @@ public interface IPlayerAttributesCapability {
     void setPassword(String pass);
     String getPassword();
     void setVariableStorage(ValueObject variableStorage);
+    double getLoginX();
+    double getLoginY();
+    double getLoginZ();
+    double setLoginX(double x);
+    double setLoginY(double y);
+    double setLoginZ(double z);
 }

@@ -54,6 +54,7 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     private ValueObject variableStorage = new ValueObject();
     private String password = "";
     private boolean isAuthorized = false;
+    private double loginX, loginY, loginZ;
 
     public PlayerAttributesCapabilityDefaultImpl() {
     }
@@ -128,6 +129,7 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
 
     @Override
     public void authorize(EntityPlayerMP player) {
+        System.out.println("Authorized " + player.getName());
         isAuthorized = true;
 
         //send player data to client
@@ -141,7 +143,6 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
                 TextFormatting.RESET + "Полезные команды:\n" +
                 TextFormatting.BLUE + "/giveme <название предмета> <кол-во (необязательно)>\n" +
                 TextFormatting.RESET + "Чтобы ломать любые блоки, используйте предмет " + TextFormatting.AQUA + "breakingTool");
-        motd.appendSibling(new ItemStack(mItems.itemBreakingTool).getTextComponent());
         player.addChatComponentMessage(motd);
     }
 
@@ -158,6 +159,36 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     @Override
     public void setVariableStorage(ValueObject variableStorage) {
         this.variableStorage = variableStorage;
+    }
+
+    @Override
+    public double getLoginX() {
+        return loginX;
+    }
+
+    @Override
+    public double getLoginY() {
+        return loginY;
+    }
+
+    @Override
+    public double getLoginZ() {
+        return loginZ;
+    }
+
+    @Override
+    public double setLoginX(double x) {
+        return loginX = x;
+    }
+
+    @Override
+    public double setLoginY(double y) {
+        return loginY = y;
+    }
+
+    @Override
+    public double setLoginZ(double z) {
+        return loginZ = z;
     }
 
     @Override
