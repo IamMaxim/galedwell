@@ -168,6 +168,10 @@ public class Auth {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void attackEntityEvent(AttackEntityEvent event) {
         EntityPlayer player = event.getEntityPlayer();
+
+        if (player.worldObj.isRemote)
+            return;
+
         IPlayerAttributesCapability cap = TESItems.getCapability(player);
         if (!cap.isAuthorized()) {
             event.setCanceled(true);
