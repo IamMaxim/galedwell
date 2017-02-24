@@ -132,6 +132,12 @@ public class Inventory {
     public int getItemStackIndex(ItemStack stack) {
         for (int i = 0; i < inventory.size(); i++) {
             ItemStack is = inventory.get(i);
+
+            if (stack == null)
+                System.out.println("stack == null");
+            if (is == null)
+                System.out.println("is == null");
+
             if (is.getItem() == stack.getItem() && stack.getMetadata() == is.getMetadata()) {
                 System.out.println("getting itemstack index: " + stack + "; returning " + i);
                 return i;
