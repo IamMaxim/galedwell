@@ -68,6 +68,7 @@ public class InventoryServer extends Inventory {
 
     @Override
     public void equip(EntityEquipmentSlot slot, int index) {
+        System.out.println("Equipping " + index + " (" + get(index) + ") to slot " + slot);
         if (index == -1)
             player.setItemStackToSlot(slot, null);
         else

@@ -55,10 +55,12 @@ public class Inventory {
     }
 
     public void clear() {
+        System.out.println("clearing inventory");
         inventory.clear();
     }
 
     public void addItem(ItemStack stack) {
+        System.out.println("adding " + stack);
         if (stack.isItemStackDamageable())
             inventory.add(stack);
         else {
@@ -78,11 +80,13 @@ public class Inventory {
     }
 
     public void setItem(int index, ItemStack stack) {
+        System.out.println("setting item at " + index + " to " + stack);
         inventory.set(index, stack);
         calculateCarryweight();
     }
 
     public void checkInventory() {
+        System.out.println("checking inventory");
         for (int i = inventory.size() - 1; i >= 0; i--) {
             checkSlot(i);
         }
@@ -97,6 +101,7 @@ public class Inventory {
     }
 
     public boolean removeItem(Item item) {
+        System.out.println("removing item " + item);
         int index = getItemIndex(item);
         if (index == -1) {
             System.out.println("item not found in inventory");
@@ -106,6 +111,7 @@ public class Inventory {
     }
 
     public boolean removeItem(int index) {
+        System.out.println("removing item at " + index);
         inventory.remove(index);
         calculateCarryweight();
         return true;
@@ -114,16 +120,24 @@ public class Inventory {
     public int getItemIndex(Item item) {
         for (int i = 0; i < inventory.size(); i++) {
             ItemStack is = inventory.get(i);
-            if (is.getItem() == item) return i;
+            if (is.getItem() == item) {
+                System.out.println("getting item index: " + item + "; returning " + i);
+                return i;
+            }
         }
+        System.out.println("getting item index: " + item + "; returning " + -1);
         return -1;
     }
 
     public int getItemStackIndex(ItemStack stack) {
         for (int i = 0; i < inventory.size(); i++) {
             ItemStack is = inventory.get(i);
-            if (is.getItem() == stack.getItem() && stack.getMetadata() == is.getMetadata()) return i;
+            if (is.getItem() == stack.getItem() && stack.getMetadata() == is.getMetadata()) {
+                System.out.println("getting itemstack index: " + stack + "; returning " + i);
+                return i;
+            }
         }
+        System.out.println("getting itemstack index: " + stack + "; returning " + -1);
         return -1;
     }
 
@@ -160,7 +174,7 @@ public class Inventory {
         }
     }
 
-    public List<int[]> getItemIndices(Item item) {
+/*    public List<int[]> getItemIndices(Item item) {
         List<int[]> slots = new ArrayList<>();
         for (int i = 0; i < inventory.size(); i++) {
             ItemStack is = inventory.get(i);
@@ -169,7 +183,7 @@ public class Inventory {
             }
         }
         return slots;
-    }
+    }*/
 
 /*    public ItemStack takeItem(Item item, int count) {
         if (item.isDamageable()) {
@@ -206,6 +220,7 @@ public class Inventory {
     }
 
     public void drop(Entity entity, int index, int count) {
+        System.out.println("Dropping " + index + " (" + inventory.get(index) + ") " + count);
         ItemStack is = inventory.get(index);
         if (count > is.stackSize) {
             System.out.println("count > is.stackSize. Something goes wrong");
