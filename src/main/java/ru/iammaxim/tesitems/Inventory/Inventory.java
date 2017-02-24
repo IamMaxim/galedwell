@@ -132,8 +132,18 @@ public class Inventory {
         NBTTagList tagList = new NBTTagList();
         for (ItemStack is : inventory) {
             try {
-                NBTTagCompound itemTag = is.serializeNBT();
-                tagList.appendTag(itemTag);
+                if (is != null) {
+                    NBTTagCompound itemTag = is.serializeNBT();
+                    tagList.appendTag(itemTag);
+                } else {
+                    System.out.println("found null ItemStack. Full inventory:");
+                    inventory.forEach(i -> {
+                        if (i == null)
+                            System.out.println("is == null");
+                        else
+                            System.out.println(i);
+                    });
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
