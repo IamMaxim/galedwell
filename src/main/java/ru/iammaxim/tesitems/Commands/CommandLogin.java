@@ -40,4 +40,9 @@ public class CommandLogin extends CommandBase {
             ((EntityPlayer) sender).addChatComponentMessage(new TextComponentString(TextFormatting.RED + getCommandUsage(sender)));
         }
     }
+
+    @Override
+    public int getRequiredPermissionLevel() {
+        return 0;
+    }
 }

@@ -423,6 +423,9 @@ public class TESItems {
         if (TESItems.getMinecraft().currentScreen == null) {
             NotificationManager.draw();
             getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+        } else {
+            if (TESItems.getMinecraft().currentScreen instanceof net.minecraft.client.gui.inventory.GuiInventory)
+                TESItems.getMinecraft().currentScreen = null;
         }
     }
 

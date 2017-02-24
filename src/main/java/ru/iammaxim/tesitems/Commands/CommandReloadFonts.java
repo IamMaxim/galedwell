@@ -4,6 +4,7 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.TextComponentString;
 import ru.iammaxim.tesitems.TESItems;
 
 /**
@@ -22,6 +23,10 @@ public class CommandReloadFonts extends CommandBase {
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+        if (!sender.getEntityWorld().isRemote) {
+            sender.addChatMessage(new TextComponentString("This only works in singleplayer worlds"));
+            return;
+        }
         TESItems.getMinecraft().addScheduledTask(TESItems.ClientThings::loadFonts);
     }
 }
