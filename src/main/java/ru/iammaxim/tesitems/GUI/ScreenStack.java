@@ -65,6 +65,8 @@ public class ScreenStack extends GuiScreen {
             } else {
                 wasClicked = false;
             }
+
+            NotificationManager.draw();
     }
 
     @Override

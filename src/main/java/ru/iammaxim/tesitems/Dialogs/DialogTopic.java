@@ -7,7 +7,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import ru.iammaxim.tesitems.Questing.Condition;
 import ru.iammaxim.tesitems.Questing.Quest;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.GaledwellLang;
-import ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.InvalidTokenException;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.ValueObject;
 import ru.iammaxim.tesitems.TESItems;
 
@@ -36,7 +35,7 @@ public class DialogTopic {
             try {
                 System.out.println("loading topic script");
                 GaledwellLang.loadSrcInto(topic.script, topic.object);
-            } catch (InvalidTokenException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 

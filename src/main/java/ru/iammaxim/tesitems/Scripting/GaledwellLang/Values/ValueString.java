@@ -29,6 +29,11 @@ public class ValueString extends Value {
     }
 
     @Override
+    public Value operatorPlus(Value right) throws InvalidOperationException {
+        return new ValueString(value + right.valueToString());
+    }
+
+    @Override
     public NBTTagCompound writeToNBT() {
         NBTTagCompound tag = new NBTTagCompound();
         tag.setString("type", "string");

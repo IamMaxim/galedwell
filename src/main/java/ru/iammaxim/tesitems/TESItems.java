@@ -59,7 +59,9 @@ import ru.iammaxim.tesitems.Magic.RenderEntityFlyingSpell;
 import ru.iammaxim.tesitems.Magic.RenderEntityRangedSpellEffect;
 import ru.iammaxim.tesitems.NPC.EntityNPC;
 import ru.iammaxim.tesitems.NPC.RenderNPC;
-import ru.iammaxim.tesitems.Networking.*;
+import ru.iammaxim.tesitems.Networking.MessageCastSpell;
+import ru.iammaxim.tesitems.Networking.MessageOpenGui;
+import ru.iammaxim.tesitems.Networking.NetworkUtils;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.Player.PlayerAttributesCapabilityDefaultImpl;
 import ru.iammaxim.tesitems.Player.PlayerAttributesCapabilityProvider;
@@ -74,7 +76,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.List;
 
 @Mod(modid = TESItems.MODID, version = TESItems.VERSION)
 public class TESItems {
@@ -165,32 +166,7 @@ public class TESItems {
         mArmor.register();
 
         networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel("TESItemsChannel");
-        networkWrapper.registerMessage(MessageOpenGui.Handler.class, MessageOpenGui.class, 0, Side.SERVER);
-        networkWrapper.registerMessage(MessageAttributes.Handler.class, MessageAttributes.class, 1, Side.CLIENT);
-        networkWrapper.registerMessage(MessageCastSpell.Handler.class, MessageCastSpell.class, 2, Side.SERVER);
-        networkWrapper.registerMessage(MessageSpellbook.Handler.class, MessageSpellbook.class, 3, Side.CLIENT);
-        networkWrapper.registerMessage(MessageInventoryUpdate.ClientHandler.class, MessageInventoryUpdate.class, 4, Side.CLIENT);
-        networkWrapper.registerMessage(MessageInventoryUpdate.ServerHandler.class, MessageInventoryUpdate.class, 5, Side.SERVER);
-        networkWrapper.registerMessage(MessageInventory.Handler.class, MessageInventory.class, 6, Side.CLIENT);
-        networkWrapper.registerMessage(MessageEquip.ServerHandler.class, MessageEquip.class, 7, Side.SERVER);
-        networkWrapper.registerMessage(MessageEquip.ClientHandler.class, MessageEquip.class, 8, Side.CLIENT);
-        networkWrapper.registerMessage(MessageItemDrop.ServerHandler.class, MessageItemDrop.class, 9, Side.SERVER);
-        networkWrapper.registerMessage(MessageJournal.Handler.class, MessageJournal.class, 10, Side.CLIENT);
-        networkWrapper.registerMessage(MessageJournalAppend.Handler.class, MessageJournalAppend.class, 11, Side.CLIENT);
-        networkWrapper.registerMessage(MessageNPCUpdate.ServerHandler.class, MessageNPCUpdate.class, 12, Side.SERVER);
-        networkWrapper.registerMessage(MessageNPCUpdate.ClientHandler.class, MessageNPCUpdate.class, 13, Side.CLIENT);
-        networkWrapper.registerMessage(MessageDialog.Handler.class, MessageDialog.class, 14, Side.CLIENT);
-        networkWrapper.registerMessage(MessageFactionList.Handler.class, MessageFactionList.class, 15, Side.CLIENT);
-        networkWrapper.registerMessage(MessageFaction.ServerHandler.class, MessageFaction.class, 16, Side.SERVER);
-        networkWrapper.registerMessage(MessageFaction.ClientHandler.class, MessageFaction.class, 17, Side.CLIENT);
-        networkWrapper.registerMessage(MessageFactionRemove.ClientHandler.class, MessageFactionRemove.class, 18, Side.CLIENT);
-        networkWrapper.registerMessage(MessageFactionRemove.ServerHandler.class, MessageFactionRemove.class, 19, Side.SERVER);
-        networkWrapper.registerMessage(MessageDialogSelectTopic.ServerHandler.class, MessageDialogSelectTopic.class, 20, Side.SERVER);
-        networkWrapper.registerMessage(MessageShowNotification.Handler.class, MessageShowNotification.class, 21, Side.CLIENT);
-        networkWrapper.registerMessage(MessageQuestList.Handler.class, MessageQuestList.class, 22, Side.CLIENT);
-        networkWrapper.registerMessage(MessageOpenEditFaction.ServerHandler.class, MessageOpenEditFaction.class, 23, Side.SERVER);
-        networkWrapper.registerMessage(MessageQuest.ServerHandler.class, MessageQuest.class, 24, Side.SERVER);
-        networkWrapper.registerMessage(MessageQuest.ClientHandler.class, MessageQuest.class, 25, Side.CLIENT);
+        NetworkUtils.registerMessages();
 
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GUIHandler());
         EntityRegistry.registerModEntity(EntityRangedSpellEffect.class, "EntityRangedSpellEffect", 0, instance, 100, 1, false);
@@ -444,37 +420,10 @@ public class TESItems {
     @SubscribeEvent
     public void onHUDDraw(RenderGameOverlayEvent.Post event) {
         if (event.getType() != RenderGameOverlayEvent.ElementType.HOTBAR) return;
-
-        //update notifications
-        NotificationManager.update();
-        List<String> notifications = NotificationManager.getNotificationsToRender();
-
-        if (notifications.size() > 0) {
-            int first_alpha = (int) (255 * Math.min(NotificationManager.getFirstLivetime() * 6, 1));
-            //fixes reset of alpha 0x00 to 0xFF
-            if (first_alpha == 0) first_alpha = 1;
-            if (first_alpha == 255) first_alpha = 254;
-
-            float y = ((float) 12 / 255 * first_alpha);
-
-            //draw first string
-            ClientThings.fontRenderer.drawString(notifications.get(0), 8, y, 0x00FFFFFF + (first_alpha << 24), false);
-            y += 12;
-
-            //draw strings between first and last
-            for (int i = 1; i < notifications.size() - 1; i++) {
-                ClientThings.fontRenderer.drawString(notifications.get(i), 8, y, 0xFFFFFFFF, false);
-                y += 12;
-            }
-
-            //draw last string
-            if (notifications.size() == NotificationManager.RENDER_COUNT)
-                ClientThings.fontRenderer.drawString(notifications.get(notifications.size() - 1), 8, y, 0xFFFFFFFF - (first_alpha << 24), false);
-            else if (notifications.size() > 1)
-                ClientThings.fontRenderer.drawString(notifications.get(notifications.size() - 1), 8, y, 0xFFFFFFFF, false);
+        if (TESItems.getMinecraft().currentScreen == null) {
+            NotificationManager.draw();
+            getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
         }
-
-        getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
     }
 
     @SideOnly(Side.CLIENT)

@@ -1,8 +1,14 @@
-main() {
-    testVar = 1;
-    if (testVar == testVar)
-        print("true");
+onTopicClick(varStorage) {
+    print("Notification test");
+    if (varStorage.counter == null)
+        varStorage.counter = 0;
     else
-        print("false");
-    print("after if{}");
+        varStorage.counter = varStorage.counter + 1;
+    print("Your counter: " + varStorage.counter);
+    return 0;
+}
+
+main() {
+    obj = Object;
+    onTopicClick(obj);
 }

@@ -131,8 +131,12 @@ public class Inventory {
         NBTTagCompound tag = new NBTTagCompound();
         NBTTagList tagList = new NBTTagList();
         for (ItemStack is : inventory) {
-            NBTTagCompound itemTag = is.serializeNBT();
-            tagList.appendTag(itemTag);
+            try {
+                NBTTagCompound itemTag = is.serializeNBT();
+                tagList.appendTag(itemTag);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         tag.setTag("items", tagList);
         return tag;
