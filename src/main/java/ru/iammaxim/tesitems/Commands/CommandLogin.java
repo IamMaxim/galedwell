@@ -42,7 +42,7 @@ public class CommandLogin extends CommandBase {
     }
 
     @Override
-    public int getRequiredPermissionLevel() {
-        return 0;
+    public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
+        return true;
     }
 }
