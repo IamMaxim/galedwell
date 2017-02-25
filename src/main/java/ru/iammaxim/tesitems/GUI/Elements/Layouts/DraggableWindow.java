@@ -51,6 +51,12 @@ public class DraggableWindow extends FrameLayout {
     }
 
     @Override
+    public void checkRightClick(int mouseX, int mouseY) {
+        super.checkRightClick(mouseX, mouseY);
+        topPanel.checkRightClick(mouseX, mouseY);
+    }
+
+    @Override
     public ElementBase setBounds(int left, int top, int right, int bottom) {
         int topPanelHeight = topPanel.getHeight();
         super.setBounds(left, top, right, bottom);

@@ -21,7 +21,7 @@ public abstract class ElementBase {
     protected int bottom;
     protected int width;
     protected int height;
-    public Consumer<ElementBase> onClick;
+    public Consumer<ElementBase> onClick, onRightClick;
     protected ElementBase parent;
     protected int marginLeft = 0;
     protected int marginRight = 0;
@@ -31,9 +31,20 @@ public abstract class ElementBase {
     public static final int FILL = -2;
     protected int widthOverride = -1;
     protected int heightOverride = -1;
+    protected ElementBase background;
+
+    public ElementBase setBackground(ElementBase background) {
+        this.background = background;
+        return this;
+    }
 
     public ElementBase setOnClick(Consumer<ElementBase> onCLick) {
         this.onClick = onCLick;
+        return this;
+    }
+
+    public ElementBase setOnRightClick(Consumer<ElementBase> onRightClick) {
+        this.onRightClick = onRightClick;
         return this;
     }
 
@@ -91,6 +102,12 @@ public abstract class ElementBase {
     public void checkClick(int mouseX, int mouseY) {
         if (mouseX > left && mouseX < right && mouseY > top && mouseY < bottom) {
             click(mouseX - left, mouseY - top);
+        }
+    }
+
+    public void checkRightClick(int mouseX, int mouseY) {
+        if (mouseX > left && mouseX < right && mouseY > top && mouseY < bottom) {
+            rightClick(mouseX - left, mouseY - top);
         }
     }
 
@@ -186,6 +203,8 @@ public abstract class ElementBase {
         this.bottom = bottom - marginBottom;
         this.width = this.right - this.left;
         this.height = this.bottom - this.top;
+        if (background != null)
+            setBounds(left, top, right, bottom);
 //        System.out.println(getPath() + "\nset bounds: " + this.left + " " + this.top + " " + this.right + " " + this.bottom + " " + this.width + " " + this.height);
         return this;
     }
@@ -199,6 +218,13 @@ public abstract class ElementBase {
             return;
         }
         onClick.accept(this);
+    }
+
+    public void rightClick(int relativeX, int relativeY) {
+        if (onRightClick == null) {
+            return;
+        }
+        onRightClick.accept(this);
     }
 
     public void drawTexturedRect(Tessellator tess, int left, int top, int right, int bottom, ResourceLocation texture) {

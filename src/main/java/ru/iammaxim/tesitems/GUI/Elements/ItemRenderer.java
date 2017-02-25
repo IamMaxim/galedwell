@@ -2,8 +2,8 @@ package ru.iammaxim.tesitems.GUI.Elements;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import org.lwjgl.opengl.GL11;
 import ru.iammaxim.tesitems.TESItems;
 
 /**
@@ -12,7 +12,6 @@ import ru.iammaxim.tesitems.TESItems;
 public class ItemRenderer extends ElementBase {
     public ItemStack itemStack;
     public RenderItem renderItem = TESItems.getMinecraft().getRenderItem();
-    public EntityPlayer player = TESItems.getClientPlayer();
 
     @Override
     public int getWidth() {
@@ -30,9 +29,12 @@ public class ItemRenderer extends ElementBase {
 
     @Override
     public void draw(int mouseX, int mouseY) {
-        GlStateManager.disableLighting();
-        renderItem.renderItemAndEffectIntoGUI(player, itemStack, left, top);
-        GlStateManager.enableLighting();
+        boolean isLightEnabled = GL11.glIsEnabled(GL11.GL_LIGHTING);
+        if (isLightEnabled)
+            GlStateManager.disableLighting();
+        renderItem.renderItemAndEffectIntoGUI(itemStack, left, top);
+        if (isLightEnabled)
+            GlStateManager.enableLighting();
     }
 
     @Override

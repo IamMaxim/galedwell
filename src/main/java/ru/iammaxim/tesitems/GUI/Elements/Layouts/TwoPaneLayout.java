@@ -99,6 +99,13 @@ public class TwoPaneLayout extends LayoutBase {
     }
 
     @Override
+    public void checkRightClick(int mouseX, int mouseY) {
+        super.checkRightClick(mouseX, mouseY);
+        leftElement.checkRightClick(mouseX, mouseY);
+        rightElement.checkRightClick(mouseX, mouseY);
+    }
+
+    @Override
     public void doLayout() {
         int borderX;
 

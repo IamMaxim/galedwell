@@ -64,6 +64,15 @@ public class HorizontalLayout extends LayoutBase implements LayoutWithList {
     }
 
     @Override
+    public void checkRightClick(int mouseX, int mouseY) {
+        try {
+            super.checkRightClick(mouseX, mouseY);
+            elements.forEach(e -> e.checkRightClick(mouseX, mouseY));
+        } catch (ConcurrentModificationException e) {
+        }
+    }
+
+    @Override
     public void doLayout() {
         int _w = getWidth();
         int y = top + paddingTop;

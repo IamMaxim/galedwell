@@ -29,6 +29,12 @@ public class FrameLayout extends LayoutBase {
         element.checkClick(mouseX, mouseY);
     }
 
+    @Override
+    public void checkRightClick(int mouseX, int mouseY) {
+        super.checkRightClick(mouseX, mouseY);
+        element.checkRightClick(mouseX, mouseY);
+    }
+
     public FrameLayout setElement(ElementBase element) {
         this.element = element;
         element.setParent(this);

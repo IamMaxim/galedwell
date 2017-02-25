@@ -27,6 +27,12 @@ public class ScrollableLayout extends FrameLayout {
         scrollbar.checkClick(mouseX, mouseY);
     }
 
+    @Override
+    public void checkRightClick(int mouseX, int mouseY) {
+        super.checkRightClick(mouseX, mouseY);
+        scrollbar.checkRightClick(mouseX, mouseY);
+    }
+
     public ScrollableLayout() {
         mc = Minecraft.getMinecraft();
         res = new ScaledResolution(mc);

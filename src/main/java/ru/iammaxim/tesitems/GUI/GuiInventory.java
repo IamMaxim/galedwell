@@ -1,8 +1,11 @@
 package ru.iammaxim.tesitems.GUI;
 
-import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemTool;
+import org.lwjgl.input.Keyboard;
 import ru.iammaxim.tesitems.GUI.Elements.*;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.FrameLayout;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.HorizontalLayout;
@@ -15,6 +18,8 @@ import ru.iammaxim.tesitems.Items.Weapon;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.TESItems;
 
+import java.util.HashMap;
+
 /**
  * Created by maxim on 2/24/17 at 8:57 PM.
  */
@@ -26,6 +31,7 @@ public class GuiInventory extends Screen {
     private EntityPlayer player;
     private IPlayerAttributesCapability cap;
     private float playerScale = 1;
+    private HashMap<EntityEquipmentSlot, Integer> equippedIndices = new HashMap<>();
 
     public GuiInventory() {
         player = TESItems.getClientPlayer();
@@ -40,6 +46,16 @@ public class GuiInventory extends Screen {
                 super.draw(mouseX, mouseY);
             }
         };
+
+        //add equipped slots
+        ItemStack[] armorInv = player.inventory.armorInventory;
+        for (int i = 0; i < armorInv.length; i++) {
+            ItemStack is = armorInv[i];
+            if (is != null)
+                equippedIndices.put(getSlotFromIndex(i), inv.getItemStackIndex(is));
+        }
+        equippedIndices.put(EntityEquipmentSlot.MAINHAND, inv.getItemStackIndex(player.getHeldItemMainhand()));
+        equippedIndices.put(EntityEquipmentSlot.OFFHAND, inv.getItemStackIndex(player.getHeldItemOffhand()));
 
         header = (TableEntry) new TableEntry()
                 .add(new HorizontalLayout()._setwidth(18))
@@ -62,15 +78,7 @@ public class GuiInventory extends Screen {
             table.add(getEntryFor(ResManager.icon_value, "dummy", i, 0, 0, 0));
         }*/
 
-        RenderItem renderItem = mc.getRenderItem();
-        for (int i = 0; i < inv.size(); i++) {
-            ItemStack is = inv.get(i);
-            table.add(getEntryFor(is,
-                    ItemValueManager.getValue(is),
-                    ItemWeightManager.getWeight(is),
-                    is.getItem() instanceof Weapon ? ((Weapon) is.getItem()).getDamageVsEntity() : -1,
-                    is.isItemStackDamageable() ? (int) (100 * (1 - (float) is.getItemDamage() / is.getMaxDamage())) : -1));
-        }
+        updateTable();
 
         root.setBounds(left_padding, top_padding, left_padding + root.getWidth(), res.getScaledHeight() - top_padding - bottom_padding);
         root.doLayout();
@@ -78,6 +86,56 @@ public class GuiInventory extends Screen {
 
     private void drawPlayer() {
 
+    }
+
+    private void updateTable() {
+        table.clear();
+        for (int i = 0; i < inv.size(); i++) {
+            ItemStack is = inv.get(i);
+            int finalI = i;
+            TableEntry entry = (TableEntry) getEntryFor(is,
+                    ItemValueManager.getValue(is),
+                    ItemWeightManager.getWeight(is),
+                    is.getItem() instanceof Weapon ? ((Weapon) is.getItem()).getDamageVsEntity() : -1,
+                    is.isItemStackDamageable() ? (int) (100 * (1 - (float) is.getItemDamage() / is.getMaxDamage())) : -1)
+                    .setOnClick(e -> {
+                        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+                            inv.drop(inv.player, finalI, 1);
+                        } else {
+                            if (is.getItem() instanceof ItemArmor) {
+                                ItemArmor armor = (ItemArmor) is.getItem();
+                                if (equippedIndices.get(armor.getEquipmentSlot()) == finalI) {
+                                    inv.equip(armor.getEquipmentSlot(), -1);
+                                    equippedIndices.put(armor.getEquipmentSlot(), null);
+                                } else {
+                                    inv.equip(armor.getEquipmentSlot(), finalI);
+                                    equippedIndices.put(armor.getEquipmentSlot(), finalI);
+                                }
+                            } else if (is.getItem() instanceof Weapon || is.getItem() instanceof ItemTool) {
+                                if (equippedIndices.get(EntityEquipmentSlot.MAINHAND) == inv.getItemStackIndex(is)) {
+                                    inv.equip(EntityEquipmentSlot.MAINHAND, -1);
+                                    equippedIndices.put(EntityEquipmentSlot.MAINHAND, null);
+                                } else {
+                                    inv.equip(EntityEquipmentSlot.MAINHAND, finalI);
+                                    equippedIndices.put(EntityEquipmentSlot.MAINHAND, inv.getItemStackIndex(is));
+                                }
+                            }
+                        }
+                    })
+                    .setOnRightClick(e -> {
+                        if (equippedIndices.get(EntityEquipmentSlot.OFFHAND) == inv.getItemStackIndex(is)) {
+                            inv.equip(EntityEquipmentSlot.OFFHAND, -1);
+                            equippedIndices.put(EntityEquipmentSlot.OFFHAND, null);
+                        } else {
+                            inv.equip(EntityEquipmentSlot.OFFHAND, finalI);
+                            equippedIndices.put(EntityEquipmentSlot.OFFHAND, inv.getItemStackIndex(is));
+                        }
+                    });
+
+            if (equippedIndices.values().contains(inv.getItemStackIndex(is)))
+                entry.setBackground(new Image(ResManager.inv_entry_bg_selected));
+            table.add(entry);
+        }
     }
 
     private TableEntry getEntryFor(ItemStack is, float value, float weight, float damage, int durability) {
@@ -92,5 +150,20 @@ public class GuiInventory extends Screen {
                 .add(durability == -1 ?
                         new HorizontalLayout() :
                         new HorizontalLayout().center(true).add(new Text(String.valueOf(durability))).setPaddingTop(entryTextPaddingTop));
+    }
+
+    private EntityEquipmentSlot getSlotFromIndex(int index) {
+        switch (index) {
+            case 0:
+                return EntityEquipmentSlot.FEET;
+            case 1:
+                return EntityEquipmentSlot.LEGS;
+            case 2:
+                return EntityEquipmentSlot.CHEST;
+            case 3:
+                return EntityEquipmentSlot.HEAD;
+            default:
+                return null;
+        }
     }
 }

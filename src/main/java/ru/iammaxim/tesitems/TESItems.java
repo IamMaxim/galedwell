@@ -7,6 +7,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -72,10 +73,9 @@ import ru.iammaxim.tesitems.World.WorldCapabilityProvider;
 import ru.iammaxim.tesitems.World.WorldCapabilityStorage;
 
 import java.awt.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Field;
+import java.util.Scanner;
 
 @Mod(modid = TESItems.MODID, version = TESItems.VERSION)
 public class TESItems {
@@ -157,6 +157,33 @@ public class TESItems {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        //init config file
+        File config = new File("galedwell.cfg");
+        if (!config.exists()) {
+            try {
+                config.createNewFile();
+                FileOutputStream fos = new FileOutputStream(config);
+                fos.write("enableBlur=false".getBytes());
+                ResManager.enableBlur = false;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                Scanner scanner = new Scanner(config);
+                while (scanner.hasNext()) {
+                    String s = scanner.nextLine();
+                    String[] strs = s.split("=");
+                    if (strs[0].equals("enableBlur"))
+                        ResManager.enableBlur = Boolean.parseBoolean(strs[1]);
+                }
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+
         CapabilityManager.INSTANCE.register(IPlayerAttributesCapability.class, new PlayerAttributesStorage(), PlayerAttributesCapabilityDefaultImpl::new);
         CapabilityManager.INSTANCE.register(IWorldCapability.class, new WorldCapabilityStorage(), WorldCapabilityDefaultImpl::new);
         MinecraftForge.EVENT_BUS.register(this);
@@ -308,6 +335,8 @@ public class TESItems {
         getCapability(event.getEntityPlayer()).setAttributes(getCapability(event.getOriginal()).getAttributes());
         getCapability(event.getEntityPlayer()).setSpellbook(getCapability(event.getOriginal()).getSpellbook());
         getCapability(event.getEntityPlayer()).setInventory(getCapability(event.getOriginal()).getInventory());
+        if (getCapability(event.getOriginal()).isAuthorized())
+            getCapability(event.getEntityPlayer()).authorize((EntityPlayerMP) event.getEntityPlayer());
     }
 
     @SubscribeEvent
@@ -425,7 +454,7 @@ public class TESItems {
             getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
         } else {
             if (TESItems.getMinecraft().currentScreen instanceof net.minecraft.client.gui.inventory.GuiInventory)
-                TESItems.getMinecraft().currentScreen = null;
+                TESItems.getMinecraft().displayGuiScreen(null);
         }
     }
 

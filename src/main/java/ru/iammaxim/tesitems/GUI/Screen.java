@@ -67,6 +67,11 @@ public class Screen {
         debugWindow.checkClick(mouseX, mouseY);
     }
 
+    public void checkRightClick(int mouseX, int mouseY) {
+        root.checkRightClick(mouseX, mouseY);
+        debugWindow.checkClick(mouseX, mouseY);
+    }
+
     public void keyTyped(char typedChar, int keyCode) throws IOException {
         root.keyTyped(typedChar, keyCode);
     }

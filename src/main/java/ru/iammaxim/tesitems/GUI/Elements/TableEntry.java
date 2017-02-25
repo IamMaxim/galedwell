@@ -45,6 +45,8 @@ public class TableEntry extends LayoutBase implements LayoutWithList {
 
     @Override
     public void draw(int mouseX, int mouseY) {
+        if (background != null)
+            background.draw(mouseX, mouseY);
         columns.forEach(c -> c.draw(mouseX, mouseY));
     }
 

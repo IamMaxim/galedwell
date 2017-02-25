@@ -59,6 +59,15 @@ public class VerticalLayout extends LayoutBase implements LayoutWithList {
     }
 
     @Override
+    public void checkRightClick(int mouseX, int mouseY) {
+        try {
+            super.checkRightClick(mouseX, mouseY);
+            elements.forEach(e -> e.checkRightClick(mouseX, mouseY));
+        } catch (ConcurrentModificationException e) {
+        }
+    }
+
+    @Override
     public void doLayout() {
         int y;
         if (center)

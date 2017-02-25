@@ -12,8 +12,8 @@ import java.util.ArrayList;
  */
 public class ScreenStack extends GuiScreen {
     public static ScreenStack instance;
+    protected boolean wasClicked = false, wasRightClicked = false;
     private ArrayList<Screen> screens = new ArrayList<>();
-    protected boolean wasClicked = false;
 
     public ScreenStack() {
         mc = Minecraft.getMinecraft();
@@ -53,10 +53,9 @@ public class ScreenStack extends GuiScreen {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         for (int i = 0; i < screens.size() - 1; i++)
             screens.get(i).drawScreen(-1, -1, partialTicks);
-        if (screens.size() > 0)
+        if (screens.size() > 0) {
             screens.get(screens.size() - 1).drawScreen(mouseX, mouseY, partialTicks);
 
-        if (lastScreen() != null)
             if (Mouse.isButtonDown(0)) {
                 if (!wasClicked) {
                     lastScreen().checkClick(mouseX, mouseY);
@@ -66,7 +65,17 @@ public class ScreenStack extends GuiScreen {
                 wasClicked = false;
             }
 
+            if (Mouse.isButtonDown(1)) {
+                if (!wasRightClicked) {
+                    lastScreen().checkRightClick(mouseX, mouseY);
+                    wasRightClicked = true;
+                }
+            } else {
+                wasRightClicked = false;
+            }
+
             NotificationManager.draw();
+        }
     }
 
     @Override
