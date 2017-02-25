@@ -7,6 +7,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.Vec3d;
 import ru.iammaxim.tesitems.Items.EntityItemNew;
 import ru.iammaxim.tesitems.Items.ItemWeightManager;
@@ -93,10 +94,20 @@ public class Inventory {
     }
 
     public void checkSlot(int index) {
+        System.out.println("checking slot " + index);
         ItemStack is = inventory.get(index);
+        System.out.println("is: " + is);
         if (is.stackSize <= 0) {
             inventory.remove(index);
             calculateCarryweight();
+
+            if (this instanceof InventoryClient) {
+                EntityPlayer player = ((InventoryClient) this).player;
+                if (player.getHeldItemMainhand() == is)
+                    player.setHeldItem(EnumHand.MAIN_HAND, null);
+                if (player.getHeldItemOffhand() == is)
+                    player.setHeldItem(EnumHand.OFF_HAND, null);
+            }
         }
     }
 

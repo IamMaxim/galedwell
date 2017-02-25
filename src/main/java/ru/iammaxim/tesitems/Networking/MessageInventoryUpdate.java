@@ -8,6 +8,9 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import ru.iammaxim.tesitems.GUI.GuiInventory;
+import ru.iammaxim.tesitems.GUI.Screen;
+import ru.iammaxim.tesitems.GUI.ScreenStack;
 import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.TESItems;
 
@@ -105,6 +108,12 @@ public class MessageInventoryUpdate implements IMessage {
                 case ACTION_CLEAR:
                     inv.clear();
                     break;
+            }
+
+            Screen lastScreen = ScreenStack.lastScreen();
+            if (lastScreen instanceof GuiInventory) {
+                ((GuiInventory) lastScreen).setUpdated();
+                ((GuiInventory) lastScreen).updateTable();
             }
             return null;
         }

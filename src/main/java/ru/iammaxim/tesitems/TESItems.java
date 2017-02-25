@@ -29,6 +29,7 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -266,6 +267,25 @@ public class TESItems {
             event.player.addPotionEffect(new PotionEffect(Potion.getPotionById(2), 5, 3));
     }
 
+    @SubscribeEvent
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        if (event.getSide() == Side.CLIENT)
+            return;
+
+        if (event.getItemStack() != null) {
+            System.out.println(event.getItemStack());
+            if (event.getItemStack().stackSize == 1) {
+                System.out.println("ItemStack is: " + event.getItemStack());
+                event.getWorld().getMinecraftServer().addScheduledTask(() -> {
+                    IPlayerAttributesCapability cap = TESItems.getCapability(event.getEntityPlayer());
+                    System.out.println("new itemStack is: " + event.getItemStack());
+                    System.out.println("checking inventory");
+                    cap.getInventory().checkInventory();
+                });
+            }
+        }
+    }
+
     private boolean isMiningBlock(Block b) {
         for (Block b1 : miningBlocks)
             if (b == b1) return true;
@@ -332,11 +352,18 @@ public class TESItems {
 
     @SubscribeEvent
     public void onClonePLayer(net.minecraftforge.event.entity.player.PlayerEvent.Clone event) {
-        getCapability(event.getEntityPlayer()).setAttributes(getCapability(event.getOriginal()).getAttributes());
-        getCapability(event.getEntityPlayer()).setSpellbook(getCapability(event.getOriginal()).getSpellbook());
-        getCapability(event.getEntityPlayer()).setInventory(getCapability(event.getOriginal()).getInventory());
-        if (getCapability(event.getOriginal()).isAuthorized())
-            getCapability(event.getEntityPlayer()).authorize((EntityPlayerMP) event.getEntityPlayer());
+        IPlayerAttributesCapability origCap = TESItems.getCapability(event.getOriginal());
+        IPlayerAttributesCapability destCap = TESItems.getCapability(event.getEntityPlayer());
+
+        destCap.setAttributes(origCap.getAttributes());
+        destCap.setSpellbook(origCap.getSpellbook());
+        destCap.setInventory(origCap.getInventory());
+        if (origCap.isAuthorized())
+            destCap.authorize((EntityPlayerMP) event.getEntityPlayer());
+
+        String password = origCap.getPassword();
+        if (!password.isEmpty())
+            destCap.setPassword(password);
     }
 
     @SubscribeEvent

@@ -18,6 +18,7 @@ import ru.iammaxim.tesitems.Items.Weapon;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.TESItems;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 /**
@@ -32,6 +33,25 @@ public class GuiInventory extends Screen {
     private IPlayerAttributesCapability cap;
     private float playerScale = 1;
     private HashMap<EntityEquipmentSlot, Integer> equippedIndices = new HashMap<>();
+    private boolean updated = true;
+
+    @Override
+    public void keyTyped(char typedChar, int keyCode) throws IOException {
+        if (keyCode == Keyboard.KEY_TAB) {
+            ScreenStack.close();
+            return;
+        }
+
+        super.keyTyped(typedChar, keyCode);
+    }
+
+    public void setUpdated() {
+        updated = true;
+    }
+
+    private void setUnUpdated() {
+        updated = false;
+    }
 
     public GuiInventory() {
         player = TESItems.getClientPlayer();
@@ -47,19 +67,6 @@ public class GuiInventory extends Screen {
             }
         };
 
-        //add equipped slots
-        ItemStack[] armorInv = player.inventory.armorInventory;
-        for (int i = 0; i < armorInv.length; i++) {
-            ItemStack is = armorInv[i];
-            if (is != null)
-                equippedIndices.put(getSlotFromIndex(i), inv.getItemStackIndex(is));
-        }
-
-        if (player.getHeldItemMainhand() != null)
-            equippedIndices.put(EntityEquipmentSlot.MAINHAND, inv.getItemStackIndex(player.getHeldItemMainhand()));
-        if (player.getHeldItemOffhand() != null)
-            equippedIndices.put(EntityEquipmentSlot.OFFHAND, inv.getItemStackIndex(player.getHeldItemOffhand()));
-
         header = (TableEntry) new TableEntry()
                 .add(new HorizontalLayout()._setwidth(18))
                 .add(new HorizontalLayout().add(new Text("Name")).center(true).setPaddingTop(4).setWidthOverride(ElementBase.FILL)._setwidth(182))
@@ -74,13 +81,8 @@ public class GuiInventory extends Screen {
         table.setHeightOverride(ElementBase.FILL);
         table.setWidth(280);
 
-/*
-        table.add(getEntryFor(ResManager.icon_durability , "name1", 1, 1, 2, 3));
-        table.add(getEntryFor(ResManager.icon_damage, "name2", 0, 1, -1, -1));
-        for (int i = 0; i < 30; i++) {
-            table.add(getEntryFor(ResManager.icon_value, "dummy", i, 0, 0, 0));
-        }*/
-
+        //add equipped slots
+        checkEquipped();
         updateTable();
 
         root.setBounds(left_padding, top_padding, left_padding + root.getWidth(), res.getScaledHeight() - top_padding - bottom_padding);
@@ -91,7 +93,20 @@ public class GuiInventory extends Screen {
 
     }
 
-    private void updateTable() {
+    public void checkEquipped() {
+        ItemStack[] armorInv = player.inventory.armorInventory;
+        for (int i = 0; i < armorInv.length; i++) {
+            ItemStack is = armorInv[i];
+            if (is != null)
+                equippedIndices.put(getSlotFromIndex(i), inv.getItemStackIndex(is));
+        }
+        if (player.getHeldItemMainhand() != null)
+            equippedIndices.put(EntityEquipmentSlot.MAINHAND, inv.getItemStackIndex(player.getHeldItemMainhand()));
+        if (player.getHeldItemOffhand() != null)
+            equippedIndices.put(EntityEquipmentSlot.OFFHAND, inv.getItemStackIndex(player.getHeldItemOffhand()));
+    }
+
+    public void updateTable() {
         table.clear();
         for (int i = 0; i < inv.size(); i++) {
             ItemStack is = inv.get(i);
@@ -102,7 +117,8 @@ public class GuiInventory extends Screen {
                     is.getItem() instanceof Weapon ? ((Weapon) is.getItem()).getDamageVsEntity() : -1,
                     is.isItemStackDamageable() ? (int) (100 * (1 - (float) is.getItemDamage() / is.getMaxDamage())) : -1)
                     .setOnClick(e -> {
-                        System.out.println("Left click " + is);
+                        if (!updated)
+                            return;
 
                         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                             inv.drop(inv.player, finalI, 1);
@@ -110,51 +126,45 @@ public class GuiInventory extends Screen {
                             if (is.getItem() instanceof ItemArmor) {
                                 ItemArmor armor = (ItemArmor) is.getItem();
 
-                                if (equippedIndices == null)
-                                    System.out.println("equippedIndices == null");
-
-                                if (armor == null)
-                                    System.out.println("armor == null");
-
-                                if (armor.getEquipmentSlot() == null)
-                                    System.out.println("equipmentSlot == null");
-
-                                if (equippedIndices
-                                        .
-                                                get
-                                                        (
-                                                armor
-                                                        .
-                                                                getEquipmentSlot()
-                                        )
-                                        ==
-                                        finalI) {
+                                if (equippedIndices.get(armor.getEquipmentSlot()) != null && equippedIndices.get(armor.getEquipmentSlot()) == finalI) {
                                     inv.equip(armor.getEquipmentSlot(), -1);
                                     equippedIndices.put(armor.getEquipmentSlot(), null);
+                                    setUnUpdated();
                                 } else {
                                     inv.equip(armor.getEquipmentSlot(), finalI);
                                     equippedIndices.put(armor.getEquipmentSlot(), finalI);
+                                    setUnUpdated();
                                 }
                             } else if (is.getItem() instanceof Weapon || is.getItem() instanceof ItemTool) {
-                                if (equippedIndices.get(EntityEquipmentSlot.MAINHAND) == inv.getItemStackIndex(is)) {
+                                if (equippedIndices.get(EntityEquipmentSlot.MAINHAND) != null && equippedIndices.get(EntityEquipmentSlot.MAINHAND) == inv.getItemStackIndex(is)) {
                                     inv.equip(EntityEquipmentSlot.MAINHAND, -1);
                                     equippedIndices.put(EntityEquipmentSlot.MAINHAND, null);
+                                    setUnUpdated();
                                 } else {
+                                    if (equippedIndices.get(EntityEquipmentSlot.OFFHAND) != null && equippedIndices.get(EntityEquipmentSlot.OFFHAND) == inv.getItemStackIndex(is)) {
+                                        inv.equip(EntityEquipmentSlot.OFFHAND, -1);
+
+                                    }
+
                                     inv.equip(EntityEquipmentSlot.MAINHAND, finalI);
                                     equippedIndices.put(EntityEquipmentSlot.MAINHAND, inv.getItemStackIndex(is));
+                                    setUnUpdated();
                                 }
                             }
                         }
                     })
                     .setOnRightClick(e -> {
-                        System.out.println("Right click");
+                        if (!updated)
+                            return;
 
-                        if (equippedIndices.get(EntityEquipmentSlot.OFFHAND) == inv.getItemStackIndex(is)) {
+                        if (equippedIndices.get(EntityEquipmentSlot.OFFHAND) != null && equippedIndices.get(EntityEquipmentSlot.OFFHAND) == inv.getItemStackIndex(is)) {
                             inv.equip(EntityEquipmentSlot.OFFHAND, -1);
                             equippedIndices.put(EntityEquipmentSlot.OFFHAND, null);
+                            setUnUpdated();
                         } else {
                             inv.equip(EntityEquipmentSlot.OFFHAND, finalI);
                             equippedIndices.put(EntityEquipmentSlot.OFFHAND, inv.getItemStackIndex(is));
+                            setUnUpdated();
                         }
                     });
 

@@ -12,6 +12,10 @@ public class Stack {
     private Value[] stack;
     private int cursor = -1;
 
+    public void resetCursor() {
+        cursor = -1;
+    }
+
     public Stack(int size) {
         stack = new Value[size];
     }

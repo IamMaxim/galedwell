@@ -7,6 +7,9 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import ru.iammaxim.tesitems.GUI.GuiInventory;
+import ru.iammaxim.tesitems.GUI.Screen;
+import ru.iammaxim.tesitems.GUI.ScreenStack;
 import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.TESItems;
 
@@ -46,6 +49,13 @@ public class MessageEquip implements IMessage {
             EntityPlayer player = TESItems.getClientPlayer();
             if (message.index == -1) player.setItemStackToSlot(EntityEquipmentSlot.fromString(message.slot), null);
             else player.setItemStackToSlot(EntityEquipmentSlot.fromString(message.slot), Inventory.getInventory(player).get(message.index));
+
+            Screen lastScreen = ScreenStack.lastScreen();
+            if (lastScreen instanceof GuiInventory) {
+                ((GuiInventory) lastScreen).setUpdated();
+                ((GuiInventory) lastScreen).checkEquipped();
+                ((GuiInventory) lastScreen).updateTable();
+            }
             return null;
         }
     }

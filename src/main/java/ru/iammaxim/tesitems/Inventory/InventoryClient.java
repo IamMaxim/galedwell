@@ -62,7 +62,6 @@ public class InventoryClient extends Inventory {
 
     @Override
     public void equip(EntityEquipmentSlot slot, int index) {
-        System.out.println("Equipping " + index + " (" + get(index) + ") to slot " + slot);
         TESItems.networkWrapper.sendToServer(new MessageEquip(slot.getName(), index));
     }
 }

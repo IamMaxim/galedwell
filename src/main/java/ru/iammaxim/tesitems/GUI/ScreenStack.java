@@ -2,6 +2,7 @@ package ru.iammaxim.tesitems.GUI;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import java.io.IOException;
@@ -80,7 +81,7 @@ public class ScreenStack extends GuiScreen {
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) throws IOException {
-        if (keyCode == 1) {
+        if (keyCode == Keyboard.KEY_ESCAPE) {
             close();
         } else
             screens.get(screens.size() - 1).keyTyped(typedChar, keyCode);
