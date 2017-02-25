@@ -6,6 +6,7 @@ import ru.iammaxim.tesitems.GUI.Elements.Layouts.LayoutWithList;
 import ru.iammaxim.tesitems.GUI.ResManager;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 
 /**
@@ -127,7 +128,9 @@ public class Table extends LayoutBase implements LayoutWithList {
     public void draw(int mouseX, int mouseY) {
         header.draw(mouseX, mouseY);
         divider.draw(mouseX, mouseY);
-        entries.forEach(e -> e.draw(mouseX, mouseY));
+        try {
+            entries.forEach(e -> e.draw(mouseX, mouseY));
+        } catch (ConcurrentModificationException e) {}
 
         //draw vertical dividers
         Tessellator tess = Tessellator.getInstance();
