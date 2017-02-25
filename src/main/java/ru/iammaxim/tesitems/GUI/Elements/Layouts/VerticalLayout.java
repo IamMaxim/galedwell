@@ -13,6 +13,7 @@ public class VerticalLayout extends LayoutBase implements LayoutWithList {
     protected int spacing = 4;
     protected ArrayList<ElementBase> elements = new ArrayList<>();
     private boolean limitHeight = true;
+    private boolean center = false;
 
     public ArrayList<ElementBase> getElements() {
         return elements;
@@ -59,7 +60,11 @@ public class VerticalLayout extends LayoutBase implements LayoutWithList {
 
     @Override
     public void doLayout() {
-        int y = top + paddingTop;
+        int y;
+        if (center)
+            y = top + (height - getHeight()) / 2;
+        else
+            y = top + paddingTop;
         int y_max = bottom - paddingBottom;
         int x = left + paddingLeft;
         for (ElementBase element : elements) {
@@ -141,5 +146,10 @@ public class VerticalLayout extends LayoutBase implements LayoutWithList {
     @Override
     public String getName() {
         return "VerticalLayout";
+    }
+
+    public VerticalLayout center(boolean center) {
+        this.center = center;
+        return this;
     }
 }

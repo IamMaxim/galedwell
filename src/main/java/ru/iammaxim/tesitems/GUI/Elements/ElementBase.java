@@ -1,6 +1,5 @@
 package ru.iammaxim.tesitems.GUI.Elements;
 
-import jdk.nashorn.internal.runtime.ECMAErrors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -58,8 +57,9 @@ public abstract class ElementBase {
     }
 
     //force set this.width
-    public void _setwidth(int width) {
+    public ElementBase _setwidth(int width) {
         this.width = width;
+        return this;
     }
 
     public int height() {

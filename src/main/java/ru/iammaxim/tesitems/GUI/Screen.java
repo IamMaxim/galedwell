@@ -14,10 +14,10 @@ import java.io.IOException;
 public class Screen {
     protected Minecraft mc;
     protected ScaledResolution res;
-    protected ScreenCenteredLayout root;
+    protected FrameLayout root;
     protected FrameLayout contentLayout;
 
-    protected DoubleStateFrameLayout debugWindow;
+    protected DraggableWindow debugWindow;
 
     public Screen() {
         mc = Minecraft.getMinecraft();
@@ -76,11 +76,15 @@ public class Screen {
     }
 
     public void buildDebugWindow() {
-        debugWindow = (DoubleStateFrameLayout) new DoubleStateFrameLayout()
+        DoubleStateFrameLayout dsfl = new DoubleStateFrameLayout();
+        debugWindow = new DraggableWindow("Debug window");
+        debugWindow.setElement(dsfl
                 .setFirstState(
                         new VerticalLayout().add(
                                 new Button("Show debug window").setOnClick(e -> {
-                                    debugWindow.selectSecond();
+                                    dsfl.selectSecond();
+                                    debugWindow.setBounds(debugWindow.posX, debugWindow.posY, debugWindow.posX + debugWindow.getWidth(), debugWindow.posY + debugWindow.getHeight());
+                                    debugWindow.checkBounds();
                                     debugWindow.doLayout();
                                 })))
                 .setSecondState(
@@ -89,18 +93,22 @@ public class Screen {
                                         new VerticalLayout()
                                                 .add(new HorizontalLayout()
                                                         .add(new Button("Hide debug window").setOnClick(e -> {
-                                                            debugWindow.selectFirst();
+                                                            dsfl.selectFirst();
+                                                            debugWindow.setBounds(debugWindow.posX, debugWindow.posY, debugWindow.posX + debugWindow.getWidth(), debugWindow.posY + debugWindow.getHeight());
+                                                            debugWindow.checkBounds();
                                                             debugWindow.doLayout();
                                                         }))
                                                         .add(new Button("Rebuild tree").setOnClick(e -> {
                                                             buildDebugWindow();
-                                                            debugWindow.selectSecond();
+                                                            dsfl.selectSecond();
+                                                            debugWindow.setBounds(debugWindow.posX, debugWindow.posY, debugWindow.posX + debugWindow.getWidth(), debugWindow.posY + debugWindow.getHeight());
+                                                            debugWindow.checkBounds();
                                                             debugWindow.doLayout();
                                                         }))
                                                 )
                                                 .add(DebuggerWindow.buildForElement(root))
-                                ))).selectFirst()
-                .setBounds(8, 8, 308, res.getScaledHeight() - 8);
+                                ))).selectFirst());
+        debugWindow.setBounds(8, 8, 8 + debugWindow.getWidth(), 8 + debugWindow.getHeight());
         debugWindow.doLayout();
     }
 

@@ -19,7 +19,7 @@ public class GUIHandler implements IGuiHandler {
         switch (ID) {
             /*case TESItems.guiSpellSelect: return new GuiSpellSelect();
             case TESItems.guiNpcDialog: return new GuiNPCDialog();
-            case TESItems.guiInventory: return new GuiInventory(player);
+            case TESItems.guiInventory: return new GuiInventoryOld(player);
             case TESItems.guiJournal: return new GuiJournal();
             case TESItems.guiNPCEditor: return new GuiNPCEditor(player);
             case TESItems.guiFactionList: return new GuiFactionList();
@@ -27,7 +27,7 @@ public class GUIHandler implements IGuiHandler {
             case TESItems.guiFactionEditor: return new GuiFactionEditor();
             case TESItems.guiQuestEditor: return new GuiQuestEditor();*/
 
-            case TESItems.guiInventory: return new GuiInventory(player);
+            case TESItems.guiInventory: new GuiInventory().show(); return ScreenStack.instance;
             case TESItems.guiSpellSelect: new GuiSpellSelect().show(); return ScreenStack.instance;
             case TESItems.guiNpcDialog: new GuiNPCDialog().show(); return ScreenStack.instance;
             case TESItems.guiJournal: new GuiJournal().show(); return ScreenStack.instance;

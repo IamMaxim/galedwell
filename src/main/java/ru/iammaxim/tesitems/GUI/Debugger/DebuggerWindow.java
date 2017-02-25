@@ -13,7 +13,7 @@ import ru.iammaxim.tesitems.GUI.ResManager;
 public class DebuggerWindow {
     public static ElementBase buildForElement(ElementBase element) {
         return new ScrollableLayout()
-                .setMinHeight(1000000)
+                .setMinHeight(400)
                 .setElement(new VerticalLayout().add(buildNode(element)))
                 .setWidthOverride(ElementBase.FILL);
     }

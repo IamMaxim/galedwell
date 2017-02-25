@@ -20,7 +20,7 @@ public class BlurBackgroundFrameLayout extends FrameLayout {
         if (ResManager.enableBlur) {
             GL11.glEnable(GL11.GL_SCISSOR_TEST);
             GL11.glScissor(left * res.getScaleFactor(),
-                    top * res.getScaleFactor(),
+                    (res.getScaledHeight() - bottom) * res.getScaleFactor(),
                     width * res.getScaleFactor(),
                     height * res.getScaleFactor());
             ResManager.gaussianBlurShader.loadShaderGroup(0);

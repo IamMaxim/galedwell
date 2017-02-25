@@ -123,7 +123,7 @@ public class ScrollableLayout extends FrameLayout {
         double scaleW = mc.displayWidth / res.getScaledWidth_double();
         double scaleH = mc.displayHeight / res.getScaledHeight_double();
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        GL11.glScissor((int) ((left) * scaleW), (int) ((top) * scaleH), (int) ((width) * scaleW), (int) ((height) * scaleH));
+        GL11.glScissor((int) ((left) * scaleW), (int) ((res.getScaledHeight() - bottom) * scaleH), (int) ((width) * scaleW), (int) ((height) * scaleH));
         element.draw(mouseX, mouseY);
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
     }
