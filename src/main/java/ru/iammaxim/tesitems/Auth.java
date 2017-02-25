@@ -28,22 +28,6 @@ public class Auth {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-/*    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void playerMoveEvent(PlayerEvent.LivingUpdateEvent event) {
-        if (!(event.getEntityLiving() instanceof EntityPlayer))
-            return;
-
-        EntityPlayer player = (EntityPlayer) event.getEntityLiving();
-
-        if (player.worldObj.isRemote)
-            return;
-
-        IPlayerAttributesCapability cap = TESItems.getCapability(player);
-
-
-    }*/
-
-
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void serverChatEvent(ServerChatEvent event) {
         EntityPlayer player = event.getPlayer();
@@ -199,40 +183,4 @@ public class Auth {
             player.addChatComponentMessage(new TextComponentString(TextFormatting.YELLOW + "/login <password>" + TextFormatting.RED + " required."));
         }
     }
-
-/*    @SubscribeEvent
-    public void playerLoggedOutEvent(PlayerLoggedOutEvent event) {
-        ModuleAuth.deauthenticate(event.player.getPersistentID());
-    }*/
-
-    // autologin
-
-/*    @SubscribeEvent
-    public void onClientHandshake(ClientHandshakeEstablished e)
-    {
-        if (!ModuleAuth.isEnabled())
-            return;
-        if (ModuleAuth.isRegistered(e.getPlayer().getPersistentID())  && !ModuleAuth.isAuthenticated(e.getPlayer()))
-        {
-            NetworkUtils.netHandler.sendTo(new Packet6AuthLogin(0, ""), e.getPlayer());
-        }
-    }*/
-
-/*    @SubscribeEvent
-    public void onAuthLogin(PlayerAuthLoginEvent.Success e)
-    {
-        if (e.source == Source.COMMAND && ModuleAuth.allowAutoLogin)
-        {
-            UUID token = UUID.randomUUID();
-            NetworkUtils.netHandler.sendTo(new Packet6AuthLogin(2, token.toString()), e.getPlayer());
-            PasswordManager.addSession(e.getPlayer().getPersistentID(), token);
-        }
-        APIRegistry.scripts.runEventScripts(ModuleAuth.SCRIPT_KEY_SUCCESS, e.getPlayer());
-    }*/
-
-//    @SubscribeEvent
-//    public void onAuthLoginFail(PlayerAuthLoginEvent.Failure e)
-//    {
-//        APIRegistry.scripts.runEventScripts(ModuleAuth.SCRIPT_KEY_FAILURE, e.getPlayer());
-//    }
 }
