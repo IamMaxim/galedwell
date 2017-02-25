@@ -204,7 +204,7 @@ public abstract class ElementBase {
         this.width = this.right - this.left;
         this.height = this.bottom - this.top;
         if (background != null)
-            setBounds(left, top, right, bottom);
+            background.setBounds(left, top, right, bottom);
 //        System.out.println(getPath() + "\nset bounds: " + this.left + " " + this.top + " " + this.right + " " + this.bottom + " " + this.width + " " + this.height);
         return this;
     }

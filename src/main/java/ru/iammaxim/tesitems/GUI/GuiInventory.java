@@ -120,9 +120,12 @@ public class GuiInventory extends Screen {
                                     System.out.println("equipmentSlot == null");
 
                                 if (equippedIndices
-                                        .get(
+                                        .
+                                                get
+                                                        (
                                                 armor
-                                                        .getEquipmentSlot()
+                                                        .
+                                                                getEquipmentSlot()
                                         )
                                         ==
                                         finalI) {
