@@ -15,11 +15,11 @@ public class VerticalLayout extends LayoutBase implements LayoutWithList {
     private boolean limitHeight = true;
     private boolean center = false;
 
-    public ArrayList<ElementBase> getElements() {
-        return elements;
+    public VerticalLayout() {
     }
 
-    public VerticalLayout() {
+    public ArrayList<ElementBase> getElements() {
+        return elements;
     }
 
     public VerticalLayout setSpacing(int spacing) {
@@ -76,7 +76,9 @@ public class VerticalLayout extends LayoutBase implements LayoutWithList {
                 w = Math.min(width - paddingLeft - paddingRight, element.getWidth());
 
             int h;
-            if (limitHeight) {
+            if (element.getHeightOverride() == FILL)
+                h = height();
+            else if (limitHeight) {
                 h = Math.min(element.getHeight(), y_max - y);
             } else {
                 h = element.getHeight();

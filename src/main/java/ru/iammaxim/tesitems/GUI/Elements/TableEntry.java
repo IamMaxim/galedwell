@@ -11,6 +11,12 @@ import java.util.List;
  */
 public class TableEntry extends LayoutBase implements LayoutWithList {
     private ArrayList<ElementBase> columns = new ArrayList<>();
+    private int verticalDividerWidth = 1;
+
+    public TableEntry setVerticalDividerWidth(int width) {
+        this.verticalDividerWidth = width;
+        return this;
+    }
 
     public void setupColumns(TableEntry header) {
         for (int i = 0; i < columns.size(); i++) {
@@ -28,7 +34,7 @@ public class TableEntry extends LayoutBase implements LayoutWithList {
             column.setBounds(x, y, x + w, y + h);
             if (column instanceof LayoutBase)
                 ((LayoutBase) column).doLayout();
-            x += w;
+            x += w + verticalDividerWidth;
         }
     }
 
@@ -48,6 +54,7 @@ public class TableEntry extends LayoutBase implements LayoutWithList {
         for (ElementBase column : columns) {
             w += column.width();
         }
+        w += (columns.size() - 1) * verticalDividerWidth;
         return w;
     }
 

@@ -1,7 +1,9 @@
 package ru.iammaxim.tesitems.GUI.Elements;
 
+import net.minecraft.client.renderer.Tessellator;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.LayoutBase;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.LayoutWithList;
+import ru.iammaxim.tesitems.GUI.ResManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +16,7 @@ public class Table extends LayoutBase implements LayoutWithList {
     private int w = 10, spacing = 0;
     private TableEntry header;
     private HorizontalDivider divider;
+    private int verticalDividerWidth = 1;
 
     public Table(TableEntry header) {
         this.header = header;
@@ -23,11 +26,6 @@ public class Table extends LayoutBase implements LayoutWithList {
     public Table setHeader(TableEntry header) {
         this.header = header;
         entries.forEach(e -> ((TableEntry) e).setupColumns(this.header));
-        return this;
-    }
-
-    public Table setWidth(int width) {
-        this.w = width;
         return this;
     }
 
@@ -58,6 +56,11 @@ public class Table extends LayoutBase implements LayoutWithList {
     @Override
     public int getWidth() {
         return w + paddingLeft + paddingRight + marginLeft + marginRight;
+    }
+
+    public Table setWidth(int width) {
+        this.w = width;
+        return this;
     }
 
     @Override
@@ -111,10 +114,23 @@ public class Table extends LayoutBase implements LayoutWithList {
         header.draw(mouseX, mouseY);
         divider.draw(mouseX, mouseY);
         entries.forEach(e -> e.draw(mouseX, mouseY));
+
+        //draw vertical dividers
+        Tessellator tess = Tessellator.getInstance();
+        List<ElementBase> columns = header.getChildren();
+        int x = left;
+        for (int i = 0; i < columns.size() - 1; i++) {
+            x += columns.get(i).width();
+            drawColoredRect(tess, x, top, x + 1, bottom, ResManager.MAIN_COLOR);
+        }
     }
 
     @Override
     public String getName() {
         return "Table";
+    }
+
+    public void setVerticalDividerWidth(int width) {
+        this.verticalDividerWidth = width;
     }
 }
