@@ -54,8 +54,11 @@ public class GuiInventory extends Screen {
             if (is != null)
                 equippedIndices.put(getSlotFromIndex(i), inv.getItemStackIndex(is));
         }
-        equippedIndices.put(EntityEquipmentSlot.MAINHAND, inv.getItemStackIndex(player.getHeldItemMainhand()));
-        equippedIndices.put(EntityEquipmentSlot.OFFHAND, inv.getItemStackIndex(player.getHeldItemOffhand()));
+
+        if (player.getHeldItemMainhand() != null)
+            equippedIndices.put(EntityEquipmentSlot.MAINHAND, inv.getItemStackIndex(player.getHeldItemMainhand()));
+        if (player.getHeldItemOffhand() != null)
+            equippedIndices.put(EntityEquipmentSlot.OFFHAND, inv.getItemStackIndex(player.getHeldItemOffhand()));
 
         header = (TableEntry) new TableEntry()
                 .add(new HorizontalLayout()._setwidth(18))
