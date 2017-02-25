@@ -268,7 +268,7 @@ public class TESItems {
     }
 
     @SubscribeEvent
-    public void onPlayerInteract(PlayerInteractEvent event) {
+    public void onPlayerInteract(PlayerInteractEvent.RightClickBlock event) {
         if (event.getSide() == Side.CLIENT)
             return;
 

@@ -98,6 +98,7 @@ public class Inventory {
         ItemStack is = inventory.get(index);
         System.out.println("is: " + is);
         if (is.stackSize <= 0) {
+            System.out.printf("REMOVING ITEM " + is);
             inventory.remove(index);
             calculateCarryweight();
 
