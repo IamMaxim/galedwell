@@ -108,7 +108,8 @@ public class Screen {
                                                 )
                                                 .add(DebuggerWindow.buildForElement(root))
                                 ))).selectFirst());
-        debugWindow.setBounds(8, 8, 8 + debugWindow.getWidth(), 8 + debugWindow.getHeight());
+//        debugWindow.setBounds(8, 8, 8 + debugWindow.getWidth(), 8 + debugWindow.getHeight());
+        debugWindow.setPos(8, 8);
         debugWindow.doLayout();
     }
 

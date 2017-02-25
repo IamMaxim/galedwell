@@ -37,8 +37,6 @@ public class GuiInventory extends Screen {
                 .add(new HorizontalLayout().add(new Image(ResManager.icon_damage)).center(true)._setwidth(20))
                 .add(new HorizontalLayout().add(new Image(ResManager.icon_durability)).center(true)._setwidth(20));
 
-        System.out.println("header width: " + header.getWidth());
-
         root.setElement(contentLayout);
         contentLayout.setElement(new ScrollableLayout().setElement(new VerticalLayout().add(table = new Table(header))));
         table.setWidthOverride(ElementBase.FILL);
@@ -61,14 +59,14 @@ public class GuiInventory extends Screen {
 
     private TableEntry getEntryFor(String name, float value, float weight, float damage, float durability) {
         return (TableEntry) ((TableEntry) new TableEntry()
-                .add(new Text(name)._setwidth(200))
+                .add(new Text(name))
                 .add(new HorizontalLayout().center(true).add(new Text(value == (int) value ? String.valueOf((int) value) : String.valueOf(value))))
                 .add(new HorizontalLayout().center(true).add(new Text(weight == (int) weight ? String.valueOf((int) weight) : String.valueOf(weight))))
                 .add(damage == -1 ?
-                        new HorizontalLayout()._setwidth(20) :
+                        new HorizontalLayout() :
                         new HorizontalLayout().center(true).add(new Text(damage == (int) damage ? String.valueOf((int) damage) : String.valueOf(damage))))
                 .add(durability == -1 ?
-                        new HorizontalLayout()._setwidth(20) :
+                        new HorizontalLayout() :
                         new HorizontalLayout().center(true).add(new Text(durability == (int) durability ? String.valueOf((int) durability) : String.valueOf(durability)))))
                 .setPaddingTop(4).setPaddingBottom(4);
     }

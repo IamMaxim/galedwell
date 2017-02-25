@@ -19,6 +19,15 @@ public class DraggableWindow extends FrameLayout {
     public ScaledResolution res;
     private boolean needToReact = false;
 
+    //sets position of left top corner
+    public void setPos(int x, int y) {
+        this.posX = x;
+        this.posY = y;
+        setBounds(posX, posY, posX + getWidth(), posY + getHeight());
+        checkBounds();
+        doLayout();
+    }
+
     @Override
     public int getWidth() {
         return Math.max(super.getWidth(), topPanel.getWidth());
@@ -56,18 +65,28 @@ public class DraggableWindow extends FrameLayout {
         topPanel.onResize();
     }
 
-    public void checkBounds() {
+    public boolean checkBounds() {
+        boolean changed = false;
         int dx = posX + width - res.getScaledWidth();
-        if (dx > 0)
+        if (dx > 0) {
             posX -= dx;
-        if (posX < 0)
+            changed = true;
+        }
+        if (posX < 0) {
             posX = 0;
+            changed = true;
+        }
 
         int dy = posY + height - res.getScaledHeight();
-        if (dy > 0)
+        if (dy > 0) {
             posY -= dy;
-        if (posY < 0)
+            changed = true;
+        }
+        if (posY < 0) {
             posY = 0;
+            changed = true;
+        }
+        return changed;
     }
 
     public DraggableWindow(String name) {
@@ -115,5 +134,14 @@ public class DraggableWindow extends FrameLayout {
         element.setBounds(left + paddingLeft, top + paddingTop + topPanel.height(), right - paddingRight, bottom - paddingBottom);
         if (element instanceof LayoutBase)
             ((LayoutBase) element).doLayout();
+
+
+
+        if (checkBounds()) {
+            topPanel.doLayout();
+            element.setBounds(left + paddingLeft, top + paddingTop + topPanel.height(), right - paddingRight, bottom - paddingBottom);
+            if (element instanceof LayoutBase)
+                ((LayoutBase) element).doLayout();
+        }
     }
 }

@@ -81,6 +81,7 @@ public class Table extends LayoutBase implements LayoutWithList {
 
         int headerHeight = header.getHeight();
         header.setBounds(x, y, x + w, y + headerHeight);
+        header.doLayout();
         y += headerHeight;
 
         int dividerHeight = divider.getHeight();
