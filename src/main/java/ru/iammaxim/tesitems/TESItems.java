@@ -29,7 +29,7 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -156,6 +156,12 @@ public class TESItems {
         return Minecraft.getMinecraft();
     }
 
+    public static Side getSide() {
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER || Thread.currentThread().getName().startsWith("Netty Epoll Server IO"))
+            return Side.SERVER;
+        else return Side.CLIENT;
+    }
+
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         //init config file
@@ -268,20 +274,16 @@ public class TESItems {
     }
 
     @SubscribeEvent
-    public void onPlayerInteract(PlayerInteractEvent.RightClickBlock event) {
-        if (event.getSide() == Side.CLIENT)
-            return;
+    public void onBlockPlace(BlockEvent.PlaceEvent event) {
+        System.out.println("BlockEvent.PlaceEvent");
 
-        if (event.getItemStack() != null) {
-            System.out.println(event.getItemStack());
-            if (event.getItemStack().stackSize == 1) {
-                System.out.println("ItemStack is: " + event.getItemStack());
-                event.getWorld().getMinecraftServer().addScheduledTask(() -> {
-                    IPlayerAttributesCapability cap = TESItems.getCapability(event.getEntityPlayer());
-                    System.out.println("new itemStack is: " + event.getItemStack());
-                    System.out.println("checking inventory");
-                    cap.getInventory().checkInventory();
-                });
+        if (event.getItemInHand() != null) {
+            System.out.println(event.getItemInHand());
+            if (event.getItemInHand().stackSize == 1) {
+                IPlayerAttributesCapability cap = TESItems.getCapability(event.getPlayer());
+//                System.out.println("checking inventory");
+//                cap.getInventory().checkInventory();
+                cap.getInventory().removeItem(cap.getInventory().getItemStackIndex(event.getItemInHand()));
             }
         }
     }
@@ -334,7 +336,6 @@ public class TESItems {
             event.setNewSpeed(speed);
         }
     }
-
 
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
@@ -428,7 +429,14 @@ public class TESItems {
                     event.getTarget().attackEntityFrom(DamageSource.causePlayerDamage(player), multiplier * ((ItemSword) item).getDamageVsEntity());
             }
             held.damageItem(1, player);
-            if (held.getItemDamage() <= 0) {
+            if (held.getItemDamage() >= held.getMaxDamage()) {
+                if (getSide() == Side.SERVER) {
+                    //remove item from inventory
+                    IPlayerAttributesCapability cap = TESItems.getCapability(player);
+                    Inventory inv = cap.getInventory();
+                    inv.removeItem(inv.getItemStackIndex(held));
+                }
+                //remove item from hand
                 player.setHeldItem(EnumHand.MAIN_HAND, null);
             }
         }
@@ -513,12 +521,6 @@ public class TESItems {
                 ClientThings.monospaceFontRenderer = getMinecraft().fontRendererObj;
             }
         }
-    }
-
-    public static Side getSide() {
-        if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER || Thread.currentThread().getName().startsWith("Netty Epoll Server IO"))
-            return Side.SERVER;
-        else return Side.CLIENT;
     }
 
 /*    @SubscribeEvent
