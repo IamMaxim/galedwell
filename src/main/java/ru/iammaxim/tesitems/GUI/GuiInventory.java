@@ -102,12 +102,30 @@ public class GuiInventory extends Screen {
                     is.getItem() instanceof Weapon ? ((Weapon) is.getItem()).getDamageVsEntity() : -1,
                     is.isItemStackDamageable() ? (int) (100 * (1 - (float) is.getItemDamage() / is.getMaxDamage())) : -1)
                     .setOnClick(e -> {
+                        System.out.println("Left click " + is);
+
                         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                             inv.drop(inv.player, finalI, 1);
                         } else {
                             if (is.getItem() instanceof ItemArmor) {
                                 ItemArmor armor = (ItemArmor) is.getItem();
-                                if (equippedIndices.get(armor.getEquipmentSlot()) == finalI) {
+
+                                if (equippedIndices == null)
+                                    System.out.println("equippedIndices == null");
+
+                                if (armor == null)
+                                    System.out.println("armor == null");
+
+                                if (armor.getEquipmentSlot() == null)
+                                    System.out.println("equipmentSlot == null");
+
+                                if (equippedIndices
+                                        .get(
+                                                armor
+                                                        .getEquipmentSlot()
+                                        )
+                                        ==
+                                        finalI) {
                                     inv.equip(armor.getEquipmentSlot(), -1);
                                     equippedIndices.put(armor.getEquipmentSlot(), null);
                                 } else {
@@ -126,6 +144,8 @@ public class GuiInventory extends Screen {
                         }
                     })
                     .setOnRightClick(e -> {
+                        System.out.println("Right click");
+
                         if (equippedIndices.get(EntityEquipmentSlot.OFFHAND) == inv.getItemStackIndex(is)) {
                             inv.equip(EntityEquipmentSlot.OFFHAND, -1);
                             equippedIndices.put(EntityEquipmentSlot.OFFHAND, null);

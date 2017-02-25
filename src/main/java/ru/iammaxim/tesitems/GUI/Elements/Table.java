@@ -78,6 +78,20 @@ public class Table extends LayoutBase implements LayoutWithList {
     }
 
     @Override
+    public void checkClick(int mouseX, int mouseY) {
+        super.checkClick(mouseX, mouseY);
+
+        entries.forEach(e -> e.checkClick(mouseX, mouseY));
+    }
+
+    @Override
+    public void checkRightClick(int mouseX, int mouseY) {
+        super.checkRightClick(mouseX, mouseY);
+
+        entries.forEach(e -> e.checkRightClick(mouseX, mouseY));
+    }
+
+    @Override
     public void doLayout() {
         int x = left + paddingLeft;
         int y = top + paddingTop;
