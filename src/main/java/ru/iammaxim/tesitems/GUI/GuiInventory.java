@@ -83,7 +83,7 @@ public class GuiInventory extends Screen {
     private TableEntry getEntryFor(ItemStack is, float value, float weight, float damage, int durability) {
         return (TableEntry) new TableEntry()
                 .add(new ItemRenderer(is).setVerticalMargin(1)) //drawing is not here
-                .add(new FrameLayout().setElement(new Text(is.stackSize == 1 ? is.getDisplayName() : "(" + is.stackSize + ") " + is.getDisplayName())).setPaddingTop(entryTextPaddingTop))
+                .add(new FrameLayout().setElement(new Text(is.stackSize == 1 ? is.getDisplayName() : "(" + is.stackSize + ") " + is.getDisplayName())).setPaddingTop(entryTextPaddingTop).setPaddingLeft(2))
                 .add(new HorizontalLayout().center(true).add(new Text(value == (int) value ? String.valueOf((int) value) : String.valueOf(value))).setPaddingTop(entryTextPaddingTop))
                 .add(new HorizontalLayout().center(true).add(new Text(weight == (int) weight ? String.valueOf((int) weight) : String.valueOf(weight))).setPaddingTop(entryTextPaddingTop))
                 .add(damage == -1 ?

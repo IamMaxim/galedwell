@@ -118,10 +118,10 @@ public class Table extends LayoutBase implements LayoutWithList {
         //draw vertical dividers
         Tessellator tess = Tessellator.getInstance();
         List<ElementBase> columns = header.getChildren();
-        int x = left;
+        int x = left - verticalDividerWidth;
         for (int i = 0; i < columns.size() - 1; i++) {
-            x += columns.get(i).width();
-            drawColoredRect(tess, x, top, x + 1, bottom, ResManager.MAIN_COLOR);
+            x += columns.get(i).width() + verticalDividerWidth;
+            drawColoredRect(tess, x, top, x + verticalDividerWidth, bottom, ResManager.MAIN_COLOR);
         }
     }
 

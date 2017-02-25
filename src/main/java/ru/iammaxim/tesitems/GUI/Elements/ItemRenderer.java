@@ -1,5 +1,6 @@
 package ru.iammaxim.tesitems.GUI.Elements;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -29,7 +30,9 @@ public class ItemRenderer extends ElementBase {
 
     @Override
     public void draw(int mouseX, int mouseY) {
+        GlStateManager.disableLighting();
         renderItem.renderItemAndEffectIntoGUI(player, itemStack, left, top);
+        GlStateManager.enableLighting();
     }
 
     @Override
