@@ -1,9 +1,8 @@
 package ru.iammaxim.tesitems.GUI.Elements;
 
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.item.ItemStack;
-import org.lwjgl.opengl.GL11;
 import ru.iammaxim.tesitems.TESItems;
 
 /**
@@ -29,12 +28,9 @@ public class ItemRenderer extends ElementBase {
 
     @Override
     public void draw(int mouseX, int mouseY) {
-        boolean isLightEnabled = GL11.glIsEnabled(GL11.GL_LIGHTING);
-        if (isLightEnabled)
-            GlStateManager.disableLighting();
+        RenderHelper.enableGUIStandardItemLighting();
         renderItem.renderItemAndEffectIntoGUI(itemStack, left, top);
-        if (isLightEnabled)
-            GlStateManager.enableLighting();
+        RenderHelper.disableStandardItemLighting();
     }
 
     @Override

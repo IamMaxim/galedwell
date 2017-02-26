@@ -289,6 +289,10 @@ public class TESItems {
         EntityPlayer player = event.player;
         IPlayerAttributesCapability cap = getCapability(player);
 
+        //reset to first slot
+        if (player.inventory.currentItem != 0)
+            player.inventory.currentItem = 0;
+
         if (!cap.isAuthorized() && cap.getLoginY() != 0) {
             player.setPositionAndUpdate(cap.getLoginX(), cap.getLoginY(), cap.getLoginZ());
             return;
