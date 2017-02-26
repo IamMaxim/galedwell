@@ -10,7 +10,7 @@ import ru.iammaxim.tesitems.TESItems;
  */
 public class ItemRenderer extends ElementBase {
     public ItemStack itemStack;
-    public RenderItem renderItem = TESItems.getMinecraft().getRenderItem();
+    public static RenderItem renderItem = TESItems.getMinecraft().getRenderItem();
 
     @Override
     public int getWidth() {
@@ -28,8 +28,12 @@ public class ItemRenderer extends ElementBase {
 
     @Override
     public void draw(int mouseX, int mouseY) {
+        drawItem(itemStack, left, top);
+    }
+
+    public static void drawItem(ItemStack is, int left, int top) {
         RenderHelper.enableGUIStandardItemLighting();
-        renderItem.renderItemAndEffectIntoGUI(itemStack, left, top);
+        renderItem.renderItemAndEffectIntoGUI(is, left, top);
         RenderHelper.disableStandardItemLighting();
     }
 

@@ -3,7 +3,6 @@ package ru.iammaxim.tesitems;
 import net.minecraft.block.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -531,15 +530,10 @@ public class TESItems {
     }
 
     @SubscribeEvent
-    public void onHUDDraw(RenderGameOverlayEvent.Post event) {
+    public void onHUDDraw(RenderGameOverlayEvent.Pre event) {
         if (event.getType() != RenderGameOverlayEvent.ElementType.HOTBAR) return;
-        if (TESItems.getMinecraft().currentScreen == null) {
-            NotificationManager.draw();
-            getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
-        } else {
-            if (TESItems.getMinecraft().currentScreen instanceof net.minecraft.client.gui.inventory.GuiInventory)
-                TESItems.getMinecraft().displayGuiScreen(null);
-        }
+        event.setCanceled(true); //hotbar will be replaced
+        HUD.drawHUD();
     }
 
     @SideOnly(Side.CLIENT)

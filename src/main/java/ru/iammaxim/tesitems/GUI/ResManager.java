@@ -22,6 +22,7 @@ public class ResManager {
 
     public static void loadShaders() {
         try {
+            System.out.println("Loading shaders...");
             gaussianBlurShader = new ShaderGroup(Minecraft.getMinecraft().getTextureManager(),
                     Minecraft.getMinecraft().getResourceManager(),
                     Minecraft.getMinecraft().getFramebuffer(),

@@ -1,12 +1,14 @@
 package ru.iammaxim.tesitems.GUI.Elements;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
+import ru.iammaxim.tesitems.GUI.ResManager;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
@@ -227,7 +229,7 @@ public abstract class ElementBase {
         onRightClick.accept(this);
     }
 
-    public void drawTexturedRect(Tessellator tess, int left, int top, int right, int bottom, ResourceLocation texture) {
+    public static void drawTexturedRect(Tessellator tess, int left, int top, int right, int bottom, ResourceLocation texture) {
         boolean isTexture2Denabled = GL11.glIsEnabled(GL11.GL_TEXTURE_2D);
         if (!isTexture2Denabled)
             GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -247,7 +249,7 @@ public abstract class ElementBase {
             GL11.glDisable(GL11.GL_TEXTURE_2D);
     }
 
-    public void drawTexturedRect(Tessellator tess, int left, int top, int right, int bottom, float UVx, float UVy, ResourceLocation texture) {
+    public static void drawTexturedRect(Tessellator tess, int left, int top, int right, int bottom, float UVx, float UVy, ResourceLocation texture) {
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GlStateManager.color(1, 1, 1, 1);
         GlStateManager.enableBlend();
@@ -262,6 +264,17 @@ public abstract class ElementBase {
         tess.draw();
         GlStateManager.disableBlend();
         GL11.glDisable(GL11.GL_TEXTURE_2D);
+    }
+
+    public static void drawBlur(ScaledResolution res, int left, int top, int right, int bottom) {
+        GL11.glEnable(GL11.GL_SCISSOR_TEST);
+        GL11.glScissor(left * res.getScaleFactor(),
+                (res.getScaledHeight() - bottom) * res.getScaleFactor(),
+                (right - left) * res.getScaleFactor(),
+                (bottom - top) * res.getScaleFactor());
+        ResManager.gaussianBlurShader.loadShaderGroup(0);
+        Minecraft.getMinecraft().getFramebuffer().bindFramebuffer(false);
+        GL11.glDisable(GL11.GL_SCISSOR_TEST);
     }
 
     public void onResize() {}
