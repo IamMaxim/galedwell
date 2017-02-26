@@ -32,5 +32,5 @@ To start editing code:
  4. Then, open project in IDEA (select this folder).
  5. Now, type in terminal/command prompt `gradlew genIntellijRuns` (or `./gradlew genIntellijRuns`).
     This will create run configurations for client and server.
- 6. Switch back to IDEA. It will ask you to reload project. Reload it. Now click on `Edit configurations...` and change field `Use classpath of module` to `Galedwell_main` on server and client configurations. It External libraries have not appeared, click on `Gradle` on right toolbar and click `Refresh all Gradle projects` (Toolbars can be enabled by clicking on button in left bottom corner).
+ 6. Switch back to IDEA. It will ask you to reload project. Reload it. Now click on `Edit configurations...` and change field `Use classpath of module` to `Galedwell_main` on server and client configurations. If External libraries have not appeared, click on `Gradle` on right toolbar and click `Refresh all Gradle projects` (Toolbars can be enabled by clicking on button in left bottom corner).
  7. Now you should be able to run Minecraft! If you are going to test server, add `--username <Your minecraft username>` to program arguments in `Minecraft Client` configuration.
