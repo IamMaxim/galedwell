@@ -22,25 +22,25 @@ public class InventoryClient extends Inventory {
 
     @Override
     public void setMainHandItem() {
-        System.out.println("setting mainhand item to " + getMainhandItem());
+//        System.out.println("setting mainhand item to " + getMainhandItem());
         player.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, getMainhandItem());
     }
 
     @Override
     public void setOffHandItem() {
-        System.out.println("setting offhand item to " + getOffhandItem());
+//        System.out.println("setting offhand item to " + getOffhandItem());
         player.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, getOffhandItem());
     }
 
     @Override
     public ItemStack getMainhandItem() {
-        System.out.println("returning mainhand item: " + player.getHeldItemMainhand());
+//        System.out.println("returning mainhand item: " + player.getHeldItemMainhand());
         return player.getHeldItemMainhand();
     }
 
     @Override
     public ItemStack getOffhandItem() {
-        System.out.println("returning offhand item: " + player.getHeldItemOffhand());
+//        System.out.println("returning offhand item: " + player.getHeldItemOffhand());
         return player.getHeldItemOffhand();
     }
 
@@ -56,7 +56,7 @@ public class InventoryClient extends Inventory {
 
     @Override
     public void drop(Entity entity, int index, int count) {
-        System.out.println("dropping " + index + " (" + get(index) + ") " + count);
+//        System.out.println("dropping " + index + " (" + get(index) + ") " + count);
         TESItems.networkWrapper.sendToServer(new MessageItemDrop(index, count));
     }
 

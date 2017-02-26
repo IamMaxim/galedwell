@@ -300,15 +300,12 @@ public class TESItems {
 
     @SubscribeEvent
     public void onBlockPlace(BlockEvent.PlaceEvent event) {
-        System.out.println("BlockEvent.PlaceEvent");
-
         if (event.getItemInHand() != null) {
-            System.out.println(event.getItemInHand());
             if (event.getItemInHand().stackSize == 1) {
                 IPlayerAttributesCapability cap = TESItems.getCapability(event.getPlayer());
-//                System.out.println("checking inventory");
-//                cap.getInventory().checkInventory();
-                cap.getInventory().removeItem(cap.getInventory().getItemStackIndex(event.getItemInHand()));
+                int index = cap.getInventory().getItemStackIndex(event.getItemInHand());
+                if (index != -1) // block has been taken from creative mode or with middle mouse button gives index -1
+                    cap.getInventory().removeItem(index);
             }
         }
     }
@@ -316,8 +313,8 @@ public class TESItems {
     @SubscribeEvent
     public void onBlockBreak(BlockEvent.BreakEvent event) {
         EntityPlayer player = event.getPlayer();
-        ItemStack is = player.getHeldItemMainhand();
-        if (is.getItemDamage() == is.getMaxDamage() - 1) {
+        ItemStack is = player.getActiveItemStack();
+        if (is != null && is.getItemDamage() == is.getMaxDamage() - 1) {
             IPlayerAttributesCapability cap = TESItems.getCapability(player);
             cap.getInventory().removeItem(cap.getInventory().getItemStackIndex(is));
         }

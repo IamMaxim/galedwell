@@ -48,9 +48,18 @@ public class CommandGiveMe extends CommandBase {
             Inventory inv = Inventory.getInventory(player);
             int count = 1;
             if (args.length == 2) count = Integer.parseInt(args[1]);
+
+            if (count > 64) {
+                ((EntityPlayer) sender).addChatComponentMessage(new TextComponentString(TextFormatting.RED + "Maximum amount is 64"));
+                return;
+            }
+
             Item item = Item.getByNameOrId(args[0]);
-            for (int i = 0; i < count; i++)
-                inv.addItem(new ItemStack(item));
+            if (item.isDamageable())
+                for (int i = 0; i < count; i++)
+                    inv.addItem(new ItemStack(item));
+            else
+                inv.addItem(new ItemStack(item, count));
         } catch (Exception e) {
             ((EntityPlayer) sender).addChatComponentMessage(new TextComponentString(TextFormatting.RED + "Error occured while running command:\n" + e.toString()));
         }
