@@ -2,6 +2,7 @@ package ru.iammaxim.tesitems.Items;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemTool;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -46,6 +47,10 @@ public class mItems {
             orcishDagger,
             steelSword;
 
+    public static Item.ToolMaterial materialDwarven = EnumHelper.addToolMaterial("dwarven", 3, 5, 6, 3, 0);
+
+    public static ItemTool dwarvenPickaxe;
+
     public static void register(Side side) {
         registerItem(itemBreakingTool = new ItemBreakingTool());
         registerItem(itemNPCCreatorTool = new ItemNPCCreatorTool());
@@ -56,6 +61,8 @@ public class mItems {
         registerItem(ironSword = new Weapon(createWeaponMaterial("ironSword", 100, swordDamageModifier * ironDamage), "ironSword", WeaponType.BLADES));
         registerItem(orcishDagger = new Weapon(createWeaponMaterial("orcishDagger", 100, daggerDamageModifier * orcishDamage), "orcishDagger", WeaponType.BLADES));
         registerItem(steelSword = new Weapon(createWeaponMaterial("steelSword", 100, swordDamageModifier * steelDamage), "steelSword", WeaponType.BLADES));
+
+        registerItem(dwarvenPickaxe = new Pickaxe(materialDwarven, "dwarvenPickaxe"));
 
 
         if (side == Side.CLIENT) {

@@ -14,7 +14,8 @@ public class ResManager {
             CLICKABLE_TEXT_COLOR = 0xFF0066CC,
             DARK_TRANSPARENT_BG_COLOR = 0x80000000,
             DARK_FRAME_COLOR = 0xBB000000,
-            BRIGHT_TEXT_COLOR = 0xffffffff;
+            BRIGHT_TEXT_COLOR = 0xffffffff,
+            MAIN_COLOR_SEMITRANSPARENT = 0x40481f09;
 
     public static boolean enableBlur = true;
     public static ShaderGroup gaussianBlurShader;

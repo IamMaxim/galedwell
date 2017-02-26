@@ -27,6 +27,7 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.world.BlockEvent;
@@ -94,9 +95,33 @@ public class TESItems {
     };
     public static final float maxSkillLevel = 100;
     public static final Block[] miningBlocks = {
-            Blocks.STONE_STAIRS,
-            Blocks.STONE_BRICK_STAIRS,
-            Blocks.SANDSTONE_STAIRS
+            Blocks.ACTIVATOR_RAIL,
+            Blocks.COAL_ORE,
+            Blocks.COBBLESTONE,
+            Blocks.DETECTOR_RAIL,
+            Blocks.DIAMOND_BLOCK,
+            Blocks.DIAMOND_ORE,
+            Blocks.DOUBLE_STONE_SLAB,
+            Blocks.GOLDEN_RAIL,
+            Blocks.GOLD_BLOCK,
+            Blocks.GOLD_ORE,
+            Blocks.ICE,
+            Blocks.IRON_BLOCK,
+            Blocks.IRON_ORE,
+            Blocks.LAPIS_BLOCK,
+            Blocks.LAPIS_ORE,
+            Blocks.LIT_REDSTONE_ORE,
+            Blocks.MOSSY_COBBLESTONE,
+            Blocks.NETHERRACK,
+            Blocks.PACKED_ICE,
+            Blocks.RAIL,
+            Blocks.REDSTONE_ORE,
+            Blocks.SANDSTONE,
+            Blocks.RED_SANDSTONE,
+            Blocks.STONE,
+            Blocks.STONE_SLAB,
+            Blocks.STONE_BUTTON,
+            Blocks.STONE_PRESSURE_PLATE
     }, woodcuttingBlocks = {
             Blocks.WOODEN_SLAB,
             Blocks.DOUBLE_WOODEN_SLAB,
@@ -288,6 +313,16 @@ public class TESItems {
         }
     }
 
+    @SubscribeEvent
+    public void onBlockBreak(BlockEvent.BreakEvent event) {
+        EntityPlayer player = event.getPlayer();
+        ItemStack is = player.getHeldItemMainhand();
+        if (is.getItemDamage() == is.getMaxDamage() - 1) {
+            IPlayerAttributesCapability cap = TESItems.getCapability(player);
+            cap.getInventory().removeItem(cap.getInventory().getItemStackIndex(is));
+        }
+    }
+
     private boolean isMiningBlock(Block b) {
         for (Block b1 : miningBlocks)
             if (b == b1) return true;
@@ -382,6 +417,19 @@ public class TESItems {
         IPlayerAttributesCapability cap = event.player.getCapability(attributesCapability, null);
         for (String s : ATTRIBUTES) {
             System.out.println(s + " = " + cap.getAttribute(s));
+        }
+    }
+
+    @SubscribeEvent
+    public void onItemUse(LivingEntityUseItemEvent.Finish event) {
+        ItemStack is = event.getItem();
+        System.out.println("result: " + is);
+        if (is.stackSize == 0) {
+            if (event.getEntityLiving() instanceof EntityPlayer) {
+                EntityPlayer player = (EntityPlayer) event.getEntityLiving();
+                IPlayerAttributesCapability cap = TESItems.getCapability(player);
+                cap.getInventory().removeItem(cap.getInventory().getItemStackIndex(is));
+            }
         }
     }
 

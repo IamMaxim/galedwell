@@ -32,8 +32,6 @@ public class GaledwellLang {
     }
 
     public static void loadSrcInto(String src, ValueObject object) throws InvalidTokenException {
-        System.out.println("compiling script");
-
         if (src.isEmpty())
             return;
 

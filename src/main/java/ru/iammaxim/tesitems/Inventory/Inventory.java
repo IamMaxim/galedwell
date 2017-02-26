@@ -65,7 +65,7 @@ public class Inventory {
         if (stack.isItemStackDamageable())
             inventory.add(stack);
         else {
-            int index = getItemStackIndex(stack);
+            int index = getItemIndex(stack.getItem());
             if (index == -1)
                 inventory.add(stack);
             else {
@@ -144,13 +144,8 @@ public class Inventory {
     public int getItemStackIndex(ItemStack stack) {
         for (int i = 0; i < inventory.size(); i++) {
             ItemStack is = inventory.get(i);
-
-            if (stack == null)
-                System.out.println("stack == null");
-            if (is == null)
-                System.out.println("is == null");
-
-            if (is.getItem() == stack.getItem() && stack.getMetadata() == is.getMetadata()) {
+//            if (is.getItem() == stack.getItem() && is.stackSize == stack.stackSize && stack.getMetadata() == is.getMetadata()) {
+            if (is == stack) {
                 System.out.println("getting itemstack index: " + stack + "; returning " + i);
                 return i;
             }

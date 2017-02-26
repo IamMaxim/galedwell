@@ -79,7 +79,7 @@ public class GuiInventory extends Screen {
         contentLayout.setElement(new ScrollableLayout().setElement(new VerticalLayout().add(table = new Table(header))));
         table.setWidthOverride(ElementBase.FILL);
         table.setHeightOverride(ElementBase.FILL);
-        table.setWidth(280);
+        table.setWidth(header.getWidth());
 
         //add equipped slots
         checkEquipped();
@@ -121,31 +121,36 @@ public class GuiInventory extends Screen {
                             return;
 
                         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+                            //drop item
                             inv.drop(inv.player, finalI, 1);
                         } else {
                             if (is.getItem() instanceof ItemArmor) {
                                 ItemArmor armor = (ItemArmor) is.getItem();
 
+                                //if this armor is equipped, unequip it
                                 if (equippedIndices.get(armor.getEquipmentSlot()) != null && equippedIndices.get(armor.getEquipmentSlot()) == finalI) {
                                     inv.equip(armor.getEquipmentSlot(), -1);
                                     equippedIndices.put(armor.getEquipmentSlot(), null);
                                     setUnUpdated();
                                 } else {
+                                    //if not equipped, equip
                                     inv.equip(armor.getEquipmentSlot(), finalI);
                                     equippedIndices.put(armor.getEquipmentSlot(), finalI);
                                     setUnUpdated();
                                 }
                             } else if (is.getItem() instanceof Weapon || is.getItem() instanceof ItemTool) {
                                 if (equippedIndices.get(EntityEquipmentSlot.MAINHAND) != null && equippedIndices.get(EntityEquipmentSlot.MAINHAND) == inv.getItemStackIndex(is)) {
+                                    //unequip from this hand
                                     inv.equip(EntityEquipmentSlot.MAINHAND, -1);
                                     equippedIndices.put(EntityEquipmentSlot.MAINHAND, null);
                                     setUnUpdated();
                                 } else {
+                                    //unequip from other hand
                                     if (equippedIndices.get(EntityEquipmentSlot.OFFHAND) != null && equippedIndices.get(EntityEquipmentSlot.OFFHAND) == inv.getItemStackIndex(is)) {
                                         inv.equip(EntityEquipmentSlot.OFFHAND, -1);
-
                                     }
 
+                                    //equip in this hand
                                     inv.equip(EntityEquipmentSlot.MAINHAND, finalI);
                                     equippedIndices.put(EntityEquipmentSlot.MAINHAND, inv.getItemStackIndex(is));
                                     setUnUpdated();
@@ -158,10 +163,17 @@ public class GuiInventory extends Screen {
                             return;
 
                         if (equippedIndices.get(EntityEquipmentSlot.OFFHAND) != null && equippedIndices.get(EntityEquipmentSlot.OFFHAND) == inv.getItemStackIndex(is)) {
+                            //unequip from this hand
                             inv.equip(EntityEquipmentSlot.OFFHAND, -1);
                             equippedIndices.put(EntityEquipmentSlot.OFFHAND, null);
                             setUnUpdated();
                         } else {
+                            //unequip from other hand
+                            if (equippedIndices.get(EntityEquipmentSlot.MAINHAND) != null && equippedIndices.get(EntityEquipmentSlot.MAINHAND) == inv.getItemStackIndex(is)) {
+                                inv.equip(EntityEquipmentSlot.MAINHAND, -1);
+                            }
+
+                            //equip in this hand
                             inv.equip(EntityEquipmentSlot.OFFHAND, finalI);
                             equippedIndices.put(EntityEquipmentSlot.OFFHAND, inv.getItemStackIndex(is));
                             setUnUpdated();

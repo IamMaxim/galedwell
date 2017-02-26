@@ -48,8 +48,9 @@ public class CommandGiveMe extends CommandBase {
             Inventory inv = Inventory.getInventory(player);
             int count = 1;
             if (args.length == 2) count = Integer.parseInt(args[1]);
-            ItemStack stack = new ItemStack(Item.getByNameOrId(args[0]), count);
-            inv.addItem(stack);
+            Item item = Item.getByNameOrId(args[0]);
+            for (int i = 0; i < count; i++)
+                inv.addItem(new ItemStack(item));
         } catch (Exception e) {
             ((EntityPlayer) sender).addChatComponentMessage(new TextComponentString(TextFormatting.RED + "Error occured while running command:\n" + e.toString()));
         }

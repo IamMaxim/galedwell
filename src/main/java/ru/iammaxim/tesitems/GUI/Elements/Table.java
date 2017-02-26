@@ -22,6 +22,7 @@ public class Table extends LayoutBase implements LayoutWithList {
     public Table(TableEntry header) {
         this.header = header;
         divider = new HorizontalDivider();
+        divider.setColor(ResManager.MAIN_COLOR_SEMITRANSPARENT);
     }
 
     public Table setHeader(TableEntry header) {
@@ -132,13 +133,14 @@ public class Table extends LayoutBase implements LayoutWithList {
             entries.forEach(e -> e.draw(mouseX, mouseY));
         } catch (ConcurrentModificationException e) {}
 
+        int height = getHeight();
         //draw vertical dividers
         Tessellator tess = Tessellator.getInstance();
         List<ElementBase> columns = header.getChildren();
         int x = left - verticalDividerWidth;
         for (int i = 0; i < columns.size() - 1; i++) {
             x += columns.get(i).width() + verticalDividerWidth;
-            drawColoredRect(tess, x, top, x + verticalDividerWidth, bottom, ResManager.MAIN_COLOR);
+            drawColoredRect(tess, x, top, x + verticalDividerWidth, top + height, ResManager.MAIN_COLOR_SEMITRANSPARENT);
         }
     }
 

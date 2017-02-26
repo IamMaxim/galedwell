@@ -33,7 +33,6 @@ public class DialogTopic {
         topic.object = new ValueObject();
         if (TESItems.getSide() == Side.SERVER)
             try {
-                System.out.println("loading topic script");
                 GaledwellLang.loadSrcInto(topic.script, topic.object);
             } catch (Exception e) {
                 e.printStackTrace();
