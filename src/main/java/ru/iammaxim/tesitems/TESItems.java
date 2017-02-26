@@ -531,6 +531,13 @@ public class TESItems {
 
     @SubscribeEvent
     public void onHUDDraw(RenderGameOverlayEvent.Pre event) {
+        if (event.getType() == RenderGameOverlayEvent.ElementType.HEALTH ||
+                event.getType() == RenderGameOverlayEvent.ElementType.FOOD ||
+                event.getType() == RenderGameOverlayEvent.ElementType.EXPERIENCE) {
+            event.setCanceled(true);
+            return;
+        }
+
         if (event.getType() != RenderGameOverlayEvent.ElementType.HOTBAR) return;
         event.setCanceled(true); //hotbar will be replaced
         HUD.drawHUD();
