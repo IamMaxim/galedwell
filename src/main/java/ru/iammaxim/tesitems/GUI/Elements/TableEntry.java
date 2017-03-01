@@ -5,6 +5,7 @@ import ru.iammaxim.tesitems.GUI.Elements.Layouts.LayoutWithList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Created by maxim on 2/24/17 at 9:08 PM.
@@ -12,10 +13,46 @@ import java.util.List;
 public class TableEntry extends LayoutBase implements LayoutWithList {
     private ArrayList<ElementBase> columns = new ArrayList<>();
     private int verticalDividerWidth = 1;
+    private Consumer<Integer> onLeftClick, onRightClick;
+    protected int index;
+
+    public TableEntry setOnEntryLeftClick(Consumer<Integer> onLeftClick) {
+        this.onLeftClick = onLeftClick;
+        return this;
+    }
+
+    public TableEntry setOnEntryRightClick(Consumer<Integer> onRightClick) {
+        this.onRightClick = onRightClick;
+        return this;
+    }
+
+    public TableEntry(int index) {
+        this.index = index;
+    }
+
+    public TableEntry() {
+        this(0);
+    }
 
     public TableEntry setVerticalDividerWidth(int width) {
         this.verticalDividerWidth = width;
         return this;
+    }
+
+    @Override
+    public void click(int relativeX, int relativeY) {
+        if (onLeftClick == null) {
+            return;
+        }
+        onLeftClick.accept(index);
+    }
+
+    @Override
+    public void rightClick(int relativeX, int relativeY) {
+        if (onRightClick == null) {
+            return;
+        }
+        onRightClick.accept(index);
     }
 
     public void setupColumns(TableEntry header) {

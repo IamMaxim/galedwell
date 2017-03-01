@@ -48,7 +48,7 @@ public class MessageDialog implements IMessage {
                 TESItems.getMinecraft().addScheduledTask(() -> {
                     gui.topics.clear();
                     dialog.topics.forEach((name, topic) -> gui.addTopic(topic));
-                    gui.setUpdated();
+                    gui.update();
                 });
             }
             return null;

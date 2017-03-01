@@ -15,7 +15,7 @@ import ru.iammaxim.tesitems.TESItems;
 /**
  * Created by maxim on 7/24/16.
  */
-public class GuiNPCDialog extends Screen {
+public class GuiNPCDialog extends Screen implements IGuiUpdatable {
     public VerticalLayout topics;
     private boolean updated = true;
     private int rightPaneWidth = 160;
@@ -71,7 +71,7 @@ public class GuiNPCDialog extends Screen {
                 }
             }
         }.setOnClick(e -> {
-            if (!updated) {
+            if (!updated()) {
                 return;
             }
 
@@ -119,7 +119,18 @@ public class GuiNPCDialog extends Screen {
         topicElement.update();
     }
 
-    public void setUpdated() {
+    @Override
+    public void update() {
         updated = true;
+    }
+
+    @Override
+    public void unupdate() {
+        updated = false;
+    }
+
+    @Override
+    public boolean updated() {
+        return updated;
     }
 }

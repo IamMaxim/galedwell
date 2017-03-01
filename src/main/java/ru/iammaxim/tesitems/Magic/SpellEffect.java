@@ -11,9 +11,9 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
+import ru.iammaxim.tesitems.Resource;
 import ru.iammaxim.tesitems.ResourceManager;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.GaledwellLang;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Objects.Entity.ValueEntity;
@@ -33,10 +33,10 @@ public class SpellEffect {
     private String name;
     protected float power, range;
     private ValueObject object;
-    private ResourceLocation texture;
+    private Resource texture;
     private String script;
 
-    public SpellEffect(String name, String script, ValueObject object, ResourceLocation texture, Float power, Float range) {
+    public SpellEffect(String name, String script, ValueObject object, Resource texture, Float power, Float range) {
         this.name = name;
         this.script = script;
         this.power = power;
@@ -66,7 +66,7 @@ public class SpellEffect {
         return effect;
     }
 
-    protected ResourceLocation getTexture() {
+    protected Resource getTexture() {
         return texture;
     }
 
@@ -130,7 +130,7 @@ public class SpellEffect {
         //renderManager.renderEngine.bindTexture(getTexture());
 
         GlStateManager.pushMatrix();
-        renderManager.renderEngine.bindTexture(getTexture());
+        renderManager.renderEngine.bindTexture(getTexture().getRes());
         GlStateManager.translate((float) x, (float) y, (float) z);
         GlStateManager.enableRescaleNormal();
         //GlStateManager.scale(this.scale, this.scale, this.scale);

@@ -30,6 +30,8 @@ public class ResManager {
             gaussianBlurShader.createBindFramebuffers(
                     Minecraft.getMinecraft().displayWidth,
                     Minecraft.getMinecraft().displayHeight);
+
+            ResManager.gaussianBlurShader.createBindFramebuffers(Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -66,5 +68,6 @@ public class ResManager {
             decor_blue_left = new ResourceLocation("tesitems:textures/gui/decor_blue_left.png"),
             decor_blue_right = new ResourceLocation("tesitems:textures/gui/decor_blue_right.png"),
             arrow_right = new ResourceLocation("tesitems:textures/gui/arrow_right.png"),
-            arrow_down = new ResourceLocation("tesitems:textures/gui/arrow_down.png");
+            arrow_down = new ResourceLocation("tesitems:textures/gui/arrow_down.png"),
+            fakeTexture = new ResourceLocation("tesitems:textures/fakeTexture.png");
 }

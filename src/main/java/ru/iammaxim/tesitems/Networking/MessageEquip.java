@@ -52,7 +52,7 @@ public class MessageEquip implements IMessage {
 
             Screen lastScreen = ScreenStack.lastScreen();
             if (lastScreen instanceof GuiInventory) {
-                ((GuiInventory) lastScreen).setUpdated();
+                ((GuiInventory) lastScreen).update();
                 ((GuiInventory) lastScreen).checkEquipped();
                 ((GuiInventory) lastScreen).updateTable();
             }

@@ -7,6 +7,7 @@ import net.minecraft.util.ResourceLocation;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
+import ru.iammaxim.tesitems.GUI.ResManager;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class UnicodeFontRenderer extends FontRenderer {
     public final UnicodeFont font;
-    private static final ResourceLocation fakeTexture = new ResourceLocation("tesitems:textures/fakeTexture.png");
+
     public static String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'\".,+-_!?@#$%*/\\|;:(){}=<>";
     private Minecraft mc = Minecraft.getMinecraft();
     private int topOffset = 0;
@@ -126,7 +127,7 @@ public class UnicodeFontRenderer extends FontRenderer {
 
     @Override
     public int drawString(String text, float x, float y, int color, boolean dropShadow) {
-        mc.getTextureManager().bindTexture(fakeTexture);
+        mc.getTextureManager().bindTexture(ResManager.fakeTexture);
 
         glPushMatrix();
         glScaled(0.5, 0.5, 0.5);

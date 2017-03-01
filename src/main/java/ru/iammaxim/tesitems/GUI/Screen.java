@@ -46,13 +46,16 @@ public class Screen {
 
                 if (ResManager.gaussianBlurShader == null) {
                     System.out.println("ERROR! Shader wasn't loaded!");
-                    return;
-                }
-            }
+                } else {
 
-            ResManager.gaussianBlurShader.createBindFramebuffers(mc.displayWidth, mc.displayHeight);
-            ResManager.gaussianBlurShader.loadShaderGroup(partialTicks);
-            mc.getFramebuffer().bindFramebuffer(false);
+                    ResManager.gaussianBlurShader.loadShaderGroup(partialTicks);
+                    mc.getFramebuffer().bindFramebuffer(false);
+                }
+            } else {
+//                ResManager.gaussianBlurShader.createBindFramebuffers(mc.displayWidth, mc.displayHeight);
+                ResManager.gaussianBlurShader.loadShaderGroup(partialTicks);
+                mc.getFramebuffer().bindFramebuffer(false);
+            }
         }
 
         root.checkHover(mouseX, mouseY);
