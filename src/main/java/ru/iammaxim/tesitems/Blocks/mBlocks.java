@@ -19,7 +19,8 @@ public class mBlocks {
             wood_block_1,
             wood_block_2,
             wood_block_3,
-            wood_block_4;
+            wood_block_4,
+            ayleid_block_1;
 
     public static void register(Side side) {
         hay_block_1 = registerBlock("hay_block_1", Material.GRASS, 0.8f, MapColor.YELLOW, side);
@@ -27,6 +28,7 @@ public class mBlocks {
         wood_block_2 = registerBlock("wood_block_2", Material.WOOD, 1, MapColor.WOOD, side);
         wood_block_3 = registerBlock("wood_block_3", Material.WOOD, 1, MapColor.WOOD, side);
         wood_block_4 = registerBlock("wood_block_4", Material.WOOD, 1, MapColor.WOOD, side);
+        ayleid_block_1 = registerBlock("ayleid_block_1", Material.ROCK, 5, MapColor.STONE, side);
     }
 
     private static Block registerBlock(String name, Material material, float hardness, MapColor mapColor, Side side) {
