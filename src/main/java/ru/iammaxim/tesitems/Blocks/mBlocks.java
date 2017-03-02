@@ -22,7 +22,11 @@ public class mBlocks {
             wood_block_4,
             ayleid_block_1;
 
+    public static BlockChest block_chest_01;
+
     public static void register(Side side) {
+        block_chest_01 = new BlockChest();
+
         hay_block_1 = registerBlock("hay_block_1", Material.GRASS, 0.8f, MapColor.YELLOW, side);
         wood_block_1 = registerBlock("wood_block_1", Material.WOOD, 1, MapColor.WOOD, side);
         wood_block_2 = registerBlock("wood_block_2", Material.WOOD, 1, MapColor.WOOD, side);
@@ -31,19 +35,23 @@ public class mBlocks {
         ayleid_block_1 = registerBlock("ayleid_block_1", Material.ROCK, 5, MapColor.STONE, side);
     }
 
-    private static Block registerBlock(String name, Material material, float hardness, MapColor mapColor, Side side) {
-        Block b = new Block(material, mapColor);
-        b.setRegistryName(name);
-        b.setUnlocalizedName(name);
-        b.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
-        b.setHardness(hardness);
-        ItemBlock ib = new ItemBlock(b);
+    private static void registerBlock(String name, Block block, Side side) {
+        block.setRegistryName(name);
+        ItemBlock ib = new ItemBlock(block);
         ib.setRegistryName(name);
-        GameRegistry.register(b);
+        GameRegistry.register(block);
         GameRegistry.register(ib);
         if (side == Side.CLIENT) {
             ModelLoader.setCustomModelResourceLocation(ib, 0, new ModelResourceLocation("tesitems:" + name));
         }
+    }
+
+    private static Block registerBlock(String name, Material material, float hardness, MapColor mapColor, Side side) {
+        Block b = new Block(material, mapColor);
+        b.setUnlocalizedName(name);
+        b.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
+        b.setHardness(hardness);
+        registerBlock(name, b, side);
         return b;
     }
 }
