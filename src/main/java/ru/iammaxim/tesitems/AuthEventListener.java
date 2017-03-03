@@ -167,9 +167,6 @@ public class AuthEventListener {
     public void playerLoggedInEvent(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent event) {
         EntityPlayer player = event.player;
 
-        if (player.worldObj.isRemote)
-            return;
-
         IPlayerAttributesCapability cap = TESItems.getCapability(player);
 
         cap.setLoginX(player.posX);

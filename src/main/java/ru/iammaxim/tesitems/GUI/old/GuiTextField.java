@@ -5,7 +5,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import org.lwjgl.input.Keyboard;
 import ru.iammaxim.tesitems.GUI.Fonts.UnicodeFontRenderer;
-import ru.iammaxim.tesitems.TESItems;
+import ru.iammaxim.tesitems.Utils.ClientThings;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -96,7 +96,7 @@ public class GuiTextField extends RenderableBase {
             drawColoredRect(tess, top, left, bottom, right, 0xFF333333);
         else
             drawColoredRect(tess, top, left, bottom, right, 0xFF7F7F7F);
-        FontRenderer fontRenderer = TESItems.ClientThings.fontRenderer;
+        FontRenderer fontRenderer = ClientThings.fontRenderer;
         if (text.isEmpty()) //draw hint
             fontRenderer.drawString(hint, left + padding, top + padding, hintColor);
         else //draw text

@@ -8,6 +8,7 @@ import ru.iammaxim.tesitems.Networking.MessageFaction;
 import ru.iammaxim.tesitems.Networking.MessageFactionRemove;
 import ru.iammaxim.tesitems.Player.AdminTemporaryStorage;
 import ru.iammaxim.tesitems.TESItems;
+import ru.iammaxim.tesitems.Utils.ClientThings;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -145,7 +146,7 @@ public class GuiFactionEditor extends Screen {
                         .add(new TextField()
                                 .setHint("Script")
                                 .setText(topic.script)
-                                .setFontRenderer(TESItems.ClientThings.monospaceFontRenderer)
+                                .setFontRenderer(ClientThings.monospaceFontRenderer)
                                 .setOnType(tf -> topic.script = tf.getText())
                                 .setWidthOverride(ElementBase.FILL))
                         .add(new Button()

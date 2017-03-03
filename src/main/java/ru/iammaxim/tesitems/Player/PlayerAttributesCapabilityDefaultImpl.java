@@ -271,16 +271,6 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
             SpellEffect[] effects = new SpellEffect[list1.tagCount()];
             for (int j = 0; j < list1.tagCount(); j++) {
                 effects[j] = SpellEffect.readFromNBT(list1.getCompoundTagAt(j));
-
-                /*NBTTagCompound tag2 = (NBTTagCompound) list1.get(j);
-                String effectName = tag2.getString("name");
-                float power = tag2.getFloat("power");
-                float range = tag2.getFloat("range");
-                try {
-                    effects[j] = (SpellEffect) ReflectionUtils.createInstance(SpellEffectManager.getEffectByName(effectName), power, range);
-                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }*/
             }
             SpellBase spell = SpellBase.createSpell(spellType, spellName, effects);
             spellbook.add(spell);

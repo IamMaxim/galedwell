@@ -1,0 +1,50 @@
+package ru.iammaxim.tesitems.Proxy;
+
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import ru.iammaxim.tesitems.Client.ClientHandler;
+import ru.iammaxim.tesitems.GUI.KeyBindings;
+import ru.iammaxim.tesitems.GUI.ResManager;
+import ru.iammaxim.tesitems.GUI.ScreenStack;
+import ru.iammaxim.tesitems.Magic.EntityFlyingSpell;
+import ru.iammaxim.tesitems.Magic.EntityRangedSpellEffect;
+import ru.iammaxim.tesitems.Magic.RenderEntityFlyingSpell;
+import ru.iammaxim.tesitems.Magic.RenderEntityRangedSpellEffect;
+import ru.iammaxim.tesitems.NPC.EntityNPC;
+import ru.iammaxim.tesitems.NPC.RenderNPC;
+import ru.iammaxim.tesitems.Utils.ClientThings;
+
+import java.io.IOException;
+
+
+/**
+ * Created by maxim on 3/3/17 at 7:01 PM.
+ */
+public class ClientProxy extends CommonProxy {
+    @Override
+    public void preInit(FMLPreInitializationEvent event) throws IOException {
+        super.preInit(event);
+        MinecraftForge.EVENT_BUS.register(new ClientHandler());
+
+        RenderingRegistry.registerEntityRenderingHandler(EntityRangedSpellEffect.class, RenderEntityRangedSpellEffect::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityFlyingSpell.class, RenderEntityFlyingSpell::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityNPC.class, RenderNPC::new);
+    }
+
+    @Override
+    public void postInit(FMLPostInitializationEvent event) {
+        super.postInit(event);
+
+        ClientThings.loadFonts();
+        ResManager.loadShaders();
+        ScreenStack.instance = new ScreenStack();
+    }
+
+    @Override
+    public void init(FMLInitializationEvent event) {
+        KeyBindings.register();
+    }
+}

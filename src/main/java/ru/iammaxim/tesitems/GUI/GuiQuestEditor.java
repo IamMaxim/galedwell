@@ -11,6 +11,7 @@ import ru.iammaxim.tesitems.Player.AdminTemporaryStorage;
 import ru.iammaxim.tesitems.Questing.Quest;
 import ru.iammaxim.tesitems.Questing.QuestStage;
 import ru.iammaxim.tesitems.TESItems;
+import ru.iammaxim.tesitems.Utils.ClientThings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +75,7 @@ public class GuiQuestEditor extends Screen {
 
         private class StagesElement extends LayoutBase {
             public ArrayList<StageElement> stages = new ArrayList<>();
-            private FontRenderer fontRenderer = TESItems.ClientThings.fontRenderer;
+            private FontRenderer fontRenderer = ClientThings.fontRenderer;
             private int offsetX = 0, offsetY = 0;
             private HorizontalLayout buttons;
             private int lastMouseX = -1, lastMouseY = -1;

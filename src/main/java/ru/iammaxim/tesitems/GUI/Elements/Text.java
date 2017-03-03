@@ -3,7 +3,7 @@ package ru.iammaxim.tesitems.GUI.Elements;
 import net.minecraft.client.gui.FontRenderer;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.LayoutBase;
 import ru.iammaxim.tesitems.GUI.ResManager;
-import ru.iammaxim.tesitems.TESItems;
+import ru.iammaxim.tesitems.Utils.ClientThings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ public class Text extends ElementBase {
     }
 
     public Text() {
-        fontRenderer = TESItems.ClientThings.fontRenderer;
+        fontRenderer = ClientThings.fontRenderer;
     }
 
     public Text(String text) {

@@ -2,7 +2,7 @@ package ru.iammaxim.tesitems.GUI.Elements;
 
 import net.minecraft.client.renderer.Tessellator;
 import ru.iammaxim.tesitems.GUI.ResManager;
-import ru.iammaxim.tesitems.TESItems;
+import ru.iammaxim.tesitems.Utils.ClientThings;
 
 /**
  * Created by maxim on 11/9/16 at 6:38 PM.
@@ -30,7 +30,7 @@ public class CheckBox extends ElementBase {
 
     @Override
     public int getWidth() {
-        return TESItems.ClientThings.fontRenderer.getStringWidth(text) + 8;
+        return ClientThings.fontRenderer.getStringWidth(text) + 8;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class CheckBox extends ElementBase {
         if (checked)
             color = 0xffffffff;
         drawColoredRect(Tessellator.getInstance(), left + 1, top + 1, left + 7, bottom - 1, color);
-        TESItems.ClientThings.fontRenderer.drawString(text, left + 8, top, textColor);
+        ClientThings.fontRenderer.drawString(text, left + 8, top, textColor);
     }
 
     /**

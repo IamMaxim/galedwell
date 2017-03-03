@@ -6,7 +6,7 @@ import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.LayoutBase;
 import ru.iammaxim.tesitems.GUI.Fonts.UnicodeFontRenderer;
-import ru.iammaxim.tesitems.TESItems;
+import ru.iammaxim.tesitems.Utils.ClientThings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ public class TextField extends ElementBase {
     private long startTime = 0;
     private char lastChar = 0;
     private int lastKey = 0;
-    private FontRenderer fontRenderer = TESItems.ClientThings.fontRenderer;
+    private FontRenderer fontRenderer = ClientThings.fontRenderer;
     private int cursorPos = 0;
 
     @Override

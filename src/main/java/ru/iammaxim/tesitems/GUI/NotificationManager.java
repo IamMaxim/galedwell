@@ -1,6 +1,7 @@
 package ru.iammaxim.tesitems.GUI;
 
 import ru.iammaxim.tesitems.TESItems;
+import ru.iammaxim.tesitems.Utils.ClientThings;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -45,20 +46,20 @@ public class NotificationManager {
             float y = ((float) 12 / 255 * first_alpha);
 
             //draw first string
-            TESItems.ClientThings.fontRenderer.drawString(notifications.get(0), 8, y, 0x00FFFFFF + (first_alpha << 24), false);
+            ClientThings.fontRenderer.drawString(notifications.get(0), 8, y, 0x00FFFFFF + (first_alpha << 24), false);
             y += 12;
 
             //draw strings between first and last
             for (int i = 1; i < notifications.size() - 1; i++) {
-                TESItems.ClientThings.fontRenderer.drawString(notifications.get(i), 8, y, 0xFFFFFFFF, false);
+                ClientThings.fontRenderer.drawString(notifications.get(i), 8, y, 0xFFFFFFFF, false);
                 y += 12;
             }
 
             //draw last string
             if (notifications.size() == NotificationManager.RENDER_COUNT)
-                TESItems.ClientThings.fontRenderer.drawString(notifications.get(notifications.size() - 1), 8, y, 0xFFFFFFFF - (first_alpha << 24), false);
+                ClientThings.fontRenderer.drawString(notifications.get(notifications.size() - 1), 8, y, 0xFFFFFFFF - (first_alpha << 24), false);
             else if (notifications.size() > 1)
-                TESItems.ClientThings.fontRenderer.drawString(notifications.get(notifications.size() - 1), 8, y, 0xFFFFFFFF, false);
+                ClientThings.fontRenderer.drawString(notifications.get(notifications.size() - 1), 8, y, 0xFFFFFFFF, false);
         }
     }
 

@@ -12,8 +12,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import ru.iammaxim.tesitems.TESItems;
 
 import javax.annotation.Nullable;
@@ -34,7 +37,7 @@ public class BlockChest extends Block implements ITileEntityProvider {
 
         GameRegistry.register(this);
         GameRegistry.register(new ItemBlock(this), getRegistryName());
-        GameRegistry.registerTileEntity(BlockChestTileEntity.class, TESItems.MODID + "block_chest_01");
+        GameRegistry.registerTileEntity(BlockChestTileEntity.class, TESItems.MODID + "_block_chest_01");
     }
 
     @Override
@@ -51,5 +54,21 @@ public class BlockChest extends Block implements ITileEntityProvider {
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
         super.breakBlock(world, pos, state);
         world.removeTileEntity(pos);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
+        return false;
+    }
+
+    @Override
+    public boolean isBlockNormalCube(IBlockState blockState) {
+        return false;
+    }
+
+    @Override
+    public boolean isOpaqueCube(IBlockState blockState) {
+        return false;
     }
 }

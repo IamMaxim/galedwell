@@ -6,7 +6,7 @@ import ru.iammaxim.tesitems.GUI.Elements.Layouts.HorizontalLayout;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.LayoutWithList;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.VerticalLayout;
 import ru.iammaxim.tesitems.GUI.Elements.Text;
-import ru.iammaxim.tesitems.TESItems;
+import ru.iammaxim.tesitems.Utils.ClientThings;
 
 import java.util.function.Consumer;
 
@@ -33,7 +33,7 @@ public class GuiSelectionDialog extends Screen {
 
         int entriesWidth = 0;
         for (String entry : entries) {
-            entriesWidth += TESItems.ClientThings.fontRenderer.getStringWidth(entry);
+            entriesWidth += ClientThings.fontRenderer.getStringWidth(entry);
         }
 
         LayoutWithList selectionsLayout;

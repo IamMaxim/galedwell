@@ -1,10 +1,7 @@
 package ru.iammaxim.tesitems.Blocks;
 
-import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
-import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.Inventory.InventoryContainer;
 
 /**
@@ -19,7 +16,8 @@ public class BlockChestTileEntity extends TileEntity {
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        inv.loadFromNBT(compound.getCompoundTag("inv"));
+        if (compound.hasKey("inv"))
+            inv.loadFromNBT(compound.getCompoundTag("inv"));
     }
 
     @Override

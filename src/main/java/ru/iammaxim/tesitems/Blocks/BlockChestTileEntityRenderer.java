@@ -1,7 +1,6 @@
 package ru.iammaxim.tesitems.Blocks;
 
 import net.minecraft.client.model.ModelChest;
-import net.minecraft.client.model.ModelLargeChest;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.ResourceLocation;
@@ -12,7 +11,6 @@ import net.minecraft.util.ResourceLocation;
 public class BlockChestTileEntityRenderer extends TileEntitySpecialRenderer<BlockChestTileEntity> {
     private static final ResourceLocation TEXTURE_NORMAL = new ResourceLocation("textures/entity/chest/normal.png");
     private final ModelChest simpleChest = new ModelChest();
-    private final ModelChest largeChest = new ModelLargeChest();
 
     public BlockChestTileEntityRenderer() {
     }

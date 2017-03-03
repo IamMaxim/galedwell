@@ -9,6 +9,7 @@ import ru.iammaxim.tesitems.GUI.Elements.ElementBase;
 import ru.iammaxim.tesitems.GUI.Elements.ItemRenderer;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.TESItems;
+import ru.iammaxim.tesitems.Utils.ClientThings;
 
 /**
  * Created by maxim on 2/26/17 at 7:23 PM.
@@ -60,12 +61,12 @@ public class HUD {
         if (mainhand != null) {
             ItemRenderer.drawItem(mainhand, left + 22, top + 1);
             if (mainhand.stackSize != 1)
-                TESItems.ClientThings.fontRenderer.drawString(String.valueOf(mainhand.stackSize), left + 33, top + 14, ResManager.BRIGHT_TEXT_COLOR);
+                ClientThings.fontRenderer.drawString(String.valueOf(mainhand.stackSize), left + 33, top + 14, ResManager.BRIGHT_TEXT_COLOR);
         }
         if (offhand != null) {
             ItemRenderer.drawItem(offhand, left + 2, top + 1);
             if (offhand.stackSize != 1)
-                TESItems.ClientThings.fontRenderer.drawString(String.valueOf(offhand.stackSize), left + 13, top + 14, ResManager.BRIGHT_TEXT_COLOR);
+                ClientThings.fontRenderer.drawString(String.valueOf(offhand.stackSize), left + 13, top + 14, ResManager.BRIGHT_TEXT_COLOR);
         }
     }
 

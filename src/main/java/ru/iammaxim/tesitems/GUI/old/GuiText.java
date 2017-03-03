@@ -1,7 +1,7 @@
 package ru.iammaxim.tesitems.GUI.old;
 
 import net.minecraft.client.Minecraft;
-import ru.iammaxim.tesitems.TESItems;
+import ru.iammaxim.tesitems.Utils.ClientThings;
 
 import java.util.List;
 
@@ -15,13 +15,13 @@ public class GuiText extends RenderableBase {
     private int lineSpacing = 4, color = 0xffffffff;
 
     public void calculateWidth() {
-        width = TESItems.ClientThings.fontRenderer.getStringWidth(text);
+        width = ClientThings.fontRenderer.getStringWidth(text);
         if (width > parent.width) width = parent.width;
         if (width == 0) {
             System.out.println("ERROR! GuiText.width == 0. Resetting to 100");
             width = 100;
         }
-        strs = TESItems.ClientThings.fontRenderer.listFormattedStringToWidth(text, width);
+        strs = ClientThings.fontRenderer.listFormattedStringToWidth(text, width);
         height = strs.size() * (8 + lineSpacing) - lineSpacing;
     }
 
@@ -31,7 +31,7 @@ public class GuiText extends RenderableBase {
 
     @Override
     public int getWidth() {
-        return TESItems.ClientThings.fontRenderer.getStringWidth(text);
+        return ClientThings.fontRenderer.getStringWidth(text);
     }
 
     public void setLineSpacing(int lineSpacing) {
@@ -48,7 +48,7 @@ public class GuiText extends RenderableBase {
     @Override
     public void draw(int mouseX, int mouseY) {
         for (int i = 0; i < strs.size(); i++) {
-            TESItems.ClientThings.fontRenderer.drawString(strs.get(i), left, top + (8 + lineSpacing) * i, color);
+            ClientThings.fontRenderer.drawString(strs.get(i), left, top + (8 + lineSpacing) * i, color);
         }
     }
 }
