@@ -47,7 +47,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import ru.iammaxim.tesitems.Blocks.BlockChestTileEntity;
@@ -79,9 +78,10 @@ import ru.iammaxim.tesitems.World.WorldCapabilityProvider;
 import ru.iammaxim.tesitems.World.WorldCapabilityStorage;
 
 import java.awt.*;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.Scanner;
 
 @Mod(modid = TESItems.MODID, version = TESItems.VERSION)
 public class TESItems {
@@ -192,38 +192,16 @@ public class TESItems {
     }
 
     @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
-        //init config file
-        File config = new File("galedwell.cfg");
-        if (!config.exists()) {
-            try {
-                config.createNewFile();
-                FileOutputStream fos = new FileOutputStream(config);
-                fos.write("enableBlur=false".getBytes());
-                ResManager.enableBlur = false;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                Scanner scanner = new Scanner(config);
-                while (scanner.hasNext()) {
-                    String s = scanner.nextLine();
-                    String[] strs = s.split("=");
-                    if (strs[0].equals("enableBlur"))
-                        ResManager.enableBlur = Boolean.parseBoolean(strs[1]);
-                }
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
+    public void preInit(FMLPreInitializationEvent event) throws IOException {
+        //load config values
+        ConfigManager.loadConfig();
+        ResManager.enableBlur = ConfigManager.getBool("enableBlur");
 
 
         CapabilityManager.INSTANCE.register(IPlayerAttributesCapability.class, new PlayerAttributesStorage(), PlayerAttributesCapabilityDefaultImpl::new);
         CapabilityManager.INSTANCE.register(IWorldCapability.class, new WorldCapabilityStorage(), WorldCapabilityDefaultImpl::new);
         MinecraftForge.EVENT_BUS.register(this);
-        new Auth().register();
+        new AuthEventListener().register();
         mItems.register(event.getSide());
         mBlocks.register(event.getSide());
         mArmor.register();

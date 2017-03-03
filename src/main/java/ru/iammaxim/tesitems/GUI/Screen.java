@@ -29,10 +29,11 @@ public class Screen {
 
     public void onResize(Minecraft mcIn, int w, int h) {
         res = new ScaledResolution(mcIn);
-        root.doLayout();
-        root.onResize();
+/*
+        ResManager.gaussianBlurShader.createBindFramebuffers(mcIn.displayWidth, mcIn.displayHeight);*/
 
-        ResManager.gaussianBlurShader.createBindFramebuffers(w, h);
+        root.onResize();
+        root.doLayout();
     }
 
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
@@ -47,12 +48,10 @@ public class Screen {
                 if (ResManager.gaussianBlurShader == null) {
                     System.out.println("ERROR! Shader wasn't loaded!");
                 } else {
-
                     ResManager.gaussianBlurShader.loadShaderGroup(partialTicks);
                     mc.getFramebuffer().bindFramebuffer(false);
                 }
             } else {
-//                ResManager.gaussianBlurShader.createBindFramebuffers(mc.displayWidth, mc.displayHeight);
                 ResManager.gaussianBlurShader.loadShaderGroup(partialTicks);
                 mc.getFramebuffer().bindFramebuffer(false);
             }

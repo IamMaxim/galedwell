@@ -1,6 +1,5 @@
 package ru.iammaxim.tesitems;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -23,6 +22,8 @@ public class ConfigManager {
             Scanner s = new Scanner(f);
             while (s.hasNext()) {
                 String line = s.nextLine();
+                String[] KandV = line.split("=");
+                set(KandV[0], KandV[1]);
             }
         }
     }
@@ -49,5 +50,17 @@ public class ConfigManager {
 
     public static String get(String key) {
         return settings.get(key);
+    }
+
+    public static boolean getBool(String key) {
+        return Boolean.parseBoolean(get(key));
+    }
+
+    public static int getInt(String key) {
+        return Integer.parseInt(get(key));
+    }
+
+    public static float getFloat(String key) {
+        return Float.parseFloat(get(key));
     }
 }

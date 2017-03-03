@@ -18,7 +18,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 
-public class Auth {
+public class AuthEventListener {
     private static boolean registered = false;
 
     public void register() {

@@ -1,5 +1,6 @@
 package ru.iammaxim.tesitems.GUI;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.input.Keyboard;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.FrameLayout;
@@ -79,6 +80,12 @@ public class GuiInventory extends Screen implements IGuiUpdatable {
 
     public void checkEquipped() {
         ((InventoryPlayerLayout) inventoryLayout).checkEquipped();
+    }
+
+    @Override
+    public void onResize(Minecraft mcIn, int w, int h) {
+        root.setBounds(left_padding, top_padding, left_padding + root.getWidth(), res.getScaledHeight() - top_padding - bottom_padding);
+        super.onResize(mcIn, w, h);
     }
 
     public void updateTable() {

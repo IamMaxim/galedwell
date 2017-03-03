@@ -52,6 +52,11 @@ public class ScreenStack extends GuiScreen {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        //check shaders
+        if (ResManager.gaussianBlurShader.getFramebufferRaw("swap").framebufferTextureWidth != mc.displayWidth ||
+                ResManager.gaussianBlurShader.getFramebufferRaw("swap").framebufferTextureHeight != mc.displayHeight)
+            ResManager.gaussianBlurShader.createBindFramebuffers(mc.displayWidth, mc.displayHeight);
+
         for (int i = 0; i < screens.size() - 1; i++)
             screens.get(i).drawScreen(-1, -1, partialTicks);
         if (screens.size() > 0) {
@@ -83,7 +88,7 @@ public class ScreenStack extends GuiScreen {
     protected void keyTyped(char typedChar, int keyCode) throws IOException {
         if (keyCode == Keyboard.KEY_ESCAPE) {
             close();
-        } else
+        } else if (screens.size() > 0)
             screens.get(screens.size() - 1).keyTyped(typedChar, keyCode);
     }
 
@@ -101,5 +106,6 @@ public class ScreenStack extends GuiScreen {
     @Override
     public void onResize(Minecraft mcIn, int w, int h) {
         super.onResize(mcIn, w, h);
+        screens.forEach(s -> s.onResize(mcIn, w, h));
     }
 }
