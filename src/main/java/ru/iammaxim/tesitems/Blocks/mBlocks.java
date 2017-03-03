@@ -41,7 +41,9 @@ public class mBlocks {
     public static void initModels() {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block_chest_01), 0, new ModelResourceLocation(block_chest_01.getRegistryName(), "inventory"));
         ClientRegistry.bindTileEntitySpecialRenderer(BlockChestTileEntity.class, new BlockChestTileEntityRenderer());
+        System.out.println("chest's registry name: " + block_chest_01.getRegistryName());
 
+        //        TESItems.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(block_chest_01), 0, new ModelResourceLocation(block_chest_01.getRegistryName(), "inventory"));
     }
 
     private static Block registerBlock(String name, Material material, float hardness, MapColor mapColor, Side side) {

@@ -66,8 +66,6 @@ public class CommonProxy {
     public void preInit(FMLPreInitializationEvent event) throws IOException {
         //load config values
         ConfigManager.loadConfig();
-        ResManager.enableBlur = ConfigManager.getBool("enableBlur");
-
 
         CapabilityManager.INSTANCE.register(IPlayerAttributesCapability.class, new PlayerAttributesStorage(), PlayerAttributesCapabilityDefaultImpl::new);
         CapabilityManager.INSTANCE.register(IWorldCapability.class, new WorldCapabilityStorage(), WorldCapabilityDefaultImpl::new);

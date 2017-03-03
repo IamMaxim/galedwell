@@ -5,7 +5,9 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import ru.iammaxim.tesitems.Blocks.mBlocks;
 import ru.iammaxim.tesitems.Client.ClientHandler;
+import ru.iammaxim.tesitems.ConfigManager;
 import ru.iammaxim.tesitems.GUI.KeyBindings;
 import ru.iammaxim.tesitems.GUI.ResManager;
 import ru.iammaxim.tesitems.GUI.ScreenStack;
@@ -27,7 +29,12 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void preInit(FMLPreInitializationEvent event) throws IOException {
         super.preInit(event);
+
+        //load settings from config
+        ResManager.enableBlur = ConfigManager.getBool("enableBlur");
+
         MinecraftForge.EVENT_BUS.register(new ClientHandler());
+        mBlocks.initModels();
 
         RenderingRegistry.registerEntityRenderingHandler(EntityRangedSpellEffect.class, RenderEntityRangedSpellEffect::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityFlyingSpell.class, RenderEntityFlyingSpell::new);
