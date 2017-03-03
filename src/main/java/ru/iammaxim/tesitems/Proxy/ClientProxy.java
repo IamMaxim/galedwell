@@ -42,16 +42,18 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
+    public void init(FMLInitializationEvent event) {
+//        mBlocks.initModels();
+
+        KeyBindings.register();
+    }
+
+    @Override
     public void postInit(FMLPostInitializationEvent event) {
         super.postInit(event);
 
         ClientThings.loadFonts();
         ResManager.loadShaders();
         ScreenStack.instance = new ScreenStack();
-    }
-
-    @Override
-    public void init(FMLInitializationEvent event) {
-        KeyBindings.register();
     }
 }

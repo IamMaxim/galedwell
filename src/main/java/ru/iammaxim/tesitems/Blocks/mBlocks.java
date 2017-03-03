@@ -42,8 +42,9 @@ public class mBlocks {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block_chest_01), 0, new ModelResourceLocation(block_chest_01.getRegistryName(), "inventory"));
         ClientRegistry.bindTileEntitySpecialRenderer(BlockChestTileEntity.class, new BlockChestTileEntityRenderer());
         System.out.println("chest's registry name: " + block_chest_01.getRegistryName());
-
-        //        TESItems.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(block_chest_01), 0, new ModelResourceLocation(block_chest_01.getRegistryName(), "inventory"));
+//        ModelLoader.setCustomStateMapper(block_chest_01, null);
+//        ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(block_chest_01), 0, BlockChestTileEntity.class);
+//        TESItems.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(block_chest_01), block_chest_01.getMetaFromState(block_chest_01.getDefaultState()), new ModelResourceLocation(block_chest_01.getRegistryName(), "inventory"));
     }
 
     private static Block registerBlock(String name, Material material, float hardness, MapColor mapColor, Side side) {
