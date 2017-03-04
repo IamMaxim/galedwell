@@ -148,8 +148,8 @@ public class CommonProxy {
     @SubscribeEvent
     public void onBlockBreak(BlockEvent.BreakEvent event) {
         EntityPlayer player = event.getPlayer();
-        ItemStack is = player.getActiveItemStack();
-        if (is != null && is.getItemDamage() == is.getMaxDamage() - 1) {
+        ItemStack is = player.getHeldItemMainhand();
+        if (is != null && is.getItemDamage() == is.getMaxDamage()) {
             IPlayerAttributesCapability cap = TESItems.getCapability(player);
             cap.getInventory().removeItem(cap.getInventory().getItemStackIndex(is));
         }
