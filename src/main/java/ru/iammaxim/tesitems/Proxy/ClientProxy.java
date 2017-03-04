@@ -1,10 +1,13 @@
 package ru.iammaxim.tesitems.Proxy;
 
+import net.minecraft.item.Item;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import ru.iammaxim.tesitems.Blocks.BlockChestTileEntity;
 import ru.iammaxim.tesitems.Blocks.mBlocks;
 import ru.iammaxim.tesitems.Client.ClientHandler;
 import ru.iammaxim.tesitems.ConfigManager;
@@ -44,6 +47,9 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void init(FMLInitializationEvent event) {
 //        mBlocks.initModels();
+
+        ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(mBlocks.block_chest_01), 0, BlockChestTileEntity.class);
+
 
         KeyBindings.register();
     }
