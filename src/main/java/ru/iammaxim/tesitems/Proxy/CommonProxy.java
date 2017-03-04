@@ -33,13 +33,13 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
+import ru.iammaxim.tesitems.AuthEventListener;
 import ru.iammaxim.tesitems.Blocks.mBlocks;
 import ru.iammaxim.tesitems.Commands.*;
 import ru.iammaxim.tesitems.ConfigManager;
 import ru.iammaxim.tesitems.Craft.CraftRecipe;
 import ru.iammaxim.tesitems.Craft.CraftRecipes;
 import ru.iammaxim.tesitems.GUI.GUIHandler;
-import ru.iammaxim.tesitems.GUI.ResManager;
 import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.Items.*;
 import ru.iammaxim.tesitems.Magic.EntityFlyingSpell;
@@ -70,9 +70,10 @@ public class CommonProxy {
         CapabilityManager.INSTANCE.register(IPlayerAttributesCapability.class, new PlayerAttributesStorage(), PlayerAttributesCapabilityDefaultImpl::new);
         CapabilityManager.INSTANCE.register(IWorldCapability.class, new WorldCapabilityStorage(), WorldCapabilityDefaultImpl::new);
         MinecraftForge.EVENT_BUS.register(this);
+        new AuthEventListener().register();
         mItems.register(event.getSide());
         mBlocks.register(event.getSide());
-        mArmor.register();
+        mArmor.register(event.getSide());
 
         TESItems.networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel("TESItemsChannel");
         NetworkUtils.registerMessages();

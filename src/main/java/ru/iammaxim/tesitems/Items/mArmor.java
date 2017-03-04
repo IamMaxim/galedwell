@@ -1,11 +1,14 @@
 package ru.iammaxim.tesitems.Items;
 
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * Created by Maxim on 12.06.2016.
@@ -41,7 +44,7 @@ public class mArmor {
     public static ItemArmor.ArmorMaterial glassArmorMaterial = EnumHelper.addArmorMaterial("Glass", "tesitems:glassArmor", 37, new int[]{2, 7, 3, 2}, 25, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0);
     public static ItemArmor.ArmorMaterial steelArmorMaterial = EnumHelper.addArmorMaterial("Steel", "tesitems:steelArmor", 37, new int[]{2, 6, 3, 1}, 25, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0);
     public static ItemArmor.ArmorMaterial elvenArmorMaterial = EnumHelper.addArmorMaterial("Elven", "tesitems:elvenArmor", 37, new int[]{2, 6, 3, 1}, 25, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0);
-    public static ItemArmor.ArmorMaterial ironArmorMaterial = EnumHelper.addArmorMaterial("Iron",   "tesitems:ironArmor", 37, new int[]{2, 5, 2, 1}, 25, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0);
+    public static ItemArmor.ArmorMaterial ironArmorMaterial = EnumHelper.addArmorMaterial("Iron", "tesitems:ironArmor", 37, new int[]{2, 5, 2, 1}, 25, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0);
     public static ItemArmor.ArmorMaterial ironArmorMaterial01 = EnumHelper.addArmorMaterial("Iron", "tesitems:ironArmor01", 37, new int[]{2, 5, 2, 1}, 25, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0);
     public static ItemArmor.ArmorMaterial ironArmorMaterial02 = EnumHelper.addArmorMaterial("Iron", "tesitems:ironArmor02", 37, new int[]{2, 5, 2, 1}, 25, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0);
     public static ItemArmor.ArmorMaterial ironArmorMaterial03 = EnumHelper.addArmorMaterial("Iron", "tesitems:ironArmor03", 37, new int[]{2, 5, 2, 1}, 25, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0);
@@ -60,26 +63,26 @@ public class mArmor {
             chainHelmet,
             chainChestplate,
             chainBoots,
-            ironArmor_01_Helmet,
-            ironArmor_01_Chestplate,
-            ironArmor_01_Leggings,
-            ironArmor_01_Boots,
-            ironArmor_02_Helmet,
-            ironArmor_02_Chestplate,
-            ironArmor_02_Leggings,
-            ironArmor_02_Boots,
-            ironArmor_03_Helmet,
-            ironArmor_03_Chestplate,
-            ironArmor_03_Leggings,
-            ironArmor_03_Boots,
-            ironArmor_04_Helmet,
-            ironArmor_04_Chestplate,
-            ironArmor_04_Leggings,
-            ironArmor_04_Boots,
-            ironArmor_Helmet,
-            ironArmor_Chestplate,
-            ironArmor_Leggings,
-            ironArmor_Boots,
+            iron_01_Helmet,
+            iron_01_Chestplate,
+            iron_01_Leggings,
+            iron_01_Boots,
+            iron_02_Helmet,
+            iron_02_Chestplate,
+            iron_02_Leggings,
+            iron_02_Boots,
+            iron_03_Helmet,
+            iron_03_Chestplate,
+            iron_03_Leggings,
+            iron_03_Boots,
+            iron_04_Helmet,
+            iron_04_Chestplate,
+            iron_04_Leggings,
+            iron_04_Boots,
+            iron_Helmet,
+            iron_Chestplate,
+            iron_Leggings,
+            iron_Boots,
             leatherHelmet,
             leatherChestplate,
             leatherLeggings,
@@ -173,134 +176,135 @@ public class mArmor {
             clothes_15_Boots;
 
 
-
-    public static void register() {
-        furHelmet = registerItem(furArmorMaterial, "furHelmet", EntityEquipmentSlot.HEAD);
-        furChestplate = registerItem(furArmorMaterial, "furChestplate", EntityEquipmentSlot.CHEST);
-        furLeggings = registerItem(furArmorMaterial, "furLeggings", EntityEquipmentSlot.LEGS);
-        furBoots = registerItem(furArmorMaterial, "furBoots", EntityEquipmentSlot.FEET);
-        chainHelmet = registerItem(             chainArmorMaterial, "chainHelmet",  EntityEquipmentSlot.HEAD);
-        chainChestplate = registerItem(         chainArmorMaterial, "chainChestplate",  EntityEquipmentSlot.CHEST);
-        chainBoots = registerItem(              chainArmorMaterial, "chainBoots",   EntityEquipmentSlot.FEET);
-        ironArmor_01_Helmet = registerItem(     ironArmorMaterial01, "ironHelmet_01",       EntityEquipmentSlot.HEAD);
-        ironArmor_01_Chestplate = registerItem( ironArmorMaterial01, "ironChestplate_01",   EntityEquipmentSlot.CHEST);
-        ironArmor_01_Leggings = registerItem(   ironArmorMaterial01, "ironLeggings_01",     EntityEquipmentSlot.LEGS);
-        ironArmor_01_Boots = registerItem(      ironArmorMaterial01, "ironBoots_01",        EntityEquipmentSlot.FEET);
-        ironArmor_02_Helmet = registerItem(     ironArmorMaterial02, "ironHelmet_02",       EntityEquipmentSlot.HEAD);
-        ironArmor_02_Chestplate = registerItem( ironArmorMaterial02, "ironChestplate_02",   EntityEquipmentSlot.CHEST);
-        ironArmor_02_Leggings = registerItem(   ironArmorMaterial02, "ironLeggints_02",     EntityEquipmentSlot.LEGS);
-        ironArmor_02_Boots = registerItem(      ironArmorMaterial02, "ironBoots_02",        EntityEquipmentSlot.FEET);
-        ironArmor_03_Helmet = registerItem(     ironArmorMaterial03, "ironHelmet_03",       EntityEquipmentSlot.HEAD);
-        ironArmor_03_Chestplate = registerItem( ironArmorMaterial03, "ironChestplate_03",   EntityEquipmentSlot.CHEST);
-        ironArmor_03_Leggings = registerItem(   ironArmorMaterial03, "ironLeggings_03",     EntityEquipmentSlot.LEGS);
-        ironArmor_03_Boots = registerItem(      ironArmorMaterial03, "ironBoots_03",        EntityEquipmentSlot.FEET);
-        ironArmor_04_Helmet = registerItem(     ironArmorMaterial04, "ironHelmet_04",       EntityEquipmentSlot.HEAD);
-        ironArmor_04_Chestplate = registerItem( ironArmorMaterial04, "ironChestplate_04",   EntityEquipmentSlot.CHEST);
-        ironArmor_04_Leggings = registerItem(   ironArmorMaterial04, "ironLeggings_04",     EntityEquipmentSlot.LEGS);
-        ironArmor_04_Boots = registerItem(      ironArmorMaterial04, "ironBoots_04",        EntityEquipmentSlot.FEET);
-        ironArmor_Helmet = registerItem(        ironArmorMaterial, "ironHelmet", EntityEquipmentSlot.HEAD);
-        ironArmor_Chestplate = registerItem(    ironArmorMaterial, "ironChestplate", EntityEquipmentSlot.CHEST);
-        ironArmor_Leggings = registerItem(      ironArmorMaterial, "ironLeggings", EntityEquipmentSlot.LEGS);
-        ironArmor_Boots = registerItem(         ironArmorMaterial, "ironBoots", EntityEquipmentSlot.FEET);
-        leatherHelmet = registerItem(           leatherArmorMaterial, "leatherHelmet",     EntityEquipmentSlot.HEAD);
-        leatherChestplate = registerItem(       leatherArmorMaterial, "leatherChestplate",     EntityEquipmentSlot.CHEST);
-        leatherLeggings = registerItem(         leatherArmorMaterial, "leatherLeggings",   EntityEquipmentSlot.LEGS);
-        leatherBoots = registerItem(            leatherArmorMaterial, "leatherBoots",  EntityEquipmentSlot.FEET);
-        mithrilHelmet = registerItem(           mithrilArmorMaterial, "mithrilHelmet",    EntityEquipmentSlot.HEAD);
-        mithrilChestplate = registerItem(       mithrilArmorMaterial, "mithrilChestplate",    EntityEquipmentSlot.CHEST);
-        mithrilBoots = registerItem(            mithrilArmorMaterial, "mithrilBoots", EntityEquipmentSlot.FEET);
-        rawhideHelmet = registerItem(           rawhideArmorMaterial, "rawhideHelmet",    EntityEquipmentSlot.HEAD);
-        rawhideChestplate = registerItem(       rawhideArmorMaterial, "rawhideChestplate",    EntityEquipmentSlot.CHEST);
-        rawhideLeggings = registerItem(         rawhideArmorMaterial, "rawhideLeggings",  EntityEquipmentSlot.LEGS);
-        rawhideBoots = registerItem(            rawhideArmorMaterial, "rawhideBoots", EntityEquipmentSlot.FEET);
-        robe_01_Helmet = registerItem(          robe_01_ArmorMaterial,"robeHelmet_01",   EntityEquipmentSlot.HEAD);
-        robe_01_Chestplate = registerItem(      robe_01_ArmorMaterial,"robeChestplate_01",   EntityEquipmentSlot.FEET);
-        robe_01_Leggings = registerItem(        robe_01_ArmorMaterial,"robeLeggings_01", EntityEquipmentSlot.LEGS);
-        robe_01_Boots = registerItem(           robe_01_ArmorMaterial,"robeBoots_01",    EntityEquipmentSlot.FEET);
-        robe_02_Helmet = registerItem(          robe_02_ArmorMaterial,"robeHelmet_02",      EntityEquipmentSlot.HEAD);
-        robe_02_Chestplate = registerItem(      robe_02_ArmorMaterial,"robeChestplate_02",      EntityEquipmentSlot.CHEST);
-        robe_02_Leggings = registerItem(        robe_02_ArmorMaterial,"robeLeggings_02",  EntityEquipmentSlot.LEGS);
-        robe_02_Boots = registerItem(           robe_02_ArmorMaterial,"robeBoots_02",        EntityEquipmentSlot.FEET);
-        robe_03_Helmet = registerItem(          robe_03_ArmorMaterial,"robeHelmet_03",      EntityEquipmentSlot.HEAD);
-        robe_03_Chestplate = registerItem(      robe_03_ArmorMaterial,"robeChestplate_03",      EntityEquipmentSlot.CHEST);
-        robe_03_Leggings = registerItem(        robe_03_ArmorMaterial,"robeLeggings_03",  EntityEquipmentSlot.LEGS);
-        robe_03_Boots = registerItem(           robe_03_ArmorMaterial,"robeBoots_03",        EntityEquipmentSlot.FEET);
-        robe_04_Helmet = registerItem(          robe_04_ArmorMaterial,"robeHelmet_04",      EntityEquipmentSlot.HEAD);
-        robe_04_Chestplate = registerItem(      robe_04_ArmorMaterial,"robeChestplate_04",      EntityEquipmentSlot.CHEST);
-        robe_04_Leggings = registerItem(        robe_04_ArmorMaterial,"robeLeggings_04",  EntityEquipmentSlot.LEGS);
-        robe_04_Boots = registerItem(           robe_04_ArmorMaterial,"robeBoots_04",        EntityEquipmentSlot.FEET);
-        robe_05_Helmet = registerItem(          robe_05_ArmorMaterial,"robeHelmet_05",      EntityEquipmentSlot.HEAD);
-        robe_05_Chestplate = registerItem(      robe_05_ArmorMaterial,"robeChestplate_05",      EntityEquipmentSlot.CHEST);
-        robe_05_Leggings = registerItem(        robe_05_ArmorMaterial,"robeLeggings_05",  EntityEquipmentSlot.LEGS);
-        robe_05_Boots = registerItem(           robe_05_ArmorMaterial,"robeBoots_05",        EntityEquipmentSlot.FEET);
-        clothes_01_Helmet = registerItem(       clothes_01_ArmorMaterial,"clothesHelmet_01",    EntityEquipmentSlot.HEAD);
-        clothes_01_Chestplate = registerItem(   clothes_01_ArmorMaterial,"clothesChestplate_01",    EntityEquipmentSlot.CHEST);
-        clothes_01_Leggings = registerItem(     clothes_01_ArmorMaterial,"clothesLeggings_01",  EntityEquipmentSlot.LEGS);
-        clothes_01_Boots = registerItem(        clothes_01_ArmorMaterial,"clothesBoots_01", EntityEquipmentSlot.FEET);
-        clothes_02_Helmet = registerItem(       clothes_02_ArmorMaterial,"clothesHelmet_02",        EntityEquipmentSlot.HEAD);
-        clothes_02_Chestplate = registerItem(   clothes_02_ArmorMaterial,"clothesChestplate_02",        EntityEquipmentSlot.CHEST);
-        clothes_02_Leggings = registerItem(     clothes_02_ArmorMaterial,"clothesLeggings_02",    EntityEquipmentSlot.LEGS);
-        clothes_02_Boots = registerItem(        clothes_02_ArmorMaterial,"clothesBoots_02",  EntityEquipmentSlot.FEET);
-        clothes_03_Helmet = registerItem(       clothes_03_ArmorMaterial,"clothesHelmet_03",        EntityEquipmentSlot.HEAD);
-        clothes_03_Chestplate = registerItem(   clothes_03_ArmorMaterial,"clothesChestplate_03",        EntityEquipmentSlot.CHEST);
-        clothes_03_Leggings = registerItem(     clothes_03_ArmorMaterial,"clothesLeggings_03",    EntityEquipmentSlot.LEGS);
-        clothes_03_Boots = registerItem(        clothes_03_ArmorMaterial,"clothesBoots_03",  EntityEquipmentSlot.FEET);
-        clothes_04_Helmet = registerItem(       clothes_04_ArmorMaterial,"clothesHelmet_04",        EntityEquipmentSlot.HEAD);
-        clothes_04_Chestplate = registerItem(   clothes_04_ArmorMaterial,"clothesChestplate_04",        EntityEquipmentSlot.CHEST);
-        clothes_04_Leggings = registerItem(     clothes_04_ArmorMaterial,"clothesLeggings_04",    EntityEquipmentSlot.LEGS);
-        clothes_04_Boots = registerItem(        clothes_04_ArmorMaterial,"clothesBoots_04",  EntityEquipmentSlot.FEET);
-        clothes_05_Helmet = registerItem(       clothes_05_ArmorMaterial,"clothesHelmet_05",        EntityEquipmentSlot.HEAD);
-        clothes_05_Chestplate = registerItem(   clothes_05_ArmorMaterial,"clothesChestplate_05",        EntityEquipmentSlot.CHEST);
-        clothes_05_Leggings = registerItem(     clothes_05_ArmorMaterial,"clothesLeggings_05",    EntityEquipmentSlot.LEGS);
-        clothes_05_Boots = registerItem(        clothes_05_ArmorMaterial,"clothesBoots_05",  EntityEquipmentSlot.FEET);
-        clothes_06_Helmet = registerItem(       clothes_06_ArmorMaterial,"clothesHelmet_06",        EntityEquipmentSlot.HEAD);
-        clothes_06_Chestplate = registerItem(   clothes_06_ArmorMaterial,"clothesChestplate_06",        EntityEquipmentSlot.CHEST);
-        clothes_06_Leggings = registerItem(     clothes_06_ArmorMaterial,"clothesLeggings_06",    EntityEquipmentSlot.LEGS);
-        clothes_06_Boots = registerItem(        clothes_06_ArmorMaterial,"clothesBoots_06",  EntityEquipmentSlot.FEET);
-        clothes_07_Helmet = registerItem(       clothes_07_ArmorMaterial,"clothesHelmet_07",        EntityEquipmentSlot.HEAD);
-        clothes_07_Chestplate = registerItem(   clothes_07_ArmorMaterial,"clothesChestplate_07",        EntityEquipmentSlot.CHEST);
-        clothes_07_Leggings = registerItem(     clothes_07_ArmorMaterial,"clothesLeggings_07",    EntityEquipmentSlot.LEGS);
-        clothes_07_Boots = registerItem(        clothes_07_ArmorMaterial,"clothesBoots_07",  EntityEquipmentSlot.FEET);
-        clothes_08_Helmet = registerItem(       clothes_08_ArmorMaterial,"clothesHelmet_08",        EntityEquipmentSlot.HEAD);
-        clothes_08_Chestplate = registerItem(   clothes_08_ArmorMaterial,"clothesChestplate_08",        EntityEquipmentSlot.CHEST);
-        clothes_08_Leggings = registerItem(     clothes_08_ArmorMaterial,"clothesLeggings_08",    EntityEquipmentSlot.LEGS);
-        clothes_08_Boots = registerItem(        clothes_08_ArmorMaterial,"clothesBoots_08",  EntityEquipmentSlot.FEET);
-        clothes_09_Helmet = registerItem(       clothes_09_ArmorMaterial,"clothesHelmet_09",        EntityEquipmentSlot.HEAD);
-        clothes_09_Chestplate = registerItem(   clothes_09_ArmorMaterial,"clothesChestplate_09",        EntityEquipmentSlot.CHEST);
-        clothes_09_Leggings = registerItem(     clothes_09_ArmorMaterial,"clothesLeggings_09",    EntityEquipmentSlot.LEGS);
-        clothes_09_Boots = registerItem(        clothes_09_ArmorMaterial,"clothesBoots_09",  EntityEquipmentSlot.FEET);
-        clothes_10_Helmet = registerItem(       clothes_10_ArmorMaterial,"clothesHelmet_10",        EntityEquipmentSlot.HEAD);
-        clothes_10_Chestplate = registerItem(   clothes_10_ArmorMaterial,"clothesChestplate_10",        EntityEquipmentSlot.CHEST);
-        clothes_10_Leggings = registerItem(     clothes_10_ArmorMaterial,"clothesLeggings_10",    EntityEquipmentSlot.LEGS);
-        clothes_10_Boots = registerItem(        clothes_10_ArmorMaterial,"clothesBoots_10",  EntityEquipmentSlot.FEET);
-        clothes_11_Helmet = registerItem(       clothes_11_ArmorMaterial,"clothesHelmet_11",        EntityEquipmentSlot.HEAD);
-        clothes_11_Chestplate = registerItem(   clothes_11_ArmorMaterial,"clothesChestplate_11",        EntityEquipmentSlot.CHEST);
-        clothes_11_Leggings = registerItem(     clothes_11_ArmorMaterial,"clothesLeggings_11",    EntityEquipmentSlot.LEGS);
-        clothes_11_Boots = registerItem(        clothes_11_ArmorMaterial,"clothesBoots_11",  EntityEquipmentSlot.FEET);
-        clothes_12_Helmet = registerItem(       clothes_12_ArmorMaterial,"clothesHelmet_12",        EntityEquipmentSlot.HEAD);
-        clothes_12_Chestplate = registerItem(   clothes_12_ArmorMaterial,"clothesChestplate_12",        EntityEquipmentSlot.CHEST);
-        clothes_12_Leggings = registerItem(     clothes_12_ArmorMaterial,"clothesLeggings_12",    EntityEquipmentSlot.LEGS);
-        clothes_12_Boots = registerItem(        clothes_12_ArmorMaterial,"clothesBoots_12",  EntityEquipmentSlot.FEET);
-        clothes_13_Helmet = registerItem(       clothes_13_ArmorMaterial,"clothesHelmet_13",        EntityEquipmentSlot.HEAD);
-        clothes_13_Chestplate = registerItem(   clothes_13_ArmorMaterial,"clothesChestplate_13",        EntityEquipmentSlot.CHEST);
-        clothes_13_Leggings = registerItem(     clothes_13_ArmorMaterial,"clothesLeggings_13",    EntityEquipmentSlot.LEGS);
-        clothes_13_Boots = registerItem(        clothes_13_ArmorMaterial,"clothesBoots_13",  EntityEquipmentSlot.FEET);
-        clothes_14_Helmet = registerItem(       clothes_14_ArmorMaterial,"clothesHelmet_14",        EntityEquipmentSlot.HEAD);
-        clothes_14_Chestplate = registerItem(   clothes_14_ArmorMaterial,"clothesChestplate_14",        EntityEquipmentSlot.CHEST);
-        clothes_14_Leggings = registerItem(     clothes_14_ArmorMaterial,"clothesLeggings_14",    EntityEquipmentSlot.LEGS);
-        clothes_14_Boots = registerItem(        clothes_14_ArmorMaterial,"clothesBoots_14",  EntityEquipmentSlot.FEET);
-        clothes_15_Helmet = registerItem(       clothes_15_ArmorMaterial,"clothesHelmet_15",        EntityEquipmentSlot.HEAD);
-        clothes_15_Chestplate = registerItem(   clothes_15_ArmorMaterial,"clothesChestplate_15",        EntityEquipmentSlot.CHEST);
-        clothes_15_Leggings = registerItem(     clothes_15_ArmorMaterial,"clothesLeggings_15",    EntityEquipmentSlot.LEGS);
-        clothes_15_Boots = registerItem(        clothes_15_ArmorMaterial,"clothesBoots_15",  EntityEquipmentSlot.FEET);
+    public static void register(Side side) {
+        furHelmet = registerItem(furArmorMaterial, "furHelmet", EntityEquipmentSlot.HEAD, side);
+        furChestplate = registerItem(furArmorMaterial, "furChestplate", EntityEquipmentSlot.CHEST, side);
+        furLeggings = registerItem(furArmorMaterial, "furLeggings", EntityEquipmentSlot.LEGS, side);
+        furBoots = registerItem(furArmorMaterial, "furBoots", EntityEquipmentSlot.FEET, side);
+        chainHelmet = registerItem(chainArmorMaterial, "chainHelmet", EntityEquipmentSlot.HEAD, side);
+        chainChestplate = registerItem(chainArmorMaterial, "chainChestplate", EntityEquipmentSlot.CHEST, side);
+        chainBoots = registerItem(chainArmorMaterial, "chainBoots", EntityEquipmentSlot.FEET, side);
+        iron_01_Helmet = registerItem(ironArmorMaterial01, "iron_01_Helmet", EntityEquipmentSlot.HEAD, side);
+        iron_01_Chestplate = registerItem(ironArmorMaterial01, "iron_01_Chestplate", EntityEquipmentSlot.CHEST, side);
+        iron_01_Leggings = registerItem(ironArmorMaterial01, "iron_01_Leggings", EntityEquipmentSlot.LEGS, side);
+        iron_01_Boots = registerItem(ironArmorMaterial01, "iron_01_Boots", EntityEquipmentSlot.FEET, side);
+        iron_02_Helmet = registerItem(ironArmorMaterial02, "iron_02_Helmet", EntityEquipmentSlot.HEAD, side);
+        iron_02_Chestplate = registerItem(ironArmorMaterial02, "iron_02_Chestplate", EntityEquipmentSlot.CHEST, side);
+        iron_02_Leggings = registerItem(ironArmorMaterial02, "iron_02_Leggings", EntityEquipmentSlot.LEGS, side);
+        iron_02_Boots = registerItem(ironArmorMaterial02, "iron_02_Boots", EntityEquipmentSlot.FEET, side);
+        iron_03_Helmet = registerItem(ironArmorMaterial03, "iron_03_Helmet", EntityEquipmentSlot.HEAD, side);
+        iron_03_Chestplate = registerItem(ironArmorMaterial03, "iron_03_Chestplate", EntityEquipmentSlot.CHEST, side);
+        iron_03_Leggings = registerItem(ironArmorMaterial03, "iron_03_Leggings", EntityEquipmentSlot.LEGS, side);
+        iron_03_Boots = registerItem(ironArmorMaterial03, "iron_03_Boots", EntityEquipmentSlot.FEET, side);
+        iron_04_Helmet = registerItem(ironArmorMaterial04, "iron_04_Helmet", EntityEquipmentSlot.HEAD, side);
+        iron_04_Chestplate = registerItem(ironArmorMaterial04, "iron_04_Chestplate", EntityEquipmentSlot.CHEST, side);
+        iron_04_Leggings = registerItem(ironArmorMaterial04, "iron_04_Leggings", EntityEquipmentSlot.LEGS, side);
+        iron_04_Boots = registerItem(ironArmorMaterial04, "iron_04_Boots", EntityEquipmentSlot.FEET, side);
+        iron_Helmet = registerItem(ironArmorMaterial, "iron_Helmet", EntityEquipmentSlot.HEAD, side);
+        iron_Chestplate = registerItem(ironArmorMaterial, "iron_Chestplate", EntityEquipmentSlot.CHEST, side);
+        iron_Leggings = registerItem(ironArmorMaterial, "iron_Leggings", EntityEquipmentSlot.LEGS, side);
+        iron_Boots = registerItem(ironArmorMaterial, "iron_Boots", EntityEquipmentSlot.FEET, side);
+        leatherHelmet = registerItem(leatherArmorMaterial, "leatherHelmet", EntityEquipmentSlot.HEAD, side);
+        leatherChestplate = registerItem(leatherArmorMaterial, "leatherChestplate", EntityEquipmentSlot.CHEST, side);
+        leatherLeggings = registerItem(leatherArmorMaterial, "leatherLeggings", EntityEquipmentSlot.LEGS, side);
+        leatherBoots = registerItem(leatherArmorMaterial, "leatherBoots", EntityEquipmentSlot.FEET, side);
+        mithrilHelmet = registerItem(mithrilArmorMaterial, "mithrilHelmet", EntityEquipmentSlot.HEAD, side);
+        mithrilChestplate = registerItem(mithrilArmorMaterial, "mithrilChestplate", EntityEquipmentSlot.CHEST, side);
+        mithrilBoots = registerItem(mithrilArmorMaterial, "mithrilBoots", EntityEquipmentSlot.FEET, side);
+        rawhideHelmet = registerItem(rawhideArmorMaterial, "rawhideHelmet", EntityEquipmentSlot.HEAD, side);
+        rawhideChestplate = registerItem(rawhideArmorMaterial, "rawhideChestplate", EntityEquipmentSlot.CHEST, side);
+        rawhideLeggings = registerItem(rawhideArmorMaterial, "rawhideLeggings", EntityEquipmentSlot.LEGS, side);
+        rawhideBoots = registerItem(rawhideArmorMaterial, "rawhideBoots", EntityEquipmentSlot.FEET, side);
+        robe_01_Helmet = registerItem(robe_01_ArmorMaterial, "robe_01_Helmet", EntityEquipmentSlot.HEAD, side);
+        robe_01_Chestplate = registerItem(robe_01_ArmorMaterial, "robe_01_Chestplate", EntityEquipmentSlot.FEET, side);
+        robe_01_Leggings = registerItem(robe_01_ArmorMaterial, "robe_01_Leggings", EntityEquipmentSlot.LEGS, side);
+        robe_01_Boots = registerItem(robe_01_ArmorMaterial, "robe_01_Boots", EntityEquipmentSlot.FEET, side);
+        robe_02_Helmet = registerItem(robe_02_ArmorMaterial, "robe_02_Helmet", EntityEquipmentSlot.HEAD, side);
+        robe_02_Chestplate = registerItem(robe_02_ArmorMaterial, "robe_02_Chestplate", EntityEquipmentSlot.CHEST, side);
+        robe_02_Leggings = registerItem(robe_02_ArmorMaterial, "robe_02_Leggings", EntityEquipmentSlot.LEGS, side);
+        robe_02_Boots = registerItem(robe_02_ArmorMaterial, "robe_02_Boots", EntityEquipmentSlot.FEET, side);
+        robe_03_Helmet = registerItem(robe_03_ArmorMaterial, "robe_03_Helmet", EntityEquipmentSlot.HEAD, side);
+        robe_03_Chestplate = registerItem(robe_03_ArmorMaterial, "robe_03_Chestplate", EntityEquipmentSlot.CHEST, side);
+        robe_03_Leggings = registerItem(robe_03_ArmorMaterial, "robe_03_Leggings", EntityEquipmentSlot.LEGS, side);
+        robe_03_Boots = registerItem(robe_03_ArmorMaterial, "robe_03_Boots", EntityEquipmentSlot.FEET, side);
+        robe_04_Helmet = registerItem(robe_04_ArmorMaterial, "robe_04_Helmet", EntityEquipmentSlot.HEAD, side);
+        robe_04_Chestplate = registerItem(robe_04_ArmorMaterial, "robe_04_Chestplate", EntityEquipmentSlot.CHEST, side);
+        robe_04_Leggings = registerItem(robe_04_ArmorMaterial, "robe_04_Leggings", EntityEquipmentSlot.LEGS, side);
+        robe_04_Boots = registerItem(robe_04_ArmorMaterial, "robe_04_Boots", EntityEquipmentSlot.FEET, side);
+        robe_05_Helmet = registerItem(robe_05_ArmorMaterial, "robe_05_Helmet", EntityEquipmentSlot.HEAD, side);
+        robe_05_Chestplate = registerItem(robe_05_ArmorMaterial, "robe_05_Chestplate", EntityEquipmentSlot.CHEST, side);
+        robe_05_Leggings = registerItem(robe_05_ArmorMaterial, "robe_05_Leggings", EntityEquipmentSlot.LEGS, side);
+        robe_05_Boots = registerItem(robe_05_ArmorMaterial, "robe_05_Boots", EntityEquipmentSlot.FEET, side);
+        clothes_01_Helmet = registerItem(clothes_01_ArmorMaterial, "clothes_01_Helmet", EntityEquipmentSlot.HEAD, side);
+        clothes_01_Chestplate = registerItem(clothes_01_ArmorMaterial, "clothes_01_Chestplate", EntityEquipmentSlot.CHEST, side);
+        clothes_01_Leggings = registerItem(clothes_01_ArmorMaterial, "clothes_01_Leggings", EntityEquipmentSlot.LEGS, side);
+        clothes_01_Boots = registerItem(clothes_01_ArmorMaterial, "clothes_01_Boots", EntityEquipmentSlot.FEET, side);
+        clothes_02_Helmet = registerItem(clothes_02_ArmorMaterial, "clothes_02_Helmet", EntityEquipmentSlot.HEAD, side);
+        clothes_02_Chestplate = registerItem(clothes_02_ArmorMaterial, "clothes_02_Chestplate", EntityEquipmentSlot.CHEST, side);
+        clothes_02_Leggings = registerItem(clothes_02_ArmorMaterial, "clothes_02_Leggings", EntityEquipmentSlot.LEGS, side);
+        clothes_02_Boots = registerItem(clothes_02_ArmorMaterial, "clothes_02_Boots", EntityEquipmentSlot.FEET, side);
+        clothes_03_Helmet = registerItem(clothes_03_ArmorMaterial, "clothes_03_Helmet", EntityEquipmentSlot.HEAD, side);
+        clothes_03_Chestplate = registerItem(clothes_03_ArmorMaterial, "clothes_03_Chestplate", EntityEquipmentSlot.CHEST, side);
+        clothes_03_Leggings = registerItem(clothes_03_ArmorMaterial, "clothes_03_Leggings", EntityEquipmentSlot.LEGS, side);
+        clothes_03_Boots = registerItem(clothes_03_ArmorMaterial, "clothes_03_Boots", EntityEquipmentSlot.FEET, side);
+        clothes_04_Helmet = registerItem(clothes_04_ArmorMaterial, "clothes_04_Helmet", EntityEquipmentSlot.HEAD, side);
+        clothes_04_Chestplate = registerItem(clothes_04_ArmorMaterial, "clothes_04_Chestplate", EntityEquipmentSlot.CHEST, side);
+        clothes_04_Leggings = registerItem(clothes_04_ArmorMaterial, "clothes_04_Leggings", EntityEquipmentSlot.LEGS, side);
+        clothes_04_Boots = registerItem(clothes_04_ArmorMaterial, "clothes_04_Boots", EntityEquipmentSlot.FEET, side);
+        clothes_05_Helmet = registerItem(clothes_05_ArmorMaterial, "clothes_05_Helmet", EntityEquipmentSlot.HEAD, side);
+        clothes_05_Chestplate = registerItem(clothes_05_ArmorMaterial, "clothes_05_Chestplate", EntityEquipmentSlot.CHEST, side);
+        clothes_05_Leggings = registerItem(clothes_05_ArmorMaterial, "clothes_05_Leggings", EntityEquipmentSlot.LEGS, side);
+        clothes_05_Boots = registerItem(clothes_05_ArmorMaterial, "clothes_05_Boots", EntityEquipmentSlot.FEET, side);
+        clothes_06_Helmet = registerItem(clothes_06_ArmorMaterial, "clothes_06_Helmet", EntityEquipmentSlot.HEAD, side);
+        clothes_06_Chestplate = registerItem(clothes_06_ArmorMaterial, "clothes_06_Chestplate", EntityEquipmentSlot.CHEST, side);
+        clothes_06_Leggings = registerItem(clothes_06_ArmorMaterial, "clothes_06_Leggings", EntityEquipmentSlot.LEGS, side);
+        clothes_06_Boots = registerItem(clothes_06_ArmorMaterial, "clothes_06_Boots", EntityEquipmentSlot.FEET, side);
+        clothes_07_Helmet = registerItem(clothes_07_ArmorMaterial, "clothes_07_Helmet", EntityEquipmentSlot.HEAD, side);
+        clothes_07_Chestplate = registerItem(clothes_07_ArmorMaterial, "clothes_07_Chestplate", EntityEquipmentSlot.CHEST, side);
+        clothes_07_Leggings = registerItem(clothes_07_ArmorMaterial, "clothes_07_Leggings", EntityEquipmentSlot.LEGS, side);
+        clothes_07_Boots = registerItem(clothes_07_ArmorMaterial, "clothes_07_Boots", EntityEquipmentSlot.FEET, side);
+        clothes_08_Helmet = registerItem(clothes_08_ArmorMaterial, "clothes_08_Helmet", EntityEquipmentSlot.HEAD, side);
+        clothes_08_Chestplate = registerItem(clothes_08_ArmorMaterial, "clothes_08_Chestplate", EntityEquipmentSlot.CHEST, side);
+        clothes_08_Leggings = registerItem(clothes_08_ArmorMaterial, "clothes_08_Leggings", EntityEquipmentSlot.LEGS, side);
+        clothes_08_Boots = registerItem(clothes_08_ArmorMaterial, "clothes_08_Boots", EntityEquipmentSlot.FEET, side);
+        clothes_09_Helmet = registerItem(clothes_09_ArmorMaterial, "clothes_09_Helmet", EntityEquipmentSlot.HEAD, side);
+        clothes_09_Chestplate = registerItem(clothes_09_ArmorMaterial, "clothes_09_Chestplate", EntityEquipmentSlot.CHEST, side);
+        clothes_09_Leggings = registerItem(clothes_09_ArmorMaterial, "clothes_09_Leggings", EntityEquipmentSlot.LEGS, side);
+        clothes_09_Boots = registerItem(clothes_09_ArmorMaterial, "clothes_09_Boots", EntityEquipmentSlot.FEET, side);
+        clothes_10_Helmet = registerItem(clothes_10_ArmorMaterial, "clothes_10_Helmet", EntityEquipmentSlot.HEAD, side);
+        clothes_10_Chestplate = registerItem(clothes_10_ArmorMaterial, "clothes_10_Chestplate", EntityEquipmentSlot.CHEST, side);
+        clothes_10_Leggings = registerItem(clothes_10_ArmorMaterial, "clothes_10_Leggings", EntityEquipmentSlot.LEGS, side);
+        clothes_10_Boots = registerItem(clothes_10_ArmorMaterial, "clothes_10_Boots", EntityEquipmentSlot.FEET, side);
+        clothes_11_Helmet = registerItem(clothes_11_ArmorMaterial, "clothes_11_Helmet", EntityEquipmentSlot.HEAD, side);
+        clothes_11_Chestplate = registerItem(clothes_11_ArmorMaterial, "clothes_11_Chestplate", EntityEquipmentSlot.CHEST, side);
+        clothes_11_Leggings = registerItem(clothes_11_ArmorMaterial, "clothes_11_Leggings", EntityEquipmentSlot.LEGS, side);
+        clothes_11_Boots = registerItem(clothes_11_ArmorMaterial, "clothes_11_Boots", EntityEquipmentSlot.FEET, side);
+        clothes_12_Helmet = registerItem(clothes_12_ArmorMaterial, "clothes_12_Helmet", EntityEquipmentSlot.HEAD, side);
+        clothes_12_Chestplate = registerItem(clothes_12_ArmorMaterial, "clothes_12_Chestplate", EntityEquipmentSlot.CHEST, side);
+        clothes_12_Leggings = registerItem(clothes_12_ArmorMaterial, "clothes_12_Leggings", EntityEquipmentSlot.LEGS, side);
+        clothes_12_Boots = registerItem(clothes_12_ArmorMaterial, "clothes_12_Boots", EntityEquipmentSlot.FEET, side);
+        clothes_13_Helmet = registerItem(clothes_13_ArmorMaterial, "clothes_13_Helmet", EntityEquipmentSlot.HEAD, side);
+        clothes_13_Chestplate = registerItem(clothes_13_ArmorMaterial, "clothes_13_Chestplate", EntityEquipmentSlot.CHEST, side);
+        clothes_13_Leggings = registerItem(clothes_13_ArmorMaterial, "clothes_13_Leggings", EntityEquipmentSlot.LEGS, side);
+        clothes_13_Boots = registerItem(clothes_13_ArmorMaterial, "clothes_13_Boots", EntityEquipmentSlot.FEET, side);
+        clothes_14_Helmet = registerItem(clothes_14_ArmorMaterial, "clothes_14_Helmet", EntityEquipmentSlot.HEAD, side);
+        clothes_14_Chestplate = registerItem(clothes_14_ArmorMaterial, "clothes_14_Chestplate", EntityEquipmentSlot.CHEST, side);
+        clothes_14_Leggings = registerItem(clothes_14_ArmorMaterial, "clothes_14_Leggings", EntityEquipmentSlot.LEGS, side);
+        clothes_14_Boots = registerItem(clothes_14_ArmorMaterial, "clothes_14_Boots", EntityEquipmentSlot.FEET, side);
+        clothes_15_Helmet = registerItem(clothes_15_ArmorMaterial, "clothes_15_Helmet", EntityEquipmentSlot.HEAD, side);
+        clothes_15_Chestplate = registerItem(clothes_15_ArmorMaterial, "clothes_15_Chestplate", EntityEquipmentSlot.CHEST, side);
+        clothes_15_Leggings = registerItem(clothes_15_ArmorMaterial, "clothes_15_Leggings", EntityEquipmentSlot.LEGS, side);
+        clothes_15_Boots = registerItem(clothes_15_ArmorMaterial, "clothes_15_Boots", EntityEquipmentSlot.FEET, side);
     }
 
-    private static ItemArmor registerItem(ItemArmor.ArmorMaterial material, String name, EntityEquipmentSlot slot) {
+    private static ItemArmor registerItem(ItemArmor.ArmorMaterial material, String name, EntityEquipmentSlot slot, Side side) {
         ItemArmor armor = new ItemArmor(material, 0, slot);
         armor.setRegistryName(name);
         armor.setUnlocalizedName(name);
         GameRegistry.register(armor);
         armor.setCreativeTab(CreativeTabs.COMBAT);
+        if (side == Side.CLIENT)
+            ModelLoader.setCustomModelResourceLocation(armor, 0, new ModelResourceLocation(armor.getRegistryName().toString()));
         return armor;
     }
 }

@@ -1,7 +1,6 @@
 package ru.iammaxim.tesitems.Proxy;
 
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import ru.iammaxim.tesitems.AuthEventListener;
 
 import java.io.IOException;
 
@@ -12,7 +11,5 @@ public class ServerProxy extends CommonProxy {
     @Override
     public void preInit(FMLPreInitializationEvent event) throws IOException {
         super.preInit(event);
-
-        new AuthEventListener().register();
     }
 }

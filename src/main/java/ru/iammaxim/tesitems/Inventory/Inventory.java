@@ -132,7 +132,7 @@ public class Inventory {
     public int getItemIndex(Item item) {
         for (int i = 0; i < inventory.size(); i++) {
             ItemStack is = inventory.get(i);
-            if (is.getItem() == item) {
+            if (is != null && is.getItem() == item) {
 //                System.out.println("getting item index: " + item + "; returning " + i);
                 return i;
             }

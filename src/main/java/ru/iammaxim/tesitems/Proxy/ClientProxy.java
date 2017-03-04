@@ -59,7 +59,6 @@ public class ClientProxy extends CommonProxy {
         super.postInit(event);
 
         ClientThings.loadFonts();
-        ResManager.loadShaders();
         ScreenStack.instance = new ScreenStack();
     }
 }

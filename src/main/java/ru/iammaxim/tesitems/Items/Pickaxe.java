@@ -12,5 +12,6 @@ public class Pickaxe extends ItemPickaxe {
         setUnlocalizedName(name);
         setRegistryName(name);
         setCreativeTab(CreativeTabs.TOOLS);
+        setMaxStackSize(1);
     }
 }

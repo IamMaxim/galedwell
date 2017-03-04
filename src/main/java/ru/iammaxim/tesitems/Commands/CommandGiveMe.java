@@ -61,6 +61,7 @@ public class CommandGiveMe extends CommandBase {
             else
                 inv.addItem(new ItemStack(item, count));
         } catch (Exception e) {
+            e.printStackTrace();
             ((EntityPlayer) sender).addChatComponentMessage(new TextComponentString(TextFormatting.RED + "Error occured while running command:\n" + e.toString()));
         }
     }

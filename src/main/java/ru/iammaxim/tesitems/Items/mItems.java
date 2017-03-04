@@ -52,20 +52,20 @@ public class mItems {
     public static ItemTool dwarvenPickaxe;
 
     public static void register(Side side) {
-        registerItem(itemBreakingTool = new ItemBreakingTool());
-        registerItem(itemNPCCreatorTool = new ItemNPCCreatorTool());
-        registerItem(itemNPCEditorTool = new ItemNPCEditorTool());
-        registerItem(dwarvenSword = new Weapon(createWeaponMaterial("dwarvenSword", 100, swordDamageModifier * dwarvenDamage), "dwarvenSword", WeaponType.BLADES));
-        registerItem(elvenDagger = new Weapon(createWeaponMaterial("elvenDagger", 100, daggerDamageModifier * elvenDamage), "elvenDagger", WeaponType.BLADES));
-        registerItem(elvenSword = new Weapon(createWeaponMaterial("elvenSword", 100, swordDamageModifier * elvenDamage), "elvenSword", WeaponType.BLADES));
-        registerItem(ironSword = new Weapon(createWeaponMaterial("ironSword", 100, swordDamageModifier * ironDamage), "ironSword", WeaponType.BLADES));
-        registerItem(orcishDagger = new Weapon(createWeaponMaterial("orcishDagger", 100, daggerDamageModifier * orcishDamage), "orcishDagger", WeaponType.BLADES));
-        registerItem(steelSword = new Weapon(createWeaponMaterial("steelSword", 100, swordDamageModifier * steelDamage), "steelSword", WeaponType.BLADES));
+        registerItem(itemBreakingTool = new ItemBreakingTool(), side);
+        registerItem(itemNPCCreatorTool = new ItemNPCCreatorTool(), side);
+        registerItem(itemNPCEditorTool = new ItemNPCEditorTool(), side);
+        registerItem(dwarvenSword = new Weapon(createWeaponMaterial("dwarvenSword", 100, swordDamageModifier * dwarvenDamage), "dwarvenSword", WeaponType.BLADES), side);
+        registerItem(elvenDagger = new Weapon(createWeaponMaterial("elvenDagger", 100, daggerDamageModifier * elvenDamage), "elvenDagger", WeaponType.BLADES), side);
+        registerItem(elvenSword = new Weapon(createWeaponMaterial("elvenSword", 100, swordDamageModifier * elvenDamage), "elvenSword", WeaponType.BLADES), side);
+        registerItem(ironSword = new Weapon(createWeaponMaterial("ironSword", 100, swordDamageModifier * ironDamage), "ironSword", WeaponType.BLADES), side);
+        registerItem(orcishDagger = new Weapon(createWeaponMaterial("orcishDagger", 100, daggerDamageModifier * orcishDamage), "orcishDagger", WeaponType.BLADES), side);
+        registerItem(steelSword = new Weapon(createWeaponMaterial("steelSword", 100, swordDamageModifier * steelDamage), "steelSword", WeaponType.BLADES), side);
 
-        registerItem(dwarvenPickaxe = new Pickaxe(materialDwarven, "dwarvenPickaxe"));
+        registerItem(dwarvenPickaxe = new Pickaxe(materialDwarven, "dwarvenPickaxe"), side);
 
 
-        if (side == Side.CLIENT) {
+/*        if (side == Side.CLIENT) {
             ModelLoader.setCustomModelResourceLocation(itemBreakingTool, 0, new ModelResourceLocation("tesitems:breakingTool"));
             ModelLoader.setCustomModelResourceLocation(itemNPCEditorTool, 0, new ModelResourceLocation("tesitems:NPCEditorTool"));
             ModelLoader.setCustomModelResourceLocation(itemNPCCreatorTool, 0, new ModelResourceLocation("tesitems:NPCCreatorTool"));
@@ -75,11 +75,14 @@ public class mItems {
             ModelLoader.setCustomModelResourceLocation(ironSword, 0, new ModelResourceLocation("tesitems:ironSword"));
             ModelLoader.setCustomModelResourceLocation(orcishDagger, 0, new ModelResourceLocation("tesitems:orcishDagger"));
             ModelLoader.setCustomModelResourceLocation(steelSword, 0, new ModelResourceLocation("tesitems:steelSword"));
-        }
+        }*/
     }
 
-    private static void registerItem(Item item) {
+    private static void registerItem(Item item, Side side) {
         GameRegistry.register(item);
+        if (side == Side.CLIENT) {
+            ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName().toString()));
+        }
     }
 
     private static Item.ToolMaterial createWeaponMaterial(String name, int maxUses, float damage) {

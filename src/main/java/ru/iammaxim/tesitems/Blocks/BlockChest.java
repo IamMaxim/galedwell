@@ -32,11 +32,9 @@ public class BlockChest extends Block implements ITileEntityProvider {
         setHardness(5);
         setResistance(10);
         isBlockContainer = true;
-
         setRegistryName("block_chest_01");
-
         GameRegistry.register(this);
-        GameRegistry.register(new ItemBlock(this), getRegistryName());
+        GameRegistry.register(new ItemBlock(this).setRegistryName(getRegistryName()));
         GameRegistry.registerTileEntity(BlockChestTileEntity.class, TESItems.MODID + "_block_chest_01");
     }
 
