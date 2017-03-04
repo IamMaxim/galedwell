@@ -53,6 +53,7 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     private String password = "";
     private boolean isAuthorized = false;
     private double loginX = 0, loginY = 0, loginZ = 0;
+    private Inventory latestContainer;
 
     public PlayerAttributesCapabilityDefaultImpl() {
     }
@@ -187,6 +188,16 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     @Override
     public double setLoginZ(double z) {
         return loginZ = z;
+    }
+
+    @Override
+    public Inventory getLatestContainer() {
+        return latestContainer;
+    }
+
+    @Override
+    public void setLatestContainer(Inventory latestContainer) {
+        this.latestContainer = latestContainer;
     }
 
     @Override

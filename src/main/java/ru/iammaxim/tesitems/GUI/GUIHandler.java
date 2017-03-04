@@ -37,6 +37,7 @@ public class GUIHandler implements IGuiHandler {
             case TESItems.guiFactionEditor: new GuiFactionEditor().show(); return ScreenStack.instance;
             case TESItems.guiQuestEditor: new GuiQuestEditor().show(); return ScreenStack.instance;
             case TESItems.guiEditSpells: new GuiSpellEditorList().show(); return ScreenStack.instance;
+            case TESItems.guiContainer: new GuiContainer().show(); return ScreenStack.instance;
         }
         return null;
     }

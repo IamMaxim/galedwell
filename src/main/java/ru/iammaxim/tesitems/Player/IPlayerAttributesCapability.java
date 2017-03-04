@@ -59,4 +59,6 @@ public interface IPlayerAttributesCapability {
     double setLoginX(double x);
     double setLoginY(double y);
     double setLoginZ(double z);
+    Inventory getLatestContainer();
+    void setLatestContainer(Inventory latestContainer);
 }

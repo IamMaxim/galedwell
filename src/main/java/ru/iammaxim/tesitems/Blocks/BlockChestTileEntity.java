@@ -8,7 +8,7 @@ import ru.iammaxim.tesitems.Inventory.InventoryContainer;
  * Created by maxim on 02.03.2017.
  */
 public class BlockChestTileEntity extends TileEntity {
-    private InventoryContainer inv = new InventoryContainer();
+    public InventoryContainer inv = new InventoryContainer();
 
     public BlockChestTileEntity() {
     }

@@ -170,12 +170,13 @@ public class Inventory {
         return tag;
     }
 
-    public void loadFromNBT(NBTTagCompound tag) {
+    public Inventory loadFromNBT(NBTTagCompound tag) {
         NBTTagList tagList = (NBTTagList) tag.getTag("items");
         for (int i = 0; i < tagList.tagCount(); i++) {
             ItemStack stack = ItemStack.loadItemStackFromNBT((NBTTagCompound) tagList.get(i));
             inventory.add(stack);
         }
+        return this;
     }
 
     public static Inventory getInventory(EntityPlayer player) {

@@ -6,6 +6,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -17,6 +18,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import ru.iammaxim.tesitems.Networking.MessageLatestContainer;
+import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.TESItems;
 
 import javax.annotation.Nullable;
@@ -40,7 +43,23 @@ public class BlockChest extends Block implements ITileEntityProvider {
 
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-        return super.onBlockActivated(worldIn, pos, state, playerIn, hand, heldItem, side, hitX, hitY, hitZ);
+//        return super.onBlockActivated(worldIn, pos, state, playerIn, hand, heldItem, side, hitX, hitY, hitZ);
+        if (worldIn.isRemote)
+            return true;
+
+        BlockChestTileEntity te = (BlockChestTileEntity) worldIn.getTileEntity(pos);
+
+        if (te == null) {
+            System.out.println("Something goes wrong. No BlockChestTileEntity here");
+            return true;
+        }
+
+        IPlayerAttributesCapability cap = TESItems.getCapability(playerIn);
+        cap.setLatestContainer(te.inv);
+        TESItems.networkWrapper.sendTo(new MessageLatestContainer(te.inv), (EntityPlayerMP) playerIn);
+        playerIn.openGui(TESItems.instance, TESItems.guiContainer, worldIn, pos.getX(), pos.getY(), pos.getZ());
+
+        return true;
     }
 
     @Override

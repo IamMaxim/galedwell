@@ -34,5 +34,8 @@ public class NetworkUtils {
         TESItems.networkWrapper.registerMessage(MessageOpenEditFaction.ServerHandler.class, MessageOpenEditFaction.class, 23, Side.SERVER);
         TESItems.networkWrapper.registerMessage(MessageQuest.ServerHandler.class, MessageQuest.class, 24, Side.SERVER);
         TESItems.networkWrapper.registerMessage(MessageQuest.ClientHandler.class, MessageQuest.class, 25, Side.CLIENT);
+        TESItems.networkWrapper.registerMessage(MessageLatestContainer.ClientHandler.class, MessageLatestContainer.class, 26, Side.CLIENT);
+        TESItems.networkWrapper.registerMessage(MessageUpdateLatestContainer.ClientHandler.class, MessageUpdateLatestContainer.class, 27, Side.CLIENT);
+        TESItems.networkWrapper.registerMessage(MessageUpdateLatestContainer.ServerHandler.class, MessageUpdateLatestContainer.class, 28, Side.SERVER);
     }
 }

@@ -9,6 +9,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
+import net.minecraft.item.ItemTool;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
@@ -149,7 +150,7 @@ public class CommonProxy {
     public void onBlockBreak(BlockEvent.BreakEvent event) {
         EntityPlayer player = event.getPlayer();
         ItemStack is = player.getHeldItemMainhand();
-        if (is != null && is.getItemDamage() == is.getMaxDamage()) {
+        if (is != null && is.getItem() instanceof ItemTool && is.getItemDamage() == is.getMaxDamage()) {
             IPlayerAttributesCapability cap = TESItems.getCapability(player);
             cap.getInventory().removeItem(cap.getInventory().getItemStackIndex(is));
         }
