@@ -2,7 +2,6 @@ package ru.iammaxim.tesitems.Blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
@@ -12,25 +11,21 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
 /**
  * Created by maxim on 3/5/17 at 3:56 PM.
  */
-public abstract class BlockFurniture extends Block implements ITileEntityProvider {
+public abstract class BlockFurniture extends Block {
     public static final PropertyDirection FACING = BlockHorizontal.FACING;
+
 
     public BlockFurniture(String name, Material material) {
         super(material);
@@ -51,32 +46,8 @@ public abstract class BlockFurniture extends Block implements ITileEntityProvide
     }
 
     @Override
-    public abstract TileEntity createNewTileEntity(World worldIn, int meta);
-
-    @Override
-    public void breakBlock(World world, BlockPos pos, IBlockState state) {
-        world.removeTileEntity(pos);
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
-        return false;
-    }
-
-    @Override
-    public boolean isBlockNormalCube(IBlockState blockState) {
-        return false;
-    }
-
-    @Override
     public boolean isOpaqueCube(IBlockState blockState) {
         return false;
-    }
-
-    @Override
-    public EnumBlockRenderType getRenderType(IBlockState state) {
-        return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 
     @Override

@@ -1,0 +1,13 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "tesitems:block_chair_01.obj"
+  },
+  "variants": {
+    "normal": [{}],
+    "facing=north": {"model": "tesitems:block_chair_01.obj"},
+    "facing=south": {"model": "tesitems:block_chair_01.obj", "y": 180},
+    "facing=west": {"model": "tesitems:block_chair_01.obj", "y": 270},
+    "facing=east": {"model": "tesitems:block_chair_01.obj", "y": 90}
+  }
+}

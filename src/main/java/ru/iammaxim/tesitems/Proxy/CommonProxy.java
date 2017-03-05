@@ -187,7 +187,6 @@ public class CommonProxy {
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
         if (event.getEntity() instanceof EntityPlayer) {
-            System.out.println("player joined world");
             EntityPlayer player = (EntityPlayer) event.getEntity();
             //clear vanilla inventory
             player.inventory.clear();

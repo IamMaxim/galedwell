@@ -1,0 +1,13 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "tesitems:block_workbench.obj"
+  },
+  "variants": {
+    "normal": [{}],
+    "facing=north": {"model": "tesitems:block_workbench.obj"},
+    "facing=south": {"model": "tesitems:block_workbench.obj", "y": 180},
+    "facing=west": {"model": "tesitems:block_workbench.obj", "y": 270},
+    "facing=east": {"model": "tesitems:block_workbench.obj", "y": 90}
+  }
+}

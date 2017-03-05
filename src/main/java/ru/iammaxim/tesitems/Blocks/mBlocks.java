@@ -24,13 +24,15 @@ public class mBlocks {
             wood_block_3,
             wood_block_4,
             ayleid_block_1,
-            workbench;
+            block_workbench,
+            block_chair_01;
 
     public static BlockChest block_chest_01;
 
     public static void register(Side side) {
         block_chest_01 = new BlockChest();
-        workbench = new BlockWorkbench();
+        block_workbench = new BlockWorkbench();
+        block_chair_01 = new BlockChair01();
 
         hay_block_1 = registerBlock("hay_block_1", Material.GRASS, 0.8f, MapColor.YELLOW, side);
         wood_block_1 = registerBlock("wood_block_1", Material.WOOD, 1, MapColor.WOOD, side);
@@ -45,14 +47,14 @@ public class mBlocks {
         registerModelResLocation(block_chest_01);
         ClientRegistry.bindTileEntitySpecialRenderer(BlockChestTileEntity.class, new BlockChestTileEntityRenderer());
 
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(workbench), 0, new ModelResourceLocation("tesitems:block_workbench"));
-//        registerModelResLocation(workbench);
-//        ClientRegistry.bindTileEntitySpecialRenderer(BlockWorkbenchTileEntity.class, new BlockWorkbenchTileEntityRenderer("block/workbench.obj"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block_workbench), 0, new ModelResourceLocation("tesitems:block_workbench"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block_chair_01), 0, new ModelResourceLocation("tesitems:block_chair_01"));
+//        registerModelResLocation(block_workbench);
+//        ClientRegistry.bindTileEntitySpecialRenderer(BlockWorkbenchTileEntity.class, new BlockWorkbenchTileEntityRenderer("block/block_workbench.obj"));
     }
 
     public static void registerModelResLocation(Block block) {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), 0, new ModelResourceLocation(block.getRegistryName(), "inventory"));
-
     }
 
     private static Block registerBlock(String name, Material material, float hardness, MapColor mapColor, Side side) {

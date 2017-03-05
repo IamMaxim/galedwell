@@ -1,23 +1,19 @@
 package ru.iammaxim.tesitems.Blocks;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import ru.iammaxim.tesitems.Craft.CraftRecipes;
 import ru.iammaxim.tesitems.Networking.MessageRecipes;
 import ru.iammaxim.tesitems.TESItems;
@@ -27,20 +23,11 @@ import javax.annotation.Nullable;
 /**
  * Created by maxim on 3/5/17 at 10:09 AM.
  */
-public class BlockWorkbench extends Block {
+public class BlockWorkbench extends BlockFurniture {
     public static final PropertyDirection FACING = BlockHorizontal.FACING;
 
     public BlockWorkbench() {
-        super(Material.WOOD);
-        setUnlocalizedName("block_workbench");
-        setCreativeTab(CreativeTabs.DECORATIONS);
-        setHardness(1);
-        setResistance(1);
-        isBlockContainer = true;
-        setRegistryName("block_workbench");
-        setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
-        GameRegistry.register(this);
-        GameRegistry.register(new ItemBlock(this).setRegistryName(getRegistryName()));
+        super("block_workbench", Material.WOOD);
     }
 
     @Override

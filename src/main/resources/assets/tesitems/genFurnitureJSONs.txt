@@ -7,7 +7,6 @@ blockstates/$name.json
   },
   "variants": {
     "normal": [{}],
-    "inventory": [{}],
     "facing=north": {"model": "tesitems:$name.obj"},
     "facing=south": {"model": "tesitems:$name.obj", "y": 180},
     "facing=west": {"model": "tesitems:$name.obj", "y": 270},
