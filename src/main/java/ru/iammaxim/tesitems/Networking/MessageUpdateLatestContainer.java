@@ -46,12 +46,13 @@ public class MessageUpdateLatestContainer implements IMessage {
             EntityPlayer player = ctx.getServerHandler().playerEntity;
             IPlayerAttributesCapability cap = TESItems.getCapability(player);
 
+            cap.getLatestContainer().setLatestPlayer(player);
             switch (message.action) {
                 case CLICK_CONTAINER:
                     if (message.slotIndex >= cap.getLatestContainer().size()) {
                         return new MessageShowNotification("Error occurred while transferring item");
                     }
-                    cap.getInventory().addItem(cap.getLatestContainer().get(message.slotIndex));
+                    cap.getInventory().addItemWithoutNotify(cap.getLatestContainer().get(message.slotIndex));
                     cap.getLatestContainer().removeItem(message.slotIndex);
                     return new MessageUpdateLatestContainer(message.action, message.slotIndex);
                 case CLICK_INVENTORY:
@@ -71,23 +72,23 @@ public class MessageUpdateLatestContainer implements IMessage {
 
         @Override
         public IMessage onMessage(MessageUpdateLatestContainer message, MessageContext ctx) {
-            EntityPlayer player = TESItems.getClientPlayer();
+/*            EntityPlayer player = TESItems.getClientPlayer();
             IPlayerAttributesCapability cap = TESItems.getCapability(player);
 
             switch (message.action) {
                 case CLICK_CONTAINER:
-                    cap.getInventory().addItem(cap.getLatestContainer().get(message.slotIndex));
-                    cap.getLatestContainer().removeItem(message.slotIndex);
+//                    cap.getInventory().addItem(cap.getLatestContainer().get(message.slotIndex));
+//                    cap.getLatestContainer().removeItem(message.slotIndex);
                     break;
                 case CLICK_INVENTORY:
-                    cap.getLatestContainer().addItem(cap.getInventory().get(message.slotIndex));
-                    cap.getInventory().removeItem(message.slotIndex);
-            }
+//                    cap.getLatestContainer().addItem(cap.getInventory().get(message.slotIndex));
+//                    cap.getInventory().removeItem(message.slotIndex);
+            }*/
 
             Screen lastScreen = ScreenStack.lastScreen();
             if (lastScreen instanceof GuiContainer) {
-                ((GuiContainer) lastScreen).update();
                 ((GuiContainer) lastScreen).updateTable();
+                ((GuiContainer) lastScreen).update();
             }
 
             return null;

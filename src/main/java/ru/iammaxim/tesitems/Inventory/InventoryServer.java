@@ -16,6 +16,12 @@ import ru.iammaxim.tesitems.TESItems;
  * Created by maxim on 7/27/16 at 12:37 PM.
  */
 public class InventoryServer extends Inventory {
+    @Override
+    public void addItemWithoutNotify(ItemStack stack) {
+        super.addItemWithoutNotify(stack);
+        sendMessage(new MessageInventoryUpdate(MessageInventoryUpdate.ACTION_ADD_WITHOUT_NOTIFY, stack), player);
+    }
+
     private EntityPlayer player;
 
     public InventoryServer(EntityPlayer player) {

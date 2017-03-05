@@ -13,6 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import ru.iammaxim.tesitems.Dialogs.Dialog;
 import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.Inventory.InventoryClient;
+import ru.iammaxim.tesitems.Inventory.InventoryContainer;
 import ru.iammaxim.tesitems.Inventory.InventoryServer;
 import ru.iammaxim.tesitems.Magic.SpellBase;
 import ru.iammaxim.tesitems.Magic.SpellEffect;
@@ -53,7 +54,7 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     private String password = "";
     private boolean isAuthorized = false;
     private double loginX = 0, loginY = 0, loginZ = 0;
-    private Inventory latestContainer;
+    private InventoryContainer latestContainer;
 
     public PlayerAttributesCapabilityDefaultImpl() {
     }
@@ -191,12 +192,12 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     }
 
     @Override
-    public Inventory getLatestContainer() {
+    public InventoryContainer getLatestContainer() {
         return latestContainer;
     }
 
     @Override
-    public void setLatestContainer(Inventory latestContainer) {
+    public void setLatestContainer(InventoryContainer latestContainer) {
         this.latestContainer = latestContainer;
     }
 

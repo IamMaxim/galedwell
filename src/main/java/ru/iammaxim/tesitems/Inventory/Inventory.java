@@ -80,6 +80,25 @@ public class Inventory {
         calculateCarryweight();
     }
 
+    public void addItemWithoutNotify(ItemStack stack) {
+        if (stack.isItemStackDamageable())
+            inventory.add(stack);
+        else {
+            int index = getItemIndex(stack.getItem());
+            if (index == -1)
+                inventory.add(stack);
+            else {
+                ItemStack is = inventory.get(index);
+                is.stackSize += stack.stackSize;
+                while (is.stackSize > 64) {
+                    is.stackSize -= 64;
+                    inventory.add(new ItemStack(stack.getItem(), 64));
+                }
+            }
+        }
+        calculateCarryweight();
+    }
+
     public void setItem(int index, ItemStack stack) {
 //        System.out.println("setting item at " + index + " to " + stack);
         inventory.set(index, stack);

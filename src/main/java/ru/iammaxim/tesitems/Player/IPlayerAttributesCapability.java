@@ -5,6 +5,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import ru.iammaxim.tesitems.Dialogs.Dialog;
 import ru.iammaxim.tesitems.Inventory.Inventory;
+import ru.iammaxim.tesitems.Inventory.InventoryContainer;
 import ru.iammaxim.tesitems.Magic.SpellBase;
 import ru.iammaxim.tesitems.NPC.NPC;
 import ru.iammaxim.tesitems.Questing.QuestInstance;
@@ -59,6 +60,6 @@ public interface IPlayerAttributesCapability {
     double setLoginX(double x);
     double setLoginY(double y);
     double setLoginZ(double z);
-    Inventory getLatestContainer();
-    void setLatestContainer(Inventory latestContainer);
+    InventoryContainer getLatestContainer();
+    void setLatestContainer(InventoryContainer latestContainer);
 }

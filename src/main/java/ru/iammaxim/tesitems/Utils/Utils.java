@@ -18,4 +18,11 @@ public class Utils {
         FakePlayer fakePlayer = new FakePlayer(worldServer, gameProfile);
         return fakePlayer.mcServer;
     }
+
+    public static void printStackTrace() {
+        StackTraceElement[] elements = Thread.currentThread().getStackTrace();
+        for (StackTraceElement element : elements) {
+            System.out.println(element);
+        }
+    }
 }

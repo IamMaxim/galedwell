@@ -17,19 +17,18 @@ import ru.iammaxim.tesitems.TESItems;
 /**
  * Created by maxim on 7/26/16 at 6:20 PM.
  */
-public class MessageInventoryUpdate implements IMessage {
-    public static final byte ACTION_ADD = 0, ACTION_SET = 1, ACTION_REMOVE_INDEX = 2, ACTION_REMOVE_ITEM = 3, ACTION_CLEAR = 4, ACTION_ADD_WITHOUT_NOTIFY = 5;
+public class MessageLatestContainerUpdate implements IMessage {
+    public static final byte ACTION_ADD = 0, ACTION_SET = 1, ACTION_REMOVE_INDEX = 2, ACTION_REMOVE_ITEM = 3, ACTION_CLEAR = 4;
     public byte action;
     public ItemStack stack;
     public int index;
 
-    public MessageInventoryUpdate() {}
+    public MessageLatestContainerUpdate() {}
 
-    public MessageInventoryUpdate(byte action, Object... data) {
+    public MessageLatestContainerUpdate(byte action, Object... data) {
         this.action = action;
         switch (action) {
             case ACTION_ADD:
-            case ACTION_ADD_WITHOUT_NOTIFY:
                 stack = (ItemStack) data[0];
                 break;
             case ACTION_SET:
@@ -50,7 +49,6 @@ public class MessageInventoryUpdate implements IMessage {
         action = buf.readByte();
         switch (action) {
             case ACTION_ADD:
-            case ACTION_ADD_WITHOUT_NOTIFY:
                 stack = ByteBufUtils.readItemStack(buf);
                 break;
             case ACTION_SET:
@@ -71,7 +69,6 @@ public class MessageInventoryUpdate implements IMessage {
         buf.writeByte(action);
         switch (action) {
             case ACTION_ADD:
-            case ACTION_ADD_WITHOUT_NOTIFY:
                 ByteBufUtils.writeItemStack(buf, stack);
                 break;
             case ACTION_SET:
@@ -87,20 +84,15 @@ public class MessageInventoryUpdate implements IMessage {
         }
     }
 
-    /**
-     * Created by maxim on 7/27/16 at 11:46 AM.
-     */
-    public static class ClientHandler implements IMessageHandler<MessageInventoryUpdate, IMessage> {
+    public static class ClientHandler implements IMessageHandler<MessageLatestContainerUpdate, IMessage> {
         @Override
-        public IMessage onMessage(MessageInventoryUpdate message, MessageContext ctx) {
+        public IMessage onMessage(MessageLatestContainerUpdate message, MessageContext ctx) {
             EntityPlayer player = TESItems.getClientPlayer();
-            Inventory inv = TESItems.getCapability(player).getInventory();
+            Inventory inv = TESItems.getCapability(player).getLatestContainer();
             switch(message.action) {
                 case ACTION_ADD:
                     inv.addItem(message.stack);
                     break;
-                case ACTION_ADD_WITHOUT_NOTIFY:
-                    inv.addItemWithoutNotify(message.stack);
                 case ACTION_SET:
                     inv.setItem(message.index, message.stack);
                     break;
@@ -124,16 +116,12 @@ public class MessageInventoryUpdate implements IMessage {
         }
     }
 
-    /**
-     * Created by maxim on 7/27/16 at 11:46 AM.
-     */
-    public static class ServerHandler implements IMessageHandler<MessageInventoryUpdate, IMessage> {
+    public static class ServerHandler implements IMessageHandler<MessageLatestContainerUpdate, IMessage> {
         @Override
-        public IMessage onMessage(MessageInventoryUpdate message, MessageContext ctx) {
-            Inventory inv = TESItems.getCapability(ctx.getServerHandler().playerEntity).getInventory();
+        public IMessage onMessage(MessageLatestContainerUpdate message, MessageContext ctx) {
+            Inventory inv = TESItems.getCapability(ctx.getServerHandler().playerEntity).getLatestContainer();
             switch(message.action) {
                 case ACTION_ADD:
-                case ACTION_ADD_WITHOUT_NOTIFY: //we don't need to disable notifications on server
                     inv.addItem(message.stack);
                     break;
                 case ACTION_SET:

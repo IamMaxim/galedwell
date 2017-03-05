@@ -55,6 +55,11 @@ public class InventoryClient extends Inventory {
     }
 
     @Override
+    public void addItemWithoutNotify(ItemStack stack) {
+        super.addItem(stack);
+    }
+
+    @Override
     public void drop(Entity entity, int index, int count) {
 //        System.out.println("dropping " + index + " (" + get(index) + ") " + count);
         TESItems.networkWrapper.sendToServer(new MessageItemDrop(index, count));
