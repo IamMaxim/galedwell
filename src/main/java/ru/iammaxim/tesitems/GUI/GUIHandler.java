@@ -17,16 +17,6 @@ public class GUIHandler implements IGuiHandler {
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         switch (ID) {
-            /*case TESItems.guiSpellSelect: return new GuiSpellSelect();
-            case TESItems.guiNpcDialog: return new GuiNPCDialog();
-            case TESItems.guiInventory: return new GuiInventoryOld(player);
-            case TESItems.guiJournal: return new GuiJournal();
-            case TESItems.guiNPCEditor: return new GuiNPCEditor(player);
-            case TESItems.guiFactionList: return new GuiFactionList();
-            case TESItems.guiQuestList: return new GuiQuestList();
-            case TESItems.guiFactionEditor: return new GuiFactionEditor();
-            case TESItems.guiQuestEditor: return new GuiQuestEditor();*/
-
             case TESItems.guiInventory: new GuiInventory().show(); return ScreenStack.instance;
             case TESItems.guiSpellSelect: new GuiSpellSelect().show(); return ScreenStack.instance;
             case TESItems.guiNpcDialog: new GuiNPCDialog().show(); return ScreenStack.instance;
@@ -38,6 +28,7 @@ public class GUIHandler implements IGuiHandler {
             case TESItems.guiQuestEditor: new GuiQuestEditor().show(); return ScreenStack.instance;
             case TESItems.guiEditSpells: new GuiSpellEditorList().show(); return ScreenStack.instance;
             case TESItems.guiContainer: new GuiContainer().show(); return ScreenStack.instance;
+            case TESItems.guiWorkbench: new GuiWorkbench().show(); return ScreenStack.instance;
         }
         return null;
     }

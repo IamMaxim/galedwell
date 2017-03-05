@@ -25,26 +25,26 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import ru.iammaxim.tesitems.Networking.MessageLatestContainer;
-import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
+import ru.iammaxim.tesitems.Craft.CraftRecipes;
+import ru.iammaxim.tesitems.Networking.MessageRecipes;
 import ru.iammaxim.tesitems.TESItems;
 
 import javax.annotation.Nullable;
 
 /**
- * Created by maxim on 3/2/17 at 5:17 PM.
+ * Created by maxim on 3/5/17 at 10:09 AM.
  */
-public class BlockChest extends Block implements ITileEntityProvider {
+public class BlockWorkbench extends Block implements ITileEntityProvider {
     public static final PropertyDirection FACING = BlockHorizontal.FACING;
 
-    public BlockChest() {
+    public BlockWorkbench() {
         super(Material.WOOD);
-        setUnlocalizedName("block_chest_01");
+        setUnlocalizedName("block_workbench");
         setCreativeTab(CreativeTabs.DECORATIONS);
         setHardness(1);
         setResistance(1);
         isBlockContainer = true;
-        setRegistryName("block_chest_01");
+        setRegistryName("block_workbench");
         setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
         GameRegistry.register(this);
         GameRegistry.register(new ItemBlock(this).setRegistryName(getRegistryName()));
@@ -53,22 +53,16 @@ public class BlockChest extends Block implements ITileEntityProvider {
 
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-//        return super.onBlockActivated(worldIn, pos, state, playerIn, hand, heldItem, side, hitX, hitY, hitZ);
         if (worldIn.isRemote)
             return true;
 
-        BlockChestTileEntity te = (BlockChestTileEntity) worldIn.getTileEntity(pos);
+        BlockWorkbenchTileEntity te = (BlockWorkbenchTileEntity) worldIn.getTileEntity(pos);
 
-        if (te == null) {
-            System.out.println("Something goes wrong. No BlockChestTileEntity here");
+        if (te == null)
             return true;
-        }
 
-        IPlayerAttributesCapability cap = TESItems.getCapability(playerIn);
-        cap.setLatestContainer(te.inv);
-        TESItems.networkWrapper.sendTo(new MessageLatestContainer(te.inv), (EntityPlayerMP) playerIn);
-        playerIn.openGui(TESItems.instance, TESItems.guiContainer, worldIn, pos.getX(), pos.getY(), pos.getZ());
-
+        TESItems.networkWrapper.sendTo(new MessageRecipes(CraftRecipes.writeToNBT()), (EntityPlayerMP) playerIn);
+        playerIn.openGui(TESItems.instance, TESItems.guiWorkbench, worldIn, pos.getX(), pos.getY(), pos.getZ());
         return true;
     }
 

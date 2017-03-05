@@ -8,7 +8,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import ru.iammaxim.tesitems.Items.EntityItemNew;
 import ru.iammaxim.tesitems.Items.ItemWeightManager;
 import ru.iammaxim.tesitems.TESItems;
@@ -229,6 +231,18 @@ public class Inventory {
         carryweight = 0;
         for (ItemStack stack : inventory) {
             carryweight += ItemWeightManager.getWeight(stack);
+        }
+    }
+
+    public void dropAllItems(World world, BlockPos pos) {
+        for (int i = 0; i < size(); i++) {
+            ItemStack itemStack = get(i);
+            EntityItemNew entity = new EntityItemNew(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, itemStack);
+            entity.motionX = TESItems.RANDOM.nextGaussian() * 0.05;
+            entity.motionY = TESItems.RANDOM.nextGaussian() * 0.05 + 0.2;
+            entity.motionZ = TESItems.RANDOM.nextGaussian() * 0.05;
+            world.spawnEntityInWorld(entity);
+            inventory.remove(i);
         }
     }
 }

@@ -19,12 +19,16 @@ import ru.iammaxim.tesitems.Proxy.CommonProxy;
 import ru.iammaxim.tesitems.World.IWorldCapability;
 
 import java.io.IOException;
+import java.util.Random;
 
 @Mod(modid = TESItems.MODID, name = TESItems.MODNAME, version = TESItems.VERSION)
 public class TESItems {
     public static final String MODID = "tesitems";
     public static final String MODNAME = "Galedwell";
     public static final String VERSION = "PREVIEW";
+
+    public static final Random RANDOM = new Random();
+
     public static final String attributesTagName = "tesitems:playerAttributes";
     public static final String worldTagName = "tesitems:world";
     public static final String[] ATTRIBUTES = {
@@ -46,7 +50,8 @@ public class TESItems {
             guiFactionEditor = 7,
             guiQuestList = 8,
             guiEditSpells = 9,
-            guiContainer = 10;
+            guiContainer = 10,
+            guiWorkbench = 11;
     @Mod.Instance
     public static TESItems instance;
     @SidedProxy(clientSide = "ru.iammaxim.tesitems.Proxy.ClientProxy", serverSide = "ru.iammaxim.tesitems.Proxy.ServerProxy")

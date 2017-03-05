@@ -13,6 +13,7 @@ import ru.iammaxim.tesitems.GUI.Screen;
 import ru.iammaxim.tesitems.GUI.ScreenStack;
 import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.TESItems;
+import ru.iammaxim.tesitems.Utils.Utils;
 
 /**
  * Created by maxim on 7/26/16 at 6:20 PM.
@@ -147,7 +148,7 @@ public class MessageInventoryUpdate implements IMessage {
                     break;
                 case ACTION_CLEAR:
 //                    inv.clear();
-                    TESItems.networkWrapper.sendTo(new MessageShowNotification("Cannot clear from client side"), ctx.getServerHandler().playerEntity);
+                    Utils.showNotification(ctx.getServerHandler().playerEntity, "Cannot clear from client side");
                     break;
             }
             return null;

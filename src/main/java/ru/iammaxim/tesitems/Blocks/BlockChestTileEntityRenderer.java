@@ -47,6 +47,14 @@ public class BlockChestTileEntityRenderer extends TileEntitySpecialRenderer<Bloc
         GlStateManager.scale(1.0F, -1.0F, -1.0F);
         GlStateManager.translate(0.5F, 0.5F, 0.5F);
         int j = 0;
+        //rotate block
+        if (te != null) {
+            int i = te.getBlockMetadata();
+            if (i == 2) j = 180;
+            if (i == 3) j = 0;
+            if (i == 4) j = 90;
+            if (i == 5) j = -90;
+        }
 
         GlStateManager.rotate((float) j, 0.0F, 1.0F, 0.0F);
         GlStateManager.translate(-0.5F, -0.5F, -0.5F);

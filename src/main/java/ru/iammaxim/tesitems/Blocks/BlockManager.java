@@ -38,22 +38,30 @@ public class BlockManager {
             Blocks.STONE_PRESSURE_PLATE
     };
     public static final Block[] woodcuttingBlocks = {
-            Blocks.WOODEN_SLAB,
-            Blocks.DOUBLE_WOODEN_SLAB,
-            Blocks.ACACIA_STAIRS,
-            Blocks.BIRCH_STAIRS,
-            Blocks.DARK_OAK_STAIRS,
-            Blocks.JUNGLE_STAIRS,
-            Blocks.OAK_STAIRS,
-            Blocks.SPRUCE_STAIRS,
-            Blocks.ACACIA_DOOR,
-            Blocks.BIRCH_DOOR,
-            Blocks.DARK_OAK_DOOR,
-            Blocks.JUNGLE_DOOR,
-            Blocks.OAK_DOOR
+            Blocks.PLANKS,
+            Blocks.BOOKSHELF,
+            Blocks.LOG,
+            Blocks.LOG2,
+            Blocks.CHEST,
+            Blocks.PUMPKIN,
+            Blocks.LIT_PUMPKIN,
+            Blocks.MELON_BLOCK,
+            Blocks.LADDER,
+            Blocks.WOODEN_BUTTON,
+            Blocks.WOODEN_PRESSURE_PLATE
     };
     public static final Block[] diggingBlocks = {
-
+            Blocks.CLAY,
+            Blocks.DIRT,
+            Blocks.FARMLAND,
+            Blocks.GRASS,
+            Blocks.GRAVEL,
+            Blocks.MYCELIUM,
+            Blocks.SAND,
+            Blocks.SNOW,
+            Blocks.SNOW_LAYER,
+            Blocks.SOUL_SAND,
+            Blocks.GRASS_PATH
     };
     public static final Block[] furnutureBlocks = {
 

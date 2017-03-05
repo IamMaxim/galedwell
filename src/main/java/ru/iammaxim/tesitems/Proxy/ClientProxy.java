@@ -2,6 +2,7 @@ package ru.iammaxim.tesitems.Proxy;
 
 import net.minecraft.item.Item;
 import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -20,6 +21,7 @@ import ru.iammaxim.tesitems.Magic.RenderEntityFlyingSpell;
 import ru.iammaxim.tesitems.Magic.RenderEntityRangedSpellEffect;
 import ru.iammaxim.tesitems.NPC.EntityNPC;
 import ru.iammaxim.tesitems.NPC.RenderNPC;
+import ru.iammaxim.tesitems.TESItems;
 import ru.iammaxim.tesitems.Utils.ClientThings;
 
 import java.io.IOException;
@@ -37,6 +39,7 @@ public class ClientProxy extends CommonProxy {
         ResManager.enableBlur = ConfigManager.getBool("enableBlur");
 
         MinecraftForge.EVENT_BUS.register(new ClientHandler());
+        OBJLoader.INSTANCE.addDomain(TESItems.MODID);
         mBlocks.initModels();
 
         RenderingRegistry.registerEntityRenderingHandler(EntityRangedSpellEffect.class, RenderEntityRangedSpellEffect::new);

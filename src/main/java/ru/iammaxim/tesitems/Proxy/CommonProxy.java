@@ -38,8 +38,6 @@ import ru.iammaxim.tesitems.AuthEventListener;
 import ru.iammaxim.tesitems.Blocks.mBlocks;
 import ru.iammaxim.tesitems.Commands.*;
 import ru.iammaxim.tesitems.ConfigManager;
-import ru.iammaxim.tesitems.Craft.CraftRecipe;
-import ru.iammaxim.tesitems.Craft.CraftRecipes;
 import ru.iammaxim.tesitems.GUI.GUIHandler;
 import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.Items.*;
@@ -110,8 +108,6 @@ public class CommonProxy {
         Item.getItemFromBlock(Blocks.TORCH).setMaxStackSize(8);
         Items.IRON_INGOT.setMaxStackSize(2);
         Items.GOLD_INGOT.setMaxStackSize(2);
-        CraftRecipes.addRecipe(new CraftRecipe("log", new ItemStack[]{new ItemStack(Items.STICK, 4)}, new ItemStack(Item.getItemFromBlock(Blocks.LOG), 1)));
-        CraftRecipes.addRecipe(new CraftRecipe("testLargeStacks", new ItemStack[]{new ItemStack(Item.getItemFromBlock(Blocks.DIRT), 100)}, new ItemStack(Item.getItemFromBlock(Blocks.COBBLESTONE), 1)));
         ItemWeightManager.init();
         ItemValueManager.init();
     }
@@ -137,7 +133,7 @@ public class CommonProxy {
     @SubscribeEvent
     public void onBlockPlace(BlockEvent.PlaceEvent event) {
         if (event.getItemInHand() != null) {
-            if (event.getItemInHand().stackSize == 1) {
+            if (!event.getPlayer().isCreative() && event.getItemInHand().stackSize == 1) {
                 IPlayerAttributesCapability cap = TESItems.getCapability(event.getPlayer());
                 int index = cap.getInventory().getItemStackIndex(event.getItemInHand());
                 if (index != -1) // block has been taken from creative mode or with middle mouse button gives index -1
@@ -249,7 +245,6 @@ public class CommonProxy {
 
     public void serverStarting(FMLServerStartingEvent event) {
         event.registerServerCommand(new CommandSetAttribute());
-        event.registerServerCommand(new CommandCraft());
         event.registerServerCommand(new CommandGetSkills());
         event.registerServerCommand(new CommandCreateSpell());
         event.registerServerCommand(new CommandRemoveSpell());
