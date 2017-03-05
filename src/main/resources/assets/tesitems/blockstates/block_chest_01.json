@@ -1,14 +1,13 @@
 {
   "forge_marker": 1,
+  "defaults": {
+    "model": "tesitems:block_chest_01"
+  },
   "variants": {
-      "normal": {
-        "model": "tesitems:block_chest_01"
-      },
-      "facing": {
-          "north": {},
-          "south": { "y": 180 },
-          "west": { "y": 270 },
-          "east": { "y": 90 }
-      }
+      "normal": [{}],
+      "facing=north": {"model": "tesitems:block_chest_01"},
+      "facing=south": {"model": "tesitems:block_chest_01", "y": 180 },
+      "facing=west": {"model": "tesitems:block_chest_01", "y": 270 },
+      "facing=east": {"model": "tesitems:block_chest_01", "y": 90 }
   }
 }

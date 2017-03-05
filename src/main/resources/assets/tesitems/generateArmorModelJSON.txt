@@ -1,0 +1,8 @@
+models/item/$name.json
+###
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "tesitems:items/$type"
+    }
+}

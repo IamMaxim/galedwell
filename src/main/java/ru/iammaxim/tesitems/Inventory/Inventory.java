@@ -235,14 +235,14 @@ public class Inventory {
     }
 
     public void dropAllItems(World world, BlockPos pos) {
-        for (int i = 0; i < size(); i++) {
-            ItemStack itemStack = get(i);
+        while (size() > 0) {
+            ItemStack itemStack = get(0);
             EntityItemNew entity = new EntityItemNew(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, itemStack);
             entity.motionX = TESItems.RANDOM.nextGaussian() * 0.05;
             entity.motionY = TESItems.RANDOM.nextGaussian() * 0.05 + 0.2;
             entity.motionZ = TESItems.RANDOM.nextGaussian() * 0.05;
             world.spawnEntityInWorld(entity);
-            inventory.remove(i);
+            inventory.remove(0);
         }
     }
 }

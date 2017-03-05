@@ -23,12 +23,15 @@ public class mBlocks {
             wood_block_2,
             wood_block_3,
             wood_block_4,
-            ayleid_block_1;
+            ayleid_block_1,
+            workbench;
 
     public static BlockChest block_chest_01;
 
     public static void register(Side side) {
         block_chest_01 = new BlockChest();
+        workbench = new BlockWorkbench();
+
         hay_block_1 = registerBlock("hay_block_1", Material.GRASS, 0.8f, MapColor.YELLOW, side);
         wood_block_1 = registerBlock("wood_block_1", Material.WOOD, 1, MapColor.WOOD, side);
         wood_block_2 = registerBlock("wood_block_2", Material.WOOD, 1, MapColor.WOOD, side);
@@ -39,8 +42,17 @@ public class mBlocks {
 
     @SideOnly(Side.CLIENT)
     public static void initModels() {
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block_chest_01), 0, new ModelResourceLocation(block_chest_01.getRegistryName(), "inventory"));
+        registerModelResLocation(block_chest_01);
         ClientRegistry.bindTileEntitySpecialRenderer(BlockChestTileEntity.class, new BlockChestTileEntityRenderer());
+
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(workbench), 0, new ModelResourceLocation("tesitems:block_workbench"));
+//        registerModelResLocation(workbench);
+//        ClientRegistry.bindTileEntitySpecialRenderer(BlockWorkbenchTileEntity.class, new BlockWorkbenchTileEntityRenderer("block/workbench.obj"));
+    }
+
+    public static void registerModelResLocation(Block block) {
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), 0, new ModelResourceLocation(block.getRegistryName(), "inventory"));
+
     }
 
     private static Block registerBlock(String name, Material material, float hardness, MapColor mapColor, Side side) {

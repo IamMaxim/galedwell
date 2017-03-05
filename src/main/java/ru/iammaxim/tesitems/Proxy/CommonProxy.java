@@ -35,6 +35,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import ru.iammaxim.tesitems.AuthEventListener;
+import ru.iammaxim.tesitems.Blocks.BlockManager;
 import ru.iammaxim.tesitems.Blocks.mBlocks;
 import ru.iammaxim.tesitems.Commands.*;
 import ru.iammaxim.tesitems.ConfigManager;
@@ -161,15 +162,15 @@ public class CommonProxy {
 
             //Check if player uses a breaking tool
             if ((((EntityPlayer) p).getHeldItemMainhand() != null && ((EntityPlayer) p).getHeldItemMainhand().getItem() == mItems.itemBreakingTool) || (((EntityPlayer) p).getHeldItemOffhand() != null && ((EntityPlayer) p).getHeldItemOffhand().getItem() == mItems.itemBreakingTool)) {
-                speed *= 0.2;
+                speed *= 2;
             } else {
                 //Player doesn't use breaking tool, get break speed by player skill
                 String blockType = null;
-                if (b instanceof BlockStone || b instanceof BlockStoneBrick || b instanceof BlockOre || b instanceof BlockSandStone) {
+                if (BlockManager.isMiningBlock(b)) {
                     blockType = "mining";
-                } else if (b instanceof BlockLog || b instanceof BlockPlanks || b instanceof BlockFence || b instanceof BlockFenceGate) {
+                } else if (BlockManager.isWoodcuttingBlock(b)) {
                     blockType = "woodcutting";
-                } else if (b instanceof BlockDirt || b instanceof BlockSand || b instanceof BlockGravel || b instanceof BlockGrass || b instanceof BlockGrassPath) {
+                } else if (BlockManager.isDiggingBlock(b)) {
                     blockType = "digging";
                 }
 

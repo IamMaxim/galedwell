@@ -29,7 +29,7 @@ public class GuiContainer extends Screen {
         .setHeightOverride(ElementBase.FILL));
 
         updateTable();
-        layout.setFixedHeight(res.getScaledHeight() - 32);
+        layout.setFixedHeight(res.getScaledHeight() - 64);
         root.doLayout();
     }
 

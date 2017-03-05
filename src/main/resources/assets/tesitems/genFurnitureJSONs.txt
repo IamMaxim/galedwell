@@ -1,0 +1,16 @@
+blockstates/$name.json
+###
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "tesitems:$name.obj"
+  },
+  "variants": {
+    "normal": [{}],
+    "inventory": [{}],
+    "facing=north": {"model": "tesitems:$name.obj"},
+    "facing=south": {"model": "tesitems:$name.obj", "y": 180},
+    "facing=west": {"model": "tesitems:$name.obj", "y": 270},
+    "facing=east": {"model": "tesitems:$name.obj", "y": 90}
+  }
+}

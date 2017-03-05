@@ -67,19 +67,19 @@ public class BlockManager {
 
     };
 
-    private static boolean isMiningBlock(Block b) {
+    public static boolean isMiningBlock(Block b) {
         for (Block b1 : miningBlocks)
             if (b == b1) return true;
         return false;
     }
 
-    private static boolean isWoodcuttingBlock(Block b) {
+    public static boolean isWoodcuttingBlock(Block b) {
         for (Block b1 : woodcuttingBlocks)
             if (b == b1) return true;
         return false;
     }
 
-    private static boolean isDiggingBlock(Block b) {
+    public static boolean isDiggingBlock(Block b) {
         for (Block b1 : diggingBlocks)
             if (b == b1) return true;
         return false;

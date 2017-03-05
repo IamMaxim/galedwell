@@ -10,7 +10,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -24,65 +23,38 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import ru.iammaxim.tesitems.Networking.MessageLatestContainer;
-import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
-import ru.iammaxim.tesitems.TESItems;
 
 import javax.annotation.Nullable;
 
 /**
- * Created by maxim on 3/2/17 at 5:17 PM.
+ * Created by maxim on 3/5/17 at 3:56 PM.
  */
-public class BlockChest extends Block implements ITileEntityProvider {
+public abstract class BlockFurniture extends Block implements ITileEntityProvider {
     public static final PropertyDirection FACING = BlockHorizontal.FACING;
 
-    public BlockChest() {
-        super(Material.WOOD);
-        setUnlocalizedName("block_chest_01");
+    public BlockFurniture(String name, Material material) {
+        super(material);
+        setUnlocalizedName(name);
         setCreativeTab(CreativeTabs.DECORATIONS);
         setHardness(1);
         setResistance(1);
         isBlockContainer = true;
-        setRegistryName("block_chest_01");
+        setRegistryName(name);
         setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
         GameRegistry.register(this);
         GameRegistry.register(new ItemBlock(this).setRegistryName(getRegistryName()));
-        GameRegistry.registerTileEntity(BlockChestTileEntity.class, getRegistryName().toString());
     }
 
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-//        return super.onBlockActivated(worldIn, pos, state, playerIn, hand, heldItem, side, hitX, hitY, hitZ);
-        if (worldIn.isRemote)
-            return true;
-
-        BlockChestTileEntity te = (BlockChestTileEntity) worldIn.getTileEntity(pos);
-
-        if (te == null) {
-            System.out.println("Something goes wrong. No BlockChestTileEntity here");
-            return true;
-        }
-
-        IPlayerAttributesCapability cap = TESItems.getCapability(playerIn);
-        cap.setLatestContainer(te.inv);
-        TESItems.networkWrapper.sendTo(new MessageLatestContainer(te.inv), (EntityPlayerMP) playerIn);
-        playerIn.openGui(TESItems.instance, TESItems.guiContainer, worldIn, pos.getX(), pos.getY(), pos.getZ());
-
         return true;
     }
 
     @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta) {
-        return new BlockChestTileEntity();
-    }
+    public abstract TileEntity createNewTileEntity(World worldIn, int meta);
 
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
-        BlockChestTileEntity te = (BlockChestTileEntity) world.getTileEntity(pos);
-
-        if (te != null)
-            te.inv.dropAllItems(world, pos);
-
         world.removeTileEntity(pos);
     }
 
@@ -124,7 +96,7 @@ public class BlockChest extends Block implements ITileEntityProvider {
 
     @Override
     public IBlockState getStateFromMeta(int meta) {
-        EnumFacing enumfacing = EnumFacing.getHorizontal(meta);
+        EnumFacing enumfacing = EnumFacing.getFront(meta);
         return this.getDefaultState().withProperty(FACING, enumfacing);
     }
 
