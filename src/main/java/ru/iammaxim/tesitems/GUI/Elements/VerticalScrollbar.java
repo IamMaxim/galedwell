@@ -31,6 +31,9 @@ public class VerticalScrollbar extends LayoutBase {
     public VerticalScrollbar() {
         arrowUp = new ScrollbarArrow(-20, Direction.UP);
         arrowDown = new ScrollbarArrow(20, Direction.DOWN);
+
+        arrowUp.setParent(this);
+        arrowDown.setParent(this);
     }
 
     @Override
@@ -132,6 +135,10 @@ public class VerticalScrollbar extends LayoutBase {
         public ScrollbarArrow(int scrollDelta, Direction direction) {
             this.direction = direction;
             setOnClick(e -> {
+                if (elementHeight < parent.getHeight()) {
+                    return;
+                }
+
                 scroll += scrollDelta;
                 if (scroll < 0)
                     scroll = 0;
