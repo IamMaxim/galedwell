@@ -55,7 +55,7 @@ public class MessageAttributes implements IMessage {
             if (ctx.side == Side.CLIENT)
             Minecraft.getMinecraft().addScheduledTask(() -> {
                 EntityPlayer player = TESItems.getClientPlayer();
-                IPlayerAttributesCapability cap = player.getCapability(TESItems.attributesCapability, null);
+                IPlayerAttributesCapability cap = player.getCapability(TESItems.playerAttributesCapability, null);
 
                 for (String s : TESItems.ATTRIBUTES) {
                     cap.setAttribute(s, message.getAttribute(s));

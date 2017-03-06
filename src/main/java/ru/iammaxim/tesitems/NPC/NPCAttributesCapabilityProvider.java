@@ -1,4 +1,4 @@
-package ru.iammaxim.tesitems.Player;
+package ru.iammaxim.tesitems.NPC;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -9,8 +9,8 @@ import ru.iammaxim.tesitems.TESItems;
 /**
  * Created by Maxim on 09.06.2016.
  */
-public class PlayerAttributesCapabilityProvider implements ICapabilitySerializable<NBTTagCompound> {
-    IPlayerAttributesCapability inst = TESItems.playerAttributesCapability.getDefaultInstance();
+public class NPCAttributesCapabilityProvider implements ICapabilitySerializable<NBTTagCompound> {
+    INPCAttributesCapability inst = TESItems.npcAttributesCapability.getDefaultInstance();
 
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing enumFacing) {
@@ -19,8 +19,8 @@ public class PlayerAttributesCapabilityProvider implements ICapabilitySerializab
 
     @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing enumFacing) {
-        if (capability == TESItems.playerAttributesCapability) {
-            return TESItems.playerAttributesCapability.cast(inst);
+        if (capability == TESItems.npcAttributesCapability) {
+            return TESItems.npcAttributesCapability.cast(inst);
         } else {
             return null;
         }
@@ -28,11 +28,11 @@ public class PlayerAttributesCapabilityProvider implements ICapabilitySerializab
 
     @Override
     public NBTTagCompound serializeNBT() {
-        return (NBTTagCompound) TESItems.playerAttributesCapability.getStorage().writeNBT(TESItems.playerAttributesCapability, inst, null);
+        return (NBTTagCompound) TESItems.npcAttributesCapability.getStorage().writeNBT(TESItems.npcAttributesCapability, inst, null);
     }
 
     @Override
     public void deserializeNBT(NBTTagCompound nbtPrimitive) {
-        TESItems.playerAttributesCapability.getStorage().readNBT(TESItems.playerAttributesCapability, inst, null, nbtPrimitive);
+        TESItems.npcAttributesCapability.getStorage().readNBT(TESItems.npcAttributesCapability, inst, null, nbtPrimitive);
     }
 }

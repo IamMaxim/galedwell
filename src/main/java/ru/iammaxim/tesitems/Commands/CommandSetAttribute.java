@@ -39,7 +39,7 @@ public class CommandSetAttribute extends CommandBase {
                 iCommandSender.addChatMessage(new TextComponentString(TextFormatting.RED + "Player " + TextFormatting.BLUE + TextFormatting.BOLD + args[0] + TextFormatting.RED + TextFormatting.RESET + " not found"));
                 return;
             }
-            IPlayerAttributesCapability cap = player.getCapability(TESItems.attributesCapability, null);
+            IPlayerAttributesCapability cap = player.getCapability(TESItems.playerAttributesCapability, null);
             float f = Float.parseFloat(args[2]);
             cap.setAttribute(args[1], f);
             iCommandSender.addChatMessage(new TextComponentString("Setting " + TextFormatting.YELLOW + args[0] + TextFormatting.RESET + "'s " + TextFormatting.BLUE + args[1] + TextFormatting.RESET + " to " + f));

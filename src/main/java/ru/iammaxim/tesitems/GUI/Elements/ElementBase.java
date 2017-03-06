@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import ru.iammaxim.tesitems.GUI.ResManager;
+import ru.iammaxim.tesitems.GUI.Screen;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
@@ -34,6 +35,16 @@ public abstract class ElementBase {
     protected int widthOverride = -1;
     protected int heightOverride = -1;
     protected ElementBase background;
+    private Screen screen;
+
+    public ElementBase setScreen(Screen screen){
+        this.screen = screen;
+        return this;
+    }
+
+    public Screen getScreen() {
+        return screen;
+    }
 
     public ElementBase setBackground(ElementBase background) {
         this.background = background;

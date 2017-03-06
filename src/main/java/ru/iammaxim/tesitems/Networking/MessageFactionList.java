@@ -43,6 +43,7 @@ public class MessageFactionList implements IMessage {
     public static class Handler implements IMessageHandler<MessageFactionList, IMessage> {
         @Override
         public IMessage onMessage(MessageFactionList message, MessageContext ctx) {
+            FactionManager.factions.clear();
             message.factions.forEach((id, name) -> {
                 Faction f = new Faction(name);
                 f.id = id;

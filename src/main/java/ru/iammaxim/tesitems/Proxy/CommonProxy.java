@@ -49,7 +49,7 @@ import ru.iammaxim.tesitems.Networking.NetworkUtils;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.Player.PlayerAttributesCapabilityDefaultImpl;
 import ru.iammaxim.tesitems.Player.PlayerAttributesCapabilityProvider;
-import ru.iammaxim.tesitems.Player.PlayerAttributesStorage;
+import ru.iammaxim.tesitems.Player.PlayerAttributesCapabilityStorage;
 import ru.iammaxim.tesitems.TESItems;
 import ru.iammaxim.tesitems.World.IWorldCapability;
 import ru.iammaxim.tesitems.World.WorldCapabilityDefaultImpl;
@@ -67,7 +67,7 @@ public class CommonProxy {
         //load config values
         ConfigManager.loadConfig();
 
-        CapabilityManager.INSTANCE.register(IPlayerAttributesCapability.class, new PlayerAttributesStorage(), PlayerAttributesCapabilityDefaultImpl::new);
+        CapabilityManager.INSTANCE.register(IPlayerAttributesCapability.class, new PlayerAttributesCapabilityStorage(), PlayerAttributesCapabilityDefaultImpl::new);
         CapabilityManager.INSTANCE.register(IWorldCapability.class, new WorldCapabilityStorage(), WorldCapabilityDefaultImpl::new);
         MinecraftForge.EVENT_BUS.register(this);
         new AuthEventListener().register();
@@ -178,7 +178,7 @@ public class CommonProxy {
                     event.setNewSpeed(0);
                     return;
                 }
-                speed *= p.getCapability(TESItems.attributesCapability, null).getAttribute(blockType) / TESItems.maxSkillLevel;
+                speed *= p.getCapability(TESItems.playerAttributesCapability, null).getAttribute(blockType) / TESItems.maxSkillLevel;
             }
             event.setNewSpeed(speed);
         }
@@ -225,7 +225,7 @@ public class CommonProxy {
 
     @SubscribeEvent
     public void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
-        IPlayerAttributesCapability cap = event.player.getCapability(TESItems.attributesCapability, null);
+        IPlayerAttributesCapability cap = event.player.getCapability(TESItems.playerAttributesCapability, null);
         for (String s : TESItems.ATTRIBUTES) {
             System.out.println(s + " = " + cap.getAttribute(s));
         }

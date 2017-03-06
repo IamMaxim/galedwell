@@ -116,11 +116,13 @@ public class MessageInventoryUpdate implements IMessage {
                     break;
             }
 
-            Screen lastScreen = ScreenStack.lastScreen();
+/*            Screen lastScreen = ScreenStack.lastScreen();
             if (lastScreen instanceof GuiInventory) {
-                ((GuiInventory) lastScreen).update();
                 ((GuiInventory) lastScreen).updateTable();
-            }
+                ((GuiInventory) lastScreen).update();
+            }*/
+
+            ScreenStack.processCallback("inventoryUpdated");
             return null;
         }
     }

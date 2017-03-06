@@ -7,6 +7,8 @@ import ru.iammaxim.tesitems.GUI.Elements.Button;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by maxim on 11/9/16 at 9:34 PM.
@@ -16,8 +18,8 @@ public class Screen {
     protected ScaledResolution res;
     protected FrameLayout root;
     protected FrameLayout contentLayout;
-
     protected DraggableWindow debugWindow;
+    protected HashMap<String, IGuiCallback> callbacks = new HashMap<>();
 
     public Screen() {
         mc = Minecraft.getMinecraft();
@@ -25,13 +27,11 @@ public class Screen {
         root = new ScreenCenteredLayout();
         contentLayout = new FancyFrameLayout();
         root.setElement(contentLayout);
+        root.setScreen(this);
     }
 
     public void onResize(Minecraft mcIn, int w, int h) {
         res = new ScaledResolution(mcIn);
-/*
-        ResManager.gaussianBlurShader.createBindFramebuffers(mcIn.displayWidth, mcIn.displayHeight);*/
-
         root.onResize();
         root.doLayout();
     }
@@ -122,5 +122,16 @@ public class Screen {
 
     public void show() {
         ScreenStack.addScreen(this);
+    }
+
+    public void processCallback(String action) {
+        for (String callbackAction : callbacks.keySet()) {
+            if (callbackAction.equals(action))
+                callbacks.get(callbackAction).process();
+        }
+    }
+
+    public void addCallback(String action, IGuiCallback callback) {
+        callbacks.put(action, callback);
     }
 }

@@ -1,13 +1,9 @@
-package ru.iammaxim.tesitems.Player;
+package ru.iammaxim.tesitems.NPC;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.text.TextComponentBase;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import ru.iammaxim.tesitems.Dialogs.Dialog;
@@ -17,11 +13,8 @@ import ru.iammaxim.tesitems.Inventory.InventoryContainer;
 import ru.iammaxim.tesitems.Inventory.InventoryServer;
 import ru.iammaxim.tesitems.Magic.SpellBase;
 import ru.iammaxim.tesitems.Magic.SpellEffect;
-import ru.iammaxim.tesitems.NPC.NPC;
-import ru.iammaxim.tesitems.Networking.*;
 import ru.iammaxim.tesitems.Questing.QuestInstance;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.ValueObject;
-import ru.iammaxim.tesitems.TESItems;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +23,7 @@ import java.util.List;
 /**
  * Created by Maxim on 06.06.2016.
  */
-public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesCapability {
+public class NPCAttributesCapabilityDefaultImpl implements INPCAttributesCapability {
     //player attributes and skills
     private HashMap<String, Float> attributes = new HashMap<>();
     //player spells
@@ -52,10 +45,8 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     private boolean isAuthorized = false;
     private double loginX = 0, loginY = 0, loginZ = 0;
     private InventoryContainer latestContainer;
-    private int gold = 0;
-    private EntityPlayer player;
 
-    public PlayerAttributesCapabilityDefaultImpl() {
+    public NPCAttributesCapabilityDefaultImpl() {
     }
 
     public void createInventory(EntityPlayer player, Inventory inv) {
@@ -70,50 +61,8 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
         return Minecraft.getMinecraft().thePlayer;
     }
 
-    @Override
-    public void loadQuests(NBTTagCompound nbttag) {
-        quests.clear();
-        NBTTagList nbtList = (NBTTagList) nbttag.getTag("quests");
-        for (int i = 0; i < nbtList.tagCount(); i++) {
-            QuestInstance inst = new QuestInstance();
-            inst.loadFromNBT(nbtList.getCompoundTagAt(i));
-            quests.put(inst.quest_id, inst);
-        }
-    }
-
-    @Override
-    public NBTTagCompound saveQuests() {
-        NBTTagCompound tag = new NBTTagCompound();
-        NBTTagList nbtlist = new NBTTagList();
-        for (int i = 0; i < quests.size(); i++)
-            nbtlist.appendTag(quests.get(i).writeToNBT());
-        tag.setTag("quests", nbtlist);
-        return tag;
-    }
-
-    @Override
     public void journalAppend(String s) {
         journal = journal + s;
-    }
-
-    @Override
-    public void setQuestStage(int questID, int stage) {
-        if (stage == -1) { //complete quest
-            quests.remove(questID);
-        }
-        QuestInstance inst = getQuest(questID);
-        inst.stage = stage;
-        journalAppend(inst.quest.stages.get(stage).journalLine + "\n\n");
-    }
-
-    @Override
-    public QuestInstance getQuest(int id) {
-        return quests.get(id);
-    }
-
-    @Override
-    public Dialog getLatestDialog() {
-        return dialog;
     }
 
     @Override
@@ -122,74 +71,8 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     }
 
     @Override
-    public boolean isAuthorized() {
-        return isAuthorized;
-    }
-
-    @Override
-    public void authorize(EntityPlayerMP player) {
-        this.player = player;
-        System.out.println("Authorized " + player.getName());
-        isAuthorized = true;
-
-        //send player data to client
-        TESItems.networkWrapper.sendTo(new MessageAttributes(getAttributes()), player);
-        TESItems.networkWrapper.sendTo(new MessageSpellbook(saveSpellbook(false)), player);
-        TESItems.networkWrapper.sendTo(new MessageInventory(getInventory().writeToNBT()), player);
-        TESItems.networkWrapper.sendTo(new MessageJournal(getJournal()), player);
-        TESItems.networkWrapper.sendTo(new MessageGoldUpdate(getGold()), player);
-
-        //send MOTD
-        TextComponentBase motd = new TextComponentString(TextFormatting.YELLOW + "Добро пожаловать на тестовый сервер Галедвелл!\n" +
-                TextFormatting.RESET + "Полезные команды:\n" +
-                TextFormatting.BLUE + "/giveme <название предмета> <кол-во (необязательно)>\n" +
-                TextFormatting.RESET + "Чтобы ломать любые блоки, используйте предмет " + TextFormatting.AQUA + "breakingTool");
-        player.addChatComponentMessage(motd);
-    }
-
-    @Override
-    public void setPassword(String pass) {
-        this.password = pass;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
     public void setVariableStorage(ValueObject variableStorage) {
         this.variableStorage = variableStorage;
-    }
-
-    @Override
-    public double getLoginX() {
-        return loginX;
-    }
-
-    @Override
-    public double getLoginY() {
-        return loginY;
-    }
-
-    @Override
-    public double getLoginZ() {
-        return loginZ;
-    }
-
-    @Override
-    public double setLoginX(double x) {
-        return loginX = x;
-    }
-
-    @Override
-    public double setLoginY(double y) {
-        return loginY = y;
-    }
-
-    @Override
-    public double setLoginZ(double z) {
-        return loginZ = z;
     }
 
     @Override
@@ -202,48 +85,8 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
         this.latestContainer = latestContainer;
     }
 
-    @Override
-    public int getGold() {
-        return gold;
-    }
-
-    @Override
-    public void setGold(int gold) {
-        this.gold = gold;
-
-        if (TESItems.getSide() == Side.SERVER) {
-            if (player == null)
-                System.out.println("player is null");
-            else
-                TESItems.networkWrapper.sendTo(new MessageGoldUpdate(this.gold), (EntityPlayerMP) player);
-        }
-    }
-
-    @Override
-    public void addGold(int gold) {
-        this.gold += gold;
-
-        if (TESItems.getSide() == Side.SERVER) {
-            if (player == null)
-                System.out.println("player is null");
-            else
-                TESItems.networkWrapper.sendTo(new MessageGoldUpdate(this.gold), (EntityPlayerMP) player);
-        }
-    }
-
-    @Override
-    public void setLatestDialog(Dialog dialog) {
-        this.dialog = dialog;
-    }
-
-    @Override
     public String getJournal() {
         return journal;
-    }
-
-    @Override
-    public void setJournal(String s) {
-        journal = s;
     }
 
     @Override
@@ -346,16 +189,6 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     }
 
     @Override
-    public void addQuest(QuestInstance inst) {
-        quests.put(inst.quest_id, inst);
-    }
-
-    @Override
-    public HashMap<Integer, QuestInstance> getQuests() {
-        return quests;
-    }
-
-    @Override
     public float getCarryWeight() {
         return inventory.carryweight;
     }
@@ -367,16 +200,6 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
             return f;
         else
             return 0;
-    }
-
-    @Override
-    public NPC getLatestNPC() {
-        return latestNPC;
-    }
-
-    @Override
-    public void setLatestNPC(NPC npc) {
-        latestNPC = npc;
     }
 
     @Override

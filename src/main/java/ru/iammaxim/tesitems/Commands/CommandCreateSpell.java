@@ -35,7 +35,7 @@ public class CommandCreateSpell extends CommandBase {
 
         /*if (!(sender instanceof EntityPlayer)) return;
         if (args.length < 5) return;
-        IPlayerAttributesCapability cap = ((EntityPlayer) sender).getCapability(TESItems.attributesCapability, null);
+        INPCAttributesCapability cap = ((EntityPlayer) sender).getCapability(TESItems.playerAttributesCapability, null);
         int spellType = Integer.parseInt(args[1]);
 
         SpellEffect[] effects = new SpellEffect[(args.length-2)/3];

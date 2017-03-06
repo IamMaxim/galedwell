@@ -10,7 +10,7 @@ import ru.iammaxim.tesitems.TESItems;
 /**
  * Created by Maxim on 06.06.2016.
  */
-public class PlayerAttributesStorage implements Capability.IStorage<IPlayerAttributesCapability> {
+public class PlayerAttributesCapabilityStorage implements Capability.IStorage<IPlayerAttributesCapability> {
     @Override
     public NBTBase writeNBT(Capability<IPlayerAttributesCapability> capability, IPlayerAttributesCapability cap, EnumFacing enumFacing) {
         NBTTagCompound nbttag = new NBTTagCompound();
@@ -23,6 +23,7 @@ public class PlayerAttributesStorage implements Capability.IStorage<IPlayerAttri
         nbttag.setTag("quests", cap.saveQuests());
         nbttag.setString("journal", cap.getJournal());
         nbttag.setTag("variableStorage", cap.getVariableStorage().writeToNBT());
+        nbttag.setInteger("gold", cap.getGold());
         return nbttag;
     }
 
@@ -38,5 +39,6 @@ public class PlayerAttributesStorage implements Capability.IStorage<IPlayerAttri
         cap.setJournal(tag.getString("journal"));
         cap.setVariableStorage(ValueObject.loadValueFromNBT(tag.getCompoundTag("variableStorage")));
         cap.setPassword(tag.getString("password"));
+        cap.setGold(tag.getInteger("gold"));
     }
 }

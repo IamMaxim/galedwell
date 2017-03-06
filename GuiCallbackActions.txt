@@ -1,0 +1,4 @@
+inventoryUpdated
+questListUpdated
+dialogTopicsUpdated
+goldUpdated

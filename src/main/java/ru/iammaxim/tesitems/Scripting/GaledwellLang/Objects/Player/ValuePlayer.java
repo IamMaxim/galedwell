@@ -16,7 +16,10 @@ public class ValuePlayer extends ValueObject {
 
     //player functions
     private static final ValueFunction showNotification = new FunctionShowNotification(),
-    damage = new FunctionPlayerDamage();
+    damage = new FunctionPlayerDamage(),
+    setGold = new FunctionPlayerSetGold(),
+    getGold = new FunctionPlayerGetGold(),
+    addGold = new FunctionPlayerAddGold();
 
     public ValuePlayer(EntityPlayer player) {
         this.player = player;
@@ -24,6 +27,9 @@ public class ValuePlayer extends ValueObject {
 
         setField("showNotification", showNotification);
         setField("damage", damage);
+        setField("setGold", setGold);
+        setField("addGold", addGold);
+        setField("getGold", getGold);
     }
 
     @Override

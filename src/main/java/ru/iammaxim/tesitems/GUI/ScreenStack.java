@@ -108,4 +108,8 @@ public class ScreenStack extends GuiScreen {
         super.onResize(mcIn, w, h);
         screens.forEach(s -> s.onResize(mcIn, w, h));
     }
+
+    public static void processCallback(String action) {
+        instance.screens.forEach(s -> s.processCallback(action));
+    }
 }

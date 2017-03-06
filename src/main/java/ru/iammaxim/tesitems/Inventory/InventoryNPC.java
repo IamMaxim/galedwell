@@ -9,4 +9,19 @@ import ru.iammaxim.tesitems.NPC.EntityNPC;
 public class InventoryNPC extends Inventory {
     public InventoryNPC() {
     }
+
+    @Override
+    public boolean isItemEquipped(int index) {
+        return super.isItemEquipped(index);
+    }
+
+    @Override
+    public void setMainHandItem() {
+        super.setMainHandItem();
+    }
+
+    @Override
+    public void setOffHandItem() {
+        super.setOffHandItem();
+    }
 }

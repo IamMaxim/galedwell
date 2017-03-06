@@ -27,7 +27,7 @@ public class CommandGetSkills extends CommandBase {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         if (sender instanceof EntityPlayer) {
-            IPlayerAttributesCapability cap = ((EntityPlayer) sender).getCapability(TESItems.attributesCapability, null);
+            IPlayerAttributesCapability cap = ((EntityPlayer) sender).getCapability(TESItems.playerAttributesCapability, null);
             StringBuilder sb = new StringBuilder();
             for (String attr : TESItems.ATTRIBUTES) {
                 sb.append(TextFormatting.BLUE).append(attr).append(": ").append(TextFormatting.AQUA).append(cap.getAttribute(attr)).append("\n");

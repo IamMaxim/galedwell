@@ -44,6 +44,8 @@ public class AuthEventListener {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void commandEvent(CommandEvent event) {
+        if (!(event.getSender() instanceof EntityPlayer))
+            return;
         EntityPlayer player = (EntityPlayer) event.getSender();
 
         if (player.worldObj.isRemote)
