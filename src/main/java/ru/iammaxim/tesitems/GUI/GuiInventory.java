@@ -40,8 +40,6 @@ public class GuiInventory extends Screen implements IGuiUpdatable {
         root.setElement(contentLayout);
         contentLayout.setElement(inventoryLayout = new InventoryPlayerLayout(player, inv));
 
-        //add equipped slots
-        checkEquipped();
         //update inventory table
         updateTable();
 
@@ -76,10 +74,6 @@ public class GuiInventory extends Screen implements IGuiUpdatable {
     @Override
     public boolean updated() {
         return inventoryLayout.updated();
-    }
-
-    public void checkEquipped() {
-        ((InventoryPlayerLayout) inventoryLayout).checkEquipped();
     }
 
     @Override

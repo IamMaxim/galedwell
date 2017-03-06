@@ -4,7 +4,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemTool;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumHand;
@@ -13,6 +15,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import ru.iammaxim.tesitems.Items.EntityItemNew;
 import ru.iammaxim.tesitems.Items.ItemWeightManager;
+import ru.iammaxim.tesitems.Items.Weapon;
 import ru.iammaxim.tesitems.TESItems;
 
 import java.util.ArrayList;
@@ -204,6 +207,17 @@ public class Inventory {
         return TESItems.getCapability(player).getInventory();
     }
 
+    public void equip(int index) {
+        equip(getEquipmentSlot(index), index);
+/*        Item item = get(index).getItem();
+        if (item instanceof ItemArmor)
+            equip(((ItemArmor) item).getEquipmentSlot(), index);
+        else if (mainhand)
+            equip(EntityEquipmentSlot.MAINHAND, index);
+        else
+            equip(EntityEquipmentSlot.OFFHAND, index);*/
+    }
+
     public void equip(EntityEquipmentSlot slot, int index) {
         System.out.println("equip");
     }
@@ -244,5 +258,23 @@ public class Inventory {
             world.spawnEntityInWorld(entity);
             inventory.remove(0);
         }
+    }
+
+    public EntityEquipmentSlot getEquipmentSlot(int index) {
+        Item item = get(index).getItem();
+        if (item instanceof ItemArmor)
+            return ((ItemArmor) item).getEquipmentSlot();
+        else if (item instanceof Weapon || item instanceof ItemTool)
+            return EntityEquipmentSlot.MAINHAND;
+        else
+            return EntityEquipmentSlot.OFFHAND;
+    }
+
+    public boolean isItemEquipped(int index) {
+        return false;
+    }
+
+    public void unequip(int index) {
+        equip(getEquipmentSlot(index), -1);
     }
 }

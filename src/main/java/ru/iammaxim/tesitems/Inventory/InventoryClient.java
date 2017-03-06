@@ -4,6 +4,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import ru.iammaxim.tesitems.GUI.NotificationManager;
 import ru.iammaxim.tesitems.Networking.MessageEquip;
@@ -68,5 +70,18 @@ public class InventoryClient extends Inventory {
     @Override
     public void equip(EntityEquipmentSlot slot, int index) {
         TESItems.networkWrapper.sendToServer(new MessageEquip(slot.getName(), index));
+    }
+
+    @Override
+    public boolean isItemEquipped(int index) {
+        if (player.getHeldItemMainhand() != null && player.getHeldItemMainhand() == get(index))
+            return true;
+        if (player.getHeldItemOffhand() != null && player.getHeldItemOffhand() == get(index))
+            return true;
+        ItemStack[] armorInv = player.inventory.armorInventory;
+        for (ItemStack is : armorInv)
+            if (is != null && is == get(index))
+                return true;
+        return false;
     }
 }

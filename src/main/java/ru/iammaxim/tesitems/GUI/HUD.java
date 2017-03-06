@@ -1,5 +1,6 @@
 package ru.iammaxim.tesitems.GUI;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
@@ -38,7 +39,7 @@ public class HUD {
                 right = (res.getScaledWidth() + 40) / 2,
                 bottom = res.getScaledHeight();
 
-        if (ResManager.enableBlur) {
+        if (Minecraft.isFancyGraphicsEnabled() && ResManager.enableBlur) {
             if (ResManager.gaussianBlurShader == null)
                 ResManager.loadShaders();
 

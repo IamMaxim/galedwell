@@ -47,13 +47,12 @@ public class MessageEquip implements IMessage {
         @Override
         public IMessage onMessage(MessageEquip message, MessageContext ctx) {
             EntityPlayer player = TESItems.getClientPlayer();
-            if (message.index == -1) player.setItemStackToSlot(EntityEquipmentSlot.fromString(message.slot), null);
+            if (message.index == -1) player.setItemStackToSlot(EntityEquipmentSlot.fromString(message.slot.toLowerCase()), null);
             else player.setItemStackToSlot(EntityEquipmentSlot.fromString(message.slot), Inventory.getInventory(player).get(message.index));
 
             Screen lastScreen = ScreenStack.lastScreen();
             if (lastScreen instanceof GuiInventory) {
                 ((GuiInventory) lastScreen).update();
-                ((GuiInventory) lastScreen).checkEquipped();
                 ((GuiInventory) lastScreen).updateTable();
             }
             return null;
@@ -69,12 +68,12 @@ public class MessageEquip implements IMessage {
             EntityPlayer player = ctx.getServerHandler().playerEntity;
             Inventory inv = Inventory.getInventory(player);
             if (message.index == -1) {
-                player.setItemStackToSlot(EntityEquipmentSlot.fromString(message.slot), null);
+                player.setItemStackToSlot(EntityEquipmentSlot.fromString(message.slot.toLowerCase()), null);
             } else if (message.index >= inv.size()) {
                 System.out.println("trying to equip item that doesn't exists");
                 return null;
             } else {
-                player.setItemStackToSlot(EntityEquipmentSlot.fromString(message.slot), inv.get(message.index));
+                player.setItemStackToSlot(EntityEquipmentSlot.fromString(message.slot.toLowerCase()), inv.get(message.index));
             }
             return new MessageEquip(message.slot, message.index);
         }

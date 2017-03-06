@@ -59,6 +59,8 @@ public class MessageUpdateLatestContainer implements IMessage {
                     if (message.slotIndex >= cap.getInventory().size()) {
                         return new MessageShowNotification("Error occurred while transferring item");
                     }
+                    if (cap.getInventory().isItemEquipped(message.slotIndex))
+                        cap.getInventory().unequip(message.slotIndex);
                     cap.getLatestContainer().addItem(cap.getInventory().get(message.slotIndex));
                     cap.getInventory().removeItem(message.slotIndex);
                     return new MessageUpdateLatestContainer(message.action, message.slotIndex);
@@ -72,19 +74,6 @@ public class MessageUpdateLatestContainer implements IMessage {
 
         @Override
         public IMessage onMessage(MessageUpdateLatestContainer message, MessageContext ctx) {
-/*            EntityPlayer player = TESItems.getClientPlayer();
-            IPlayerAttributesCapability cap = TESItems.getCapability(player);
-
-            switch (message.action) {
-                case CLICK_CONTAINER:
-//                    cap.getInventory().addItem(cap.getLatestContainer().get(message.slotIndex));
-//                    cap.getLatestContainer().removeItem(message.slotIndex);
-                    break;
-                case CLICK_INVENTORY:
-//                    cap.getLatestContainer().addItem(cap.getInventory().get(message.slotIndex));
-//                    cap.getInventory().removeItem(message.slotIndex);
-            }*/
-
             Screen lastScreen = ScreenStack.lastScreen();
             if (lastScreen instanceof GuiContainer) {
                 ((GuiContainer) lastScreen).updateTable();

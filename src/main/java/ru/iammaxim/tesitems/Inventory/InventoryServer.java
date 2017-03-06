@@ -5,8 +5,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemTool;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import ru.iammaxim.tesitems.Items.Weapon;
 import ru.iammaxim.tesitems.Networking.MessageEquip;
 import ru.iammaxim.tesitems.Networking.MessageInventoryUpdate;
 import ru.iammaxim.tesitems.Networking.MessageItemDrop;
@@ -16,13 +19,13 @@ import ru.iammaxim.tesitems.TESItems;
  * Created by maxim on 7/27/16 at 12:37 PM.
  */
 public class InventoryServer extends Inventory {
+    private EntityPlayer player;
+
     @Override
     public void addItemWithoutNotify(ItemStack stack) {
         super.addItemWithoutNotify(stack);
         sendMessage(new MessageInventoryUpdate(MessageInventoryUpdate.ACTION_ADD_WITHOUT_NOTIFY, stack), player);
     }
-
-    private EntityPlayer player;
 
     public InventoryServer(EntityPlayer player) {
         this.player = player;
@@ -80,5 +83,18 @@ public class InventoryServer extends Inventory {
         else
             player.setItemStackToSlot(slot, get(index));
         TESItems.networkWrapper.sendTo(new MessageEquip(slot.toString(), index), (EntityPlayerMP) player);
+    }
+
+    @Override
+    public boolean isItemEquipped(int index) {
+        if (player.getHeldItemMainhand() != null && player.getHeldItemMainhand() == get(index))
+            return true;
+        if (player.getHeldItemOffhand() != null && player.getHeldItemOffhand() == get(index))
+            return true;
+        ItemStack[] armorInv = player.inventory.armorInventory;
+        for (ItemStack is : armorInv)
+            if (is != null && is == get(index))
+                return true;
+        return false;
     }
 }
