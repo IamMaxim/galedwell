@@ -254,6 +254,7 @@ public class CommonProxy {
         event.registerServerCommand(new CommandStatus());
         event.registerServerCommand(new CommandSetPassword());
         event.registerServerCommand(new CommandLogin());
+        event.registerServerCommand(new CommandManageCraftingRecipes());
 
         //debug
         event.registerServerCommand(new CommandManageInventory());

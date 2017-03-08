@@ -53,9 +53,15 @@ public class ScreenStack extends GuiScreen {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         //check shaders
-        if (Minecraft.isFancyGraphicsEnabled() && (ResManager.gaussianBlurShader.getFramebufferRaw("swap").framebufferTextureWidth != mc.displayWidth ||
-                ResManager.gaussianBlurShader.getFramebufferRaw("swap").framebufferTextureHeight != mc.displayHeight))
-            ResManager.gaussianBlurShader.createBindFramebuffers(mc.displayWidth, mc.displayHeight);
+        if (Minecraft.isFancyGraphicsEnabled()) {
+            if (ResManager.gaussianBlurShader == null)
+                ResManager.loadShaders();
+
+            if (ResManager.gaussianBlurShader != null && ResManager.gaussianBlurShader.getFramebufferRaw("swap").framebufferTextureWidth != mc.displayWidth ||
+                    ResManager.gaussianBlurShader.getFramebufferRaw("swap").framebufferTextureHeight != mc.displayHeight) {
+                ResManager.gaussianBlurShader.createBindFramebuffers(mc.displayWidth, mc.displayHeight);
+            }
+        }
 
         for (int i = 0; i < screens.size() - 1; i++)
             screens.get(i).drawScreen(-1, -1, partialTicks);

@@ -1,9 +1,22 @@
 # Blender MTL File: 'workbench.blend'
-# Material Count: 1
+# Material Count: 4
 
-newmtl None
-Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
+newmtl Calipers.001
+Ka 1.000000 1.000000 1.000000
+Kd 0.20000 0.20000 0.20000
+d 1.000000
+
+newmtl Hammer_head
+Ka 1.000000 1.000000 1.000000
+Kd 0.20000 0.20000 0.20000
+d 1.000000
+
+newmtl hammer_handle
+Ka 1.000000 1.000000 1.000000
+Kd 0.432863 0.210358 0.000000
+d 1.000000
+
+newmtl workbench
+Ka 1.000000 1.000000 1.000000
+d 1.000000
 map_Kd tesitems:blocks/ayleid_block_1

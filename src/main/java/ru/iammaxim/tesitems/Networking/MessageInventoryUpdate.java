@@ -24,7 +24,8 @@ public class MessageInventoryUpdate implements IMessage {
     public ItemStack stack;
     public int index;
 
-    public MessageInventoryUpdate() {}
+    public MessageInventoryUpdate() {
+    }
 
     public MessageInventoryUpdate(byte action, Object... data) {
         this.action = action;
@@ -41,7 +42,7 @@ public class MessageInventoryUpdate implements IMessage {
                 index = (int) data[0];
                 break;
             case ACTION_REMOVE_ITEM:
-                stack = new ItemStack((Item) data[0]);
+                stack = (ItemStack) data[0];
                 break;
         }
     }
@@ -96,12 +97,13 @@ public class MessageInventoryUpdate implements IMessage {
         public IMessage onMessage(MessageInventoryUpdate message, MessageContext ctx) {
             EntityPlayer player = TESItems.getClientPlayer();
             Inventory inv = TESItems.getCapability(player).getInventory();
-            switch(message.action) {
+            switch (message.action) {
                 case ACTION_ADD:
                     inv.addItem(message.stack);
                     break;
                 case ACTION_ADD_WITHOUT_NOTIFY:
                     inv.addItemWithoutNotify(message.stack);
+                    break;
                 case ACTION_SET:
                     inv.setItem(message.index, message.stack);
                     break;
@@ -109,18 +111,12 @@ public class MessageInventoryUpdate implements IMessage {
                     inv.removeItem(message.index);
                     break;
                 case ACTION_REMOVE_ITEM:
-                    inv.removeItem(message.stack.getItem());
+                    inv.removeItem(message.stack);
                     break;
                 case ACTION_CLEAR:
                     inv.clear();
                     break;
             }
-
-/*            Screen lastScreen = ScreenStack.lastScreen();
-            if (lastScreen instanceof GuiInventory) {
-                ((GuiInventory) lastScreen).updateTable();
-                ((GuiInventory) lastScreen).update();
-            }*/
 
             ScreenStack.processCallback("inventoryUpdated");
             return null;
@@ -134,7 +130,7 @@ public class MessageInventoryUpdate implements IMessage {
         @Override
         public IMessage onMessage(MessageInventoryUpdate message, MessageContext ctx) {
             Inventory inv = TESItems.getCapability(ctx.getServerHandler().playerEntity).getInventory();
-            switch(message.action) {
+            switch (message.action) {
                 case ACTION_ADD:
                 case ACTION_ADD_WITHOUT_NOTIFY: //we don't need to disable notifications on server
                     inv.addItem(message.stack);
@@ -146,7 +142,7 @@ public class MessageInventoryUpdate implements IMessage {
                     inv.removeItem(message.index);
                     break;
                 case ACTION_REMOVE_ITEM:
-                    inv.removeItem(message.stack.getItem());
+                    inv.removeItem(message.stack);
                     break;
                 case ACTION_CLEAR:
 //                    inv.clear();

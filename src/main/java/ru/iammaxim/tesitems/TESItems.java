@@ -53,7 +53,8 @@ public class TESItems {
             guiQuestList = 8,
             guiEditSpells = 9,
             guiContainer = 10,
-            guiWorkbench = 11;
+            guiWorkbench = 11,
+            guiCraftingRecipesList = 12;
     @Mod.Instance
     public static TESItems instance;
     @SidedProxy(clientSide = "ru.iammaxim.tesitems.Proxy.ClientProxy", serverSide = "ru.iammaxim.tesitems.Proxy.ServerProxy")

@@ -16,6 +16,7 @@ import net.minecraft.world.World;
 import ru.iammaxim.tesitems.Items.EntityItemNew;
 import ru.iammaxim.tesitems.Items.ItemWeightManager;
 import ru.iammaxim.tesitems.Items.Weapon;
+import ru.iammaxim.tesitems.Scripting.GaledwellLang.Utils;
 import ru.iammaxim.tesitems.TESItems;
 
 import java.util.ArrayList;
@@ -68,9 +69,14 @@ public class Inventory {
         if (stack.isItemStackDamageable())
             inventory.add(stack);
         else {
-            int index = getItemIndex(stack.getItem());
+            int index = getItemIndex(stack);
             //TODO: check this place
-            if (index == -1 || !ItemStack.areItemStacksEqual(get(index), stack))
+            ItemStack invIS = null;
+            if (index != -1) {
+                invIS = get(index);
+                System.out.println(stack.getItem() + " " + invIS.getItem() + " " + stack.getMetadata() + " " + invIS.getMetadata());
+            }
+            if (index == -1 || !(stack.getItem() == invIS.getItem()))
                 inventory.add(stack);
             else {
                 ItemStack is = inventory.get(index);
@@ -88,7 +94,7 @@ public class Inventory {
         if (stack.isItemStackDamageable())
             inventory.add(stack);
         else {
-            int index = getItemIndex(stack.getItem());
+            int index = getItemIndex(stack);
             if (index == -1)
                 inventory.add(stack);
             else {
@@ -96,7 +102,9 @@ public class Inventory {
                 is.stackSize += stack.stackSize;
                 while (is.stackSize > 64) {
                     is.stackSize -= 64;
-                    inventory.add(new ItemStack(stack.getItem(), 64));
+                    ItemStack newIS = is.copy();
+                    newIS.stackSize = 64;
+                    inventory.add(newIS);
                 }
             }
         }
@@ -130,7 +138,7 @@ public class Inventory {
         }
     }
 
-    public boolean removeItem(Item item) {
+    public boolean removeItem(ItemStack item) {
         int index = getItemIndex(item);
         if (index == -1) {
             return false;
@@ -144,10 +152,10 @@ public class Inventory {
         return true;
     }
 
-    public int getItemIndex(Item item) {
+    public int getItemIndex(ItemStack stack) {
         for (int i = 0; i < inventory.size(); i++) {
             ItemStack is = inventory.get(i);
-            if (is != null && is.getItem() == item) {
+            if (is != null && is.getItem() == stack.getItem() && is.getMetadata() == stack.getMetadata()) {
                 return i;
             }
         }

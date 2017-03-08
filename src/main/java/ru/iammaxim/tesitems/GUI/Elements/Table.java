@@ -8,6 +8,7 @@ import ru.iammaxim.tesitems.GUI.ResManager;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by maxim on 2/24/17 at 9:07 PM.
@@ -18,6 +19,7 @@ public class Table extends LayoutBase implements LayoutWithList {
     private TableEntry header;
     private HorizontalDivider divider;
     private int verticalDividerWidth = 1;
+    private ReentrantLock lock = new ReentrantLock();
 
     public Table(TableEntry header) {
         this.header = header;
@@ -27,7 +29,12 @@ public class Table extends LayoutBase implements LayoutWithList {
 
     public Table setHeader(TableEntry header) {
         this.header = header;
-        entries.forEach(e -> ((TableEntry) e).setupColumns(this.header));
+        try {
+            lock.lock();
+            entries.forEach(e -> ((TableEntry) e).setupColumns(this.header));
+        } finally {
+            lock.unlock();
+        }
         return this;
     }
 
@@ -38,21 +45,36 @@ public class Table extends LayoutBase implements LayoutWithList {
 
     @Override
     public LayoutWithList add(ElementBase element) {
-        entries.add(element);
         element.setParent(this);
         ((TableEntry) element).setupColumns(header);
-//        element.setWidthOverride(FILL);
+        try {
+            lock.lock();
+            entries.add(element);
+        } finally {
+            lock.unlock();
+        }
         return this;
     }
 
     @Override
     public void remove(ElementBase element) {
-        entries.remove(element);
+        try {
+            lock.lock();
+            entries.remove(element);
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override
     public void clear() {
-        entries.clear();
+        try {
+            lock.lock();
+            entries.clear();
+        } finally {
+            lock.unlock();
+        }
+
     }
 
     @Override
@@ -130,8 +152,13 @@ public class Table extends LayoutBase implements LayoutWithList {
         header.draw(mouseX, mouseY);
         divider.draw(mouseX, mouseY);
         try {
+            lock.lock();
             entries.forEach(e -> e.draw(mouseX, mouseY));
-        } catch (ConcurrentModificationException e) {}
+        } catch (ConcurrentModificationException e) {
+            e.printStackTrace();
+        } finally {
+            lock.unlock();
+        }
 
         int height = getHeight();
         //draw vertical dividers

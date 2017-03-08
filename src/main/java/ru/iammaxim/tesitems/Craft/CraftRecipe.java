@@ -4,6 +4,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
+import java.util.Arrays;
+
 /**
  * Created by Maxim on 17.06.2016.
  */
@@ -52,5 +54,9 @@ public class CraftRecipe {
         }
 
         return new CraftRecipe(name, input, output);
+    }
+
+    public CraftRecipe copy() {
+        return new CraftRecipe(name, Arrays.copyOf(input, input.length), Arrays.copyOf(output, output.length));
     }
 }

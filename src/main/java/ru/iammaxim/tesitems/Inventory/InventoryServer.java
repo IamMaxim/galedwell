@@ -13,6 +13,7 @@ import ru.iammaxim.tesitems.Items.Weapon;
 import ru.iammaxim.tesitems.Networking.MessageEquip;
 import ru.iammaxim.tesitems.Networking.MessageInventoryUpdate;
 import ru.iammaxim.tesitems.Networking.MessageItemDrop;
+import ru.iammaxim.tesitems.Scripting.GaledwellLang.Utils;
 import ru.iammaxim.tesitems.TESItems;
 
 /**
@@ -54,7 +55,7 @@ public class InventoryServer extends Inventory {
     }
 
     @Override
-    public boolean removeItem(Item item) {
+    public boolean removeItem(ItemStack item) {
         sendMessage(new MessageInventoryUpdate(MessageInventoryUpdate.ACTION_REMOVE_ITEM, item), player);
         return super.removeItem(item);
     }

@@ -42,7 +42,7 @@ public class InventoryContainerServer extends InventoryContainer {
     }
 
     @Override
-    public boolean removeItem(Item item) {
+    public boolean removeItem(ItemStack item) {
         sendMessage(new MessageLatestContainerUpdate(MessageInventoryUpdate.ACTION_REMOVE_ITEM, item), player);
         return super.removeItem(item);
     }

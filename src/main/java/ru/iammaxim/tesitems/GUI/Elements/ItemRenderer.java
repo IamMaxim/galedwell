@@ -41,4 +41,9 @@ public class ItemRenderer extends ElementBase {
     public String getName() {
         return "ItemRenderer";
     }
+
+    public ItemRenderer setItemStack(ItemStack is) {
+        this.itemStack = is;
+        return this;
+    }
 }

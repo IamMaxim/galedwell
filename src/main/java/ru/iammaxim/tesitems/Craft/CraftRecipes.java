@@ -15,7 +15,7 @@ import java.util.HashMap;
  * Created by Maxim on 17.06.2016.
  */
 public class CraftRecipes {
-    private static HashMap<Integer, CraftRecipe> recipes = new HashMap<>();
+    public static HashMap<Integer, CraftRecipe> recipes = new HashMap<>();
     private static IDGen idGen = new IDGen();
 
     public static void addRecipe(CraftRecipe recipe) {
@@ -27,7 +27,7 @@ public class CraftRecipes {
     }
 
     private static void removeItemStack(InventoryServer inventory, ItemStack toRemove) {
-        int index = inventory.getItemIndex(toRemove.getItem());
+        int index = inventory.getItemIndex(toRemove);
         ItemStack is = inventory.get(index);
         if (toRemove.stackSize >= is.stackSize)
             inventory.removeItem(index);

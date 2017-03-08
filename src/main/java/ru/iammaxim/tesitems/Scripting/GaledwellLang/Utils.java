@@ -27,4 +27,11 @@ public class Utils {
         }
         return argNames;
     }
+
+    public static void printStackTrace() {
+        StackTraceElement[] elements = Thread.currentThread().getStackTrace();
+        for (StackTraceElement element : elements) {
+            System.out.println(element);
+        }
+    }
 }

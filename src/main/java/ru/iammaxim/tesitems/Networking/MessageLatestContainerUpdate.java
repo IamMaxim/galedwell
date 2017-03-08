@@ -40,7 +40,7 @@ public class MessageLatestContainerUpdate implements IMessage {
                 index = (int) data[0];
                 break;
             case ACTION_REMOVE_ITEM:
-                stack = new ItemStack((Item) data[0]);
+                stack = (ItemStack) data[0];
                 break;
         }
     }
@@ -101,7 +101,7 @@ public class MessageLatestContainerUpdate implements IMessage {
                     inv.removeItem(message.index);
                     break;
                 case ACTION_REMOVE_ITEM:
-                    inv.removeItem(message.stack.getItem());
+                    inv.removeItem(message.stack);
                     break;
                 case ACTION_CLEAR:
                     inv.clear();
@@ -132,7 +132,7 @@ public class MessageLatestContainerUpdate implements IMessage {
                     inv.removeItem(message.index);
                     break;
                 case ACTION_REMOVE_ITEM:
-                    inv.removeItem(message.stack.getItem());
+                    inv.removeItem(message.stack);
                     break;
                 case ACTION_CLEAR:
 //                    inv.clear();
