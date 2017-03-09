@@ -70,7 +70,9 @@ public class UnicodeFontRenderer extends FontRenderer {
     }
 
     String wrapFormattedStringToWidth(String str, int wrapWidth) {
-        if (wrapWidth < 2)
+        if (str.length() == 0)
+            return "";
+        if (wrapWidth < font.getWidth(str.substring(0, 1)) + 1)
             return "ERROR";
 
         int len = sizeStringToWidth(str, wrapWidth);

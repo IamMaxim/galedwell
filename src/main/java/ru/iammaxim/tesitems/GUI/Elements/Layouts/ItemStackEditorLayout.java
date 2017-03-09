@@ -23,6 +23,7 @@ public class ItemStackEditorLayout extends HorizontalLayout {
     public ItemStackEditorLayout(ItemStack itemStack) {
         if (itemStack == null)
             this.is[0] = new ItemStack(Blocks.DIRT);
+        else this.is[0] = itemStack;
 
         add(new VerticalLayout().add(itemRenderer = new ItemRenderer(is[0])).center(true));
         add(new VerticalLayout()
@@ -39,7 +40,8 @@ public class ItemStackEditorLayout extends HorizontalLayout {
                         is[0].stackSize = Math.min(Math.max(size, 0), 64);
                     } catch (NumberFormatException e) {
                     }
-                }).setWidthOverride(FILL)));
+                }).setWidthOverride(FILL))
+                .setWidthOverride(FILL));
     }
 
     public ItemStack getItemStack() {

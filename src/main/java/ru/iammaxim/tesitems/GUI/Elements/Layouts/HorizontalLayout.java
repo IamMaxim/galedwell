@@ -12,9 +12,9 @@ import java.util.List;
  * Created by maxim on 11/7/16 at 4:19 PM.
  */
 public class HorizontalLayout extends LayoutBase implements LayoutWithList {
-    private int spacing = 4;
-    private ArrayList<ElementBase> elements = new ArrayList<>();
-    private boolean center = false;
+    protected int spacing = 4;
+    protected ArrayList<ElementBase> elements = new ArrayList<>();
+    protected boolean center = false;
 
     public HorizontalLayout center(boolean center) {
         this.center = center;

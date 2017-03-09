@@ -18,11 +18,11 @@ public class GuiCraftingRecipesList extends Screen {
     public GuiCraftingRecipesList() {
         contentLayout.setElement(new VerticalLayout()
                 .add(new ScrollableLayout().setElement(list = new VerticalLayout()).setWidthOverride(ElementBase.FILL))
-                .add(new Button("Add new recipe").setOnClick(e -> ScreenStack.addScreen(new GuiCraftingRecipeEditor(new CraftRecipe("New recipe", new ItemStack[] {}, new ItemStack[] {}))))));
+                .add(new Button("Add new recipe").setOnClick(e -> ScreenStack.addScreen(new GuiCraftingRecipeEditor(-1, new CraftRecipe("New recipe", new ItemStack[] {}, new ItemStack[] {}))))));
 
         CraftRecipes.recipes.forEach((id, recipe) -> {
             list.add(new Text(recipe.name).setColor(ResManager.CLICKABLE_TEXT_COLOR).setOnClick(e -> {
-                ScreenStack.addScreen(new GuiCraftingRecipeEditor(recipe));
+                ScreenStack.addScreen(new GuiCraftingRecipeEditor(id, recipe));
             }));
         });
 

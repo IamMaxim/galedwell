@@ -2,3 +2,4 @@ inventoryUpdated
 questListUpdated
 dialogTopicsUpdated
 goldUpdated
+recipeUpdated

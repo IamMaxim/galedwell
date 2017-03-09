@@ -24,7 +24,7 @@ public class ItemStackEditorListLayout extends FrameLayout {
     public ItemStackEditorListLayout() {
         setElement(new WrapFrameLayout()
                 .setElement(new VerticalLayout()
-                        .add(layout = new VerticalLayout())
+                        .add((layout = new VerticalLayout()).setWidthOverride(FILL))
                         .add(new Button("Add stack").setOnClick(e -> {
                             addElement(new ItemStack(Blocks.DIRT));
                         }))));
@@ -40,14 +40,25 @@ public class ItemStackEditorListLayout extends FrameLayout {
     private void addElement(ItemStack is) {
         ItemStackEditorLayout editor = new ItemStackEditorLayout(is);
         editors.add(editor);
-        elements.add(new HorizontalLayout()
-                .add(new ItemStackEditorLayout(is))
+        elements.add(new StartFromRightHorizontalLayout()
+                .add(new ItemStackEditorLayout(is).setWidthOverride(FILL))
                 .add(new Button("Remove").setOnClick(e -> {
                     int index = editors.indexOf(editor);
                     editors.remove(index);
                     elements.remove(index);
-                })));
+                    updateLayout();
+                    doLayout();
+                }))
+                .setWidthOverride(FILL));
+        updateLayout();
         ((LayoutBase) getRoot()).doLayout();
+    }
+
+    public void updateLayout() {
+        layout.clear();
+        for (ElementBase elementBase : elements) {
+            layout.add(elementBase);
+        }
     }
 
     public ArrayList<ItemStack> getStacks() {

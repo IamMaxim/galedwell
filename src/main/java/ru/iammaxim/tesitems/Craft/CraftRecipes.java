@@ -7,6 +7,7 @@ import net.minecraft.nbt.NBTTagList;
 import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.Inventory.InventoryServer;
 import ru.iammaxim.tesitems.Utils.IDGen;
+import ru.iammaxim.tesitems.Utils.NBTFileStorage;
 import ru.iammaxim.tesitems.Utils.Utils;
 
 import java.util.HashMap;
@@ -17,13 +18,20 @@ import java.util.HashMap;
 public class CraftRecipes {
     public static HashMap<Integer, CraftRecipe> recipes = new HashMap<>();
     private static IDGen idGen = new IDGen();
+    private static NBTFileStorage nbtFileStorage = new NBTFileStorage("recipes", "workbench_recipes.nbt");
+    private static boolean dirty = false;
 
     public static void addRecipe(CraftRecipe recipe) {
         recipes.put(idGen.genID(), recipe);
+        dirty = true;
     }
 
     public static void addRecipe(int id, CraftRecipe recipe) {
+        if (id == -1) {
+            id = idGen.genID();
+        }
         recipes.put(id, recipe);
+        dirty = true;
     }
 
     private static void removeItemStack(InventoryServer inventory, ItemStack toRemove) {
@@ -108,5 +116,21 @@ public class CraftRecipes {
 
         tag.setTag("recipes", list);
         return tag;
+    }
+
+    public static boolean remove(int id) {
+        dirty = true;
+        return recipes.remove(id) != null;
+    }
+
+    public void loadFromFile() {
+
+    }
+
+    public void saveToFile() {
+        if (!dirty)
+            return;
+
+
     }
 }

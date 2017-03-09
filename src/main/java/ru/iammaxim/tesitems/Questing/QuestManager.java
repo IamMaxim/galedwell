@@ -29,16 +29,11 @@ public class QuestManager {
         for (Quest quest : questList.values()) {
             quests.appendTag(quest.writeToNBT());
         }
-
-        //todo: remove out
-        System.out.println("Saved quests tag: " + quests.toString());
         return quests;
     }
 
     public static void readFromNBT(NBTTagList tag) {
         try {
-            //todo: remove out
-            System.out.println("Loading quest tag: " + tag.toString());
             for (int i = 0; i < tag.tagCount(); i++) {
                 NBTTagCompound questTag = tag.getCompoundTagAt(i);
                 Quest q = Quest.readFromNBT(questTag);

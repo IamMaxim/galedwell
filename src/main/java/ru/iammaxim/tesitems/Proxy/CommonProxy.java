@@ -255,6 +255,14 @@ public class CommonProxy {
         event.registerServerCommand(new CommandSetPassword());
         event.registerServerCommand(new CommandLogin());
         event.registerServerCommand(new CommandManageCraftingRecipes());
+        event.registerServerCommand(new CommandStr());
+        event.registerServerCommand(new CommandInt());
+        event.registerServerCommand(new CommandWill());
+        event.registerServerCommand(new CommandAgi());
+        event.registerServerCommand(new CommandSpd());
+        event.registerServerCommand(new CommandEnd());
+        event.registerServerCommand(new CommandCha());
+        event.registerServerCommand(new CommandLuck());
 
         //debug
         event.registerServerCommand(new CommandManageInventory());

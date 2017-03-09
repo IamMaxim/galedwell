@@ -35,6 +35,14 @@ public class TESItems {
     public static final String worldTagName = "tesitems:world";
     public static final String[] ATTRIBUTES = {
             "strength",
+            "intelligence",
+            "willpower",
+            "agility",
+            "speed",
+            "endurance",
+            "charisma",
+            "luck",
+
             "mining",
             "woodcutting",
             "digging",
@@ -67,6 +75,10 @@ public class TESItems {
     public static Capability<IWorldCapability> worldCapability;
 
     public static SimpleNetworkWrapper networkWrapper;
+    public static final int whisperDistance = 2,
+            talkDistance = 10,
+            actionDistance = 20,
+            shoutDistance = 40;
 
     public static IPlayerAttributesCapability getCapability(EntityPlayer player) {
         return player.getCapability(TESItems.playerAttributesCapability, null);
