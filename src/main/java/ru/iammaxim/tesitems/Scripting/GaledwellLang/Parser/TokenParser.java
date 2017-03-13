@@ -37,7 +37,7 @@ public class TokenParser {
                     i = src.indexOf('\n', i) - 1; // go to next line and leave \n, so parser will parse newline
                     continue;
                 } else
-                    throw new InvalidTokenException(line_number, "Excepted comment ('//'), but found '/'");
+                    throw new InvalidTokenException("Excepted comment ('//'), but found '/'");
 
             if (c == '\n')
                 addLineNumber();

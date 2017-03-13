@@ -191,14 +191,14 @@ public class Compiler {
             } else if (exp.operator.equals(new Token("++"))) {
                 //check if right side is not empty
                 if (!exp.right.toString().equals("null"))
-                    throw new InvalidTokenException(exp.left.getLineNumber(), "The '++' operator shouldn't have right side, but got '" + exp.right.toString() + "'");
+                    throw new InvalidTokenException("The '++' operator shouldn't have right side, but got '" + exp.right.toString() + "'");
 
                 compileExpression(exp.left, depth + 1, true);
                 addOperation(new OperationIncrement());
             } else if (exp.operator.equals(new Token("--"))) {
                 //check if right side is not empty
                 if (!exp.right.toString().equals("null"))
-                    throw new InvalidTokenException(exp.right.getLineNumber(), "The '--' operator shouldn't have right side, but got '" + exp.right.toString() + "'");
+                    throw new InvalidTokenException("The '--' operator shouldn't have right side, but got '" + exp.right.toString() + "'");
 
                 compileExpression(exp.left, depth + 1, true);
                 addOperation(new OperationDecrement());
@@ -208,7 +208,7 @@ public class Compiler {
                 // check if left side is reference
                 Operation leftOP;
                 if (!((leftOP = operations.get(operations.size() - 1)) instanceof OperationGetAndPush))
-                    throw new InvalidTokenException(exp.left.getLineNumber(), "Left side of -= should be reference");
+                    throw new InvalidTokenException("Left side of -= should be reference");
                 addOperation(new OperationSub());
                 addOperation(new OperationPushVariableStorage());
                 addOperation(new OperationPush(new ValueReference(((OperationGetAndPush) leftOP).id)));
@@ -219,13 +219,13 @@ public class Compiler {
                 // check if left side is reference
                 Operation leftOP;
                 if (!((leftOP = operations.get(operations.size() - 1)) instanceof OperationGetAndPush))
-                    throw new InvalidTokenException(exp.left.getLineNumber(), "Left side of += should be reference");
+                    throw new InvalidTokenException( "Left side of += should be reference");
                 addOperation(new OperationAdd());
                 addOperation(new OperationPushVariableStorage());
                 addOperation(new OperationPush(new ValueReference(((OperationGetAndPush) leftOP).id)));
                 addOperation(new OperationAssign());
             } else {
-                throw new InvalidTokenException(exp.getLineNumber(), "Invalid operator '" + exp.operator.token + "'");
+                throw new InvalidTokenException("Invalid operator '" + exp.operator.token + "'");
             }
         }
     }

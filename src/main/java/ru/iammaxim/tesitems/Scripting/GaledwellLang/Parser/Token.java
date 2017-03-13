@@ -56,7 +56,7 @@ public class Token {
             case IDENTIFIER:
                 return true;
             default:
-                throw new InvalidTokenException(-1, "Token.is() is not implemented for type " + type.toString());
+                throw new InvalidTokenException("Token.is() is not implemented for type " + type.toString());
         }
     }
 

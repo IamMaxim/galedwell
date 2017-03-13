@@ -7,20 +7,13 @@ import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.Value;
  */
 public class ExpressionValue extends Expression {
     public Value value;
-    private int lineNumber;
 
     @Override
     public String toString() {
         return value.toString();
     }
 
-    public ExpressionValue(int lineNumber, Value value) {
-        this.lineNumber = lineNumber;
+    public ExpressionValue(Value value) {
         this.value = value;
-    }
-
-    @Override
-    public int getLineNumber() {
-        return lineNumber;
     }
 }

@@ -8,19 +8,12 @@ import java.util.ArrayList;
 public class Tokener {
     public ArrayList<Token> tokens;
     public int index = 0;
-    private int lineNumber = -1;
 
-    public int getLineNumber() {
-        return lineNumber;
-    }
-
-    public Tokener(int lineNumber, ArrayList<Token> tokens) {
-        this.lineNumber = lineNumber;
+    public Tokener(ArrayList<Token> tokens) {
         this.tokens = tokens;
     }
 
-    public Tokener(int lineNumber, Token... tokens) {
-        this.lineNumber = lineNumber;
+    public Tokener(Token... tokens) {
         this.tokens = new ArrayList<>();
         for (Token token : tokens) {
             this.tokens.add(token);
@@ -35,7 +28,6 @@ public class Tokener {
         Token t = tokens.get(index++);
         while (t.type == TokenType.NEW_LINE) {
             t = tokens.get(index++);
-            lineNumber++;
         }
         return t;
     }
@@ -50,8 +42,8 @@ public class Tokener {
             tokens.add(t);
         }
         if (index == tokens.size())
-            throw new InvalidTokenException(lineNumber, "Excepted " + token.token);
-        return new Tokener(lineNumber, tokens);
+            throw new InvalidTokenException("Excepted " + token.token);
+        return new Tokener(tokens);
     }
 
     public Tokener readToSkippingScopes(Token token) throws InvalidTokenException {
@@ -76,10 +68,10 @@ public class Tokener {
             tokens.add(t);
         }
         if (index == tokens.size())
-            throw new InvalidTokenException(lineNumber, "Excepted " + token.token);
+            throw new InvalidTokenException("Excepted " + token.token);
 
         tokens.remove(0); //remove first scope
-        return new Tokener(lineNumber, tokens);
+        return new Tokener(tokens);
     }
 
     @Override
@@ -98,7 +90,7 @@ public class Tokener {
         while (left() > 0) {
             Token t = eat();
             if (t.equals(token)) {
-                parts.add(new Tokener(lineNumber, tokens));
+                parts.add(new Tokener(tokens));
                 tokens = new ArrayList<>();
                 while (left() > 0) {
                     tokens.add(eat());
@@ -108,7 +100,7 @@ public class Tokener {
                 tokens.add(t);
         }
         //add last part that is not followed by delimiter
-        parts.add(new Tokener(lineNumber, tokens));
+        parts.add(new Tokener(tokens));
         return parts;
     }
 
@@ -117,7 +109,7 @@ public class Tokener {
         ArrayList<Token> subList = new ArrayList<>(end - begin);
         for (int i = begin; i < end; i++)
             subList.add(tokens.get(i));
-        return new Tokener(lineNumber, subList);
+        return new Tokener(subList);
     }
 
     public int size() {
@@ -160,7 +152,7 @@ public class Tokener {
 
             if (t.equals(token)) {
                 if (tokens.size() > 0) {
-                    parts.add(new Tokener(lineNumber, tokens));
+                    parts.add(new Tokener(tokens));
                     tokens = new ArrayList<>();
                 }
             } else
@@ -168,7 +160,7 @@ public class Tokener {
         }
         //add last part that is not followed by delimiter
         if (tokens.size() > 0)
-            parts.add(new Tokener(lineNumber, tokens));
+            parts.add(new Tokener(tokens));
         return parts;
     }
 }

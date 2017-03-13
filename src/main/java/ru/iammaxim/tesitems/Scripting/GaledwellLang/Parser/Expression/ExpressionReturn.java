@@ -5,20 +5,13 @@ package ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.Expression;
  */
 public class ExpressionReturn extends Expression {
     public Expression returnExp;
-    private int lineNumber;
 
-    public ExpressionReturn(int lineNumber, Expression returnExp) {
-        this.lineNumber = lineNumber;
+    public ExpressionReturn(Expression returnExp) {
         this.returnExp = returnExp;
     }
 
     @Override
     public String toString() {
         return "return: " + returnExp.toString();
-    }
-
-    @Override
-    public int getLineNumber() {
-        return lineNumber;
     }
 }

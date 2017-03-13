@@ -14,10 +14,8 @@ import java.util.ArrayList;
 public class ExpressionFunctionCall extends Expression {
     public String functionName;
     public ArrayList<Expression> args;
-    public int lineNumber;
 
-    public ExpressionFunctionCall(int lineNumber, Token functionName, ArrayList<Expression> args) throws InvalidTokenException {
-        this.lineNumber = lineNumber;
+    public ExpressionFunctionCall(Token functionName, ArrayList<Expression> args) throws InvalidTokenException {
         this.functionName = functionName.token;
         this.args = args;
     }
@@ -35,10 +33,5 @@ public class ExpressionFunctionCall extends Expression {
         }
         sb.append(")");
         return sb.toString();
-    }
-
-    @Override
-    public int getLineNumber() {
-        return lineNumber;
     }
 }
