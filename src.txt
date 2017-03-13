@@ -1,4 +1,4 @@
-main() {
+main(arg1, arg2) {
     i = 1;
     print(i);
     i++;

@@ -10,7 +10,7 @@ import java.io.IOException;
  * Created by maxim on 13.03.2017.
  */
 public class Logger {
-    private static final int indentFactor = 2;
+    private static final int indentFactor = 4;
     private int indent = 0;
     private static FileOutputStream log;
 

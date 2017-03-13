@@ -28,17 +28,17 @@ public class Compiler {
     }
 
     private void addOperation(Operation op) {
-        GaledwellLang.log("        adding op: " + op);
+        GaledwellLang.log("adding op: " + op);
         operations.add(op);
     }
 
     private void addOperation(int index, Operation op) {
-        GaledwellLang.log("        adding op: " + op);
+        GaledwellLang.log("adding op: " + op);
         operations.add(index, op);
     }
 
     private void removeOperation(int index) {
-        GaledwellLang.log("        removing op: " + operations.get(index));
+        GaledwellLang.log("removing op: " + operations.get(index));
         operations.remove(index);
     }
 
@@ -63,7 +63,7 @@ public class Compiler {
     }
 
     private void compileExpression(Expression exp, int depth, boolean inTree) throws InvalidTokenException {
-        GaledwellLang.log("    compiling: " + exp.toString());
+        GaledwellLang.log("compiling: " + exp.toString());
 
         if (exp instanceof ExpressionFunctionCall) {
             compileFunctionCall((ExpressionFunctionCall) exp, depth, inTree);

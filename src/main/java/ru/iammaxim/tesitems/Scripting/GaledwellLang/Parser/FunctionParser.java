@@ -18,6 +18,20 @@ public class FunctionParser {
         tokener = new Tokener(getLineNumber(tokens), tokens);
     }
 
+    private Expression indentAndParseExpression(Tokener tokener) throws InvalidTokenException {
+        GaledwellLang.logger.increateIndent();
+        Expression exp = parseExpression(tokener);
+        GaledwellLang.logger.decreaseIndent();
+        return exp;
+    }
+
+    private ArrayList<Expression> indentAndParseExpressions(ArrayList<Tokener> tokeners) throws InvalidTokenException {
+        GaledwellLang.logger.increateIndent();
+        ArrayList<Expression> exps = parseExpressions(tokeners);
+        GaledwellLang.logger.decreaseIndent();
+        return exps;
+    }
+
     private Expression parseExpression(Tokener tokener) throws InvalidTokenException {
         GaledwellLang.log("parsing " + tokener);
         tokener.trimParentheses();
@@ -26,8 +40,9 @@ public class FunctionParser {
         if (tokener.size() == 1) {
             int ln = tokener.getLineNumber();
             Value val = Value.get(tokener.eat().token);
-            if (val != null)
+            if (val != null) {
                 return new ExpressionValue(ln, val);
+            }
         }
 
         //check if this is return
@@ -37,7 +52,7 @@ public class FunctionParser {
                 GaledwellLang.log("parsing return");
 
                 int ln = tokener.getLineNumber();
-                return new ExpressionReturn(ln, parseExpression(tokener.subtokener(1, tokener.size())));
+                return new ExpressionReturn(ln, indentAndParseExpression(tokener.subtokener(1, tokener.size())));
             }
         }
 
@@ -67,7 +82,7 @@ public class FunctionParser {
             GaledwellLang.log("parsed body: " + bodyTokeners);
 
             for (Tokener t : bodyTokeners) {
-                bodyExps.add(parseExpression(t));
+                bodyExps.add(indentAndParseExpression(t));
             }
 
             ArrayList<Expression> elseBodyExps = new ArrayList<>();
@@ -88,7 +103,7 @@ public class FunctionParser {
                 GaledwellLang.log("parsed elseBody: " + elseBodyTokeners);
 
                 for (Tokener t : elseBodyTokeners) {
-                    elseBodyExps.add(parseExpression(t));
+                    elseBodyExps.add(indentAndParseExpression(t));
                 }
 
                 //check situation when semicolon is not set after if(){}else{}
@@ -102,7 +117,11 @@ public class FunctionParser {
                     throw new InvalidTokenException(tokener.getLineNumber(), "Excepted ';'");
             }
 
-            return new ExpressionCondition(tokener.getLineNumber(), parseExpression(condition), bodyExps, elseBodyExps);
+            return new ExpressionCondition(
+                    tokener.getLineNumber(),
+                    indentAndParseExpression(condition),
+                    bodyExps,
+                    elseBodyExps);
         }
 
         //check if this is for loop
@@ -118,12 +137,13 @@ public class FunctionParser {
             if (!tokener.eat().equals(new Token("{")))
                 throw new InvalidTokenException(tokener.getLineNumber(), "Excepted '{'");
             Tokener body = tokener.readTo(new Token("}"));
+
             return new ExpressionForLoop(
                     tokener.getLineNumber(),
-                    parseExpression(argTokens.get(0)),
-                    parseExpression(argTokens.get(1)),
-                    parseExpression(argTokens.get(2)),
-                    parseExpressions(body.splitSkippingScopes(new Token(";"))));
+                    indentAndParseExpression(argTokens.get(0)),
+                    indentAndParseExpression(argTokens.get(1)),
+                    indentAndParseExpression(argTokens.get(2)),
+                    indentAndParseExpressions(body.splitSkippingScopes(new Token(";"))));
         }
 
         int level = 0;
@@ -162,10 +182,11 @@ public class FunctionParser {
                         Tokener argsTokener = tokener.readTo(new Token(")"));
                         ArrayList<Tokener> args = argsTokener.splitSkippingScopes(new Token(","));
                         tokener.index = index;
+
                         return new ExpressionFunctionCall(
                                 tokener.getLineNumber(),
                                 tokener.tokens.get(i - 1),
-                                parseExpressions(args));
+                                indentAndParseExpressions(args));
                     } catch (InvalidTokenException e) {
                         e.printStackTrace();
                     }
@@ -177,8 +198,8 @@ public class FunctionParser {
         }
 
         return new ExpressionTree(tokener.getLineNumber(), highest,
-                parseExpression(tokener.subtokener(0, highestPriorityIndex)),
-                parseExpression(tokener.subtokener(highestPriorityIndex + 1, tokener.size())));
+                indentAndParseExpression(tokener.subtokener(0, highestPriorityIndex)),
+                indentAndParseExpression(tokener.subtokener(highestPriorityIndex + 1, tokener.size())));
     }
 
     /**
@@ -282,17 +303,18 @@ public class FunctionParser {
             GaledwellLang.log("parsed function body: " + body);
 
             //process body
-            exps = parseExpressions(body.splitSkippingScopes(new Token(";")));
+            exps = indentAndParseExpressions(body.splitSkippingScopes(new Token(";")));
 
             GaledwellLang.log("parsed expressions:");
+            GaledwellLang.logger.increateIndent();
             exps.forEach(e -> GaledwellLang.log(e.toString()));
+            GaledwellLang.logger.decreaseIndent();
             GaledwellLang.log("parsed expressions end");
 
             //build function
             CompilerDebugRuntime.addName(functionName.token.hashCode(), functionName.token);
             functions.add(new ParsedFunction(functionName.token.hashCode(), args, exps));
         }
-
         return functions;
     }
 
