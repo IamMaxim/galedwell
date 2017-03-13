@@ -42,7 +42,7 @@ public class Tokener {
             tokens.add(t);
         }
         if (index == tokens.size())
-            throw new InvalidTokenException("Excepted " + token.token);
+            throw new InvalidTokenException("Expected " + token.token);
         return new Tokener(tokens);
     }
 
@@ -68,7 +68,7 @@ public class Tokener {
             tokens.add(t);
         }
         if (index == tokens.size())
-            throw new InvalidTokenException("Excepted " + token.token);
+            throw new InvalidTokenException("Expected " + token.token);
 
         tokens.remove(0); //remove first scope
         return new Tokener(tokens);

@@ -1,20 +1,7 @@
-main(arg1, arg2) {
-    i = 1;
-    print(i);
-    i++;
-    print(i);
-    if (i > 0)
-        i -= 3;
-
-    if (i > 0) {
-        print("if in braces")
-    } else {
-        print("else in braces")
-    };
-
-    print("Final i is: " + i);
+main() {
+    i = 2 + 3 * 4 + (2 - 3);
+    print("i: " + i);
     for (j = 0; j < 10; j++) {
-        i+=j;
+        print("j: " + j)
     }
-    print("i after loop: " + i);
 }

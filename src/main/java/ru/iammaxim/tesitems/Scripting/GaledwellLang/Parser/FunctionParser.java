@@ -59,7 +59,7 @@ public class FunctionParser {
 
             tokener.eat(); //eat if
             if (!tokener.get().equals(new Token("(")))
-                throw new InvalidTokenException("Excepted (");
+                throw new InvalidTokenException("Expected (");
             Tokener condition = tokener.readToSkippingScopes(new Token(")"));
 
             GaledwellLang.log("parsed condition: " + condition);
@@ -106,12 +106,12 @@ public class FunctionParser {
                 //check situation when semicolon is not set after if(){}else{}
                 Tokener nextExpr = tokener.readTo(new Token(";"));
                 if (!nextExpr.isEmpty())
-                    throw new InvalidTokenException("Excepted ';'");
+                    throw new InvalidTokenException("Expected ';'");
             } else {
                 //check situation when semicolon is not set after if(){}
                 Tokener nextExpr = tokener.readTo(new Token(";"));
                 if (!nextExpr.isEmpty())
-                    throw new InvalidTokenException("Excepted ';'");
+                    throw new InvalidTokenException("Expected ';'");
             }
 
             return new ExpressionCondition(
@@ -124,14 +124,14 @@ public class FunctionParser {
         if (tokener.left() > 0 && tokener.get().equals(new Token("for"))) {
             tokener.eat(); //eat 'for'
             if (!tokener.get().equals(new Token("(")))
-                throw new InvalidTokenException("Excepted '('");
+                throw new InvalidTokenException("Expected '('");
             Tokener args = tokener.readToSkippingScopes(new Token(")"));
             ArrayList<Tokener> argTokens = args.splitSkippingScopes(new Token(";"));
             GaledwellLang.log("for loop args: " + argTokens);
             if (argTokens.size() != 3)
-                throw new InvalidTokenException("Excepted 3 args in for construction, but got " + argTokens.size());
+                throw new InvalidTokenException("Expected 3 args in for construction, but got " + argTokens.size());
             if (!tokener.eat().equals(new Token("{")))
-                throw new InvalidTokenException("Excepted '{'");
+                throw new InvalidTokenException("Expected '{'");
             Tokener body = tokener.readTo(new Token("}"));
 
             return new ExpressionForLoop(
@@ -212,7 +212,7 @@ public class FunctionParser {
      * @throws InvalidTokenException if operator unknown
      */
     private int getOrder(Token t) throws InvalidTokenException {
-        int level = 0;
+        int level;
         switch (t.token) {
             case "*":
             case "/":
@@ -235,7 +235,7 @@ public class FunctionParser {
                 level = 5;
                 break;
             default:
-                throw new InvalidTokenException("Excepted operator, but got " + t.token);
+                throw new InvalidTokenException("Expected operator, but got " + t.token);
         }
 
         return level;
@@ -265,13 +265,13 @@ public class FunctionParser {
 
             //read function path
             if ((functionName = eat()).type != TokenType.IDENTIFIER)
-                throw new InvalidTokenException("Excepted identifier while parsing function path");
+                throw new InvalidTokenException("Expected identifier while parsing function path");
 
             GaledwellLang.log("parsing function " + functionName.token);
 
             //read function args
             if (!tokener.get().equals(new Token("(")))
-                throw new InvalidTokenException("Excepted (");
+                throw new InvalidTokenException("Expected (");
             Tokener argsTokener = tokener.readToSkippingScopes(new Token(")"));
             ArrayList<Tokener> argsTokeners = argsTokener.splitSkippingScopes(new Token(","));
 
@@ -281,7 +281,7 @@ public class FunctionParser {
             for (int i = 0; i < argsTokeners.size(); i++) {
                 Tokener argTokener1 = argsTokeners.get(i);
                 if (argTokener1.size() > 1)
-                    throw new InvalidTokenException("Excepted 1 identifier, got " + argTokener1.size() + " while parsing argument");
+                    throw new InvalidTokenException("Expected 1 identifier, got " + argTokener1.size() + " while parsing argument");
                 if (argTokener1.size() > 0) {
                     CompilerDebugRuntime.addName(args[i], argTokener1.tokens.get(0).token);
 
@@ -291,7 +291,7 @@ public class FunctionParser {
 
             //read function body
             if (!tokener.get().equals(new Token("{")))
-                throw new InvalidTokenException("Excepted { while parsing function body");
+                throw new InvalidTokenException("Expected { while parsing function body");
             Tokener body = tokener.readToSkippingScopes(new Token("}"));
 
             GaledwellLang.log("parsed function body: " + body);
