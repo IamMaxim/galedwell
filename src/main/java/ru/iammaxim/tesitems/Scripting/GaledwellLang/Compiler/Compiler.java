@@ -43,11 +43,7 @@ public class Compiler {
     }
 
     private void _compileFunction() throws InvalidTokenException {
-        for (int i = 0; i < exps.size(); i++) {
-            Expression exp = exps.get(i);
-
-            GaledwellLang.log("compiling: " + exp);
-
+        for (Expression exp : exps) {
             compileExpression(exp, 0, false);
         }
 
@@ -63,6 +59,7 @@ public class Compiler {
     }
 
     private void compileExpression(Expression exp, int depth, boolean inTree) throws InvalidTokenException {
+        GaledwellLang.logger.increateIndent();
         GaledwellLang.log("compiling: " + exp.toString());
 
         if (exp instanceof ExpressionFunctionCall) {
@@ -78,6 +75,7 @@ public class Compiler {
         } else if (exp instanceof ExpressionForLoop) {
             compileForLoop((ExpressionForLoop) exp, depth, inTree);
         }
+        GaledwellLang.logger.decreaseIndent();
     }
 
     private void convertLastReferenceToValue() {
