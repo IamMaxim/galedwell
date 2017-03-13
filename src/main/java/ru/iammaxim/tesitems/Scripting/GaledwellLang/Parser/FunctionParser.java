@@ -24,16 +24,20 @@ public class FunctionParser {
 
         //check if this is value
         if (tokener.size() == 1) {
-            Value val = Value.get(tokener.get().token);
+            int ln = tokener.getLineNumber();
+            Value val = Value.get(tokener.eat().token);
             if (val != null)
-                return new ExpressionValue(tokener.getLineNumber(), val);
+                return new ExpressionValue(ln, val);
         }
 
         //check if this is return
         if (tokener.size() >= 2) {
             if (tokener.get().equals(new Token("return"))) {
+                tokener.eat(); // eat return
                 GaledwellLang.log("parsing return");
-                return new ExpressionReturn(tokener.getLineNumber(), parseExpression(tokener.subtokener(1, tokener.size())));
+
+                int ln = tokener.getLineNumber();
+                return new ExpressionReturn(ln, parseExpression(tokener.subtokener(1, tokener.size())));
             }
         }
 
@@ -107,9 +111,8 @@ public class FunctionParser {
             if (!tokener.get().equals(new Token("(")))
                 throw new InvalidTokenException(tokener.getLineNumber(), "Excepted '('");
             Tokener args = tokener.readToSkippingScopes(new Token(")"));
-            GaledwellLang.log("for loop args: " + args);
             ArrayList<Tokener> argTokens = args.splitSkippingScopes(new Token(";"));
-            GaledwellLang.log("for loop arg tokens list: " + argTokens);
+            GaledwellLang.log("for loop args: " + argTokens);
             if (argTokens.size() != 3)
                 throw new InvalidTokenException(tokener.getLineNumber(), "Excepted 3 args in for construction, but got " + argTokens.size());
             if (!tokener.eat().equals(new Token("{")))
@@ -195,26 +198,39 @@ public class FunctionParser {
      */
     private int getOrder(int lineNumber, Token t) throws InvalidTokenException {
         int level = 0;
-        if (t.token.equals("*") || t.token.equals("/"))
-            level = 1;
-        else if (t.token.equals("+") || t.token.equals("-"))
-            level = 2;
-        else if (t.token.equals("++") || t.token.equals("--"))
-            level = 3;
-        else if (t.token.equals("=="))
-            level = 4;
-        else if (t.token.equals("=") || t.token.equals("+=") || t.token.equals("-="))
-            level = 5;
-        else throw new InvalidTokenException(lineNumber, "Excepted operator, but got " + t.token);
+        switch (t.token) {
+            case "*":
+            case "/":
+                level = 1;
+                break;
+            case "+":
+            case "-":
+                level = 2;
+                break;
+            case "++":
+            case "--":
+                level = 3;
+                break;
+            case "==":
+                level = 4;
+                break;
+            case "=":
+            case "+=":
+            case "-=":
+                level = 5;
+                break;
+            default:
+                throw new InvalidTokenException(lineNumber, "Excepted operator, but got " + t.token);
+        }
 
         return level;
     }
 
     public int getLineNumber(ArrayList<Token> tokens) {
         int line_number = 1;
-        for (int i = 0; i < tokens.size(); i++)
-            if (tokens.get(i).type == TokenType.NEW_LINE) {
-                line_number = Integer.parseInt(tokens.get(i).token.substring(6));
+        for (Token token : tokens)
+            if (token.type == TokenType.NEW_LINE) {
+                line_number = Integer.parseInt(token.token.substring(6));
                 break;
             }
         return line_number;

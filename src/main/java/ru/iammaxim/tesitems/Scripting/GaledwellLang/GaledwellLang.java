@@ -7,6 +7,7 @@ import ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.*;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.ValueFunction;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Compiler.Compiler;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.ValueObject;
+import ru.iammaxim.tesitems.Scripting.Logger;
 
 
 import java.io.FileNotFoundException;
@@ -21,14 +22,10 @@ import java.util.Arrays;
 public class GaledwellLang {
     private static FileOutputStream tokens;
     private static FileOutputStream ops;
-    private static FileOutputStream log;
+    public static Logger logger;
 
     public static void log(String s) {
-        try {
-            log.write((s + "\n").getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        logger.log(s);
     }
 
     public static void loadSrcInto(String src, ValueObject object) throws InvalidTokenException {
@@ -38,7 +35,7 @@ public class GaledwellLang {
         try {
             GaledwellLang.tokens = new FileOutputStream("tokens.txt");
             GaledwellLang.ops = new FileOutputStream("operations.txt");
-            GaledwellLang.log = new FileOutputStream("log.txt");
+            logger = new Logger("log.txt");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

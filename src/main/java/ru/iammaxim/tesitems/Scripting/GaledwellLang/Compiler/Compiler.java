@@ -65,157 +65,18 @@ public class Compiler {
     private void compileExpression(Expression exp, int depth, boolean inTree) throws InvalidTokenException {
         GaledwellLang.log("    compiling: " + exp.toString());
 
-        //check if this is function call
         if (exp instanceof ExpressionFunctionCall) {
-            ExpressionFunctionCall call = (ExpressionFunctionCall) exp;
-
-            for (int j = call.args.size() - 1; j >= 0; j--) {
-                Expression arg = call.args.get(j);
-                compileExpression(arg, depth + 1, false);
-            }
-
-            compilePathToVar(call.functionName);
-            addOperation(new OperationCall(call.args.size()));
-            if (depth == 0)
-                addOperation(new OperationPop()); //pop return value of function if it won't be used
-        } else if (exp instanceof ExpressionReturn) { //check if this is return statement
-            compileExpression(((ExpressionReturn) exp).returnExp, depth + 1, false);
-            addOperation(new OperationReturn());
-        } else if (exp instanceof ExpressionValue) { //check if this is value expression
-            ExpressionValue val = (ExpressionValue) exp;
-            if (val.value instanceof ValueReference) { //if this is reference, push parent and field index, so value can be got during execution
-                compilePathToVar(((ValueReference) val.value).path);
-                if (inTree)
-                    convertLastReferenceToValue();
-            } else
-                addOperation(new OperationPush(val.value)); //this is constant, just push it every time
-
-        } else if (exp instanceof ExpressionTree) { //check if this is tree expression (left + operator + right)
-            ExpressionTree tree = ((ExpressionTree) exp);
-
-            if (tree.operator.type == TokenType.OPERATOR) {
-                if (tree.operator.equals(new Token("+"))) {
-                    compileExpression(tree.right, depth + 1, true);
-                    compileExpression(tree.left, depth + 1, true);
-                    addOperation(new OperationAdd());
-                } else if (tree.operator.equals(new Token("-"))) {
-                    compileExpression(tree.right, depth + 1, true);
-                    compileExpression(tree.left, depth + 1, true);
-                    addOperation(new OperationSub());
-                } else if (tree.operator.equals(new Token("*"))) {
-                    compileExpression(tree.right, depth + 1, true);
-                    compileExpression(tree.left, depth + 1, true);
-                    addOperation(new OperationMul());
-                } else if (tree.operator.equals(new Token("/"))) {
-                    compileExpression(tree.right, depth + 1, true);
-                    compileExpression(tree.left, depth + 1, true);
-                    addOperation(new OperationDiv());
-                } else if (tree.operator.equals(new Token("<"))) {
-                    compileExpression(tree.right, depth + 1, true);
-                    compileExpression(tree.left, depth + 1, true);
-                    addOperation(new OperationLess());
-                } else if (tree.operator.equals(new Token("<="))) {
-                    compileExpression(tree.right, depth + 1, true);
-                    compileExpression(tree.left, depth + 1, true);
-                    addOperation(new OperationLessEquals());
-                } else if (tree.operator.equals(new Token("=="))) {
-                    compileExpression(tree.right, depth + 1, true);
-                    compileExpression(tree.left, depth + 1, true);
-                    addOperation(new OperationEquals());
-                } else if (tree.operator.equals(new Token(">="))) {
-                    compileExpression(tree.right, depth + 1, true);
-                    compileExpression(tree.left, depth + 1, true);
-                    addOperation(new OperationMoreEquals());
-                } else if (tree.operator.equals(new Token(">"))) {
-                    compileExpression(tree.right, depth + 1, true);
-                    compileExpression(tree.left, depth + 1, true);
-                    addOperation(new OperationMore());
-                } else if (tree.operator.equals(new Token("="))) {
-                    compileExpression(tree.right, depth + 1, true);
-                    compileExpression(tree.left, depth + 1, false);
-                    //check if we assigning a reference: if so, replace it with value
-                    {
-                        Operation op = operations.get(operations.size() - 3);
-                        if (op instanceof OperationPush)
-                            if (((OperationPush) op).value instanceof ValueReference) {
-                                GaledwellLang.log("replacing reference with value in assignment");
-
-                                removeOperation(operations.size() - 3);
-                                addOperation(operations.size() - 2, new OperationGetAndPush(((ValueReference) ((OperationPush) op).value).id));
-                            }
-                    }
-
-                    addOperation(new OperationAssign());
-                    if (depth == 0)
-                        addOperation(new OperationPop()); //pop value if it won't be used
-                } else if (tree.operator.equals(new Token("++"))) {
-                    //check if right side is not empty
-                    if (!tree.right.toString().equals("null"))
-                        throw new InvalidTokenException(tree.left.getLineNumber(), "The '++' operator shouldn't have right side, but got '" + tree.right.toString() + "'");
-
-                    compileExpression(tree.left, depth + 1, true);
-                    addOperation(new OperationIncrement());
-                } else if (tree.operator.equals(new Token("--"))) {
-                    //check if right side is not empty
-                    if (!tree.right.toString().equals("null"))
-                        throw new InvalidTokenException(tree.right.getLineNumber(), "The '--' operator shouldn't have right side, but got '" + tree.right.toString() + "'");
-
-                    compileExpression(tree.left, depth + 1, true);
-                    addOperation(new OperationDecrement());
-                } else if (tree.operator.equals(new Token("-="))) {
-                    compileExpression(tree.right, depth + 1, true);
-                    compileExpression(tree.left, depth + 1, true);
-                    // check if left side is reference
-                    Operation leftOP;
-                    if (!((leftOP = operations.get(operations.size() - 1)) instanceof OperationGetAndPush))
-                        throw new InvalidTokenException(tree.left.getLineNumber(), "Left side of -= should be reference");
-                    addOperation(new OperationSub());
-                    addOperation(new OperationPushVariableStorage());
-                    addOperation(new OperationPush(new ValueReference(((OperationGetAndPush) leftOP).id)));
-                    addOperation(new OperationAssign());
-                } else if (tree.operator.equals(new Token("+="))) {
-                    compileExpression(tree.right, depth + 1, true);
-                    compileExpression(tree.left, depth + 1, true);
-                    // check if left side is reference
-                    Operation leftOP;
-                    if (!((leftOP = operations.get(operations.size() - 1)) instanceof OperationGetAndPush))
-                        throw new InvalidTokenException(tree.left.getLineNumber(), "Left side of += should be reference");
-                    addOperation(new OperationAdd());
-                    addOperation(new OperationPushVariableStorage());
-                    addOperation(new OperationPush(new ValueReference(((OperationGetAndPush) leftOP).id)));
-                    addOperation(new OperationAssign());
-                }
-                else {
-                    throw new InvalidTokenException(tree.getLineNumber(), "Invalid operator '" + tree.operator.token + "'");
-                }
-            }
+            compileFunctionCall((ExpressionFunctionCall) exp, depth, inTree);
+        } else if (exp instanceof ExpressionReturn) {
+            compileReturn((ExpressionReturn) exp, depth, inTree);
+        } else if (exp instanceof ExpressionValue) {
+            compileValue((ExpressionValue) exp, depth, inTree);
+        } else if (exp instanceof ExpressionTree) {
+            compileTree((ExpressionTree) exp, depth, inTree);
         } else if (exp instanceof ExpressionCondition) {
-            ExpressionCondition cond = (ExpressionCondition) exp;
-            OperationLabel ifNotLabel = new OperationLabel(), endIfLabel = null;
-            boolean elseExists = false; //true if else block exists
-            if (!cond.elseBody.isEmpty()) {
-                elseExists = true;
-                endIfLabel = new OperationLabel();
-            }
-
-            compileExpression(cond.cond, depth + 1, false); //compile condition
-            addOperation(new OperationIf(ifNotLabel));
-
-            for (Expression expression : cond.body) {
-                compileExpression(expression, 0, false);
-            }
-
-            if (elseExists) //skip else block from if block
-                addOperation(new OperationGoTo(endIfLabel));
-
-            addOperation(ifNotLabel); //add label after body
-
-            if (elseExists) {
-                for (Expression expression : cond.elseBody) {
-                    compileExpression(expression, depth + 1, false);
-                }
-                addOperation(endIfLabel);
-            }
+            compileCondition((ExpressionCondition) exp, depth, inTree);
+        } else if (exp instanceof ExpressionForLoop) {
+            compileForLoop((ExpressionForLoop) exp, depth, inTree);
         }
     }
 
@@ -234,8 +95,6 @@ public class Compiler {
     }
 
     private void compilePathToVar(String path) {
-//        GaledwellLang.log("compiling path to var");
-
         addOperation(new OperationPushVariableStorage());
         String[] tokens = path.split("\\.");
         for (int i = 0; i < tokens.length; i++) {
@@ -247,5 +106,161 @@ public class Compiler {
                 addOperation(new OperationGetAndPush(tokens[i].hashCode()));
             }
         }
+    }
+
+    private void compileFunctionCall(ExpressionFunctionCall exp, int depth, boolean inTree) throws InvalidTokenException {
+        for (int j = exp.args.size() - 1; j >= 0; j--) {
+            Expression arg = exp.args.get(j);
+            compileExpression(arg, depth + 1, false);
+        }
+
+        compilePathToVar(exp.functionName);
+        addOperation(new OperationCall(exp.args.size()));
+        if (depth == 0)
+            addOperation(new OperationPop()); //pop return value of function if it won't be used
+    }
+
+    private void compileReturn(ExpressionReturn exp, int depth, boolean inTree) throws InvalidTokenException {
+        compileExpression(exp.returnExp, depth + 1, false);
+        addOperation(new OperationReturn());
+    }
+
+    private void compileValue(ExpressionValue exp, int depth, boolean inTree) throws InvalidTokenException {
+        if (exp.value instanceof ValueReference) { //if this is reference, push parent and field index, so value can be got during execution
+            compilePathToVar(((ValueReference) exp.value).path);
+            if (inTree)
+                convertLastReferenceToValue();
+        } else
+            addOperation(new OperationPush(exp.value)); //this is constant, just push it every time
+    }
+
+    private void compileTree(ExpressionTree exp, int depth, boolean inTree) throws InvalidTokenException {
+        if (exp.operator.type == TokenType.OPERATOR) {
+            if (exp.operator.equals(new Token("+"))) {
+                compileExpression(exp.right, depth + 1, true);
+                compileExpression(exp.left, depth + 1, true);
+                addOperation(new OperationAdd());
+            } else if (exp.operator.equals(new Token("-"))) {
+                compileExpression(exp.right, depth + 1, true);
+                compileExpression(exp.left, depth + 1, true);
+                addOperation(new OperationSub());
+            } else if (exp.operator.equals(new Token("*"))) {
+                compileExpression(exp.right, depth + 1, true);
+                compileExpression(exp.left, depth + 1, true);
+                addOperation(new OperationMul());
+            } else if (exp.operator.equals(new Token("/"))) {
+                compileExpression(exp.right, depth + 1, true);
+                compileExpression(exp.left, depth + 1, true);
+                addOperation(new OperationDiv());
+            } else if (exp.operator.equals(new Token("<"))) {
+                compileExpression(exp.right, depth + 1, true);
+                compileExpression(exp.left, depth + 1, true);
+                addOperation(new OperationLess());
+            } else if (exp.operator.equals(new Token("<="))) {
+                compileExpression(exp.right, depth + 1, true);
+                compileExpression(exp.left, depth + 1, true);
+                addOperation(new OperationLessEquals());
+            } else if (exp.operator.equals(new Token("=="))) {
+                compileExpression(exp.right, depth + 1, true);
+                compileExpression(exp.left, depth + 1, true);
+                addOperation(new OperationEquals());
+            } else if (exp.operator.equals(new Token(">="))) {
+                compileExpression(exp.right, depth + 1, true);
+                compileExpression(exp.left, depth + 1, true);
+                addOperation(new OperationMoreEquals());
+            } else if (exp.operator.equals(new Token(">"))) {
+                compileExpression(exp.right, depth + 1, true);
+                compileExpression(exp.left, depth + 1, true);
+                addOperation(new OperationMore());
+            } else if (exp.operator.equals(new Token("="))) {
+                compileExpression(exp.right, depth + 1, true);
+                compileExpression(exp.left, depth + 1, false);
+                //check if we assigning a reference: if so, replace it with value
+                {
+                    Operation op = operations.get(operations.size() - 3);
+                    if (op instanceof OperationPush)
+                        if (((OperationPush) op).value instanceof ValueReference) {
+                            GaledwellLang.log("replacing reference with value in assignment");
+
+                            removeOperation(operations.size() - 3);
+                            addOperation(operations.size() - 2, new OperationGetAndPush(((ValueReference) ((OperationPush) op).value).id));
+                        }
+                }
+
+                addOperation(new OperationAssign());
+                if (depth == 0)
+                    addOperation(new OperationPop()); //pop value if it won't be used
+            } else if (exp.operator.equals(new Token("++"))) {
+                //check if right side is not empty
+                if (!exp.right.toString().equals("null"))
+                    throw new InvalidTokenException(exp.left.getLineNumber(), "The '++' operator shouldn't have right side, but got '" + exp.right.toString() + "'");
+
+                compileExpression(exp.left, depth + 1, true);
+                addOperation(new OperationIncrement());
+            } else if (exp.operator.equals(new Token("--"))) {
+                //check if right side is not empty
+                if (!exp.right.toString().equals("null"))
+                    throw new InvalidTokenException(exp.right.getLineNumber(), "The '--' operator shouldn't have right side, but got '" + exp.right.toString() + "'");
+
+                compileExpression(exp.left, depth + 1, true);
+                addOperation(new OperationDecrement());
+            } else if (exp.operator.equals(new Token("-="))) {
+                compileExpression(exp.right, depth + 1, true);
+                compileExpression(exp.left, depth + 1, true);
+                // check if left side is reference
+                Operation leftOP;
+                if (!((leftOP = operations.get(operations.size() - 1)) instanceof OperationGetAndPush))
+                    throw new InvalidTokenException(exp.left.getLineNumber(), "Left side of -= should be reference");
+                addOperation(new OperationSub());
+                addOperation(new OperationPushVariableStorage());
+                addOperation(new OperationPush(new ValueReference(((OperationGetAndPush) leftOP).id)));
+                addOperation(new OperationAssign());
+            } else if (exp.operator.equals(new Token("+="))) {
+                compileExpression(exp.right, depth + 1, true);
+                compileExpression(exp.left, depth + 1, true);
+                // check if left side is reference
+                Operation leftOP;
+                if (!((leftOP = operations.get(operations.size() - 1)) instanceof OperationGetAndPush))
+                    throw new InvalidTokenException(exp.left.getLineNumber(), "Left side of += should be reference");
+                addOperation(new OperationAdd());
+                addOperation(new OperationPushVariableStorage());
+                addOperation(new OperationPush(new ValueReference(((OperationGetAndPush) leftOP).id)));
+                addOperation(new OperationAssign());
+            } else {
+                throw new InvalidTokenException(exp.getLineNumber(), "Invalid operator '" + exp.operator.token + "'");
+            }
+        }
+    }
+
+    private void compileCondition(ExpressionCondition exp, int depth, boolean inTree) throws InvalidTokenException {
+        OperationLabel ifNotLabel = new OperationLabel(), endIfLabel = null;
+        boolean elseExists = false; //true if else block exists
+        if (!exp.elseBody.isEmpty()) {
+            elseExists = true;
+            endIfLabel = new OperationLabel();
+        }
+
+        compileExpression(exp.cond, depth + 1, false); //compile condition
+        addOperation(new OperationIf(ifNotLabel));
+
+        for (Expression expression : exp.body) {
+            compileExpression(expression, 0, false);
+        }
+
+        if (elseExists) //skip else block from if block
+            addOperation(new OperationGoTo(endIfLabel));
+
+        addOperation(ifNotLabel); //add label after body
+
+        if (elseExists) {
+            for (Expression expression : exp.elseBody) {
+                compileExpression(expression, depth + 1, false);
+            }
+            addOperation(endIfLabel);
+        }
+    }
+
+    private void compileForLoop(ExpressionForLoop exp, int depth, boolean inTree) throws InvalidTokenException {
+
     }
 }
