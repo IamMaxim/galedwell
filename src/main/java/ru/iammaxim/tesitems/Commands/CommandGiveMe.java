@@ -55,6 +55,12 @@ public class CommandGiveMe extends CommandBase {
             }
 
             Item item = Item.getByNameOrId(args[0]);
+
+            if (item == null) {
+                ((EntityPlayer) sender).addChatComponentMessage(new TextComponentString(TextFormatting.RED + "Item doesn't exists. Try pressing TAB to autocomplete"));
+                return;
+            }
+
             if (item.isDamageable())
                 for (int i = 0; i < count; i++)
                     inv.addItem(new ItemStack(item));
