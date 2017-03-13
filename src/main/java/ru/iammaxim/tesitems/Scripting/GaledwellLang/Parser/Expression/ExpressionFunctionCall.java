@@ -16,13 +16,10 @@ public class ExpressionFunctionCall extends Expression {
     public ArrayList<Expression> args;
     public int lineNumber;
 
-    public ExpressionFunctionCall(int lineNumber, Token functionName, ArrayList<Tokener> args) throws InvalidTokenException {
+    public ExpressionFunctionCall(int lineNumber, Token functionName, ArrayList<Expression> args) throws InvalidTokenException {
         this.lineNumber = lineNumber;
         this.functionName = functionName.token;
-        this.args = new ArrayList<>(args.size());
-        for (Tokener arg : args) {
-            this.args.add(FunctionParser.parseExpression(arg));
-        }
+        this.args = args;
     }
 
     @Override

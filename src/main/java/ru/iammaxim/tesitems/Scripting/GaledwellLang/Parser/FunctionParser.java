@@ -18,7 +18,7 @@ public class FunctionParser {
         tokener = new Tokener(getLineNumber(tokens), tokens);
     }
 
-    public static Expression parseExpression(Tokener tokener) throws InvalidTokenException {
+    private Expression parseExpression(Tokener tokener) throws InvalidTokenException {
         GaledwellLang.log("parsing " + tokener);
         tokener.trimParentheses();
 
@@ -115,6 +115,12 @@ public class FunctionParser {
             if (!tokener.eat().equals(new Token("{")))
                 throw new InvalidTokenException(tokener.getLineNumber(), "Excepted '{'");
             Tokener body = tokener.readTo(new Token("}"));
+            return new ExpressionForLoop(
+                    tokener.getLineNumber(),
+                    parseExpression(argTokens.get(0)),
+                    parseExpression(argTokens.get(1)),
+                    parseExpression(argTokens.get(2)),
+                    parseExpressions(body.splitSkippingScopes(new Token(";"))));
         }
 
         int level = 0;
@@ -153,7 +159,10 @@ public class FunctionParser {
                         Tokener argsTokener = tokener.readTo(new Token(")"));
                         ArrayList<Tokener> args = argsTokener.splitSkippingScopes(new Token(","));
                         tokener.index = index;
-                        return new ExpressionFunctionCall(tokener.getLineNumber(), tokener.tokens.get(i - 1), args);
+                        return new ExpressionFunctionCall(
+                                tokener.getLineNumber(),
+                                tokener.tokens.get(i - 1),
+                                parseExpressions(args));
                     } catch (InvalidTokenException e) {
                         e.printStackTrace();
                     }
@@ -175,7 +184,7 @@ public class FunctionParser {
      * @return true if second's order is higher than first's
      * @throws InvalidTokenException if one of operators unknown
      */
-    private static boolean isOrderHigher(int lineNumber, Token first, Token second) throws InvalidTokenException {
+    private boolean isOrderHigher(int lineNumber, Token first, Token second) throws InvalidTokenException {
         return getOrder(lineNumber, first) < getOrder(lineNumber, second);
     }
 
@@ -184,7 +193,7 @@ public class FunctionParser {
      * @return operator's order
      * @throws InvalidTokenException if operator unknown
      */
-    private static int getOrder(int lineNumber, Token t) throws InvalidTokenException {
+    private int getOrder(int lineNumber, Token t) throws InvalidTokenException {
         int level = 0;
         if (t.token.equals("*") || t.token.equals("/"))
             level = 1;
@@ -221,7 +230,7 @@ public class FunctionParser {
         while (tokener.left() > 0) { //while !EOF
             Token functionName;
             int[] args;
-            ArrayList<Expression> exps = new ArrayList<>();
+            ArrayList<Expression> exps;
 
             //read function path
             if ((functionName = eat()).type != TokenType.IDENTIFIER)
@@ -257,19 +266,11 @@ public class FunctionParser {
             GaledwellLang.log("parsed function body: " + body);
 
             //process body
-            ArrayList<Tokener> bodyParts = body.splitSkippingScopes(new Token(";"));
+            exps = parseExpressions(body.splitSkippingScopes(new Token(";")));
 
-            GaledwellLang.log("parsed statements:");
-            bodyParts.forEach(s -> GaledwellLang.log(s.toString()));
-            GaledwellLang.log("parsed statements end");
-
-            for (Tokener statement : bodyParts) {
-                //skip empty statements
-                if (statement.isEmpty())
-                    continue;
-                Expression exp = parseExpression(statement);
-                exps.add(exp);
-            }
+            GaledwellLang.log("parsed expressions:");
+            exps.forEach(e -> GaledwellLang.log(e.toString()));
+            GaledwellLang.log("parsed expressions end");
 
             //build function
             CompilerDebugRuntime.addName(functionName.token.hashCode(), functionName.token);
@@ -277,5 +278,13 @@ public class FunctionParser {
         }
 
         return functions;
+    }
+
+    private ArrayList<Expression> parseExpressions(ArrayList<Tokener> tokeners) throws InvalidTokenException {
+        ArrayList<Expression> exps = new ArrayList<>(tokeners.size());
+        for (Tokener t : tokeners) {
+            exps.add(parseExpression(t));
+        }
+        return exps;
     }
 }
