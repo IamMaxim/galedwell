@@ -259,6 +259,18 @@ public class Compiler {
     }
 
     private void compileForLoop(ExpressionForLoop exp, int depth, boolean inTree) throws InvalidTokenException {
+        OperationLabel begin = new OperationLabel();
+        OperationLabel end = new OperationLabel();
 
+        compileExpression(exp.first, depth, false);
+        addOperation(begin);
+        compileExpression(exp.second, depth, true);
+        addOperation(new OperationIf(end));
+        for (Expression e : exp.body) {
+            compileExpression(e, depth + 1, false);
+        }
+        compileExpression(exp.third, depth, false);
+        addOperation(new OperationGoTo(begin));
+        addOperation(end);
     }
 }

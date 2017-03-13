@@ -14,7 +14,7 @@ main(arg1, arg2) {
 
     print("Final i is: " + i);
     for (j = 0; j < 10; j++) {
-        i++;
+        i+=j;
     };
     print("i after loop: " + i);
 }
