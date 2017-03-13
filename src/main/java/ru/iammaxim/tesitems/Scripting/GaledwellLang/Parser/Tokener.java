@@ -8,12 +8,19 @@ import java.util.ArrayList;
 public class Tokener {
     public ArrayList<Token> tokens;
     public int index = 0;
+    private int lineNumber = -1;
 
-    public Tokener(ArrayList<Token> tokens) {
+    public int getLineNumber() {
+        return lineNumber;
+    }
+
+    public Tokener(int lineNumber, ArrayList<Token> tokens) {
+        this.lineNumber = lineNumber;
         this.tokens = tokens;
     }
 
-    public Tokener(Token... tokens) {
+    public Tokener(int lineNumber, Token... tokens) {
+        this.lineNumber = lineNumber;
         this.tokens = new ArrayList<>();
         for (Token token : tokens) {
             this.tokens.add(token);
@@ -26,7 +33,10 @@ public class Tokener {
 
     public Token eat() {
         Token t = tokens.get(index++);
-//        System.out.println("ate " + t.token);
+        while (t.type == TokenType.NEW_LINE) {
+            t = tokens.get(index++);
+            lineNumber++;
+        }
         return t;
     }
 
@@ -40,39 +50,13 @@ public class Tokener {
             tokens.add(t);
         }
         if (index == tokens.size())
-            throw new InvalidTokenException("Excepted " + token.token);
-        return new Tokener(tokens);
-    }
-
-    public Tokener readToSkippingParentheses(Token token) throws InvalidTokenException {
-        ArrayList<Token> tokens = new ArrayList<>();
-        int level = 1; //because first paren already read
-        while (left() > 0) {
-            Token t = eat();
-
-            if (t.equals(new Token("(")))
-                level++;
-            if (t.equals(new Token(")")))
-                level--;
-
-            if (level > 0) {
-                tokens.add(t);
-                continue;
-            }
-
-            if (t.equals(token))
-                break;
-
-            tokens.add(t);
-        }
-        if (index == tokens.size())
-            throw new InvalidTokenException("Excepted " + token.token);
-        return new Tokener(tokens);
+            throw new InvalidTokenException(lineNumber, "Excepted " + token.token);
+        return new Tokener(lineNumber, tokens);
     }
 
     public Tokener readToSkippingScopes(Token token) throws InvalidTokenException {
         ArrayList<Token> tokens = new ArrayList<>();
-        int level = 1; //because first brace/paren already read
+        int level = 0; //because first brace/paren has already been read
         while (left() > 0) {
             Token t = eat();
 
@@ -92,96 +76,15 @@ public class Tokener {
             tokens.add(t);
         }
         if (index == tokens.size())
-            throw new InvalidTokenException("Excepted " + token.token);
-        return new Tokener(tokens);
-    }
+            throw new InvalidTokenException(lineNumber, "Excepted " + token.token);
 
-    public ArrayList<Tokener> split(Token token) {
-        ArrayList<Tokener> parts = new ArrayList<>();
-        ArrayList<Token> tokens = new ArrayList<>();
-        index = 0;
-        while (left() > 0) {
-            Token t = eat();
-            if (t.equals(token) && !parts.isEmpty()) {
-                parts.add(new Tokener(tokens));
-                tokens = new ArrayList<>();
-            } else
-                tokens.add(t);
-        }
-        //add last part that is not followed by delimiter
-        if (!parts.isEmpty())
-            parts.add(new Tokener(tokens));
-        return parts;
-    }
-
-    public ArrayList<Tokener> splitSkippingBraces(Token token) throws InvalidTokenException {
-        int toIgnore = 0; //skip delimiter in: if exp1; else exp2;
-        ArrayList<Tokener> parts = new ArrayList<>();
-        ArrayList<Token> tokens = new ArrayList<>();
-        index = 0;
-        int level = 0;
-        while (left() > 0) {
-            Token t = eat();
-
-            if (t.equals(new Token("{")))
-                level++;
-            else if (t.equals(new Token("}")))
-                level--;
-            else if (t.equals(new Token("if")))
-                toIgnore++;
-
-            if (level > 0) {
-                tokens.add(t);
-                continue;
-            }
-
-            if (t.equals(token)) {
-                if (toIgnore > 0) {
-                    tokens.add(t);
-                    toIgnore--;
-                }
-                else if (tokens.size() > 0) {
-                    parts.add(new Tokener(tokens));
-                    tokens = new ArrayList<>();
-                }
-            } else
-                tokens.add(t);
-        }
-        //add last part that is not followed by delimiter
-        if (tokens.size() > 0)
-            parts.add(new Tokener(tokens));
-        return parts;
+        tokens.remove(0); //remove first scope
+        return new Tokener(lineNumber, tokens);
     }
 
     @Override
     public String toString() {
         return tokens.toString();
-    }
-
-    /*public String toShortString() {
-        StringBuilder sb = new StringBuilder();
-        for (Token token : tokens) {
-            sb.append(token.toShortString()).append('\n');
-        }
-        return sb.substring(0, sb.length() - 1);
-    }*/
-
-    public boolean contains(TokenType type) {
-        for (int i = index; i < tokens.size(); i++) {
-            Token t = tokens.get(i);
-            if (t.type.equals(type))
-                return true;
-        }
-        return false;
-    }
-
-    public boolean contains(Token token) {
-        for (int i = index; i < tokens.size(); i++) {
-            Token t = tokens.get(i);
-            if (t.equals(token))
-                return true;
-        }
-        return false;
     }
 
     public boolean isEmpty() {
@@ -195,7 +98,7 @@ public class Tokener {
         while (left() > 0) {
             Token t = eat();
             if (t.equals(token)) {
-                parts.add(new Tokener(tokens));
+                parts.add(new Tokener(lineNumber, tokens));
                 tokens = new ArrayList<>();
                 while (left() > 0) {
                     tokens.add(eat());
@@ -205,7 +108,7 @@ public class Tokener {
                 tokens.add(t);
         }
         //add last part that is not followed by delimiter
-        parts.add(new Tokener(tokens));
+        parts.add(new Tokener(lineNumber, tokens));
         return parts;
     }
 
@@ -214,39 +117,11 @@ public class Tokener {
         ArrayList<Token> subList = new ArrayList<>(end - begin);
         for (int i = begin; i < end; i++)
             subList.add(tokens.get(i));
-        return new Tokener(subList);
-    }
-
-    public ArrayList<Tokener> divideByTopOrderOperatorSkippingParentheses() {
-        return null;
-    }
-
-    private int indexOfTokenSkippingParentheses(Token token) {
-        int level = 0;
-        index = 0;
-        for (int i = 0; left() > 0; i++) {
-            Token t = eat();
-            if (t.token.equals("("))
-                level++;
-            else if (t.token.equals(")"))
-                level--;
-
-            if (level == 0 && t.equals(token))
-                return i;
-        }
-        return -1;
+        return new Tokener(lineNumber, subList);
     }
 
     public int size() {
         return tokens.size();
-    }
-
-    public String toShortString() {
-        StringBuilder sb = new StringBuilder();
-        for (Token token : tokens) {
-            sb.append(token.token).append("\n");
-        }
-        return sb.substring(0, sb.length() - 1);
     }
 
     public void trimParentheses() throws InvalidTokenException {
@@ -265,7 +140,7 @@ public class Tokener {
         return tokens.get(i);
     }
 
-    public ArrayList<Tokener> splitSkippingParentheses(Token token) throws InvalidTokenException {
+    public ArrayList<Tokener> splitSkippingScopes(Token token) {
         ArrayList<Tokener> parts = new ArrayList<>();
         ArrayList<Token> tokens = new ArrayList<>();
         index = 0;
@@ -273,9 +148,9 @@ public class Tokener {
         while (left() > 0) {
             Token t = eat();
 
-            if (t.equals(new Token("(")))
+            if (t.type == TokenType.SCOPE_OPEN)
                 level++;
-            if (t.equals(new Token(")")))
+            if (t.type == TokenType.SCOPE_CLOSE)
                 level--;
 
             if (level > 0) {
@@ -285,7 +160,7 @@ public class Tokener {
 
             if (t.equals(token)) {
                 if (tokens.size() > 0) {
-                    parts.add(new Tokener(tokens));
+                    parts.add(new Tokener(lineNumber, tokens));
                     tokens = new ArrayList<>();
                 }
             } else
@@ -293,12 +168,7 @@ public class Tokener {
         }
         //add last part that is not followed by delimiter
         if (tokens.size() > 0)
-            parts.add(new Tokener(tokens));
+            parts.add(new Tokener(lineNumber, tokens));
         return parts;
-    }
-
-    public Tokener back(int count) {
-        index -= count;
-        return this;
     }
 }

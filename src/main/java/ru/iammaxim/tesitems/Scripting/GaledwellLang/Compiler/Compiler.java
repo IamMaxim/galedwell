@@ -51,14 +51,11 @@ public class Compiler {
             compileExpression(exp, 0, false);
         }
 
-//        System.out.println("processing labels...");
         //process labels
         for (int i = 0; i < operations.size(); i++) {
             Operation op = operations.get(i);
             if (op instanceof OperationLabel) {
-//                System.out.println("found label at " + i);
                 ((OperationLabel) op).index = i;
-//                System.out.println("changed index to " + i);
                 operations.remove(i);
                 i--; //repeat this index
             }
@@ -151,6 +148,45 @@ public class Compiler {
                     addOperation(new OperationAssign());
                     if (depth == 0)
                         addOperation(new OperationPop()); //pop value if it won't be used
+                } else if (tree.operator.equals(new Token("++"))) {
+                    //check if right side is not empty
+                    if (!tree.right.toString().equals("null"))
+                        throw new InvalidTokenException(tree.left.getLineNumber(), "The '++' operator shouldn't have right side, but got '" + tree.right.toString() + "'");
+
+                    compileExpression(tree.left, depth + 1, true);
+                    addOperation(new OperationIncrement());
+                } else if (tree.operator.equals(new Token("--"))) {
+                    //check if right side is not empty
+                    if (!tree.right.toString().equals("null"))
+                        throw new InvalidTokenException(tree.right.getLineNumber(), "The '--' operator shouldn't have right side, but got '" + tree.right.toString() + "'");
+
+                    compileExpression(tree.left, depth + 1, true);
+                    addOperation(new OperationDecrement());
+                } else if (tree.operator.equals(new Token("-="))) {
+                    compileExpression(tree.right, depth + 1, true);
+                    compileExpression(tree.left, depth + 1, true);
+                    // check if left side is reference
+                    Operation leftOP;
+                    if (!((leftOP = operations.get(operations.size() - 1)) instanceof OperationGetAndPush))
+                        throw new InvalidTokenException(tree.left.getLineNumber(), "Left side of -= should be reference");
+                    addOperation(new OperationSub());
+                    addOperation(new OperationPushVariableStorage());
+                    addOperation(new OperationPush(new ValueReference(((OperationGetAndPush) leftOP).id)));
+                    addOperation(new OperationAssign());
+                } else if (tree.operator.equals(new Token("+="))) {
+                    compileExpression(tree.right, depth + 1, true);
+                    compileExpression(tree.left, depth + 1, true);
+                    // check if left side is reference
+                    Operation leftOP;
+                    if (!((leftOP = operations.get(operations.size() - 1)) instanceof OperationGetAndPush))
+                        throw new InvalidTokenException(tree.left.getLineNumber(), "Left side of += should be reference");
+                    addOperation(new OperationAdd());
+                    addOperation(new OperationPushVariableStorage());
+                    addOperation(new OperationPush(new ValueReference(((OperationGetAndPush) leftOP).id)));
+                    addOperation(new OperationAssign());
+                }
+                else {
+                    throw new InvalidTokenException(tree.getLineNumber(), "Invalid operator '" + tree.operator.token + "'");
                 }
             }
         } else if (exp instanceof ExpressionCondition) {

@@ -5,9 +5,7 @@ import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.Value;
 
 import java.util.Arrays;
 
-/**
- * Created by maxim on 2/17/17 at 7:03 PM.
- */
+
 public class Stack {
     private Value[] stack;
     private int cursor = -1;
@@ -21,17 +19,14 @@ public class Stack {
     }
 
     public void push(Value o) {
-//        System.out.println("pushed " + o);
         stack[++cursor] = o;
     }
 
     public Value pop() {
-//        System.out.println("popped " + stack[cursor]);
         return stack[cursor--];
     }
 
     public Value get() {
-//        System.out.println("got " + stack[cursor]);
         return stack[cursor];
     }
 

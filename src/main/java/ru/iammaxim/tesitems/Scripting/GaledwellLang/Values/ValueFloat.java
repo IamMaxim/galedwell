@@ -88,4 +88,16 @@ public class ValueFloat extends Value {
     public static boolean isValid(String value) {
         return value.endsWith("f") && value.matches("[0-9]*.[0-9]*f");
     }
+
+    @Override
+    public Value operatorIncrement() throws InvalidOperationException {
+        value++;
+        return this;
+    }
+
+    @Override
+    public Value operatorDecrement() throws InvalidOperationException {
+        value--;
+        return this;
+    }
 }

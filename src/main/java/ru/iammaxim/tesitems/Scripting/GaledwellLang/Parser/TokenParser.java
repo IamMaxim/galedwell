@@ -9,6 +9,7 @@ public class TokenParser {
     private Token ct = new Token(); //current token
     private ArrayList<Token> tokens = new ArrayList<>();
     private String src;
+    private int line_number = 1;
 
     private TokenParser(String src) {
         this.src = src;
@@ -20,20 +21,33 @@ public class TokenParser {
         return parser.tokens;
     }
 
+    private void addLineNumber() {
+        tokens.add(new Token(TokenType.NEW_LINE, "line: " + line_number));
+        line_number++;
+    }
+
     private void _parse() throws InvalidTokenException {
+        addLineNumber();
         char[] chars = src.toCharArray();
         for (int i = 0; i < src.length(); i++) {
             char c = chars[i];
 
-            if (c == '/' && chars[i + 1] == '/') { // comment
-                i = src.indexOf('\n', i); // go to next line
-                continue;
-            }
+            if (c == '/')
+                if (chars.length >= i + 1 && chars[i + 1] == '/') { // comment
+                    i = src.indexOf('\n', i) - 1; // go to next line and leave \n, so parser will parse newline
+                    continue;
+                } else
+                    throw new InvalidTokenException(line_number, "Excepted comment ('//'), but found '/'");
+
+            if (c == '\n')
+                addLineNumber();
 
             //parse value
             if (c == '"') {
                 ct.token += c;
                 while ((c = chars[++i]) != '"') {
+                    if (c == '\n')
+                        addLineNumber();
                     ct.token += c;
                 }
                 ct.token += chars[i];
@@ -48,8 +62,8 @@ public class TokenParser {
             String s;
 
             //check if this is operator
-            //check double-character operators (==, ++, --)
-            if (src.length() - i > 1) {
+            //check double-character operators (==, !=, ++, --)
+            if (src.length() > i + 1) {
                 s = new String(new char[]{c, chars[i + 1]});
                 if (Token.is(TokenType.OPERATOR, s)) {
                     cutOffToken();

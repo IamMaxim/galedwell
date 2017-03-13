@@ -9,15 +9,19 @@ import ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.Token;
 public class ExpressionTree extends Expression {
     public Token operator;
     public Expression left, right;
+    private int lineNumber;
 
-
-    public ExpressionTree(Token operator, Expression left, Expression right) {
+    public ExpressionTree(int lineNumber, Token operator, Expression left, Expression right) {
+        this.lineNumber = lineNumber;
         this.operator = operator;
         this.left = left;
         this.right = right;
     }
 
-    public ExpressionTree(Token operator) {
+    public ExpressionTree() {};
+
+    public ExpressionTree(int lineNumber, Token operator) {
+        this.lineNumber = lineNumber;
         this.operator = operator;
     }
 
@@ -33,5 +37,10 @@ public class ExpressionTree extends Expression {
         if (right != null)
             sb.append("(").append(right).append(")");
         return sb.toString();
+    }
+
+    @Override
+    public int getLineNumber() {
+        return lineNumber;
     }
 }

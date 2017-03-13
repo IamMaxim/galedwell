@@ -77,4 +77,11 @@ public abstract class Value {
         return new ValueNull();
     }
 
+    public Value operatorIncrement() throws InvalidOperationException {
+        throw new InvalidOperationException("Not implemented");
+    }
+
+    public Value operatorDecrement() throws InvalidOperationException {
+        throw new InvalidOperationException("Not implemented");
+    }
 }

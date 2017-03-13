@@ -35,8 +35,10 @@ public class Token {
                         t.equals("*") ||
                         t.equals("/") ||
                         t.equals("=") ||
-/*                        t.equals("++") ||
-                        t.equals("--") ||*/
+                        t.equals("++") ||
+                        t.equals("--") ||
+                        t.equals("-=") ||
+                        t.equals("+=") ||
                         t.equals("<") ||
                         t.equals("<=") ||
                         t.equals(">=") ||
@@ -49,11 +51,12 @@ public class Token {
                 return t.equals("global") ||
                         t.equals("if") ||
                         t.equals("return") ||
-                        t.equals("else");
+                        t.equals("else") ||
+                        t.equals("for");
             case IDENTIFIER:
                 return true;
             default:
-                throw new InvalidTokenException("Token.is() is not implemented for type " + type.toString());
+                throw new InvalidTokenException(-1, "Token.is() is not implemented for type " + type.toString());
         }
     }
 

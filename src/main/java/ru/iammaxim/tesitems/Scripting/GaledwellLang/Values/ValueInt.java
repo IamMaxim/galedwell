@@ -86,6 +86,18 @@ public class ValueInt extends Value {
         return new ValueInt(tag.getInteger("value"));
     }
 
+    @Override
+    public Value operatorIncrement() throws InvalidOperationException {
+        value++;
+        return this;
+    }
+
+    @Override
+    public Value operatorDecrement() throws InvalidOperationException {
+        value--;
+        return this;
+    }
+
     public static boolean isValid(String value) {
         return value.matches("[0-9]*");
     }

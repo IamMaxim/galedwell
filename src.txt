@@ -1,14 +1,20 @@
-onTopicClick(varStorage) {
-    print("Notification test");
-    if (varStorage.counter == null)
-        varStorage.counter = 0;
-    else
-        varStorage.counter = varStorage.counter + 1;
-    print("Your counter: " + varStorage.counter);
-    return 0;
-}
-
 main() {
-    obj = Object;
-    onTopicClick(obj);
+    i = 1;
+    print(i);
+    i++;
+    print(i);
+    if (i > 0)
+        i -= 3;
+
+    if (i > 0) {
+        print("if in braces")
+    } else {
+        print("else in braces")
+    };
+
+    print("Final i is: " + i);
+    for (j = 0; j < 10; j++) {
+        i++;
+    };
+    print("i after loop: " + i);
 }
