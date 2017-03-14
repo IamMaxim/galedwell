@@ -22,12 +22,14 @@ public class Token {
 
     public static boolean is(TokenType type, String t) throws InvalidTokenException {
         switch (type) {
-            case SCOPE_OPEN:
-                return t.equals("(") ||
-                        t.equals("{");
-            case SCOPE_CLOSE:
-                return t.equals(")") ||
-                        t.equals("}");
+            case BRACE_OPEN:
+                return t.equals("{");
+            case PAREN_OPEN:
+                return t.equals("(");
+            case PAREN_CLOSE:
+                return t.equals(")");
+            case BRACE_CLOSE:
+                return t.equals("}");
             case OPERATOR:
                 return t.equals("==") ||
                         t.equals("+") ||
@@ -60,6 +62,25 @@ public class Token {
         }
     }
 
+    public static TokenType getType(String token) throws InvalidTokenException {
+        if (is(TokenType.BRACE_OPEN, token))
+            return TokenType.BRACE_OPEN;
+        else if (is(TokenType.BRACE_CLOSE, token))
+            return TokenType.BRACE_CLOSE;
+        else if (is(TokenType.PAREN_OPEN, token))
+            return TokenType.PAREN_OPEN;
+        else if (is(TokenType.PAREN_CLOSE, token))
+            return TokenType.PAREN_CLOSE;
+        else if (is(TokenType.OPERATOR, token))
+            return TokenType.OPERATOR;
+        else if (is(TokenType.DELIMITER, token))
+            return TokenType.DELIMITER;
+        else if (is(TokenType.KEYWORD, token))
+            return TokenType.KEYWORD;
+        else
+            return TokenType.IDENTIFIER;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Token))
@@ -75,25 +96,10 @@ public class Token {
     @Override
     public String toString() {
 //        return "{\"type\": \"" + type + "\", \"token\": \"" + token + "\"}";
-        return "\"" + token + "\"";
+        return "\'" + token + "\'";
     }
 
     public String toShortString() {
         return token;
-    }
-
-    public static TokenType getType(String token) throws InvalidTokenException {
-        if (is(TokenType.SCOPE_OPEN, token))
-            return TokenType.SCOPE_OPEN;
-        else if (is(TokenType.SCOPE_CLOSE, token))
-            return TokenType.SCOPE_CLOSE;
-        else if (is(TokenType.OPERATOR, token))
-            return TokenType.OPERATOR;
-        else if (is(TokenType.DELIMITER, token))
-            return TokenType.DELIMITER;
-        else if (is(TokenType.KEYWORD, token))
-            return TokenType.KEYWORD;
-        else
-            return TokenType.IDENTIFIER;
     }
 }

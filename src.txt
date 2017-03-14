@@ -1,7 +1,4 @@
 main() {
-    //right comment
-    i = 2 + 3 * 4 + (2 - 3) / 2;
-    print("i: " + i);
     for (j = 0; j < 10; j++) {
         print("j: " + j)
     }

@@ -32,10 +32,14 @@ public class Tokener {
         return t;
     }
 
+    public Token eatWithLineNumbers() {
+        return tokens.get(index++);
+    }
+
     public Tokener readTo(Token token) throws InvalidTokenException {
         ArrayList<Token> tokens = new ArrayList<>();
         while (left() > 0) {
-            Token t = eat();
+            Token t = eatWithLineNumbers();
             if (t.equals(token))
                 break;
 
@@ -50,11 +54,11 @@ public class Tokener {
         ArrayList<Token> tokens = new ArrayList<>();
         int level = 0; //because first brace/paren has already been read
         while (left() > 0) {
-            Token t = eat();
+            Token t = eatWithLineNumbers();
 
-            if (t.type == TokenType.SCOPE_OPEN)
+            if (t.type == TokenType.BRACE_OPEN || t.type == TokenType.PAREN_OPEN)
                 level++;
-            if (t.type == TokenType.SCOPE_CLOSE)
+            if (t.type == TokenType.BRACE_CLOSE || t.type == TokenType.PAREN_CLOSE)
                 level--;
 
             if (level > 0) {
@@ -140,9 +144,9 @@ public class Tokener {
         while (left() > 0) {
             Token t = eat();
 
-            if (t.type == TokenType.SCOPE_OPEN)
+            if (t.type == TokenType.BRACE_OPEN || t.type == TokenType.PAREN_OPEN)
                 level++;
-            if (t.type == TokenType.SCOPE_CLOSE)
+            if (t.type == TokenType.BRACE_CLOSE || t.type == TokenType.PAREN_CLOSE)
                 level--;
 
             if (level > 0) {
@@ -162,5 +166,14 @@ public class Tokener {
         if (tokens.size() > 0)
             parts.add(new Tokener(tokens));
         return parts;
+    }
+
+    public void remove(int index) {
+        System.out.println("removing " + tokens.get(index));
+        tokens.remove(index);
+    }
+
+    public void add(int index, Token token) {
+        tokens.add(index, token);
     }
 }
