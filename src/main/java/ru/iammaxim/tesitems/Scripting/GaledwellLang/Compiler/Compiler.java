@@ -7,6 +7,7 @@ import ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.InvalidTokenException
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.Token;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.TokenType;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.ValueReference;
+import sun.plugin.dom.exception.InvalidStateException;
 
 import java.util.ArrayList;
 
@@ -60,7 +61,8 @@ public class Compiler {
 
     private void compileExpression(Expression exp, int depth, boolean inTree) throws InvalidTokenException {
         GaledwellLang.logger.increateIndent();
-        GaledwellLang.log("compiling: " + exp.toString());
+        GaledwellLang.log("compiling " + exp.getClass().getSimpleName() + ": " + exp.toString());
+        GaledwellLang.logger.increateIndent();
 
         if (exp instanceof ExpressionFunctionCall) {
             compileFunctionCall((ExpressionFunctionCall) exp, depth, inTree);
@@ -74,7 +76,8 @@ public class Compiler {
             compileCondition((ExpressionCondition) exp, depth, inTree);
         } else if (exp instanceof ExpressionForLoop) {
             compileForLoop((ExpressionForLoop) exp, depth, inTree);
-        }
+        } else throw new InvalidStateException("Can't find compiler part for " + exp.getClass().getName());
+        GaledwellLang.logger.decreaseIndent();
         GaledwellLang.logger.decreaseIndent();
     }
 

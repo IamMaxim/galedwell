@@ -28,7 +28,6 @@ public class TokenParser {
     }
 
     private ArrayList<Token> assembleTokenScopes(ArrayList<Token> tokens) throws InvalidTokenException {
-        System.out.println("processing " + tokens);
         Tokener tokener = new Tokener(tokens);
         for (int i = 0; i < tokener.size(); i++) {
             Token token = tokener.get(i);
@@ -36,19 +35,13 @@ public class TokenParser {
             if (type == TokenType.BRACE_OPEN) {
                 tokener.index = i;
                 Tokener tokener1 = tokener.readToSkippingScopes(new Token("}"));
-                if (tokener.left() > 0)
-                    System.out.println("next token: " + tokener.get());
-                System.out.println("ate " + tokener1);
 
                 try {
                     //remove tokens and replace them with TokenScope
                     for (int j = 0; j < tokener1.size() + 2 /* content + wrapping braces */; j++) {
                         tokener.remove(i);
                     }
-
-                    System.out.println("after processing: " + tokener);
                 } catch (IndexOutOfBoundsException e) {
-                    System.out.println("current tokener: " + tokener);
                     System.out.println(e.toString());
                 }
 
@@ -56,24 +49,16 @@ public class TokenParser {
                 tokener1.tokens = assembleTokenScopes(tokener1.tokens);
 
                 tokener.add(i, new TokenScope(TokenScope.Type.BRACES, tokener1.tokens));
-
-                System.out.println("final tokener: " + tokener);
             } else if (type == TokenType.PAREN_OPEN) {
                 tokener.index = i;
                 Tokener tokener1 = tokener.readToSkippingScopes(new Token(")"));
-                if (tokener.left() > 0)
-                    System.out.println("next token: " + tokener.get());
-                System.out.println("ate " + tokener1);
 
                 try {
                     //remove tokens and replace them with TokenScope
                     for (int j = 0; j < tokener1.size() + 2 /* content + wrapping parens */; j++) {
                         tokener.remove(i);
                     }
-
-                    System.out.println("after processing: " + tokener);
                 } catch (IndexOutOfBoundsException e) {
-                    System.out.println("current tokener: " + tokener);
                     System.out.println(e.toString());
                 }
 
@@ -81,8 +66,6 @@ public class TokenParser {
                 tokener1.tokens = assembleTokenScopes(tokener1.tokens);
 
                 tokener.add(i, new TokenScope(TokenScope.Type.PARENS, tokener1.tokens));
-
-                System.out.println("final tokener: " + tokener);
             }
         }
 

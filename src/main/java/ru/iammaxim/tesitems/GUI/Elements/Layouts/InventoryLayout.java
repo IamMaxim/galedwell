@@ -20,7 +20,7 @@ public class InventoryLayout extends FrameLayout implements IGuiUpdatable {
     protected TableEntry header;
     protected Table table;
     protected Inventory inv;
-    protected Consumer<Integer> onLeftClick, onRightClick;
+    protected Consumer<Integer> onLeftClick;
     private boolean updated = true;
 
     public InventoryLayout(Inventory inventory) {
@@ -46,11 +46,6 @@ public class InventoryLayout extends FrameLayout implements IGuiUpdatable {
         return this;
     }
 
-    public InventoryLayout setOnEntryRightClick(Consumer<Integer> onClick) {
-        this.onRightClick = onClick;
-        return this;
-    }
-
     @Override
     public String getName() {
         return "InventoryLayout";
@@ -67,8 +62,6 @@ public class InventoryLayout extends FrameLayout implements IGuiUpdatable {
                     is.isItemStackDamageable() ? (int) (100 * (1 - (float) is.getItemDamage() / is.getMaxDamage())) : -1);
             if (onLeftClick != null)
                     entry.setOnEntryLeftClick(onLeftClick);
-            if (onRightClick != null)
-                    entry.setOnEntryRightClick(onRightClick);
 
             if (needBackground(i))
                 entry.setBackground(new Image(ResManager.inv_entry_bg_selected));

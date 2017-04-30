@@ -7,10 +7,11 @@ import java.util.ArrayList;
  */
 public class TokenScope extends Token {
     public ArrayList<Token> tokens;
-    public Type type;
+    public Type _type;
 
     public TokenScope(Type type, ArrayList<Token> tokens) {
-        this.type = type;
+        this.type = (type == Type.BRACES ? TokenType.SCOPE_BRACES : TokenType.SCOPE_PARENS);
+        this._type = type;
         this.tokens = tokens;
     }
 
@@ -21,6 +22,6 @@ public class TokenScope extends Token {
 
     @Override
     public String toString() {
-        return tokens.toString();
+        return (_type == Type.BRACES ? "b" : "p") + tokens.toString();
     }
 }

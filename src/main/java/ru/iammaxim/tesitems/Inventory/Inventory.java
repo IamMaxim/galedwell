@@ -16,7 +16,6 @@ import net.minecraft.world.World;
 import ru.iammaxim.tesitems.Items.EntityItemNew;
 import ru.iammaxim.tesitems.Items.ItemWeightManager;
 import ru.iammaxim.tesitems.Items.Weapon;
-import ru.iammaxim.tesitems.Scripting.GaledwellLang.Utils;
 import ru.iammaxim.tesitems.TESItems;
 
 import java.util.ArrayList;

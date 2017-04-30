@@ -27,6 +27,10 @@ public class Tokener {
     public Token eat() {
         Token t = tokens.get(index++);
         while (t.type == TokenType.NEW_LINE) {
+            if (left() == 0) {
+                t = null;
+                break;
+            }
             t = tokens.get(index++);
         }
         return t;
@@ -143,6 +147,8 @@ public class Tokener {
         int level = 0;
         while (left() > 0) {
             Token t = eat();
+            if (t == null)
+                break;
 
             if (t.type == TokenType.BRACE_OPEN || t.type == TokenType.PAREN_OPEN)
                 level++;
@@ -169,7 +175,6 @@ public class Tokener {
     }
 
     public void remove(int index) {
-        System.out.println("removing " + tokens.get(index));
         tokens.remove(index);
     }
 

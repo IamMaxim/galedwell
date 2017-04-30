@@ -44,6 +44,7 @@ public class FunctionParser {
             }
         }
 
+        //TODO: look into here
         //check if this is return
         if (tokener.size() >= 2) {
             if (tokener.get().equals(new Token("return"))) {
@@ -123,16 +124,16 @@ public class FunctionParser {
         //check if this is for loop
         if (tokener.left() > 0 && tokener.get().equals(new Token("for"))) {
             tokener.eat(); //eat 'for'
-            if (!tokener.get().equals(new Token("(")))
-                throw new InvalidTokenException("Expected '('");
-            Tokener args = tokener.readToSkippingScopes(new Token(")"));
+            if (tokener.get().type != TokenType.SCOPE_PARENS)
+                throw new InvalidTokenException("Expected parens scope");
+            Tokener args = new Tokener(((TokenScope) tokener.eat()).tokens);
             ArrayList<Tokener> argTokens = args.splitSkippingScopes(new Token(";"));
             GaledwellLang.log("for loop args: " + argTokens);
             if (argTokens.size() != 3)
-                throw new InvalidTokenException("Expected 3 args in for construction, but got " + argTokens.size());
-            if (!tokener.eat().equals(new Token("{")))
-                throw new InvalidTokenException("Expected '{'");
-            Tokener body = tokener.readTo(new Token("}"));
+                throw new InvalidTokenException("Expected 3 args in 'for' construction, but got " + argTokens.size());
+            if (tokener.get().type != TokenType.SCOPE_BRACES)
+                throw new InvalidTokenException("Expected braces scope");
+            Tokener body = new Tokener(((TokenScope) tokener.eat()).tokens);
 
             return new ExpressionForLoop(
                     indentAndParseExpression(argTokens.get(0)),
@@ -171,10 +172,10 @@ public class FunctionParser {
             tokener.index = 0;
             for (int i = 0; tokener.left() > 0; i++) {
                 t = tokener.eat();
-                if (t.equals(new Token("(")) && i > 0 && tokener.tokens.get(i - 1).type == TokenType.IDENTIFIER)
+                if (t.type == TokenType.SCOPE_PARENS && i > 0 && tokener.tokens.get(i - 1).type == TokenType.IDENTIFIER)
                     try {
                         int index = tokener.index;
-                        Tokener argsTokener = tokener.readTo(new Token(")"));
+                        Tokener argsTokener = new Tokener(((TokenScope) t).tokens);
                         ArrayList<Tokener> args = argsTokener.splitSkippingScopes(new Token(","));
                         tokener.index = index;
 
@@ -270,10 +271,11 @@ public class FunctionParser {
             GaledwellLang.log("parsing function " + functionName.token);
 
             //read function args
-            if (!tokener.get().equals(new Token("(")))
-                throw new InvalidTokenException("Expected (");
-            Tokener argsTokener = tokener.readToSkippingScopes(new Token(")"));
-            ArrayList<Tokener> argsTokeners = argsTokener.splitSkippingScopes(new Token(","));
+            if (tokener.get().type != TokenType.SCOPE_PARENS)
+                throw new InvalidTokenException("Expected parens scope");
+            TokenScope argsToken = (TokenScope) tokener.eat();
+            ArrayList<Tokener> argsTokeners = new ArrayList<>(argsToken.tokens.size());
+            argsToken.tokens.forEach(t -> argsTokeners.add(new Tokener(t)));
 
             GaledwellLang.log("parsed function args: " + argsTokeners);
 
@@ -290,9 +292,9 @@ public class FunctionParser {
             }
 
             //read function body
-            if (!tokener.get().equals(new Token("{")))
-                throw new InvalidTokenException("Expected { while parsing function body");
-            Tokener body = tokener.readToSkippingScopes(new Token("}"));
+            if (tokener.get().type != TokenType.SCOPE_BRACES)
+                throw new InvalidTokenException("Expected braces scope while parsing function body");
+            Tokener body = new Tokener(((TokenScope) tokener.eat()).tokens);
 
             GaledwellLang.log("parsed function body: " + body);
 
