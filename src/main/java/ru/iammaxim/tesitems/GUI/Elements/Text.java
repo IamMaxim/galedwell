@@ -19,7 +19,7 @@ public class Text extends ElementBase {
     protected int lineSpacing = 4, lineHeight = 8;
     protected int color = ResManager.MAIN_COLOR;
     protected boolean center = false;
-    protected int textWidth = 0;
+    protected ArrayList<Integer> textWidths = new ArrayList<>();
     public int leftPadding = 0;
 
     public Text setLeftPadding(int padding) {
@@ -54,7 +54,14 @@ public class Text extends ElementBase {
 
     @Override
     public int getWidth() {
-        return (fontRenderer.getStringWidth(text)) + leftPadding;
+        String[] strs = text.split("\n");
+        int max = 0;
+        for (String str : strs) {
+            int w = fontRenderer.getStringWidth(str);
+            if (w > max)
+                max = w;
+        }
+        return max + leftPadding;
     }
 
     @Override
@@ -73,7 +80,10 @@ public class Text extends ElementBase {
                 return;
             }
             strs = fontRenderer.listFormattedStringToWidth(text, width);
-            textWidth = fontRenderer.getStringWidth(strs.get(0));
+            textWidths.clear();
+            for (String str : strs) {
+                textWidths.add(fontRenderer.getStringWidth(str));
+            }
             dirty = false;
         } catch (Exception e) {
             e.printStackTrace();
@@ -88,9 +98,10 @@ public class Text extends ElementBase {
 
         int x = left + leftPadding;
         int y = top;
-        for (String str : strs) {
+        for (int i = 0; i < strs.size(); i++) {
+            String str = strs.get(i);
             if (center) {
-                fontRenderer.drawString(str, x + (width - textWidth) / 2, y, color);
+                fontRenderer.drawString(str, x + (width - textWidths.get(i)) / 2, y, color);
                 y += lineHeight + lineSpacing;
             } else {
                 fontRenderer.drawString(str, x, y, color);

@@ -79,10 +79,15 @@ public class TextField extends ElementBase {
 
     @Override
     public int getWidth() {
-        if (!text.isEmpty()) {
-            return fontRenderer.getStringWidth(text) + 2 * padding;
-        } else
-            return fontRenderer.getStringWidth(hint) + 2 * padding;
+        String s = text.isEmpty() ? hint : text;
+        String[] strs = s.split("\n");
+        int max = 0;
+        for (String str : strs) {
+            int w = fontRenderer.getStringWidth(str + " ");
+            if (w > max)
+                max = w;
+        }
+        return max + 2 * padding;
     }
 
     public TextField setOnType(Consumer<TextField> onType) {
@@ -96,7 +101,7 @@ public class TextField extends ElementBase {
         else if (cursorPos > text.length()) cursorPos = text.length();
 
         if (active) {
-            System.out.println("typed key: " + typedChar + " " + key);
+//            System.out.println("typed key: " + typedChar + " " + key);
             //Left or right control + V
             if (key == 47 && (Keyboard.isKeyDown(29) || Keyboard.isKeyDown(157))) {
                 String toPaste = Sys.getClipboard();
@@ -107,24 +112,24 @@ public class TextField extends ElementBase {
                 return;
             }
 
-            if (key == Keyboard.KEY_BACK) { //backspace
+            if (key == Keyboard.KEY_BACK) { // backspace
                 if (text.length() > 0 && cursorPos > 0) {
                     text = text.substring(0, cursorPos - 1) + text.substring(cursorPos, text.length());
                     cursorPos--;
                 }
-            } else if (key == Keyboard.KEY_DELETE && cursorPos < text.length()) { //delete
+            } else if (key == Keyboard.KEY_DELETE && cursorPos < text.length()) { // delete
                 text = text.substring(0, cursorPos) + text.substring(cursorPos + 1, text.length());
             } else if (key == Keyboard.KEY_RETURN) {
                 text = text.substring(0, cursorPos) + '\n' + text.substring(cursorPos, text.length());
                 cursorPos++;
-            } else if (typedChar == ' ' || UnicodeFontRenderer.alphabet.contains(typedChar + "")) {
+            } else if (typedChar == ' ' || UnicodeFontRenderer.alphabet.contains(String.valueOf(typedChar))) {
                 text = text.substring(0, cursorPos) + typedChar + text.substring(cursorPos, text.length());
                 cursorPos++;
-            } else if (key == 203 && cursorPos > 0) { //arrow left
+            } else if (key == 203 && cursorPos > 0) { // arrow left
                 cursorPos--;
-            } else if (key == 205 && cursorPos < text.length()) { //arrow right
+            } else if (key == 205 && cursorPos < text.length()) { // arrow right
                 cursorPos++;
-            } else if (key == 15) //tab
+            } else if (key == 15) // tab
                 for (int i = 0; i < 4; i++) keyTyped(' ', 57);
 
             if (lastKey != key)
@@ -132,6 +137,7 @@ public class TextField extends ElementBase {
             lastKey = key;
             lastChar = typedChar;
 
+            ((LayoutBase) getRoot()).doLayout();
             update();
             ((LayoutBase) getRoot()).doLayout();
             if (onType != null)
@@ -150,11 +156,11 @@ public class TextField extends ElementBase {
             if (dirty)
                 return lineHeight + 2 * padding;
 
-            int newLineCount = 0;
+/*            int newLineCount = 0;
             for (int i = 0; i < text.length(); i++) {
                 if (text.charAt(i) == '\n')
                     newLineCount++;
-            }
+            }*/
 
             return strs.size() * lineHeight + (strs.size() - 1) * lineSpacing + 2 * padding;
         } else
@@ -164,6 +170,7 @@ public class TextField extends ElementBase {
     @Override
     public void draw(int mouseX, int mouseY) {
         if (dirty) {
+            ((LayoutBase) getRoot()).doLayout();
             update();
             ((LayoutBase) getRoot()).doLayout();
         }

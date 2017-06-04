@@ -274,8 +274,7 @@ public class FunctionParser {
             if (tokener.get().type != TokenType.SCOPE_PARENS)
                 throw new InvalidTokenException("Expected parens scope");
             TokenScope argsToken = (TokenScope) tokener.eat();
-            ArrayList<Tokener> argsTokeners = new ArrayList<>(argsToken.tokens.size());
-            argsToken.tokens.forEach(t -> argsTokeners.add(new Tokener(t)));
+            ArrayList<Tokener> argsTokeners = new Tokener(argsToken.tokens).splitSkippingScopes(new Token(","));
 
             GaledwellLang.log("parsed function args: " + argsTokeners);
 

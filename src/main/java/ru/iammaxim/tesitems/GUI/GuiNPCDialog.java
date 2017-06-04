@@ -69,7 +69,10 @@ public class GuiNPCDialog extends Screen implements IGuiUpdatable {
                         return;
                     }
                     strs = fontRenderer.listFormattedStringToWidth(text, width);
-                    textWidth = fontRenderer.getStringWidth(strs.get(0));
+                    textWidths.clear();
+                    for (String str : strs) {
+                        textWidths.add(fontRenderer.getStringWidth(str));
+                    }
                     dirty = false;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -89,7 +92,10 @@ public class GuiNPCDialog extends Screen implements IGuiUpdatable {
                             return;
                         }
                         strs = fontRenderer.listFormattedStringToWidth(text, width);
-                        textWidth = fontRenderer.getStringWidth(strs.get(0));
+                        textWidths.clear();
+                        for (String str : strs) {
+                            textWidths.add(fontRenderer.getStringWidth(str));
+                        }
                         dirty = false;
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -104,7 +110,10 @@ public class GuiNPCDialog extends Screen implements IGuiUpdatable {
                             return;
                         }
                         strs = fontRenderer.listFormattedStringToWidth(text, width);
-                        textWidth = fontRenderer.getStringWidth(strs.get(0));
+                        textWidths.clear();
+                        for (String str : strs) {
+                            textWidths.add(fontRenderer.getStringWidth(str));
+                        }
                         dirty = false;
                     } catch (Exception e) {
                         e.printStackTrace();
