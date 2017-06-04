@@ -19,6 +19,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
@@ -263,6 +264,8 @@ public class CommonProxy {
         event.registerServerCommand(new CommandEnd());
         event.registerServerCommand(new CommandCha());
         event.registerServerCommand(new CommandLuck());
+        event.registerServerCommand(new CommandWhisper());
+        event.registerServerCommand(new CommandShout());
 
         //debug
         event.registerServerCommand(new CommandManageInventory());
@@ -315,5 +318,20 @@ public class CommonProxy {
     }
 
     public void init(FMLInitializationEvent event) {
+    }
+
+    @SubscribeEvent
+    public void chatEvent(ServerChatEvent event) {
+        System.out.println("chatEvent()");
+        event.setCanceled(true);
+        EntityPlayer player = event.getPlayer();
+
+        // default mode is talk
+        event.getPlayer().getServer().getPlayerList().getPlayerList().forEach(p -> {
+            if (player.getDistanceSqToEntity(p) <= TESItems.talkDistance * TESItems.talkDistance) {
+                System.out.println(player.getDistanceSqToEntity(p));
+                p.addChatComponentMessage(event.getComponent());
+            }
+        });
     }
 }

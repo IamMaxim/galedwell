@@ -10,6 +10,17 @@ public class DoubleStateFrameLayout extends FrameLayout {
 
     public DoubleStateFrameLayout() {}
 
+    @Override
+    public void doLayout() {
+        first.setBounds(left + paddingLeft, top + paddingTop, right - paddingRight, bottom - paddingBottom);
+        if (first instanceof LayoutBase)
+            ((LayoutBase) first).doLayout();
+
+        second.setBounds(left + paddingLeft, top + paddingTop, right - paddingRight, bottom - paddingBottom);
+        if (second instanceof LayoutBase)
+            ((LayoutBase) second).doLayout();
+    }
+
     public DoubleStateFrameLayout setFirstState(ElementBase element) {
         first = element;
         element.setParent(this);

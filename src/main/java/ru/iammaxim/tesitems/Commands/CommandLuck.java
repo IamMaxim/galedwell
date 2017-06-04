@@ -28,6 +28,11 @@ public class CommandLuck extends CommandBase {
     }
 
     @Override
+    public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
+        return true;
+    }
+
+    @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         List<EntityPlayerMP> players = server.getPlayerList().getPlayerList();
         EntityPlayerMP player = (EntityPlayerMP) sender;
