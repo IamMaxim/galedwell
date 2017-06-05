@@ -58,7 +58,8 @@ public class RenderNPC extends RenderLivingBase<EntityNPC> {
 
     @Override
     protected ResourceLocation getEntityTexture(EntityNPC entity) {
-        return DefaultPlayerSkin.getDefaultSkin(Minecraft.getMinecraft().thePlayer.getUniqueID());
+        return entity.getEntityTexture();
+//        return DefaultPlayerSkin.getDefaultSkin(Minecraft.getMinecraft().thePlayer.getUniqueID());
         //return texture;
     }
 

@@ -3,6 +3,8 @@ package ru.iammaxim.tesitems.NPC;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumHandSide;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import ru.iammaxim.tesitems.Factions.Faction;
 import ru.iammaxim.tesitems.Factions.FactionManager;
 import ru.iammaxim.tesitems.Inventory.Inventory;
@@ -18,11 +20,14 @@ import java.util.List;
 public class NPC {
     public int id = -1;
     public String name = "NPC";
+    public String skinName = "default";
     public boolean isInvulnerable = false;
     public Inventory inventory;
     public EnumHandSide primaryHand = EnumHandSide.RIGHT;
     public List<Integer> factions = new ArrayList<>();
     public ArrayList<Quest> attachedQuests = new ArrayList<>();
+    // used by client to determine if skin need to be reloaded
+    public boolean skinDirty = true;
 
     public NPC() {
         inventory = new InventoryNPC();
@@ -63,12 +68,14 @@ public class NPC {
     public void writeToNBT(NBTTagCompound tag) {
         tag.setBoolean("isInvulnerable", isInvulnerable);
         tag.setString("name", name);
+        tag.setString("skinName", skinName);
         tag.setTag("inventory", inventory.writeToNBT());
         tag.setTag("topics", saveFactions());
     }
 
     public void readFromNBT(NBTTagCompound tag) {
         name = tag.getString("name");
+        skinName = tag.getString("skinName");
         isInvulnerable = tag.getBoolean("isInvulnerable");
         inventory.loadFromNBT(tag.getCompoundTag("inventory"));
         loadFactions((NBTTagList) tag.getTag("topics"));
@@ -88,5 +95,9 @@ public class NPC {
         for (int i = 0; i < list.tagCount(); i++) {
             factions.add(list.getCompoundTagAt(i).getInteger("index"));
         }
+    }
+
+    public void setSkinName(String skinName) {
+        this.skinName = skinName;
     }
 }

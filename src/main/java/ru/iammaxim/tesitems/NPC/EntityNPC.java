@@ -1,5 +1,16 @@
 package ru.iammaxim.tesitems.NPC;
 
+import com.google.common.base.Objects;
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.network.NetworkPlayerInfo;
+import net.minecraft.client.renderer.IImageBuffer;
+import net.minecraft.client.renderer.ImageBufferDownload;
+import net.minecraft.client.renderer.ThreadDownloadImageData;
+import net.minecraft.client.renderer.texture.ITextureObject;
+import net.minecraft.client.resources.DefaultPlayerSkin;
+import net.minecraft.client.resources.SkinManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -7,14 +18,13 @@ import net.minecraft.entity.player.EnumPlayerModelParts;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumHandSide;
+import net.minecraft.util.*;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import ru.iammaxim.tesitems.Dialogs.Dialog;
 import ru.iammaxim.tesitems.Items.mItems;
 import ru.iammaxim.tesitems.Networking.MessageDialog;
@@ -25,16 +35,71 @@ import ru.iammaxim.tesitems.TESItems;
 import scala.actors.threadpool.Arrays;
 
 import javax.annotation.Nullable;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.HashMap;
 
 /**
  * Created by Maxim on 19.07.2016.
  */
 public class EntityNPC extends EntityLivingBase {
     public NPC npc;
+    private HashMap<Type, ResourceLocation> npcTextures = new HashMap<>();
+    private static final File skinCacheDir = new File("galedwell/NPCSkinCache");
+    private boolean textureLoaded = false;
+
+    public enum Type {
+        SKIN
+    }
 
     public EntityNPC(World worldIn) {
         super(worldIn);
         npc = new NPC();
+
+        if (worldIn.isRemote)
+            loadTextures();
+    }
+
+    @SideOnly(Side.CLIENT)
+    public ResourceLocation getEntityTexture() {
+        loadTextures();
+        return Objects.firstNonNull(npcTextures.get(Type.SKIN), DefaultPlayerSkin.getDefaultSkinLegacy());
+    }
+
+    @SideOnly(Side.CLIENT)
+    private void loadTextures() {
+        synchronized (this) {
+            if (!textureLoaded || npc.skinDirty) {
+                ResourceLocation resourceLocation = new ResourceLocation("skins/" + npc.skinName);
+                ITextureObject iTextureObject = Minecraft.getMinecraft().getTextureManager().getTexture(resourceLocation);
+
+                if (iTextureObject != null && !npc.skinDirty) {
+                    npcTextures.put(Type.SKIN, resourceLocation);
+                } else if (Minecraft.getMinecraft().getCurrentServerData() != null) {
+                    File file2 = new File(skinCacheDir, npc.skinName + ".png");
+                    final IImageBuffer iImageBuffer = new ImageBufferDownload();
+                    String url = "http://" + Minecraft.getMinecraft().getCurrentServerData().serverIP + ":8080/" + npc.skinName + ".png";
+                    System.out.println("URL: " + url);
+                    ThreadDownloadImageData threadDownloadImageData = new ThreadDownloadImageData(file2, url, DefaultPlayerSkin.getDefaultSkinLegacy(), new IImageBuffer() {
+                        public BufferedImage parseUserSkin(BufferedImage image) {
+                            if (iImageBuffer != null) {
+                                image = iImageBuffer.parseUserSkin(image);
+                            }
+                            return image;
+                        }
+
+                        public void skinAvailable() {
+                            if (iImageBuffer != null) {
+                                iImageBuffer.skinAvailable();
+                            }
+                            npcTextures.put(Type.SKIN, resourceLocation);
+                        }
+                    });
+                    Minecraft.getMinecraft().getTextureManager().loadTexture(resourceLocation, threadDownloadImageData);
+                }
+                npc.skinDirty = false;
+            }
+        }
     }
 
     @Override
@@ -69,7 +134,8 @@ public class EntityNPC extends EntityLivingBase {
     public void setItemStackToSlot(EntityEquipmentSlot slotIn, @Nullable ItemStack stack) {
         if (slotIn == EntityEquipmentSlot.MAINHAND) setHeldItem(EnumHand.MAIN_HAND, stack);
         else if (slotIn == EntityEquipmentSlot.OFFHAND) setHeldItem(EnumHand.OFF_HAND, stack);
-        else if (slotIn.getSlotType() == EntityEquipmentSlot.Type.ARMOR) npc.inventory.armorInventory[slotIn.getIndex()] = stack;
+        else if (slotIn.getSlotType() == EntityEquipmentSlot.Type.ARMOR)
+            npc.inventory.armorInventory[slotIn.getIndex()] = stack;
     }
 
     @Override
@@ -113,7 +179,7 @@ public class EntityNPC extends EntityLivingBase {
             TESItems.networkWrapper.sendTo(new MessageDialog(Dialog.createDialogForPlayer(npc, player).saveToNBT()), (EntityPlayerMP) player);
             player.openGui(TESItems.instance, TESItems.guiNpcDialog, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
         }
-            return EnumActionResult.SUCCESS;
+        return EnumActionResult.SUCCESS;
     }
 
     @Override

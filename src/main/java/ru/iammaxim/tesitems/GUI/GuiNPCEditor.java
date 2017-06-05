@@ -43,6 +43,7 @@ public class GuiNPCEditor extends Screen {
         contentLayout.setElement(new ScrollableLayout().setElement(
                 new VerticalLayout()
                         .add(new TextField().setHint("Name").setText(npc.name).setOnType(tf -> npc.setName(tf.getText())).setWidthOverride(ElementBase.FILL))
+                        .add(new TextField().setHint("Skin name").setText(npc.skinName).setOnType(tf -> npc.setSkinName(tf.getText())).setWidthOverride(ElementBase.FILL))
                         .add(new CheckBox().setChecked(npc.isInvulnerable()).setText("Invulnerable").setOnClick(((cb, newState) -> npc.setInvulnerable(newState))))
                         .add(new HorizontalDivider())
                         .add(new HeaderLayout("Factions").setWidthOverride(ElementBase.FILL))

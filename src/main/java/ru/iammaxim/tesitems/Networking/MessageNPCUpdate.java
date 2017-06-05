@@ -44,6 +44,7 @@ public class MessageNPCUpdate implements IMessage {
                 return null;
             IPlayerAttributesCapability cap = TESItems.getCapability(player);
             cap.getLatestNPC().readFromNBT(message.tag);
+            cap.getLatestNPC().skinDirty = true;
             return null;
         }
     }
