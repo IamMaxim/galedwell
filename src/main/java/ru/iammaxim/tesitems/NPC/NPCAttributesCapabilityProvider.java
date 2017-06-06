@@ -14,7 +14,7 @@ public class NPCAttributesCapabilityProvider implements ICapabilitySerializable<
 
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing enumFacing) {
-        return capability == TESItems.playerAttributesCapability;
+        return capability == TESItems.npcAttributesCapability;
     }
 
     @Override

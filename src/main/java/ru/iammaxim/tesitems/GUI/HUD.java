@@ -85,8 +85,7 @@ public class HUD {
         //draw healthbar
         drawBar(tess, left, top, right, top + bar_height, player.getHealth() / player.getMaxHealth(), 0x99ff3300);
         //draw magicka bar
-        //TODO: add magicka
-        drawBar(tess, left, top + bar_height + bar_spacing, right, top + 2 * bar_height + bar_spacing, 1, 0x993399ff);
+        drawBar(tess, left, top + bar_height + bar_spacing, right, top + 2 * bar_height + bar_spacing, cap.getMagicka() / cap.getMaxMagicka(), 0x993399ff);
         //draw hunger bar
         drawBar(tess, left, top + 2 * bar_height + 2 * bar_spacing, right, top + 3 * bar_height + 2 * bar_spacing, (float) player.getFoodStats().getFoodLevel() / 20, 0x99996633);
     }

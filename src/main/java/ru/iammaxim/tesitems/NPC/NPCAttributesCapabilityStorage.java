@@ -20,6 +20,7 @@ public class NPCAttributesCapabilityStorage implements Capability.IStorage<INPCA
         nbttag.setTag("spellbook", cap.saveSpellbook(true));
         nbttag.setTag("inventory", cap.getInventory().writeToNBT());
         nbttag.setTag("variableStorage", cap.getVariableStorage().writeToNBT());
+        nbttag.setFloat("magicka", cap.getMagicka());
         return nbttag;
     }
 
@@ -32,5 +33,6 @@ public class NPCAttributesCapabilityStorage implements Capability.IStorage<INPCA
         cap.loadSpellbook(tag.getCompoundTag("spellbook"));
         cap.getInventory().loadFromNBT(tag.getCompoundTag("inventory"));
         cap.setVariableStorage(ValueObject.loadValueFromNBT(tag.getCompoundTag("variableStorage")));
+        cap.setMagicka(tag.getFloat("magicka"));
     }
 }

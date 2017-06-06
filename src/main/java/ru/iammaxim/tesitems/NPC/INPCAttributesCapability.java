@@ -1,13 +1,10 @@
 package ru.iammaxim.tesitems.NPC;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import ru.iammaxim.tesitems.Dialogs.Dialog;
 import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.Inventory.InventoryContainer;
 import ru.iammaxim.tesitems.Magic.SpellBase;
-import ru.iammaxim.tesitems.Questing.QuestInstance;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.ValueObject;
 
 import java.util.HashMap;
@@ -38,4 +35,9 @@ public interface INPCAttributesCapability {
     void setVariableStorage(ValueObject variableStorage);
     InventoryContainer getLatestContainer();
     void setLatestContainer(InventoryContainer latestContainer);
+    float getMagicka();
+    float getMaxMagicka();
+    void setMagicka(float magicka);
+    float getMagickaRecovery();
+    void restoreMagicka();
 }

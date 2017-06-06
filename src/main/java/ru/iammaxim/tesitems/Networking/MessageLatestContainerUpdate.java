@@ -2,7 +2,6 @@ package ru.iammaxim.tesitems.Networking;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -136,7 +135,7 @@ public class MessageLatestContainerUpdate implements IMessage {
                     break;
                 case ACTION_CLEAR:
 //                    inv.clear();
-                    Utils.showNotification(ctx.getServerHandler().playerEntity, "Cannot clear from client side");
+                    Utils.showNotification(ctx.getServerHandler().playerEntity, "Cannot clear container from client side");
                     break;
             }
             return null;

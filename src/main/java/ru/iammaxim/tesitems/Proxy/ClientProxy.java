@@ -49,18 +49,13 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void init(FMLInitializationEvent event) {
-//        mBlocks.initModels();
-
         ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(mBlocks.block_chest_01), 0, BlockChestTileEntity.class);
-
-
         KeyBindings.register();
     }
 
     @Override
     public void postInit(FMLPostInitializationEvent event) {
         super.postInit(event);
-
         ClientThings.loadFonts();
         ScreenStack.instance = new ScreenStack();
     }

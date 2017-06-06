@@ -55,6 +55,7 @@ public class MessageNPCUpdate implements IMessage {
     public static class ServerHandler implements IMessageHandler<MessageNPCUpdate, IMessage> {
         @Override
         public IMessage onMessage(MessageNPCUpdate message, MessageContext ctx) {
+            // TODO: add permission check
             EntityPlayer player = ctx.getServerHandler().playerEntity;
             if (player.getHeldItemOffhand() != null && player.getHeldItemOffhand().getItem() != mItems.itemNPCEditorTool)
                 return null;

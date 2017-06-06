@@ -24,6 +24,7 @@ public class PlayerAttributesCapabilityStorage implements Capability.IStorage<IP
         nbttag.setString("journal", cap.getJournal());
         nbttag.setTag("variableStorage", cap.getVariableStorage().writeToNBT());
         nbttag.setInteger("gold", cap.getGold());
+        nbttag.setFloat("magicka", cap.getMagicka());
         return nbttag;
     }
 
@@ -40,5 +41,6 @@ public class PlayerAttributesCapabilityStorage implements Capability.IStorage<IP
         cap.setVariableStorage(ValueObject.loadValueFromNBT(tag.getCompoundTag("variableStorage")));
         cap.setPassword(tag.getString("password"));
         cap.setGold(tag.getInteger("gold"));
+        cap.setMagicka(tag.getFloat("magicka"));
     }
 }

@@ -65,4 +65,9 @@ public interface IPlayerAttributesCapability {
     int getGold();
     void setGold(int gold);
     void addGold(int gold);
+    float getMagicka();
+    float getMaxMagicka();
+    void setMagicka(float magicka);
+    float getMagickaRecovery();
+    void restoreMagicka();
 }

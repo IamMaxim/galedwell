@@ -54,6 +54,7 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     private InventoryContainer latestContainer;
     private int gold = 0;
     private EntityPlayer player;
+    private float magicka = 0;
 
     public PlayerAttributesCapabilityDefaultImpl() {
     }
@@ -232,6 +233,34 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     }
 
     @Override
+    public float getMagicka() {
+        return magicka;
+    }
+
+    @Override
+    public float getMaxMagicka() {
+        return getAttribute("intelligence") * 10;
+    }
+
+    @Override
+    public void setMagicka(float magicka) {
+        this.magicka = magicka;
+    }
+
+    @Override
+    public float getMagickaRecovery() {
+        return getAttribute("willpower") / 20;
+    }
+
+    @Override
+    public void restoreMagicka() {
+        magicka += getMagickaRecovery();
+        float maxMagicka = getMaxMagicka();
+        if (magicka > maxMagicka)
+            magicka = maxMagicka;
+    }
+
+    @Override
     public void setLatestDialog(Dialog dialog) {
         this.dialog = dialog;
     }
@@ -330,12 +359,6 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
             NBTTagList list1 = new NBTTagList();
             for (int j = 0; j < spell.effects.length; j++) {
                 SpellEffect effect = spell.effects[j];
-                /*NBTTagCompound tag1 = new NBTTagCompound();
-                tag1.setFloat("power", effect.getPower());
-                tag1.setFloat("range", effect.getRange());
-                tag1.setString("name", SpellEffectManager.getNameByEffect(effect.getClass()));*/
-//                list1.appendTag(tag1);
-
                 list1.appendTag(effect.writeToNBT(writeScripts));
             }
             tag.setTag("effects", list1);

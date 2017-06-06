@@ -1,16 +1,13 @@
 package ru.iammaxim.tesitems.NPC;
 
 import com.google.common.base.Objects;
-import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.IImageBuffer;
 import net.minecraft.client.renderer.ImageBufferDownload;
 import net.minecraft.client.renderer.ThreadDownloadImageData;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.resources.DefaultPlayerSkin;
-import net.minecraft.client.resources.SkinManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -23,6 +20,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import ru.iammaxim.tesitems.Dialogs.Dialog;
@@ -42,15 +41,11 @@ import java.util.HashMap;
 /**
  * Created by Maxim on 19.07.2016.
  */
-public class EntityNPC extends EntityLivingBase {
+public class EntityNPC extends EntityLivingBase implements IEntityAdditionalSpawnData {
+    private static final File skinCacheDir = new File("galedwell/NPCSkinCache");
     public NPC npc;
     private HashMap<Type, ResourceLocation> npcTextures = new HashMap<>();
-    private static final File skinCacheDir = new File("galedwell/NPCSkinCache");
     private boolean textureLoaded = false;
-
-    public enum Type {
-        SKIN
-    }
 
     public EntityNPC(World worldIn) {
         super(worldIn);
@@ -58,6 +53,18 @@ public class EntityNPC extends EntityLivingBase {
 
         if (worldIn.isRemote)
             loadTextures();
+    }
+
+    @Override
+    public void writeSpawnData(ByteBuf buffer) {
+        NBTTagCompound tag = new NBTTagCompound();
+        npc.writeToNBT(tag);
+        ByteBufUtils.writeTag(buffer, tag);
+    }
+
+    @Override
+    public void readSpawnData(ByteBuf additionalData) {
+        npc.readFromNBT(ByteBufUtils.readTag(additionalData));
     }
 
     @SideOnly(Side.CLIENT)
@@ -78,7 +85,7 @@ public class EntityNPC extends EntityLivingBase {
                 } else if (Minecraft.getMinecraft().getCurrentServerData() != null) {
                     File file2 = new File(skinCacheDir, npc.skinName + ".png");
                     final IImageBuffer iImageBuffer = new ImageBufferDownload();
-                    String url = "http://" + Minecraft.getMinecraft().getCurrentServerData().serverIP + ":8080/" + npc.skinName + ".png";
+                    String url = "http://" + Minecraft.getMinecraft().getCurrentServerData().serverIP + "/" + npc.skinName + ".png";
                     System.out.println("URL: " + url);
                     ThreadDownloadImageData threadDownloadImageData = new ThreadDownloadImageData(file2, url, DefaultPlayerSkin.getDefaultSkinLegacy(), new IImageBuffer() {
                         public BufferedImage parseUserSkin(BufferedImage image) {
@@ -185,5 +192,16 @@ public class EntityNPC extends EntityLivingBase {
     @Override
     public ITextComponent getDisplayName() {
         return new TextComponentString(npc.name);
+    }
+
+    public enum Type {
+        SKIN
+    }
+
+    @Override
+    public void onEntityUpdate() {
+        super.onEntityUpdate();
+        INPCAttributesCapability cap = TESItems.getNPCCapability(this);
+        cap.restoreMagicka();
     }
 }

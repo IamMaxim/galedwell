@@ -1,6 +1,6 @@
 package ru.iammaxim.tesitems.Proxy;
 
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -45,7 +45,7 @@ import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.Items.*;
 import ru.iammaxim.tesitems.Magic.EntityFlyingSpell;
 import ru.iammaxim.tesitems.Magic.EntityRangedSpellEffect;
-import ru.iammaxim.tesitems.NPC.EntityNPC;
+import ru.iammaxim.tesitems.NPC.*;
 import ru.iammaxim.tesitems.Networking.NetworkUtils;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.Player.PlayerAttributesCapabilityDefaultImpl;
@@ -69,6 +69,7 @@ public class CommonProxy {
         ConfigManager.loadConfig();
 
         CapabilityManager.INSTANCE.register(IPlayerAttributesCapability.class, new PlayerAttributesCapabilityStorage(), PlayerAttributesCapabilityDefaultImpl::new);
+        CapabilityManager.INSTANCE.register(INPCAttributesCapability.class, new NPCAttributesCapabilityStorage(), NPCAttributesCapabilityDefaultImpl::new);
         CapabilityManager.INSTANCE.register(IWorldCapability.class, new WorldCapabilityStorage(), WorldCapabilityDefaultImpl::new);
         MinecraftForge.EVENT_BUS.register(this);
         new AuthEventListener().register();
@@ -217,11 +218,12 @@ public class CommonProxy {
 
     @SubscribeEvent
     public void attachCapabilities(AttachCapabilitiesEvent event) {
-        if (event.getObject() instanceof EntityPlayer) {
+        if (event.getObject() instanceof EntityPlayer)
             event.addCapability(new ResourceLocation(TESItems.attributesTagName), new PlayerAttributesCapabilityProvider());
-        } else if (event.getObject() instanceof World) {
+        else if (event.getObject() instanceof World)
             event.addCapability(new ResourceLocation(TESItems.worldTagName), new WorldCapabilityProvider());
-        }
+        else if (event.getObject() instanceof EntityNPC)
+            event.addCapability(new ResourceLocation(TESItems.npcTagName), new NPCAttributesCapabilityProvider());
     }
 
     @SubscribeEvent

@@ -2,14 +2,11 @@ package ru.iammaxim.tesitems.Networking;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import ru.iammaxim.tesitems.GUI.GuiInventory;
-import ru.iammaxim.tesitems.GUI.Screen;
 import ru.iammaxim.tesitems.GUI.ScreenStack;
 import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.TESItems;
@@ -146,7 +143,7 @@ public class MessageInventoryUpdate implements IMessage {
                     break;
                 case ACTION_CLEAR:
 //                    inv.clear();
-                    Utils.showNotification(ctx.getServerHandler().playerEntity, "Cannot clear from client side");
+                    Utils.showNotification(ctx.getServerHandler().playerEntity, "Cannot clear inventory from client side");
                     break;
             }
             return null;

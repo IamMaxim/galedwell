@@ -29,7 +29,7 @@ public class MessageRecipe implements IMessage {
     public void fromBytes(ByteBuf buf) {
         id = buf.readInt();
         boolean delete = buf.readBoolean();
-        if (delete == true)
+        if (delete)
             recipe = null;
         else
             recipe = CraftRecipe.loadFromNBT(ByteBufUtils.readTag(buf));

@@ -43,5 +43,6 @@ public class NetworkUtils {
         TESItems.networkWrapper.registerMessage(MessageGoldUpdate.Handler.class, MessageGoldUpdate.class, 32, Side.CLIENT);
         TESItems.networkWrapper.registerMessage(MessageRecipe.ServerHandler.class, MessageRecipe.class, 33, Side.SERVER);
         TESItems.networkWrapper.registerMessage(MessageRecipe.ClientHandler.class, MessageRecipe.class, 34, Side.CLIENT);
+        TESItems.networkWrapper.registerMessage(MessageMagickaUpdate.ClientHandler.class, MessageMagickaUpdate.class, 35, Side.CLIENT);
     }
 }

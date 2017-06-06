@@ -45,6 +45,7 @@ public class NPCAttributesCapabilityDefaultImpl implements INPCAttributesCapabil
     private boolean isAuthorized = false;
     private double loginX = 0, loginY = 0, loginZ = 0;
     private InventoryContainer latestContainer;
+    private float magicka = 0;
 
     public NPCAttributesCapabilityDefaultImpl() {
     }
@@ -83,6 +84,31 @@ public class NPCAttributesCapabilityDefaultImpl implements INPCAttributesCapabil
     @Override
     public void setLatestContainer(InventoryContainer latestContainer) {
         this.latestContainer = latestContainer;
+    }
+
+    @Override
+    public float getMagicka() {
+        return magicka;
+    }
+
+    @Override
+    public float getMaxMagicka() {
+        return getAttribute("intelligence") * 10;
+    }
+
+    @Override
+    public void setMagicka(float magicka) {
+        this.magicka = magicka;
+    }
+
+    @Override
+    public float getMagickaRecovery() {
+        return getAttribute("willpower") / 20;
+    }
+
+    @Override
+    public void restoreMagicka() {
+        magicka += getMagickaRecovery();
     }
 
     public String getJournal() {
