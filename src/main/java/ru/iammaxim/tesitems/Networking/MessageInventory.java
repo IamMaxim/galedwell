@@ -34,7 +34,7 @@ public class MessageInventory implements IMessage {
     /**
      * Created by maxim on 7/27/16 at 12:19 PM.
      */
-    public static class Handler implements IMessageHandler<MessageInventory, IMessage> {
+    public static class ClientHandler implements IMessageHandler<MessageInventory, IMessage> {
         @Override
         public IMessage onMessage(MessageInventory message, MessageContext ctx) {
             TESItems.getMinecraft().addScheduledTask(() -> {

@@ -37,7 +37,7 @@ public class MessageDialog implements IMessage {
     /**
      * Created by maxim on 8/5/16 at 9:18 PM.
      */
-    public static class Handler implements IMessageHandler<MessageDialog, IMessage> {
+    public static class ClientHandler implements IMessageHandler<MessageDialog, IMessage> {
         @Override
         public IMessage onMessage(MessageDialog message, MessageContext ctx) {
             Dialog dialog = Dialog.loadFromNBT(message.tag);

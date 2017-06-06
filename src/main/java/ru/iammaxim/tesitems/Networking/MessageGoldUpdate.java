@@ -29,7 +29,7 @@ public class MessageGoldUpdate implements IMessage {
         buf.writeInt(gold);
     }
 
-    public static class Handler implements IMessageHandler<MessageGoldUpdate, IMessage> {
+    public static class ClientHandler implements IMessageHandler<MessageGoldUpdate, IMessage> {
         @Override
         public IMessage onMessage(MessageGoldUpdate message, MessageContext ctx) {
             IPlayerAttributesCapability cap = TESItems.getCapability(TESItems.getClientPlayer());

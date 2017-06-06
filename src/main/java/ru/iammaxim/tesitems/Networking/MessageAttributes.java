@@ -49,7 +49,7 @@ public class MessageAttributes implements IMessage {
     /**
      * Created by Maxim on 11.06.2016.
      */
-    public static class Handler implements IMessageHandler<MessageAttributes, IMessage> {
+    public static class ClientHandler implements IMessageHandler<MessageAttributes, IMessage> {
         @Override
         public IMessage onMessage(MessageAttributes message, MessageContext ctx) {
             if (ctx.side == Side.CLIENT)

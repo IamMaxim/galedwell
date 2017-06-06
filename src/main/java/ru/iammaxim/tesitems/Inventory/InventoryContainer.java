@@ -8,6 +8,13 @@ import net.minecraft.entity.player.EntityPlayer;
 public class InventoryContainer extends Inventory {
     public EntityPlayer player;
 
+    public InventoryContainer() {}
+
+    public InventoryContainer(Inventory inv) {
+        setInventory(inv.getItemList());
+        this.armorInventory = inv.armorInventory;
+    }
+
     public void setLatestPlayer(EntityPlayer player) {
         this.player = player;
     }

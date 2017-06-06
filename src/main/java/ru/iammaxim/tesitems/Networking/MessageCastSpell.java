@@ -35,7 +35,7 @@ public class MessageCastSpell implements IMessage {
     /**
      * Created by Maxim on 17.07.2016.
      */
-    public static class Handler implements IMessageHandler<MessageCastSpell, IMessage> {
+    public static class ServerHandler implements IMessageHandler<MessageCastSpell, IMessage> {
         @Override
         public IMessage onMessage(MessageCastSpell message, MessageContext ctx) {
             EntityPlayer player = ctx.getServerHandler().playerEntity;

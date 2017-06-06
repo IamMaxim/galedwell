@@ -52,7 +52,6 @@ public class BlockChest extends Block implements ITileEntityProvider {
 
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-//        return super.onBlockActivated(worldIn, pos, state, playerIn, hand, heldItem, side, hitX, hitY, hitZ);
         if (worldIn.isRemote)
             return true;
 
@@ -67,7 +66,6 @@ public class BlockChest extends Block implements ITileEntityProvider {
         cap.setLatestContainer(te.inv);
         TESItems.networkWrapper.sendTo(new MessageLatestContainer(te.inv), (EntityPlayerMP) playerIn);
         playerIn.openGui(TESItems.instance, TESItems.guiContainer, worldIn, pos.getX(), pos.getY(), pos.getZ());
-
         return true;
     }
 

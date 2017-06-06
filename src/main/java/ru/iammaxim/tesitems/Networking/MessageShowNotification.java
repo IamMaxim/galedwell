@@ -29,7 +29,7 @@ public class MessageShowNotification implements IMessage {
         ByteBufUtils.writeUTF8String(buf, text);
     }
 
-    public static class Handler implements IMessageHandler<MessageShowNotification, IMessage> {
+    public static class ClientHandler implements IMessageHandler<MessageShowNotification, IMessage> {
 
         @Override
         public IMessage onMessage(MessageShowNotification message, MessageContext ctx) {

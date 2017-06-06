@@ -35,7 +35,7 @@ public class MessageSpellbook implements IMessage {
     /**
      * Created by Maxim on 12.07.2016.
      */
-    public static class Handler implements IMessageHandler<MessageSpellbook, IMessage> {
+    public static class ClientHandler implements IMessageHandler<MessageSpellbook, IMessage> {
         @Override
         public IMessage onMessage(MessageSpellbook message, MessageContext ctx) {
             Minecraft.getMinecraft().addScheduledTask(() -> {

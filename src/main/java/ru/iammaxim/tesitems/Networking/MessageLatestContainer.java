@@ -6,6 +6,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import ru.iammaxim.tesitems.Inventory.InventoryContainer;
+import ru.iammaxim.tesitems.Inventory.InventoryContainerClient;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.TESItems;
 
@@ -23,7 +24,7 @@ public class MessageLatestContainer implements IMessage {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        inv = (InventoryContainer) new InventoryContainer().loadFromNBT(ByteBufUtils.readTag(buf));
+        inv = (InventoryContainer) new InventoryContainerClient().loadFromNBT(ByteBufUtils.readTag(buf));
     }
 
     @Override

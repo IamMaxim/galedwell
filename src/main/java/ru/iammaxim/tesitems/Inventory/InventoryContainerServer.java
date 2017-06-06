@@ -4,7 +4,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import ru.iammaxim.tesitems.Networking.MessageInventoryUpdate;
@@ -17,6 +16,10 @@ import ru.iammaxim.tesitems.TESItems;
 public class InventoryContainerServer extends InventoryContainer {
 
     public InventoryContainerServer() {
+    }
+
+    public InventoryContainerServer(Inventory inv) {
+        super(inv);
     }
 
     private void sendMessage(IMessage msg, EntityPlayer player) {

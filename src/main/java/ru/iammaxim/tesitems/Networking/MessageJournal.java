@@ -33,7 +33,7 @@ public class MessageJournal implements IMessage {
     /**
      * Created by maxim on 11/5/16 at 4:14 PM.
      */
-    public static class Handler implements IMessageHandler<MessageJournal, IMessage> {
+    public static class ClientHandler implements IMessageHandler<MessageJournal, IMessage> {
         @Override
         public IMessage onMessage(MessageJournal message, MessageContext ctx) {
             TESItems.getMinecraft().addScheduledTask(() -> {

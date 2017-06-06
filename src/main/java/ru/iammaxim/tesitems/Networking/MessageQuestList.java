@@ -42,7 +42,7 @@ public class MessageQuestList implements IMessage {
     /**
      * Created by Maxim on 12.07.2016.
      */
-    public static class Handler implements IMessageHandler<MessageQuestList, IMessage> {
+    public static class ClientHandler implements IMessageHandler<MessageQuestList, IMessage> {
         @Override
         public IMessage onMessage(MessageQuestList message, MessageContext ctx) {
             message.questList.forEach((id, name) -> {

@@ -263,4 +263,8 @@ public class Inventory {
     public void unequip(int index) {
         equip(getEquipmentSlot(index), -1);
     }
+
+    public void setInventory(List<ItemStack> items) {
+        this.inventory = items;
+    }
 }

@@ -40,7 +40,7 @@ public class MessageFactionList implements IMessage {
         });
     }
 
-    public static class Handler implements IMessageHandler<MessageFactionList, IMessage> {
+    public static class ClientHandler implements IMessageHandler<MessageFactionList, IMessage> {
         @Override
         public IMessage onMessage(MessageFactionList message, MessageContext ctx) {
             FactionManager.factions.clear();

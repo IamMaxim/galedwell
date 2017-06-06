@@ -30,7 +30,7 @@ public class MessageRecipes implements IMessage {
         ByteBufUtils.writeTag(buf, tag);
     }
 
-    public static class Handler implements IMessageHandler<MessageRecipes, IMessage> {
+    public static class ClientHandler implements IMessageHandler<MessageRecipes, IMessage> {
         @Override
         public IMessage onMessage(MessageRecipes message, MessageContext ctx) {
             CraftRecipes.loadFromNBT(message.tag);

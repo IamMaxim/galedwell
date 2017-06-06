@@ -34,7 +34,7 @@ public class MessageOpenGui implements IMessage {
     /**
      * Created by Maxim on 13.07.2016.
      */
-    public static class Handler implements IMessageHandler<MessageOpenGui, IMessage> {
+    public static class ServerHandler implements IMessageHandler<MessageOpenGui, IMessage> {
         @Override
         public IMessage onMessage(MessageOpenGui message, MessageContext ctx) {
             EntityPlayerMP player = ctx.getServerHandler().playerEntity;

@@ -11,6 +11,7 @@ import ru.iammaxim.tesitems.GUI.Elements.Layouts.ScrollableLayout;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.VerticalLayout;
 import ru.iammaxim.tesitems.NPC.NPC;
 import ru.iammaxim.tesitems.Networking.MessageNPCUpdate;
+import ru.iammaxim.tesitems.Networking.MessageOpenNPCInventory;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.TESItems;
 
@@ -45,23 +46,26 @@ public class GuiNPCEditor extends Screen {
                             addFaction(new Faction(""));
                         }))
                         .add(new HorizontalDivider())
-                        .add(new Button().setText("Save").setOnClick(b -> {
-                            npc.clearFactions();
-                            Iterator<Map.Entry<VerticalLayout, Faction>> it = factionEntries.entrySet().iterator();
-                            while (it.hasNext()) {
-                                Map.Entry<VerticalLayout, Faction> entry = it.next();
-                                Faction f = entry.getValue();
-                                if (f == null) {
-                                    it.remove();
-                                    factionsLayout.remove(entry.getKey());
-                                } else {
-                                    npc.addFaction(f.id);
-                                }
-                            }
+                        .add(new Button("Open inventory").center(true).setOnClick(b ->
+                                TESItems.networkWrapper.sendToServer(new MessageOpenNPCInventory())).setWidthOverride(ElementBase.FILL))
+                        .add(new Button("Save").center(true).setOnClick(b -> {
+                                    npc.clearFactions();
+                                    Iterator<Map.Entry<VerticalLayout, Faction>> it = factionEntries.entrySet().iterator();
+                                    while (it.hasNext()) {
+                                        Map.Entry<VerticalLayout, Faction> entry = it.next();
+                                        Faction f = entry.getValue();
+                                        if (f == null) {
+                                            it.remove();
+                                            factionsLayout.remove(entry.getKey());
+                                        } else {
+                                            npc.addFaction(f.id);
+                                        }
+                                    }
 
-                            TESItems.networkWrapper.sendToServer(new MessageNPCUpdate(npc.getNBT()));
-                            new GuiAlertDialog("Changes updated").show();
-                        }))));
+                                    TESItems.networkWrapper.sendToServer(new MessageNPCUpdate(npc.getNBT()));
+                                    new GuiAlertDialog("Changes updated").show();
+                                }).setWidthOverride(ElementBase.FILL)
+                        )));
 
         npc.getFactions().forEach(this::addFaction);
         root.doLayout();
