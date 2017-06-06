@@ -46,18 +46,15 @@ public class GuiNPCEditor extends Screen {
                         }))
                         .add(new HorizontalDivider())
                         .add(new Button().setText("Save").setOnClick(b -> {
-                            System.out.println("Clearing factions");
                             npc.clearFactions();
                             Iterator<Map.Entry<VerticalLayout, Faction>> it = factionEntries.entrySet().iterator();
                             while (it.hasNext()) {
                                 Map.Entry<VerticalLayout, Faction> entry = it.next();
                                 Faction f = entry.getValue();
                                 if (f == null) {
-                                    System.out.println("removing faction");
                                     it.remove();
                                     factionsLayout.remove(entry.getKey());
                                 } else {
-                                    System.out.println("adding faction");
                                     npc.addFaction(f.id);
                                 }
                             }

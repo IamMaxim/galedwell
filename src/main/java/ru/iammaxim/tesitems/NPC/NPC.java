@@ -86,12 +86,10 @@ public class NPC {
             idTag.setInteger("index", f);
             list.appendTag(idTag);
         });
-        System.out.println("saving " + list.tagCount() + " factions to NBT");
         return list;
     }
 
     public void loadFactions(NBTTagList list) {
-        System.out.println("Clearing factions. Adding " + list.tagCount() + " factions");
         factions.clear();
         for (int i = 0; i < list.tagCount(); i++) {
             factions.add(list.getCompoundTagAt(i).getInteger("index"));
