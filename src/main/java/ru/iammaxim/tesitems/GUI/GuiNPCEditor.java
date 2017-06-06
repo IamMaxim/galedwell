@@ -16,6 +16,7 @@ import ru.iammaxim.tesitems.TESItems;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Created by maxim on 11/5/16 at 9:10 PM.
@@ -24,22 +25,14 @@ public class GuiNPCEditor extends Screen {
     private EntityPlayer player;
     private NPC npc;
     private ScrollableLayout scrollableLayout;
+    private VerticalLayout factionsLayout;
     private HashMap<VerticalLayout, Faction> factionEntries = new HashMap<>();
-
-    @Override
-    public void onResize(Minecraft mcIn, int w, int h) {
-        super.onResize(mcIn, w, h);
-//        scrollableLayout.setHeight((int) (res.getScaledHeight() * 0.8f));
-    }
 
     public GuiNPCEditor(EntityPlayer player) {
         this.player = player;
         IPlayerAttributesCapability cap = TESItems.getCapability(player);
         npc = cap.getLatestNPC();
         res = new ScaledResolution(Minecraft.getMinecraft());
-
-        VerticalLayout factionsLayout;
-
         contentLayout.setElement(new ScrollableLayout().setElement(
                 new VerticalLayout()
                         .add(new TextField().setHint("Name").setText(npc.name).setOnType(tf -> npc.setName(tf.getText())).setWidthOverride(ElementBase.FILL))
@@ -49,60 +42,56 @@ public class GuiNPCEditor extends Screen {
                         .add(new HeaderLayout("Factions").setWidthOverride(ElementBase.FILL))
                         .add(factionsLayout = new VerticalLayout())
                         .add(new Button("Add faction").setOnClick(b -> {
-                            Faction f = new Faction("");
-                            VerticalLayout fl = new VerticalLayout();
-                            Text factionName = new Text("Faction name will be here if all is right");
-                            fl.add(new TextField().setHint("Faction ID").setOnType(tf -> {
-                                try {
-                                    Faction newFaction;
-                                    if ((newFaction = FactionManager.getFaction(Integer.parseInt(tf.getText()))) != null) {
-                                        factionName.setText(newFaction.name);
-                                        factionEntries.put(fl, newFaction);
-                                    }
-                                } catch (NumberFormatException e) {
-                                }
-                            }));
-                            fl.add(factionName);
-                            factionEntries.put(fl, f);
-                            factionsLayout.add(fl);
+                            addFaction(new Faction(""));
                         }))
                         .add(new HorizontalDivider())
                         .add(new Button().setText("Save").setOnClick(b -> {
-                            npc.getFactions().clear();
-                            Iterator<VerticalLayout> it = factionEntries.keySet().iterator();
+                            System.out.println("Clearing factions");
+                            npc.clearFactions();
+                            Iterator<Map.Entry<VerticalLayout, Faction>> it = factionEntries.entrySet().iterator();
                             while (it.hasNext()) {
-                                VerticalLayout fl = it.next();
-                                Faction f = factionEntries.get(fl);
-                                if (FactionManager.getFaction(f.id) == null)
+                                Map.Entry<VerticalLayout, Faction> entry = it.next();
+                                Faction f = entry.getValue();
+                                if (f == null) {
+                                    System.out.println("removing faction");
                                     it.remove();
-                                else npc.addFaction(f.id);
+                                    factionsLayout.remove(entry.getKey());
+                                } else {
+                                    System.out.println("adding faction");
+                                    npc.addFaction(f.id);
+                                }
                             }
 
                             TESItems.networkWrapper.sendToServer(new MessageNPCUpdate(npc.getNBT()));
                             new GuiAlertDialog("Changes updated").show();
                         }))));
 
-        npc.getFactions().forEach(f -> {
-            VerticalLayout fl = new VerticalLayout();
-            Text factionName = new Text(f.name + "");
-            fl.add(new TextField().setHint("Faction ID").setText(f.id + "").setOnType(tf -> {
-                try {
-                    Faction newFaction;
-                    if ((newFaction = FactionManager.getFaction(Integer.parseInt(tf.getText()))) != null) {
-                        factionName.setText(newFaction.name);
-                        factionEntries.put(fl, newFaction);
-                    }
-                } catch (NumberFormatException e) {
-                }
-            }));
-            fl.add(factionName);
-            factionEntries.put(fl, f);
-            factionsLayout.add(fl);
-        });
-
-/*        int width = root.getWidth();
-        int height = root.getHeight();
-        root.setBounds((res.getScaledWidth() - width) / 2, (res.getScaledHeight() - height) / 2, (res.getScaledWidth() + width) / 2, (res.getScaledHeight() + height) / 2);*/
+        npc.getFactions().forEach(this::addFaction);
         root.doLayout();
+    }
+
+    @Override
+    public void onResize(Minecraft mcIn, int w, int h) {
+        super.onResize(mcIn, w, h);
+    }
+
+    private void addFaction(Faction f) {
+        VerticalLayout fl = new VerticalLayout();
+        Text factionName = new Text("Faction name will be here if all is right");
+        if (!f.name.equals(""))
+            factionName.setText(f.name);
+        fl.add(new TextField().setText(f.id + "").setHint("Faction ID").setOnType(tf -> {
+            try {
+                Faction newFaction;
+                if ((newFaction = FactionManager.getFaction(Integer.parseInt(tf.getText()))) != null)
+                    factionName.setText(newFaction.name);
+                factionEntries.put(fl, newFaction);
+            } catch (NumberFormatException e) {
+                factionEntries.put(fl, null);
+            }
+        }));
+        fl.add(factionName);
+        factionEntries.put(fl, f);
+        factionsLayout.add(fl);
     }
 }

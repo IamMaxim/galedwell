@@ -3,8 +3,6 @@ package ru.iammaxim.tesitems.NPC;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumHandSide;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import ru.iammaxim.tesitems.Factions.Faction;
 import ru.iammaxim.tesitems.Factions.FactionManager;
 import ru.iammaxim.tesitems.Inventory.Inventory;
@@ -70,7 +68,7 @@ public class NPC {
         tag.setString("name", name);
         tag.setString("skinName", skinName);
         tag.setTag("inventory", inventory.writeToNBT());
-        tag.setTag("topics", saveFactions());
+        tag.setTag("factions", saveFactions());
     }
 
     public void readFromNBT(NBTTagCompound tag) {
@@ -78,7 +76,7 @@ public class NPC {
         skinName = tag.getString("skinName");
         isInvulnerable = tag.getBoolean("isInvulnerable");
         inventory.loadFromNBT(tag.getCompoundTag("inventory"));
-        loadFactions((NBTTagList) tag.getTag("topics"));
+        loadFactions((NBTTagList) tag.getTag("factions"));
     }
 
     public NBTTagList saveFactions() {
@@ -88,13 +86,20 @@ public class NPC {
             idTag.setInteger("index", f);
             list.appendTag(idTag);
         });
+        System.out.println("saving " + list.tagCount() + " factions to NBT");
         return list;
     }
 
     public void loadFactions(NBTTagList list) {
+        System.out.println("Clearing factions. Adding " + list.tagCount() + " factions");
+        factions.clear();
         for (int i = 0; i < list.tagCount(); i++) {
             factions.add(list.getCompoundTagAt(i).getInteger("index"));
         }
+    }
+
+    public void clearFactions() {
+        factions.clear();
     }
 
     public void setSkinName(String skinName) {
