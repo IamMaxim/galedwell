@@ -69,7 +69,6 @@ public class CommonProxy {
         ConfigManager.loadConfig();
 
         CapabilityManager.INSTANCE.register(IPlayerAttributesCapability.class, new PlayerAttributesCapabilityStorage(), PlayerAttributesCapabilityDefaultImpl::new);
-        CapabilityManager.INSTANCE.register(INPCAttributesCapability.class, new NPCAttributesCapabilityStorage(), NPCAttributesCapabilityDefaultImpl::new);
         CapabilityManager.INSTANCE.register(IWorldCapability.class, new WorldCapabilityStorage(), WorldCapabilityDefaultImpl::new);
         MinecraftForge.EVENT_BUS.register(this);
         new AuthEventListener().register();
@@ -222,8 +221,6 @@ public class CommonProxy {
             event.addCapability(new ResourceLocation(TESItems.attributesTagName), new PlayerAttributesCapabilityProvider());
         else if (event.getObject() instanceof World)
             event.addCapability(new ResourceLocation(TESItems.worldTagName), new WorldCapabilityProvider());
-        else if (event.getObject() instanceof EntityNPC)
-            event.addCapability(new ResourceLocation(TESItems.npcTagName), new NPCAttributesCapabilityProvider());
     }
 
     @SubscribeEvent

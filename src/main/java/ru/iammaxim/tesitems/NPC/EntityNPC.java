@@ -201,7 +201,6 @@ public class EntityNPC extends EntityLivingBase implements IEntityAdditionalSpaw
     @Override
     public void onEntityUpdate() {
         super.onEntityUpdate();
-        INPCAttributesCapability cap = TESItems.getNPCCapability(this);
-        cap.restoreMagicka();
+        npc.restoreMagicka();
     }
 }

@@ -14,8 +14,6 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import ru.iammaxim.tesitems.NPC.EntityNPC;
-import ru.iammaxim.tesitems.NPC.INPCAttributesCapability;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.Proxy.CommonProxy;
 import ru.iammaxim.tesitems.World.IWorldCapability;
@@ -33,7 +31,6 @@ public class TESItems {
 
     public static final String attributesTagName = "tesitems:playerAttributes";
     public static final String worldTagName = "tesitems:world";
-    public static final String npcTagName = "tesitems:npcAttributes";
 
     public static final String[] ATTRIBUTES = {
             "strength",
@@ -71,8 +68,6 @@ public class TESItems {
     public static CommonProxy proxy;
     @CapabilityInject(IPlayerAttributesCapability.class)
     public static Capability<IPlayerAttributesCapability> playerAttributesCapability;
-    @CapabilityInject(INPCAttributesCapability.class)
-    public static Capability<INPCAttributesCapability> npcAttributesCapability;
     @CapabilityInject(IWorldCapability.class)
     public static Capability<IWorldCapability> worldCapability;
 
@@ -84,10 +79,6 @@ public class TESItems {
 
     public static IPlayerAttributesCapability getCapability(EntityPlayer player) {
         return player.getCapability(TESItems.playerAttributesCapability, null);
-    }
-
-    public static INPCAttributesCapability getNPCCapability(EntityNPC npc) {
-        return npc.getCapability(TESItems.npcAttributesCapability, null);
     }
 
     @SideOnly(Side.CLIENT)
