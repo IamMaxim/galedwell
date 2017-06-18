@@ -3,6 +3,7 @@ package ru.iammaxim.tesitems.GUI;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
+import ru.iammaxim.tesitems.GUI.CraftingStations.GuiWorkbench;
 import ru.iammaxim.tesitems.TESItems;
 
 /**
@@ -29,7 +30,7 @@ public class GUIHandler implements IGuiHandler {
             case TESItems.guiEditSpells: new GuiSpellEditorList().show(); return ScreenStack.instance;
             case TESItems.guiContainer: new GuiContainer().show(); return ScreenStack.instance;
             case TESItems.guiWorkbench: new GuiWorkbench().show(); return ScreenStack.instance;
-            case TESItems.guiCraftingRecipesList: new GuiCraftingRecipesList().show(); return ScreenStack.instance;
+            case TESItems.guiCraftingRecipeTypesList: new GuiCraftingRecipeTypesList().show(); return ScreenStack.instance;
         }
         return null;
     }

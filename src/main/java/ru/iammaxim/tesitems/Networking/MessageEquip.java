@@ -20,7 +20,8 @@ public class MessageEquip implements IMessage {
     public int index;
     public String slot;
 
-    public MessageEquip() {}
+    public MessageEquip() {
+    }
 
     //pass -1 to unequip
     public MessageEquip(String slot, int index) {
@@ -47,8 +48,10 @@ public class MessageEquip implements IMessage {
         @Override
         public IMessage onMessage(MessageEquip message, MessageContext ctx) {
             EntityPlayer player = TESItems.getClientPlayer();
-            if (message.index == -1) player.setItemStackToSlot(EntityEquipmentSlot.fromString(message.slot.toLowerCase()), null);
-            else player.setItemStackToSlot(EntityEquipmentSlot.fromString(message.slot), Inventory.getInventory(player).get(message.index));
+            if (message.index == -1)
+                player.setItemStackToSlot(EntityEquipmentSlot.fromString(message.slot.toLowerCase()), null);
+            else
+                player.setItemStackToSlot(EntityEquipmentSlot.fromString(message.slot), Inventory.getInventory(player).get(message.index));
 
             Screen lastScreen = ScreenStack.lastScreen();
             if (lastScreen instanceof GuiInventory) {

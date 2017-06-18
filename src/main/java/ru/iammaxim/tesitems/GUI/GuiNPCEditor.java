@@ -42,9 +42,7 @@ public class GuiNPCEditor extends Screen {
                         .add(new HorizontalDivider())
                         .add(new HeaderLayout("Factions").setWidthOverride(ElementBase.FILL))
                         .add(factionsLayout = new VerticalLayout())
-                        .add(new Button("Add faction").setOnClick(b -> {
-                            addFaction(new Faction(""));
-                        }))
+                        .add(new Button("Add faction").setOnClick(b -> addFaction(new Faction(""))))
                         .add(new HorizontalDivider())
                         .add(new Button("Open inventory").center(true).setOnClick(b ->
                                 TESItems.networkWrapper.sendToServer(new MessageOpenNPCInventory())).setWidthOverride(ElementBase.FILL))

@@ -1,4 +1,4 @@
-package ru.iammaxim.tesitems.GUI;
+package ru.iammaxim.tesitems.GUI.CraftingStations;
 
 import net.minecraft.item.ItemStack;
 import ru.iammaxim.tesitems.Craft.CraftRecipe;
@@ -6,6 +6,8 @@ import ru.iammaxim.tesitems.GUI.Elements.*;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.HorizontalLayout;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.ScrollableLayout;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.VerticalLayout;
+import ru.iammaxim.tesitems.GUI.ResManager;
+import ru.iammaxim.tesitems.GUI.Screen;
 
 /**
  * Created by maxim on 3/5/17 at 2:35 PM.

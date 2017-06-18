@@ -23,6 +23,6 @@ public class CommandManageCraftingRecipes extends CommandBase {
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-        ((EntityPlayer) sender).openGui(TESItems.instance, TESItems.guiCraftingRecipesList, ((EntityPlayer) sender).worldObj, (int) ((EntityPlayer) sender).posX, (int) ((EntityPlayer) sender).posY, (int) ((EntityPlayer) sender).posZ);
+        ((EntityPlayer) sender).openGui(TESItems.instance, TESItems.guiCraftingRecipeTypesList, ((EntityPlayer) sender).worldObj, (int) ((EntityPlayer) sender).posX, (int) ((EntityPlayer) sender).posY, (int) ((EntityPlayer) sender).posZ);
     }
 }
