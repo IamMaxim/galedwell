@@ -78,6 +78,7 @@ public class NPC {
         tag.setTag("inventory", inventory.writeToNBT());
         tag.setTag("factions", saveFactions());
         tag.setTag("spellbook", saveSpellbook(true));
+        tag.setFloat("magicka", magicka);
     }
 
     public void readFromNBT(NBTTagCompound tag) {
@@ -87,6 +88,7 @@ public class NPC {
         inventory.loadFromNBT(tag.getCompoundTag("inventory"));
         loadFactions((NBTTagList) tag.getTag("factions"));
         loadSpellbook(tag.getCompoundTag("spellbook"));
+        magicka = tag.getFloat("magicka");
     }
 
     public NBTTagList saveFactions() {

@@ -15,12 +15,14 @@ import ru.iammaxim.tesitems.Utils.Utils;
  */
 public class MessageRecipe implements IMessage {
     public int id;
+    public CraftRecipe.Type type;
     public CraftRecipe recipe;
 
     public MessageRecipe() {
     }
 
-    public MessageRecipe(int id, CraftRecipe recipe) {
+    public MessageRecipe(CraftRecipe.Type type, int id, CraftRecipe recipe) {
+        this.type = type;
         this.id = id;
         this.recipe = recipe;
     }
@@ -28,6 +30,7 @@ public class MessageRecipe implements IMessage {
     @Override
     public void fromBytes(ByteBuf buf) {
         id = buf.readInt();
+        type = CraftRecipe.Type.valueOf(ByteBufUtils.readUTF8String(buf));
         boolean delete = buf.readBoolean();
         if (delete)
             recipe = null;
@@ -38,6 +41,7 @@ public class MessageRecipe implements IMessage {
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeInt(id);
+        ByteBufUtils.writeUTF8String(buf, type.toString());
         if (recipe == null)
             buf.writeBoolean(true); //delete recipe
         else
@@ -51,20 +55,20 @@ public class MessageRecipe implements IMessage {
         public IMessage onMessage(MessageRecipe message, MessageContext ctx) {
             //TODO: add permission check
             if (message.recipe == null) {
-                if (!CraftRecipes.remove(message.id))
+                if (!CraftRecipes.remove(message.type, message.id))
                     Utils.showNotification(ctx.getServerHandler().playerEntity, "Couldn't delete recipe");
             } else {
-                CraftRecipes.addRecipe(message.id, message.recipe);
+                CraftRecipes.addRecipe(message.type, message.id, message.recipe);
                 Utils.showNotification(ctx.getServerHandler().playerEntity, "Recipe saved successfully");
             }
-            return null;
+            return new MessageRecipe(message.type, message.id, message.recipe);
         }
     }
 
     public static class ClientHandler implements IMessageHandler<MessageRecipe, IMessage> {
         @Override
         public IMessage onMessage(MessageRecipe message, MessageContext ctx) {
-            CraftRecipes.addRecipe(message.id, message.recipe);
+            CraftRecipes.addRecipe(message.type, message.id, message.recipe);
             ScreenStack.processCallback("recipeUpdated");
             return null;
         }

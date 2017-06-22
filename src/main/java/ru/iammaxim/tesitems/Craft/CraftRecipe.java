@@ -10,18 +10,40 @@ import java.util.Arrays;
  * Created by Maxim on 17.06.2016.
  */
 public class CraftRecipe {
+    public int id;
     public String name;
     public ItemStack[] input;
     public ItemStack[] output;
 
-    public CraftRecipe(String name, ItemStack[] input, ItemStack[] output) {
+    public CraftRecipe(int id, String name, ItemStack[] input, ItemStack[] output) {
+        this.id = id;
         this.input = input;
         this.output = output;
         this.name = name;
     }
 
+    public static CraftRecipe loadFromNBT(NBTTagCompound tag) {
+        int id = tag.getInteger("id");
+        String name = tag.getString("name");
+
+        NBTTagList inputList = (NBTTagList) tag.getTag("input");
+        ItemStack[] input = new ItemStack[inputList.tagCount()];
+        for (int i = 0; i < inputList.tagCount(); i++) {
+            input[i] = ItemStack.loadItemStackFromNBT(inputList.getCompoundTagAt(i));
+        }
+
+        NBTTagList outputList = (NBTTagList) tag.getTag("output");
+        ItemStack[] output = new ItemStack[outputList.tagCount()];
+        for (int i = 0; i < outputList.tagCount(); i++) {
+            output[i] = ItemStack.loadItemStackFromNBT(outputList.getCompoundTagAt(i));
+        }
+
+        return new CraftRecipe(id, name, input, output);
+    }
+
     public NBTTagCompound writeToNBT() {
         NBTTagCompound tag = new NBTTagCompound();
+        tag.setInteger("id", id);
         tag.setString("name", name);
 
         NBTTagList inputList = new NBTTagList();
@@ -38,25 +60,28 @@ public class CraftRecipe {
         return tag;
     }
 
-    public static CraftRecipe loadFromNBT(NBTTagCompound tag) {
-        String name = tag.getString("name");
-
-        NBTTagList inputList = (NBTTagList) tag.getTag("input");
-        ItemStack[] input = new ItemStack[inputList.tagCount()];
-        for (int i = 0; i < inputList.tagCount(); i++) {
-            input[i] = ItemStack.loadItemStackFromNBT(inputList.getCompoundTagAt(i));
-        }
-
-        NBTTagList outputList = (NBTTagList) tag.getTag("output");
-        ItemStack[] output = new ItemStack[outputList.tagCount()];
-        for (int i = 0; i < outputList.tagCount(); i++) {
-            output[i] = ItemStack.loadItemStackFromNBT(outputList.getCompoundTagAt(i));
-        }
-
-        return new CraftRecipe(name, input, output);
+    public CraftRecipe copy() {
+        return new CraftRecipe(id, name, Arrays.copyOf(input, input.length), Arrays.copyOf(output, output.length));
     }
 
-    public CraftRecipe copy() {
-        return new CraftRecipe(name, Arrays.copyOf(input, input.length), Arrays.copyOf(output, output.length));
+    public enum Type {
+        SMELTER,
+        FORGE,
+
+        TANNING_RACK,
+
+        SAW,
+
+        COOKING_POT,
+        SKEWER,
+        CUTTING_BOARD,
+        FURNACE,
+
+        WORKBENCH,
+
+        FERMENTATION_BARREL,
+        DISTILLATION_VESSEL,
+        BLENDING_VESSEL,
+        BREWING_RACK
     }
 }

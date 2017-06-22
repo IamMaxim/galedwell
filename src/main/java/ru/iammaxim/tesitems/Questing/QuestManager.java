@@ -17,7 +17,7 @@ import java.util.HashMap;
 public class QuestManager {
     public static HashMap<Integer, Quest> questList = new HashMap<>();
     public static IDGen idGen = new IDGen();
-    public static NBTFileStorage nbtFileStorage = new NBTFileStorage("questSystem", "questSystem/quests.nbt");
+    //    public static NBTFileStorage nbtFileStorage = new NBTFileStorage("questSystem", "questSystem/quests.nbt");
     private static boolean dirty = false;
 
     public static Quest getByID(int ID) {
@@ -48,7 +48,7 @@ public class QuestManager {
 
     public static void loadFromFile() {
         try {
-            NBTTagList list = (NBTTagList) nbtFileStorage.loadFromFile().getTag("questList");
+            NBTTagList list = (NBTTagList) NBTFileStorage.loadFromFile("questSystem/quests.nbt").getTag("questList");
             if (list != null)
                 readFromNBT(list);
         } catch (IOException e) {
@@ -64,7 +64,7 @@ public class QuestManager {
         try {
             NBTTagCompound tag = new NBTTagCompound();
             tag.setTag("questList", writeToNBT());
-            nbtFileStorage.saveToFile(tag);
+            NBTFileStorage.saveToFile("questSystem/quests.nbt", tag);
         } catch (IOException e) {
             e.printStackTrace();
         }
