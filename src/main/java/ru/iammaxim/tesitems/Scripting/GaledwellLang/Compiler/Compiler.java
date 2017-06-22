@@ -7,7 +7,6 @@ import ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.InvalidTokenException
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.Token;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.TokenType;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.ValueReference;
-import sun.plugin.dom.exception.InvalidStateException;
 
 import java.util.ArrayList;
 
@@ -22,7 +21,7 @@ public class Compiler {
         this.exps = exps;
     }
 
-    public static ArrayList<Operation> compileFunction(ArrayList<Expression> tokens) throws InvalidTokenException {
+    public static ArrayList<Operation> compileFunction(ArrayList<Expression> tokens) throws InvalidTokenException, InvalidExpressionException {
         Compiler compiler = new Compiler(tokens);
         compiler._compileFunction();
         return compiler.operations;
@@ -43,7 +42,7 @@ public class Compiler {
         operations.remove(index);
     }
 
-    private void _compileFunction() throws InvalidTokenException {
+    private void _compileFunction() throws InvalidTokenException, InvalidExpressionException {
         for (Expression exp : exps) {
             compileExpression(exp, 0, false);
         }
@@ -59,7 +58,7 @@ public class Compiler {
         }
     }
 
-    private void compileExpression(Expression exp, int depth, boolean inTree) throws InvalidTokenException {
+    private void compileExpression(Expression exp, int depth, boolean inTree) throws InvalidTokenException, InvalidExpressionException {
         GaledwellLang.logger.increateIndent();
         GaledwellLang.log("compiling " + exp.getClass().getSimpleName() + ": " + exp.toString());
         GaledwellLang.logger.increateIndent();
@@ -76,7 +75,7 @@ public class Compiler {
             compileCondition((ExpressionCondition) exp, depth, inTree);
         } else if (exp instanceof ExpressionForLoop) {
             compileForLoop((ExpressionForLoop) exp, depth, inTree);
-        } else throw new InvalidStateException("Can't find compiler part for " + exp.getClass().getName());
+        } else throw new InvalidExpressionException("Can't find compiler part for " + exp.getClass().getName());
         GaledwellLang.logger.decreaseIndent();
         GaledwellLang.logger.decreaseIndent();
     }
@@ -109,7 +108,7 @@ public class Compiler {
         }
     }
 
-    private void compileFunctionCall(ExpressionFunctionCall exp, int depth, boolean inTree) throws InvalidTokenException {
+    private void compileFunctionCall(ExpressionFunctionCall exp, int depth, boolean inTree) throws InvalidTokenException, InvalidExpressionException {
         for (int j = exp.args.size() - 1; j >= 0; j--) {
             Expression arg = exp.args.get(j);
             compileExpression(arg, depth + 1, false);
@@ -121,7 +120,7 @@ public class Compiler {
             addOperation(new OperationPop()); //pop return value of function if it won't be used
     }
 
-    private void compileReturn(ExpressionReturn exp, int depth, boolean inTree) throws InvalidTokenException {
+    private void compileReturn(ExpressionReturn exp, int depth, boolean inTree) throws InvalidTokenException, InvalidExpressionException {
         compileExpression(exp.returnExp, depth + 1, false);
         addOperation(new OperationReturn());
     }
@@ -135,7 +134,7 @@ public class Compiler {
             addOperation(new OperationPush(exp.value)); //this is constant, just push it every time
     }
 
-    private void compileTree(ExpressionTree exp, int depth, boolean inTree) throws InvalidTokenException {
+    private void compileTree(ExpressionTree exp, int depth, boolean inTree) throws InvalidTokenException, InvalidExpressionException {
         if (exp.operator.type == TokenType.OPERATOR) {
             if (exp.operator.equals(new Token("+"))) {
                 compileExpression(exp.right, depth + 1, true);
@@ -233,7 +232,7 @@ public class Compiler {
         }
     }
 
-    private void compileCondition(ExpressionCondition exp, int depth, boolean inTree) throws InvalidTokenException {
+    private void compileCondition(ExpressionCondition exp, int depth, boolean inTree) throws InvalidTokenException, InvalidExpressionException {
         OperationLabel ifNotLabel = new OperationLabel(), endIfLabel = null;
         boolean elseExists = false; //true if else block exists
         if (!exp.elseBody.isEmpty()) {
@@ -261,7 +260,7 @@ public class Compiler {
         }
     }
 
-    private void compileForLoop(ExpressionForLoop exp, int depth, boolean inTree) throws InvalidTokenException {
+    private void compileForLoop(ExpressionForLoop exp, int depth, boolean inTree) throws InvalidTokenException, InvalidExpressionException {
         OperationLabel begin = new OperationLabel();
         OperationLabel end = new OperationLabel();
 

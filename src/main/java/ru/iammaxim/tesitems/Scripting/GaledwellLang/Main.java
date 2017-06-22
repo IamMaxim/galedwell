@@ -1,5 +1,6 @@
 package ru.iammaxim.tesitems.Scripting.GaledwellLang;
 
+import ru.iammaxim.tesitems.Scripting.GaledwellLang.Compiler.InvalidExpressionException;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Functions.FunctionDumpVariableStorage;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Functions.FunctionPrint;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Operations.InvalidOperationException;
@@ -37,7 +38,7 @@ public class Main {
 //            long totalMemory = java.lang.Runtime.getRuntime().totalMemory();
 //            System.out.println("Occupied memory: " + ((double) (totalMemory - freeMemory) / 1024 / 1024) + "MB (" + ((1 - (double) freeMemory / totalMemory) * 100) + "%)");
 
-        } catch (FileNotFoundException | InvalidTokenException e) {
+        } catch (FileNotFoundException | InvalidTokenException | InvalidExpressionException e) {
             e.printStackTrace();
         }
     }

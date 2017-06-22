@@ -15,6 +15,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import ru.iammaxim.tesitems.Resource;
 import ru.iammaxim.tesitems.ResourceManager;
+import ru.iammaxim.tesitems.Scripting.GaledwellLang.Compiler.InvalidExpressionException;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.GaledwellLang;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Objects.Entity.ValueEntity;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Objects.Player.ValuePlayer;
@@ -58,7 +59,7 @@ public class SpellEffect {
         if (TESItems.getSide() == Side.SERVER)
             try {
                 GaledwellLang.loadSrcInto(effect.script, effect.object);
-            } catch (InvalidTokenException e) {
+            } catch (InvalidTokenException | InvalidExpressionException e) {
                 e.printStackTrace();
             }
         effect.texture = ResourceManager.getResource(tag.getString("texture"));

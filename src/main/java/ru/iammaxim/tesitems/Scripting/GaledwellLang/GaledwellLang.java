@@ -1,6 +1,7 @@
 package ru.iammaxim.tesitems.Scripting.GaledwellLang;
 
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Compiler.CompilerDebugRuntime;
+import ru.iammaxim.tesitems.Scripting.GaledwellLang.Compiler.InvalidExpressionException;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Functions.FunctionParsed;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Operations.Operation;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.*;
@@ -28,7 +29,7 @@ public class GaledwellLang {
         logger.log(s);
     }
 
-    public static void loadSrcInto(String src, ValueObject object) throws InvalidTokenException {
+    public static void loadSrcInto(String src, ValueObject object) throws InvalidTokenException, InvalidExpressionException {
         if (src.isEmpty())
             return;
 
