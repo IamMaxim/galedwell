@@ -37,7 +37,7 @@ public abstract class ElementBase {
     protected ElementBase background;
     private Screen screen;
 
-    public ElementBase setScreen(Screen screen){
+    public ElementBase setScreen(Screen screen) {
         this.screen = screen;
         return this;
     }
@@ -51,8 +51,8 @@ public abstract class ElementBase {
         return this;
     }
 
-    public ElementBase setOnClick(Consumer<ElementBase> onCLick) {
-        this.onClick = onCLick;
+    public ElementBase setOnClick(Consumer<ElementBase> onClick) {
+        this.onClick = onClick;
         return this;
     }
 
@@ -90,13 +90,14 @@ public abstract class ElementBase {
         return height;
     }
 
-    public ElementBase() {}
+    public ElementBase() {
+    }
 
     public static void drawColoredRect(Tessellator tess, int left, int top, int right, int bottom, int color) {
-        float b = (float)(color & 0xFF)/255;
-        float g = (float)((color >> 8) & 0xFF)/255;
-        float r = (float)((color >> 16) & 0xFF)/255;
-        float a = (float)((color >> 24) & 0xFF)/255;
+        float b = (float) (color & 0xFF) / 255;
+        float g = (float) ((color >> 8) & 0xFF) / 255;
+        float r = (float) ((color >> 16) & 0xFF) / 255;
+        float a = (float) ((color >> 24) & 0xFF) / 255;
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -224,13 +225,12 @@ public abstract class ElementBase {
 
     public abstract void draw(int mouseX, int mouseY);
 
-    public void keyTyped(char c, int keyCode) {}
+    public void keyTyped(char c, int keyCode) {
+    }
 
     public void click(int relativeX, int relativeY) {
-        if (onClick == null) {
-            return;
-        }
-        onClick.accept(this);
+        if (onClick != null)
+            onClick.accept(this);
     }
 
     public void rightClick(int relativeX, int relativeY) {
@@ -288,7 +288,8 @@ public abstract class ElementBase {
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
     }
 
-    public void onResize() {}
+    public void onResize() {
+    }
 
     public ElementBase setHorizontalMargin(int margin) {
         this.marginLeft = this.marginRight = margin;
