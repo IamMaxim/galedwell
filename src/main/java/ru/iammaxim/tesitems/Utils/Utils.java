@@ -41,4 +41,16 @@ public class Utils {
             if (p.getDistanceSqToEntity(player) < distance * distance)
                 p.addChatComponentMessage(new TextComponentString(message));
     }
+
+    public static int clamp(int min, int max, int value) {
+        if (value < min) return min;
+        if (value > max) return max;
+        return value;
+    }
+
+    public static float clamp(float min, float max, float value) {
+        if (value < min) return min;
+        if (value > max) return max;
+        return value;
+    }
 }

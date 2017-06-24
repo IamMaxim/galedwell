@@ -1,6 +1,5 @@
 package ru.iammaxim.tesitems.GUI.Elements;
 
-import com.sun.javafx.util.Utils;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import org.lwjgl.Sys;
@@ -8,6 +7,7 @@ import org.lwjgl.input.Keyboard;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.LayoutBase;
 import ru.iammaxim.tesitems.GUI.Fonts.UnicodeFontRenderer;
 import ru.iammaxim.tesitems.Utils.ClientThings;
+import ru.iammaxim.tesitems.Utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
