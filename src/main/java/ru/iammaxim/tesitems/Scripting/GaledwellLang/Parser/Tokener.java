@@ -21,7 +21,15 @@ public class Tokener {
     }
 
     public int left() {
-        return tokens.size() - index;
+        int _index = index;
+        int left = tokens.size() - index;
+        while (left > 0) {
+            if (tokens.get(_index).type != TokenType.NEW_LINE)
+                return left;
+            _index++;
+            left--;
+        }
+        return 0;
     }
 
     public Token eat() {

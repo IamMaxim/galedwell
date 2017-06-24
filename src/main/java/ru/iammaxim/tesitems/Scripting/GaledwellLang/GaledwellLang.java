@@ -5,8 +5,11 @@ import ru.iammaxim.tesitems.Scripting.GaledwellLang.Compiler.InvalidExpressionEx
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Functions.FunctionParsed;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Operations.Operation;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.*;
+import ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.Expression.ExpressionReturn;
+import ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.Expression.ExpressionValue;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.ValueFunction;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Compiler.Compiler;
+import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.ValueNull;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.ValueObject;
 import ru.iammaxim.tesitems.Scripting.Logger;
 
@@ -55,7 +58,7 @@ public class GaledwellLang {
         ArrayList<ValueFunction> funcs = new ArrayList<>(parsedFuncs.size());
         for (ParsedFunction parsedFunc : parsedFuncs) {
             GaledwellLang.log(">>> compiling function " + CompilerDebugRuntime.getName(parsedFunc.id));
-
+            parsedFunc.tokens.add(new ExpressionReturn(new ExpressionValue(new ValueNull())));
             funcs.add(new FunctionParsed(parsedFunc.id, parsedFunc.args, Compiler.compileFunction(parsedFunc.tokens)));
         }
 

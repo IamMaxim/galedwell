@@ -19,10 +19,12 @@ public class Stack {
     }
 
     public void push(Value o) {
+//        System.out.println(Utils.indent((cursor + 1) * 2) + "push: " + o);
         stack[++cursor] = o;
     }
 
     public Value pop() {
+//        System.out.println(Utils.indent(cursor * 2) + "pop: " + stack[cursor]);
         return stack[cursor--];
     }
 

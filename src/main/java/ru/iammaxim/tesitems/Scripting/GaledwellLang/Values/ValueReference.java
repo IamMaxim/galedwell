@@ -49,7 +49,7 @@ public class ValueReference extends Value {
     @Override
     public String toString() {
         if (path != null)
-            return "reference: " + path;
+            return "reference (by path): " + path;
         return "reference: " + CompilerDebugRuntime.getName(id);
     }
 

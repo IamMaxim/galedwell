@@ -31,47 +31,47 @@ public class ValueInt extends Value {
 
     @Override
     public Value operatorPlus(Value right) throws InvalidOperationException {
-        return new ValueInt(value + ((ValueInt)right).value);
+        return new ValueInt(value + ((ValueInt) right).value);
     }
 
     @Override
     public Value operatorSubtract(Value right) throws InvalidOperationException {
-        return new ValueInt(value - ((ValueInt)right).value);
+        return new ValueInt(value - ((ValueInt) right).value);
     }
 
     @Override
     public Value operatorMultiply(Value right) throws InvalidOperationException {
-        return new ValueInt(value * ((ValueInt)right).value);
+        return new ValueInt(value * ((ValueInt) right).value);
     }
 
     @Override
     public Value operatorDivide(Value right) throws InvalidOperationException {
-        return new ValueInt(value / ((ValueInt)right).value);
+        return new ValueInt(value / ((ValueInt) right).value);
     }
 
     @Override
     public Value operatorLess(Value right) throws InvalidOperationException {
-        return new ValueBoolean(value < ((ValueInt)right).value);
+        return new ValueBoolean(value < ((ValueInt) right).value);
     }
 
     @Override
     public Value operatorLessEquals(Value right) throws InvalidOperationException {
-        return new ValueBoolean(value <= ((ValueInt)right).value);
+        return new ValueBoolean(value <= ((ValueInt) right).value);
     }
 
     @Override
     public Value operatorEquals(Value right) throws InvalidOperationException {
-        return new ValueBoolean(value == ((ValueInt)right).value);
+        return new ValueBoolean(value == ((ValueInt) right).value);
     }
 
     @Override
     public Value operatorMoreEquals(Value right) throws InvalidOperationException {
-        return new ValueBoolean(value >= ((ValueInt)right).value);
+        return new ValueBoolean(value >= ((ValueInt) right).value);
     }
 
     @Override
     public Value operatorMore(Value right) throws InvalidOperationException {
-        return new ValueBoolean(value > ((ValueInt)right).value);
+        return new ValueBoolean(value > ((ValueInt) right).value);
     }
 
     @Override

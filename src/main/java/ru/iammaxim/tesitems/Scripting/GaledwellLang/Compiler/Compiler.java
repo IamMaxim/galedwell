@@ -43,6 +43,7 @@ public class Compiler {
     }
 
     private void _compileFunction() throws InvalidTokenException, InvalidExpressionException {
+        GaledwellLang.logger.increateIndent();
         for (Expression exp : exps) {
             compileExpression(exp, 0, false);
         }
@@ -56,10 +57,10 @@ public class Compiler {
                 i--; //repeat this index
             }
         }
+        GaledwellLang.logger.decreaseIndent();
     }
 
     private void compileExpression(Expression exp, int depth, boolean inTree) throws InvalidTokenException, InvalidExpressionException {
-        GaledwellLang.logger.increateIndent();
         GaledwellLang.log("compiling " + exp.getClass().getSimpleName() + ": " + exp.toString());
         GaledwellLang.logger.increateIndent();
 
@@ -76,7 +77,6 @@ public class Compiler {
         } else if (exp instanceof ExpressionForLoop) {
             compileForLoop((ExpressionForLoop) exp, depth, inTree);
         } else throw new InvalidExpressionException("Can't find compiler part for " + exp.getClass().getName());
-        GaledwellLang.logger.decreaseIndent();
         GaledwellLang.logger.decreaseIndent();
     }
 
@@ -116,12 +116,12 @@ public class Compiler {
 
         compilePathToVar(exp.functionName);
         addOperation(new OperationCall(exp.args.size()));
-        if (depth == 0)
+        if (!inTree)
             addOperation(new OperationPop()); //pop return value of function if it won't be used
     }
 
     private void compileReturn(ExpressionReturn exp, int depth, boolean inTree) throws InvalidTokenException, InvalidExpressionException {
-        compileExpression(exp.returnExp, depth + 1, false);
+        compileExpression(exp.returnExp, depth + 1, true);
         addOperation(new OperationReturn());
     }
 
@@ -271,7 +271,8 @@ public class Compiler {
         for (Expression e : exp.body) {
             compileExpression(e, depth + 1, false);
         }
-        compileExpression(exp.third, depth, false);
+        compileExpression(exp.third, depth, true);
+        addOperation(new OperationPop());
         addOperation(new OperationGoTo(begin));
         addOperation(end);
     }
