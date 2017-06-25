@@ -6,7 +6,7 @@ import ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.Expression.*;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.InvalidTokenException;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.Token;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.TokenType;
-import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.ValueReference;
+import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.*;
 
 import java.util.ArrayList;
 
@@ -135,6 +135,8 @@ public class Compiler {
     }
 
     private void compileTree(ExpressionTree exp, int depth, boolean inTree) throws InvalidTokenException, InvalidExpressionException {
+        // TODO: add type conversion
+
         if (exp.operator.type == TokenType.OPERATOR) {
             if (exp.operator.equals(new Token("+"))) {
                 compileExpression(exp.right, depth + 1, true);
@@ -276,4 +278,12 @@ public class Compiler {
         addOperation(new OperationGoTo(begin));
         addOperation(end);
     }
+
+    public static final Class[] typePriority = {
+            ValueString.class,
+            ValueFloat.class,
+            ValueInt.class,
+            ValueBoolean.class,
+
+    };
 }

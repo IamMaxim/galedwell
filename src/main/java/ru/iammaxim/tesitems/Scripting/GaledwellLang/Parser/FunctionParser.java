@@ -44,7 +44,6 @@ public class FunctionParser {
             }
         }
 
-        //TODO: look into here
         //check if this is return
         if (tokener.size() >= 2) {
             if (tokener.get().equals(new Token("return"))) {

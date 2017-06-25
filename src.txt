@@ -1,9 +1,15 @@
 main() {
-    for (j = 0; j < 10000; j++) {
-        print("func1(j): " + func1(j));
-    };
+    //for (j = 0; j < 10000; j++) {
+    //    print("func1(j): " + func1(j));
+    //};
+
+    func1(func2);
 }
 
-func1(arg1) {
-    return "<" + arg1 + ">";
+func1(f) {
+    f();
+}
+
+func2() {
+    print("func2()");
 }
