@@ -76,20 +76,41 @@ public class TokenParser {
     private void _parse() throws InvalidTokenException {
         addLineNumber();
         char[] chars = src.toCharArray();
-        for (int i = 0; i < src.length(); i++) {
+        int len = src.length();
+        for (int i = 0; i < len; i++) {
             if (i == -1) // source code ended; no newline found
                 break;
 
             char c = chars[i];
 
-            if (c == '/')
-                if (chars.length >= i + 1 && chars[i + 1] == '/') { // comment
+            if (c == '/') {
+                if (len - i >= 1 && chars[i + 1] == '/') { // comment
                     i = src.indexOf('\n', i) - 1; // go to next line and leave \n, so parser will parse newline
                     continue;
                 }
+                if (len - i > 1 && chars[i + 1] == '*') { // multiline comment
+                    i += 3;
+                    while (true) {
+                        if (len - i < 2)
+                            throw new InvalidTokenException("Expected multiline comment end, but EOF reached");
+                        char c1 = chars[i - 1];
+                        char c2 = chars[i];
+                        if (c1 == '\n') {
+                            addLineNumber();
+                            i++;
+                            continue;
+                        }
+                        if (c1 == '*' && c2 == '/')
+                            break;
+                        i++;
+                    }
+                }
+            }
 
-            if (c == '\n')
+            if (c == '\n') {
                 addLineNumber();
+                continue;
+            }
 
             //parse value
             if (c == '"') {
