@@ -25,12 +25,21 @@ public class Main {
             runtime.variableStorage.setField("print", new FunctionPrint());
             runtime.variableStorage.setField("dumpVarStorage", new FunctionDumpVariableStorage());
 
-            try {
-                run(runtime);
-            } catch (Exception e) {
-                System.err.println("Error while executing operation: " + runtime.currentCursorPos);
-                e.printStackTrace();
-            }
+            boolean benchmark = false;
+
+            if (!benchmark)
+                try {
+                    run(runtime);
+                } catch (Exception e) {
+                    System.err.println("Error while executing operation: " + runtime.currentCursorPos);
+                    e.printStackTrace();
+                }
+            else
+                try {
+                    benchmark(runtime);
+                } catch (InvalidOperationException e) {
+                    e.printStackTrace();
+                }
 
 //            benchmark(runtime);
 
@@ -45,12 +54,12 @@ public class Main {
 
     public static void benchmark(Runtime runtime) throws InvalidOperationException {
         long start = System.nanoTime();
-        int runCount = 10000000;
+        int runCount = 1;
         for (int i = 0; i < runCount; i++)
             ((ValueFunction) runtime.variableStorage.getField("main")).call(runtime);
         double runTime = System.nanoTime() - start;
-        System.out.println("elapsed time: " + (runTime/1000000000) + "sec");
-        System.out.println("one execution time: " + (runTime/runCount) + "ns");
+        System.out.println("elapsed time: " + (runTime / 1000000000) + " sec");
+        System.out.println("one execution time: " + (runTime / runCount) + " ns");
     }
 
     public static void run(Runtime runtime) throws InvalidOperationException {

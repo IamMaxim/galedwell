@@ -33,15 +33,14 @@ public class FunctionParser {
     }
 
     private Expression parseExpression(Tokener tokener) throws InvalidTokenException {
-        GaledwellLang.log("parsing " + tokener);
+        GaledwellLang.log("parsing " + tokener + " with line number: " + tokener.currentLineNumber);
         tokener.trimParentheses();
 
         //check if this is value
         if (tokener.size() == 1) {
+            GaledwellLang.log("parsing value");
             Value val = Value.get(tokener.eat().token);
-            if (val != null) {
-                return new ExpressionValue(val);
-            }
+            return new ExpressionValue(val);
         }
 
         //check if this is return
@@ -122,17 +121,20 @@ public class FunctionParser {
 
         //check if this is for loop
         if (tokener.left() > 0 && tokener.get().equals(new Token("for"))) {
+            GaledwellLang.log("parsing for loop");
             tokener.eat(); //eat 'for'
             if (tokener.get().type != TokenType.SCOPE_PARENS)
                 throw new InvalidTokenException("Expected parens scope");
-            Tokener args = new Tokener(((TokenScope) tokener.eat()).tokens);
+            int lineNumber = tokener.currentLineNumber;
+            Tokener args = new Tokener(((TokenScope) tokener.eat()).tokens, lineNumber);
             ArrayList<Tokener> argTokens = args.splitSkippingScopes(new Token(";"));
             GaledwellLang.log("for loop args: " + argTokens);
             if (argTokens.size() != 3)
                 throw new InvalidTokenException("Expected 3 args in 'for' construction, but got " + argTokens.size());
             if (tokener.get().type != TokenType.SCOPE_BRACES)
                 throw new InvalidTokenException("Expected braces scope");
-            Tokener body = new Tokener(((TokenScope) tokener.eat()).tokens);
+            int lineNumber1 = tokener.currentLineNumber;
+            Tokener body = new Tokener(((TokenScope) tokener.eat()).tokens, lineNumber1);
 
             return new ExpressionForLoop(
                     indentAndParseExpression(argTokens.get(0)),
@@ -167,23 +169,28 @@ public class FunctionParser {
         }
 
         if (highest == null) {
-            //check if this is function call
-            tokener.index = 0;
-            for (int i = 0; tokener.left() > 0; i++) {
+            // check if this is function call
+            tokener.index = 1;
+            while (tokener.left() > 0) {
                 t = tokener.eat();
-                if (t.type == TokenType.SCOPE_PARENS && i > 0 && tokener.tokens.get(i - 1).type == TokenType.IDENTIFIER)
-                    try {
-                        int index = tokener.index;
-                        Tokener argsTokener = new Tokener(((TokenScope) t).tokens);
-                        ArrayList<Tokener> args = argsTokener.splitSkippingScopes(new Token(","));
-                        tokener.index = index;
-
-                        return new ExpressionFunctionCall(
-                                tokener.tokens.get(i - 1),
-                                indentAndParseExpressions(args));
-                    } catch (InvalidTokenException e) {
-                        e.printStackTrace();
+                int lineNumber = tokener.currentLineNumber;
+                if (t.type == TokenType.SCOPE_PARENS && tokener.peekPrev().type == TokenType.IDENTIFIER) {
+                    GaledwellLang.log("parsing function call");
+                    // check if this is function declaration
+                    if (tokener.left() > 0) {
+                        if (tokener.peekNext().type == TokenType.SCOPE_BRACES) {
+                            throw new InvalidTokenException("Line " + tokener.currentLineNumber + ": Unexpected function declaration");
+                        }
                     }
+                    int index = tokener.index;
+                    Tokener argsTokener = new Tokener(((TokenScope) t).tokens, lineNumber);
+                    ArrayList<Tokener> args = argsTokener.splitSkippingScopes(new Token(","));
+                    tokener.index = index;
+
+                    return new ExpressionFunctionCall(
+                            tokener.peekPrev(),
+                            indentAndParseExpressions(args));
+                }
             }
 
             if (tokener.size() == 0)
@@ -258,22 +265,23 @@ public class FunctionParser {
     public ArrayList<ParsedFunction> build() throws InvalidTokenException {
         ArrayList<ParsedFunction> functions = new ArrayList<>();
 
-        while (tokener.left() > 0) { //while !EOF
+        while (tokener.left() > 0) { // while !EOF
             Token functionName;
             int[] args;
             ArrayList<Expression> exps;
 
-            //read function path
+            // read function name
             if ((functionName = eat()).type != TokenType.IDENTIFIER)
-                throw new InvalidTokenException("Expected identifier while parsing function path");
+                throw new InvalidTokenException("Line " + tokener.currentLineNumber + ": Expected identifier while parsing function name");
 
             GaledwellLang.log("parsing function " + functionName.token);
 
-            //read function args
+            // read function args
             if (tokener.get().type != TokenType.SCOPE_PARENS)
-                throw new InvalidTokenException("Expected parens scope");
+                throw new InvalidTokenException("Expected parens scope as arguments");
+            int lineNumber = tokener.currentLineNumber;
             TokenScope argsToken = (TokenScope) tokener.eat();
-            ArrayList<Tokener> argsTokeners = new Tokener(argsToken.tokens).splitSkippingScopes(new Token(","));
+            ArrayList<Tokener> argsTokeners = new Tokener(argsToken.tokens, lineNumber).splitSkippingScopes(new Token(","));
 
             GaledwellLang.log("parsed function args: " + argsTokeners);
 
@@ -289,14 +297,16 @@ public class FunctionParser {
                 }
             }
 
-            //read function body
+            // read function body
             if (tokener.get().type != TokenType.SCOPE_BRACES)
-                throw new InvalidTokenException("Expected braces scope while parsing function body");
-            Tokener body = new Tokener(((TokenScope) tokener.eat()).tokens);
+                throw new InvalidTokenException("Expected braces scope as function body");
+            int lineNumber1 = tokener.currentLineNumber;
+            System.out.println("lineNumber1: " + lineNumber1);
+            Tokener body = new Tokener(((TokenScope) tokener.eat()).tokens, lineNumber1);
 
             GaledwellLang.log("parsed function body: " + body);
 
-            //process body
+            // process body
             exps = indentAndParseExpressions(body.splitSkippingScopes(new Token(";")));
 
             GaledwellLang.log("parsed expressions:");
@@ -305,7 +315,8 @@ public class FunctionParser {
             GaledwellLang.logger.decreaseIndent();
             GaledwellLang.log("parsed expressions end");
 
-            //build function
+            // build function
+            // TODO: remove if release mode is set
             CompilerDebugRuntime.addName(functionName.token.hashCode(), functionName.token);
             functions.add(new ParsedFunction(functionName.token.hashCode(), args, exps));
         }

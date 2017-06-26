@@ -191,7 +191,7 @@ public class Compiler {
 
                 addOperation(new OperationAssign());
                 if (depth == 0)
-                    addOperation(new OperationPop()); //pop value if it won't be used
+                    addOperation(new OperationPop()); // pop value if it won't be used
             } else if (exp.operator.equals(new Token("++"))) {
                 //check if right side is not empty
                 if (!exp.right.toString().equals("null"))
@@ -199,6 +199,8 @@ public class Compiler {
 
                 compileExpression(exp.left, depth + 1, true);
                 addOperation(new OperationIncrement());
+                if (!inTree)
+                    addOperation(new OperationPop()); // pop value if it won't be used
             } else if (exp.operator.equals(new Token("--"))) {
                 //check if right side is not empty
                 if (!exp.right.toString().equals("null"))
@@ -206,6 +208,8 @@ public class Compiler {
 
                 compileExpression(exp.left, depth + 1, true);
                 addOperation(new OperationDecrement());
+                if (!inTree)
+                    addOperation(new OperationPop()); // pop value if it won't be used
             } else if (exp.operator.equals(new Token("-="))) {
                 compileExpression(exp.right, depth + 1, true);
                 compileExpression(exp.left, depth + 1, true);
@@ -273,8 +277,7 @@ public class Compiler {
         for (Expression e : exp.body) {
             compileExpression(e, depth + 1, false);
         }
-        compileExpression(exp.third, depth, true);
-        addOperation(new OperationPop());
+        compileExpression(exp.third, depth, false);
         addOperation(new OperationGoTo(begin));
         addOperation(end);
     }

@@ -106,8 +106,9 @@ public class TokenParser {
 
             String s;
 
-            //check if this is operator
-            //check double-character operators (==, !=, ++, --)
+            // check if this is operator
+
+            // check double-character operators (==, !=, ++, --)
             if (src.length() > i + 1) {
                 s = new String(new char[]{c, chars[i + 1]});
                 if (Token.is(TokenType.OPERATOR, s)) {
@@ -117,7 +118,7 @@ public class TokenParser {
                     continue;
                 }
             }
-            //check single-character operators (+, -, *, /, *)
+            // check single-character operators (+, -, *, /, *)
             s = String.valueOf(c);
             if (Token.is(TokenType.OPERATOR, s)) {
                 cutOffToken();

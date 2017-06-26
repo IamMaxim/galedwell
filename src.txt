@@ -1,15 +1,23 @@
-main() {
+//main() {
     //for (j = 0; j < 10000; j++) {
     //    print("func1(j): " + func1(j));
     //};
+//
+//    func1(func2);
+//
+//func1(f) {
+//    f();
+//}
+//
+//func2() {
+//    print("func2()");
+//}
+//}
 
-    func1(func2);
-}
-
-func1(f) {
-    f();
-}
-
-func2() {
-    print("func2()");
+main() {
+    j = 0;
+    for (i = 0; i < 1000; i++) {
+        j++;
+    };
+    print("j: " + j);
 }
