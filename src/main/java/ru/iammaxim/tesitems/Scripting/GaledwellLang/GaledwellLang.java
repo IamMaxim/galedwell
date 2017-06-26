@@ -45,7 +45,7 @@ public class GaledwellLang {
             e.printStackTrace();
         }
 
-//        new Indexer(src).index();
+        new Indexer(src).index();
         ArrayList<Token> tokens = TokenParser.parse(src);
 
         tokens.forEach(t -> {

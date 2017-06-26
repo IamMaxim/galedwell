@@ -1,12 +1,13 @@
 package ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by maxim on 2/12/17 at 2:24 PM.
  */
 public class TokenParser {
-    private Token ct = new Token(); //current token
+    private StringBuilder ct = new StringBuilder(); // current token
     private ArrayList<Token> tokens = new ArrayList<>();
     private String src;
     private int line_number = 1;
@@ -76,6 +77,9 @@ public class TokenParser {
         addLineNumber();
         char[] chars = src.toCharArray();
         for (int i = 0; i < src.length(); i++) {
+            if (i == -1) // source code ended; no newline found
+                break;
+
             char c = chars[i];
 
             if (c == '/')
@@ -89,13 +93,13 @@ public class TokenParser {
 
             //parse value
             if (c == '"') {
-                ct.token += c;
+                ct.append(c);
                 while ((c = chars[++i]) != '"') {
                     if (c == '\n')
                         addLineNumber();
-                    ct.token += c;
+                    ct.append(c);
                 }
-                ct.token += chars[i];
+                ct.append(chars[i]);
                 continue;
             }
 
@@ -143,16 +147,16 @@ public class TokenParser {
                 continue;
             }
 
-            ct.token += c;
+            ct.append(c);
         }
     }
 
     private void cutOffToken() throws InvalidTokenException {
-        ct.token = ct.token.trim();
-        ct.type = Token.getType(ct.token);
-        if (!ct.empty()) {
-            tokens.add(ct);
-            ct = new Token();
+        Token token = new Token(ct.toString().trim());
+        token.type = Token.getType(token.token);
+        if (!token.empty()) {
+            tokens.add(token);
+            ct = new StringBuilder();
         }
     }
 }

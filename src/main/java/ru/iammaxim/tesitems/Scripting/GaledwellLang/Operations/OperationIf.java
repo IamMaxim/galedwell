@@ -7,7 +7,7 @@ import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.ValueBoolean;
  * Created by maxim on 2/19/17 at 3:34 PM.
  */
 public class OperationIf extends Operation {
-    public OperationLabel labelToGo; //operation index to go if condition is false
+    public OperationLabel labelToGo; // operation index to go if condition is false
 
     public OperationIf(OperationLabel labelToGo) {
         this.labelToGo = labelToGo;
@@ -20,7 +20,7 @@ public class OperationIf extends Operation {
 
     @Override
     public void run(Runtime runtime) throws InvalidOperationException {
-        if (!((ValueBoolean)runtime.stack.pop()).value)
+        if (!((ValueBoolean) runtime.stack.pop()).value)
             runtime.currentCursorPos = labelToGo.index - 1;
     }
 }

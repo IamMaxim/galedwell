@@ -71,6 +71,17 @@ public class Tokener {
         return t;
     }
 
+    public Token peekNextNext() {
+        int _index = index + 1;
+        Token t = tokens.get(_index);
+        while (t.type == TokenType.NEW_LINE) {
+            if (tokens.size() - _index - 1 == 0)
+                return null;
+            t = get(++_index);
+        }
+        return t;
+    }
+
     public Token peekPrev() {
         int _index = index - 2;
         Token t = tokens.get(_index);
@@ -201,6 +212,7 @@ public class Tokener {
         index = 0;
         int level = 0;
         int lineNumber = currentLineNumber;
+        System.out.println("running splitSkippingScopes on: " + this);
         System.out.println("lineNumber: " + lineNumber);
         while (left() > 0) {
             if (tokens.isEmpty()) {

@@ -221,6 +221,8 @@ public class Compiler {
                 addOperation(new OperationPushVariableStorage());
                 addOperation(new OperationPush(new ValueReference(((OperationGetAndPush) leftOP).id)));
                 addOperation(new OperationAssign());
+                if (!inTree)
+                    addOperation(new OperationPop()); // pop value if it won't be used
             } else if (exp.operator.equals(new Token("+="))) {
                 compileExpression(exp.right, depth + 1, true);
                 compileExpression(exp.left, depth + 1, true);
@@ -232,6 +234,8 @@ public class Compiler {
                 addOperation(new OperationPushVariableStorage());
                 addOperation(new OperationPush(new ValueReference(((OperationGetAndPush) leftOP).id)));
                 addOperation(new OperationAssign());
+                if (!inTree)
+                    addOperation(new OperationPop()); // pop value if it won't be used
             } else {
                 throw new InvalidTokenException("Invalid operator '" + exp.operator.token + "'");
             }

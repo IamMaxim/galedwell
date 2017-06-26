@@ -170,25 +170,26 @@ public class FunctionParser {
 
         if (highest == null) {
             // check if this is function call
-            tokener.index = 1;
+            tokener.index = 0;
             while (tokener.left() > 0) {
                 t = tokener.eat();
+                System.out.println("ate " + t);
                 int lineNumber = tokener.currentLineNumber;
-                if (t.type == TokenType.SCOPE_PARENS && tokener.peekPrev().type == TokenType.IDENTIFIER) {
+                if (t.type == TokenType.IDENTIFIER && tokener.peekNext().type == TokenType.SCOPE_PARENS) {
                     GaledwellLang.log("parsing function call");
                     // check if this is function declaration
-                    if (tokener.left() > 0) {
-                        if (tokener.peekNext().type == TokenType.SCOPE_BRACES) {
-                            throw new InvalidTokenException("Line " + tokener.currentLineNumber + ": Unexpected function declaration");
+                    if (tokener.left() >= 2) {
+                        if (tokener.peekNextNext().type == TokenType.SCOPE_BRACES) {
+                            throw new InvalidTokenException("Line " + lineNumber + ": Unexpected function declaration");
                         }
                     }
                     int index = tokener.index;
-                    Tokener argsTokener = new Tokener(((TokenScope) t).tokens, lineNumber);
+                    Tokener argsTokener = new Tokener(((TokenScope) tokener.peekNext()).tokens, lineNumber);
                     ArrayList<Tokener> args = argsTokener.splitSkippingScopes(new Token(","));
                     tokener.index = index;
 
                     return new ExpressionFunctionCall(
-                            tokener.peekPrev(),
+                            t,
                             indentAndParseExpressions(args));
                 }
             }
