@@ -1,12 +1,11 @@
 main() {
     func1(func2);
-
+}
 
 func1(f) {
     f();
-}
+};
 
 func2() {
     print("func2()");
-}
 }

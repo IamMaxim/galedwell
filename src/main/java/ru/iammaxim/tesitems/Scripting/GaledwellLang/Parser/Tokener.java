@@ -9,14 +9,19 @@ public class Tokener {
     public ArrayList<Token> tokens;
     public int index = 0;
     public int currentLineNumber = 0;
+    public int preEatenLineNumber = 0;
+    public int prePeekedLineNumber = 0;
 
     public Tokener(ArrayList<Token> tokens, int currentLineNumber) {
-//        System.out.println("Creating Tokener with line: " + currentLineNumber);
+        System.out.println("Creating Tokener with line: " + currentLineNumber + " and tokens: " + tokens);
         this.tokens = tokens;
         this.currentLineNumber = currentLineNumber;
+        this.preEatenLineNumber = currentLineNumber;
+        this.prePeekedLineNumber = currentLineNumber;
     }
 
     public Tokener(ArrayList<Token> tokens) {
+        System.out.println("Creating tokener w/o lineNumber");
         this.tokens = tokens;
     }
 
@@ -41,16 +46,17 @@ public class Tokener {
 
     public Token eat() {
         Token t = tokens.get(index++);
+        System.out.println("ate " + t);
         while (t.type == TokenType.NEW_LINE) {
             currentLineNumber++;
-//            System.out.println("increased line number. Now: " + currentLineNumber);
+            preEatenLineNumber = currentLineNumber;
             if (left() == 0) {
                 t = null;
                 break;
             }
             t = tokens.get(index++);
+            System.out.println("ate " + t);
         }
-//        System.out.println("ate " + t);
         if (t instanceof TokenScope) {
             ((TokenScope) t).tokens.forEach(token -> {
                 if (token.type == TokenType.NEW_LINE)
@@ -63,33 +69,54 @@ public class Tokener {
     public Token peekNext() {
         int _index = index;
         Token t = tokens.get(_index);
+        int lineNumber = currentLineNumber;
         while (t.type == TokenType.NEW_LINE) {
+            lineNumber++;
             if (tokens.size() - _index - 1 == 0)
                 return null;
             t = get(++_index);
         }
+        prePeekedLineNumber = lineNumber;
         return t;
     }
 
     public Token peekNextNext() {
         int _index = index + 1;
         Token t = tokens.get(_index);
+        int lineNumber = currentLineNumber;
         while (t.type == TokenType.NEW_LINE) {
+            lineNumber++;
             if (tokens.size() - _index - 1 == 0)
                 return null;
             t = get(++_index);
         }
+        prePeekedLineNumber = lineNumber;
         return t;
     }
 
     public Token peekPrev() {
         int _index = index - 2;
         Token t = tokens.get(_index);
+        int lineNumber = currentLineNumber;
         while (t.type == TokenType.NEW_LINE) {
+            lineNumber++;
             if (_index == 0)
                 return null;
             t = get(--_index);
         }
+        prePeekedLineNumber = lineNumber;
+        return t;
+    }
+
+    public Token peek() {
+        int _index = index;
+        Token t = tokens.get(_index);
+        int lineNumber = currentLineNumber;
+        while (t.type == TokenType.NEW_LINE) {
+            lineNumber++;
+            t = get(++_index);
+        }
+        prePeekedLineNumber = lineNumber;
         return t;
     }
 
@@ -215,11 +242,11 @@ public class Tokener {
         System.out.println("running splitSkippingScopes on: " + this);
         System.out.println("lineNumber: " + lineNumber);
         while (left() > 0) {
+            Token t = eat();
             if (tokens.isEmpty()) {
-                lineNumber = currentLineNumber;
+                lineNumber = preEatenLineNumber;
                 System.out.println("new lineNumber: " + lineNumber);
             }
-            Token t = eat();
             if (t == null)
                 break;
 
@@ -236,7 +263,7 @@ public class Tokener {
             if (t.equals(token)) {
                 if (tokens.size() > 0) {
                     parts.add(new Tokener(tokens, lineNumber));
-                    System.out.println("adding part " + parts.get(parts.size() - 1));
+                    System.out.println("added part");
                     tokens = new ArrayList<>();
                 }
             } else {
