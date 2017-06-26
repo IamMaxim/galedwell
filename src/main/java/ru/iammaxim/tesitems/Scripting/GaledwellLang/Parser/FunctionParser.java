@@ -56,22 +56,22 @@ public class FunctionParser {
         if (tokener.left() > 0 && tokener.peek().equals(new Token("if"))) {
             GaledwellLang.log("parsing condition");
 
-            tokener.eat(); //eat if
-            if (!tokener.peek().equals(new Token("(")))
-                throw new InvalidTokenException("Expected (");
-            Tokener condition = tokener.readToSkippingScopes(new Token(")"));
+            tokener.eat(); // eat if
+            if (tokener.peek().type != TokenType.SCOPE_PARENS)
+                throw new InvalidTokenException("Expected parens scope as condition");
+            Tokener condition = new Tokener(((TokenScope) tokener.eat()).tokens, tokener.preEatenLineNumber);
 
             GaledwellLang.log("parsed condition: " + condition);
 
             Tokener body;
             ArrayList<Expression> bodyExps = new ArrayList<>();
             ArrayList<Tokener> bodyTokeners;
-            if (!tokener.peek().equals(new Token("{"))) { // no braces; read 1 statement
+            if (tokener.peek().type != TokenType.SCOPE_BRACES) { // no braces; read 1 statement
                 body = tokener.readTo(new Token(";"));
                 bodyTokeners = new ArrayList<>();
                 bodyTokeners.add(body);
             } else {
-                body = tokener.readToSkippingScopes(new Token("}"));
+                body = new Tokener(((TokenScope) tokener.eat()).tokens, tokener.preEatenLineNumber);
                 bodyTokeners = body.splitSkippingScopes(new Token(";"));
             }
 
@@ -82,17 +82,17 @@ public class FunctionParser {
             }
 
             ArrayList<Expression> elseBodyExps = new ArrayList<>();
-            if (tokener.left() > 2 /* else, {, } */ && tokener.peek().equals(new Token("else"))) {
-                tokener.eat(); //eat else
+            if (tokener.left() >= 2 /* else, braces scope */ && tokener.peek().equals(new Token("else"))) {
+                tokener.eat(); // eat else
 
                 Tokener elseBody;
                 ArrayList<Tokener> elseBodyTokeners;
-                if (!tokener.get().equals(new Token("{"))) {
+                if (tokener.peek().type != TokenType.SCOPE_BRACES) { // no braces; read 1 statement
                     elseBody = tokener.readTo(new Token(";"));
                     elseBodyTokeners = new ArrayList<>();
                     elseBodyTokeners.add(elseBody);
                 } else {
-                    elseBody = tokener.readToSkippingScopes(new Token("}"));
+                    elseBody = new Tokener(((TokenScope) tokener.eat()).tokens, tokener.preEatenLineNumber);
                     elseBodyTokeners = elseBody.splitSkippingScopes(new Token(";"));
                 }
 
@@ -261,7 +261,7 @@ public class FunctionParser {
 
     public ArrayList<ParsedFunction> build() throws InvalidTokenException {
         ArrayList<ParsedFunction> functions = new ArrayList<>();
-        System.out.println("\n\n\n>>>> >>>> Starting FunctionParser.build()");
+//        System.out.println("\n\n\n>>>> Starting FunctionParser.build()");
         while (tokener.left() > 0) { // while !EOF
             Token functionName;
             int[] args;

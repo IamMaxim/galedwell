@@ -111,7 +111,7 @@ public class Compiler {
     private void compileFunctionCall(ExpressionFunctionCall exp, int depth, boolean inTree) throws InvalidTokenException, InvalidExpressionException {
         for (int j = exp.args.size() - 1; j >= 0; j--) {
             Expression arg = exp.args.get(j);
-            compileExpression(arg, depth + 1, false);
+            compileExpression(arg, depth + 1, true);
         }
 
         compilePathToVar(exp.functionName);

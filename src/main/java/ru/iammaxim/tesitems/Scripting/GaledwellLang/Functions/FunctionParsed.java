@@ -25,7 +25,7 @@ public class FunctionParsed extends ValueFunction {
         ArrayList<Integer> savedValuesArgs = new ArrayList<>();
         ArrayList<Value> savedValues = new ArrayList<>(arguments.length);
 
-        //add args
+        // save args
         for (int i = 0; i < arguments.length; i++) {
             Value v = runtime.variableStorage.getField(args[i]);
             if (v != null) {
@@ -35,8 +35,8 @@ public class FunctionParsed extends ValueFunction {
             runtime.variableStorage.setField(args[i], arguments[i]);
         }
 
-        //run program
-        //iterate over all operators
+        // run program
+        // iterate over all operators
         runtime.currentCursorPos = 0;
         int size = operations.size();
         runtime.currentFunctionLength = size;
@@ -47,11 +47,12 @@ public class FunctionParsed extends ValueFunction {
             runtime.currentCursorPos++;
         }
 
-        //remove args
+        // remove args
         for (int i = 0; i < arguments.length; i++) {
             runtime.variableStorage.removeField(args[i]);
         }
 
+        // restore args
         for (int i = savedValues.size() - 1; i >= 0; i--) {
             runtime.variableStorage.setField(savedValuesArgs.get(i), savedValues.get(i));
         }

@@ -1,10 +1,15 @@
 main() {
-    func1(func2);
+    func1(func2());
 }
 
 func1(f) {
-    f();
-};
+    if (f == null) {
+        print("ERROR! null passed");
+        return;
+    } else {
+        f();
+    };
+}
 
 func2() {
     print("func2()");

@@ -1,6 +1,7 @@
 package ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by maxim on 2/13/17 at 4:25 PM.
@@ -13,7 +14,7 @@ public class Tokener {
     public int prePeekedLineNumber = 0;
 
     public Tokener(ArrayList<Token> tokens, int currentLineNumber) {
-        System.out.println("Creating Tokener with line: " + currentLineNumber + " and tokens: " + tokens);
+//        System.out.println("Creating Tokener with line: " + currentLineNumber + " and tokens: " + tokens);
         this.tokens = tokens;
         this.currentLineNumber = currentLineNumber;
         this.preEatenLineNumber = currentLineNumber;
@@ -21,15 +22,13 @@ public class Tokener {
     }
 
     public Tokener(ArrayList<Token> tokens) {
-        System.out.println("Creating tokener w/o lineNumber");
+//        System.out.println("Creating tokener w/o lineNumber");
         this.tokens = tokens;
     }
 
     public Tokener(Token... tokens) {
         this.tokens = new ArrayList<>();
-        for (Token token : tokens) {
-            this.tokens.add(token);
-        }
+        this.tokens.addAll(Arrays.asList(tokens));
     }
 
     public int left() {
@@ -46,7 +45,7 @@ public class Tokener {
 
     public Token eat() {
         Token t = tokens.get(index++);
-        System.out.println("ate " + t);
+//        System.out.println("ate " + t);
         while (t.type == TokenType.NEW_LINE) {
             currentLineNumber++;
             preEatenLineNumber = currentLineNumber;
@@ -55,7 +54,7 @@ public class Tokener {
                 break;
             }
             t = tokens.get(index++);
-            System.out.println("ate " + t);
+//            System.out.println("ate " + t);
         }
         if (t instanceof TokenScope) {
             ((TokenScope) t).tokens.forEach(token -> {
@@ -117,6 +116,7 @@ public class Tokener {
             t = get(++_index);
         }
         prePeekedLineNumber = lineNumber;
+//        System.out.println("peeked " + t);
         return t;
     }
 
@@ -239,13 +239,13 @@ public class Tokener {
         index = 0;
         int level = 0;
         int lineNumber = currentLineNumber;
-        System.out.println("running splitSkippingScopes on: " + this);
-        System.out.println("lineNumber: " + lineNumber);
+//        System.out.println("running splitSkippingScopes on: " + this);
+//        System.out.println("lineNumber: " + lineNumber);
         while (left() > 0) {
             Token t = eat();
             if (tokens.isEmpty()) {
                 lineNumber = preEatenLineNumber;
-                System.out.println("new lineNumber: " + lineNumber);
+//                System.out.println("new lineNumber: " + lineNumber);
             }
             if (t == null)
                 break;
@@ -263,7 +263,7 @@ public class Tokener {
             if (t.equals(token)) {
                 if (tokens.size() > 0) {
                     parts.add(new Tokener(tokens, lineNumber));
-                    System.out.println("added part");
+//                    System.out.println("added part");
                     tokens = new ArrayList<>();
                 }
             } else {
@@ -273,7 +273,7 @@ public class Tokener {
         //add last part that is not followed by delimiter
         if (tokens.size() > 0) {
             parts.add(new Tokener(tokens, lineNumber));
-            System.out.println("adding part " + parts.get(parts.size() - 1));
+//            System.out.println("adding part " + parts.get(parts.size() - 1));
         }
         return parts;
     }

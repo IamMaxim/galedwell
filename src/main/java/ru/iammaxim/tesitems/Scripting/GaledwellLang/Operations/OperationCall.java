@@ -19,10 +19,10 @@ public class OperationCall extends Operation {
 
     @Override
     public void run(Runtime runtime) throws InvalidOperationException {
-        int id = ((ValueReference) runtime.stack.pop()).id; //function ID
-        ValueObject parent = (ValueObject) runtime.stack.pop(); //object that contains this function
+        int id = ((ValueReference) runtime.stack.pop()).id; // function ID
+        ValueObject parent = (ValueObject) runtime.stack.pop(); // object that contains this function
 
-        Value[] newArgs = new Value[argsCount]; //arguments to pass
+        Value[] newArgs = new Value[argsCount]; // arguments to pass
         for (int i = 0; i < newArgs.length; i++) {
             Value arg = runtime.stack.pop();
             if (arg instanceof ValueReference) {
