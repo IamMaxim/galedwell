@@ -132,7 +132,7 @@ public class Tokener {
         int lineNumber = currentLineNumber;
         while (left() > 0) {
             Token t = eatWithLineNumbers();
-            if (t.equals(token))
+            if (t.eq(token))
                 break;
 
             tokens.add(t);
@@ -159,7 +159,7 @@ public class Tokener {
                 continue;
             }
 
-            if (t.equals(token))
+            if (t.eq(token))
                 break;
 
             tokens.add(t);
@@ -186,7 +186,7 @@ public class Tokener {
         index = 0;
         while (left() > 0) {
             Token t = eat();
-            if (t.equals(token)) {
+            if (t.eq(token)) {
                 parts.add(new Tokener(tokens));
                 tokens = new ArrayList<>();
                 while (left() > 0) {
@@ -219,7 +219,7 @@ public class Tokener {
 
     public void trimParentheses() throws InvalidTokenException {
         if (size() >= 2)
-            while (tokens.get(0).equals(new Token("(")) && tokens.get(tokens.size() - 1).equals(new Token(")"))) {
+            while (tokens.get(0).eq("(") && tokens.get(tokens.size() - 1).eq(")")) {
                 tokens.remove(0);
                 tokens.remove(tokens.size() - 1);
             }
@@ -260,7 +260,7 @@ public class Tokener {
                 continue;
             }
 
-            if (t.equals(token)) {
+            if (t.eq(token)) {
                 if (tokens.size() > 0) {
                     parts.add(new Tokener(tokens, lineNumber));
 //                    System.out.println("added part");

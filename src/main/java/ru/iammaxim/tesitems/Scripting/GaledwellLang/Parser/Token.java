@@ -54,7 +54,8 @@ public class Token {
                         t.equals("if") ||
                         t.equals("return") ||
                         t.equals("else") ||
-                        t.equals("for");
+                        t.equals("for") ||
+                        t.equals("function");
             case IDENTIFIER:
                 return true;
             default:
@@ -81,11 +82,12 @@ public class Token {
             return TokenType.IDENTIFIER;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof Token))
-            return false;
-        Token t = (Token) obj;
+    public boolean eq(String s) throws InvalidTokenException {
+        Token t = new Token(s);
+        return t.type == type && t.token.equals(token);
+    }
+
+    public boolean eq(Token t) {
         return t.type == type && t.token.equals(token);
     }
 

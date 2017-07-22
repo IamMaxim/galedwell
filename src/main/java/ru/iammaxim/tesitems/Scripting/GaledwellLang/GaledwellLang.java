@@ -3,7 +3,6 @@ package ru.iammaxim.tesitems.Scripting.GaledwellLang;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Compiler.CompilerDebugRuntime;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Compiler.InvalidExpressionException;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Functions.FunctionParsed;
-import ru.iammaxim.tesitems.Scripting.GaledwellLang.Indexer.Indexer;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Operations.Operation;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.*;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.Expression.ExpressionReturn;
@@ -46,7 +45,7 @@ public class GaledwellLang {
         }
 
 //        new Indexer(src).index();
-        ArrayList<Token> tokens = TokenParser.parse(src);
+        ArrayList<Token> tokens = Lexer.lex(src);
 
         tokens.forEach(t -> {
             try {
@@ -56,7 +55,7 @@ public class GaledwellLang {
             }
         });
 
-        ArrayList<ParsedFunction> parsedFuncs = new FunctionParser(tokens).build();
+        ArrayList<ParsedFunction> parsedFuncs = new Parser(tokens).parse();
         ArrayList<ValueFunction> funcs = new ArrayList<>(parsedFuncs.size());
         for (ParsedFunction parsedFunc : parsedFuncs) {
             GaledwellLang.log(">>> compiling function " + CompilerDebugRuntime.getName(parsedFunc.id));

@@ -1,8 +1,8 @@
-main() {
+function main() {
     func1(func2());
 }
 
-func1(f) {
+function func1(f) {
     if (f == null) {
         print("ERROR! null passed");
         return;
@@ -11,6 +11,6 @@ func1(f) {
     };
 }
 
-func2() {
+function func2() {
     print("func2()");
 }

@@ -18,7 +18,7 @@ public class Indexer {
     }
 
     public void index() throws InvalidTokenException {
-        ArrayList<Token> tokens = TokenParser.parse(src);
+        ArrayList<Token> tokens = Lexer.lex(src);
         Tokener tokener = new Tokener(tokens);
 //        tokens.forEach(System.out::println);
         while (tokener.left() > 0)
@@ -39,7 +39,7 @@ public class Indexer {
         }
         Token t3 = tokener.eat();
         if (t2 instanceof TokenScope) {
-            if (t3.equals(new Token(";"))) {
+            if (t3.eq(";")) {
                 System.out.println("line " + lineNumber);
                 System.out.println("function call");
             } else {

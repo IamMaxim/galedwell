@@ -1,26 +1,25 @@
 package ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Created by maxim on 2/12/17 at 2:24 PM.
  */
-public class TokenParser {
+public class Lexer {
     private StringBuilder ct = new StringBuilder(); // current token
     private ArrayList<Token> tokens = new ArrayList<>();
     private String src;
     private int line_number = 1;
 
-    private TokenParser(String src) {
+    private Lexer(String src) {
         this.src = src;
     }
 
-    public static ArrayList<Token> parse(String src) throws InvalidTokenException {
-        TokenParser parser = new TokenParser(src);
-        parser._parse();
-        parser.tokens = parser.assembleTokenScopes(parser.tokens);
-        return parser.tokens;
+    public static ArrayList<Token> lex(String src) throws InvalidTokenException {
+        Lexer lexer = new Lexer(src);
+        lexer._lex();
+        lexer.tokens = lexer.assembleTokenScopes(lexer.tokens);
+        return lexer.tokens;
     }
 
     private void addLineNumber() {
@@ -43,7 +42,7 @@ public class TokenParser {
                         tokener.remove(i);
                     }
                 } catch (IndexOutOfBoundsException e) {
-                    System.out.println(e.toString());
+                    e.printStackTrace();
                 }
 
                 //recursively process nested scopes
@@ -60,7 +59,7 @@ public class TokenParser {
                         tokener.remove(i);
                     }
                 } catch (IndexOutOfBoundsException e) {
-                    System.out.println(e.toString());
+                    e.printStackTrace();
                 }
 
                 //recursively process nested scopes
@@ -73,7 +72,7 @@ public class TokenParser {
         return tokener.tokens;
     }
 
-    private void _parse() throws InvalidTokenException {
+    private void _lex() throws InvalidTokenException {
         addLineNumber();
         char[] chars = src.toCharArray();
         int len = src.length();
@@ -81,39 +80,43 @@ public class TokenParser {
             if (i == -1) // source code ended; no newline found
                 break;
 
+            // get current char
             char c = chars[i];
 
-            if (c == '/') {
-                if (len - i >= 1 && chars[i + 1] == '/') { // comment
-                    i = src.indexOf('\n', i) - 1; // go to next line and leave \n, so parser will parse newline
+            if (c == '/') { // comment
+                if (len - i >= 1 && chars[i + 1] == '/') { // singleline comment
+                    i = src.indexOf('\n', i) - 1; // go to next line and leave \n, so lexer will lex newline
                     continue;
                 }
                 if (len - i > 1 && chars[i + 1] == '*') { // multiline comment
-                    i += 3;
-                    while (true) {
+                    i += 3; // **/ if comment is 0 characters long; ......*/ otherwise
+                    while (true) { // search for */
                         if (len - i < 2)
                             throw new InvalidTokenException("Expected multiline comment end, but EOF reached");
+
                         char c1 = chars[i - 1];
                         char c2 = chars[i];
+
                         if (c1 == '\n') {
                             addLineNumber();
                             i++;
                             continue;
                         }
-                        if (c1 == '*' && c2 == '/')
+                        if (c1 == '*' && c2 == '/') // end of comment
                             break;
                         i++;
                     }
+                    continue;
                 }
             }
 
-            if (c == '\n') {
+            if (c == '\n') { // newline
                 addLineNumber();
                 continue;
             }
 
-            //parse value
-            if (c == '"') {
+            //lex value
+            if (c == '"') { // string
                 ct.append(c);
                 while ((c = chars[++i]) != '"') {
                     if (c == '\n')

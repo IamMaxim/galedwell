@@ -11,10 +11,10 @@ import java.util.ArrayList;
 /**
  * Created by maxim on 2/12/17 at 3:03 PM.
  */
-public class FunctionParser {
+public class Parser {
     private Tokener tokener;
 
-    public FunctionParser(ArrayList<Token> tokens) {
+    public Parser(ArrayList<Token> tokens) {
         tokener = new Tokener(tokens);
     }
 
@@ -45,7 +45,7 @@ public class FunctionParser {
 
         //check if this is return
         if (tokener.size() >= 2) {
-            if (tokener.peek().equals(new Token("return"))) {
+            if (tokener.peek().eq("return")) {
                 tokener.eat(); // eat return
                 GaledwellLang.log("parsing return");
                 return new ExpressionReturn(indentAndParseExpression(tokener.subtokener(1, tokener.size())));
@@ -53,7 +53,7 @@ public class FunctionParser {
         }
 
         //check if this is condition
-        if (tokener.left() > 0 && tokener.peek().equals(new Token("if"))) {
+        if (tokener.left() > 0 && tokener.peek().eq("if")) {
             GaledwellLang.log("parsing condition");
 
             tokener.eat(); // eat if
@@ -82,7 +82,7 @@ public class FunctionParser {
             }
 
             ArrayList<Expression> elseBodyExps = new ArrayList<>();
-            if (tokener.left() >= 2 /* else, braces scope */ && tokener.peek().equals(new Token("else"))) {
+            if (tokener.left() >= 2 /* else, braces scope */ && tokener.peek().eq("else")) {
                 tokener.eat(); // eat else
 
                 Tokener elseBody;
@@ -120,7 +120,7 @@ public class FunctionParser {
         }
 
         //check if this is for loop
-        if (tokener.left() > 0 && tokener.peek().equals(new Token("for"))) {
+        if (tokener.left() > 0 && tokener.peek().eq("for")) {
             GaledwellLang.log("parsing for loop");
             tokener.eat(); //eat 'for'
             if (tokener.peek().type != TokenType.SCOPE_PARENS)
@@ -146,9 +146,9 @@ public class FunctionParser {
         int highestPriorityIndex = -1;
         for (int i = 0; tokener.left() > 0; i++) {
             t = tokener.eat();
-            if (t.equals(new Token("("))) {
+            if (t.eq("(")) {
                 level++;
-            } else if (t.equals(new Token(")"))) {
+            } else if (t.eq(")")) {
                 level--;
             }
             if (level == 0) {
@@ -259,63 +259,86 @@ public class FunctionParser {
         return tokener.eat();
     }
 
-    public ArrayList<ParsedFunction> build() throws InvalidTokenException {
+    public ArrayList<ParsedFunction> parse() throws InvalidTokenException {
         ArrayList<ParsedFunction> functions = new ArrayList<>();
-//        System.out.println("\n\n\n>>>> Starting FunctionParser.build()");
-        while (tokener.left() > 0) { // while !EOF
-            Token functionName;
-            int[] args;
-            ArrayList<Expression> exps;
+//        System.out.println("\n\n\n>>>> Starting Parser.parse()");
+        while (tokener.left() > 0) { // while there are tokens left
+            Token token = eat();
 
-            // read function name
-            if ((functionName = eat()).type != TokenType.IDENTIFIER)
-                if (!functionName.equals(new Token(";")))
-                    throw new InvalidTokenException("Line " + tokener.preEatenLineNumber + ": Expected identifier while parsing function name");
-                else
-                    continue;
+            // TODO: add modifiers support
 
-            GaledwellLang.log("parsing function " + functionName.token);
+            // check function declaration
+            if (token.eq("function")) {
+                String functionName;
+                int[] args;
+                ArrayList<Expression> exps;
 
-            // read function args
-            if (tokener.peek().type != TokenType.SCOPE_PARENS)
-                throw new InvalidTokenException("Expected parens scope as arguments");
-            TokenScope argsToken = (TokenScope) tokener.eat();
-            ArrayList<Tokener> argsTokeners = new Tokener(argsToken.tokens, tokener.preEatenLineNumber).splitSkippingScopes(new Token(","));
+                Token functionNameToken = tokener.eat();
+                if (functionNameToken.type != TokenType.IDENTIFIER)
+                    throw new InvalidTokenException("Line " + tokener.preEatenLineNumber + ": Expected identifier as function name, got " + functionNameToken);
+                functionName = functionNameToken.token;
 
-            GaledwellLang.log("parsed function args: " + argsTokeners);
+                GaledwellLang.log("parsing function " + functionName);
 
-            args = new int[argsTokeners.size()];
-            for (int i = 0; i < argsTokeners.size(); i++) {
-                Tokener argTokener1 = argsTokeners.get(i);
-                if (argTokener1.size() > 1)
-                    throw new InvalidTokenException("Expected 1 identifier, got " + argTokener1.size() + " while parsing argument");
-                if (argTokener1.size() > 0) {
-                    CompilerDebugRuntime.addName(args[i], argTokener1.tokens.get(0).token);
+                // read function args
+                if (tokener.peek().type != TokenType.SCOPE_PARENS)
+                    throw new InvalidTokenException("Expected parens scope as arguments");
+                TokenScope argsToken = (TokenScope) tokener.eat();
+                ArrayList<Tokener> argsTokeners = new Tokener(argsToken.tokens, tokener.preEatenLineNumber).splitSkippingScopes(new Token(","));
 
-                    args[i] = argTokener1.tokens.get(0).token.hashCode();
+                GaledwellLang.log("parsed function args: " + argsTokeners);
+
+                args = new int[argsTokeners.size()];
+                for (int i = 0; i < argsTokeners.size(); i++) {
+                    Tokener argTokener1 = argsTokeners.get(i);
+                    if (argTokener1.size() > 1)
+                        throw new InvalidTokenException("Expected 1 identifier, got " + argTokener1.size() + " while parsing argument");
+                    if (argTokener1.size() > 0) {
+                        CompilerDebugRuntime.addName(args[i], argTokener1.tokens.get(0).token);
+
+                        args[i] = argTokener1.tokens.get(0).token.hashCode();
+                    }
                 }
+
+                // read function body
+                if (tokener.peek().type != TokenType.SCOPE_BRACES)
+                    throw new InvalidTokenException("Expected braces scope as function body");
+                Tokener body = new Tokener(((TokenScope) tokener.eat()).tokens, tokener.preEatenLineNumber);
+
+                GaledwellLang.log("parsed function body: " + body);
+
+                // process body
+                exps = indentAndParseExpressions(body.splitSkippingScopes(new Token(";")));
+
+                GaledwellLang.log("parsed expressions:");
+                GaledwellLang.logger.increateIndent();
+                exps.forEach(e -> GaledwellLang.log(e.toString()));
+                GaledwellLang.logger.decreaseIndent();
+                GaledwellLang.log("parsed expressions end");
+
+                // parse function
+                // TODO: remove if release mode is set
+                CompilerDebugRuntime.addName(functionName.hashCode(), functionName);
+                functions.add(new ParsedFunction(functionName.hashCode(), args, exps));
+                continue;
             }
 
-            // read function body
-            if (tokener.peek().type != TokenType.SCOPE_BRACES)
-                throw new InvalidTokenException("Expected braces scope as function body");
-            Tokener body = new Tokener(((TokenScope) tokener.eat()).tokens, tokener.preEatenLineNumber);
+            // TODO: more root declarations here
 
-            GaledwellLang.log("parsed function body: " + body);
+            if (token.eq(";")) // skip processing of ";"
+                continue;
 
-            // process body
-            exps = indentAndParseExpressions(body.splitSkippingScopes(new Token(";")));
 
-            GaledwellLang.log("parsed expressions:");
-            GaledwellLang.logger.increateIndent();
-            exps.forEach(e -> GaledwellLang.log(e.toString()));
-            GaledwellLang.logger.decreaseIndent();
-            GaledwellLang.log("parsed expressions end");
+            throw new InvalidTokenException("Couldn't find parsing block for " + token);
 
-            // build function
-            // TODO: remove if release mode is set
-            CompilerDebugRuntime.addName(functionName.token.hashCode(), functionName.token);
-            functions.add(new ParsedFunction(functionName.token.hashCode(), args, exps));
+/*            // read function name
+            if (token.type != TokenType.IDENTIFIER)
+                if (!token.eq(";"))
+                    throw new InvalidTokenException("Line " + tokener.preEatenLineNumber + ": Expected identifier while parsing function name");
+                else
+                    continue;*/
+
+
         }
         return functions;
     }

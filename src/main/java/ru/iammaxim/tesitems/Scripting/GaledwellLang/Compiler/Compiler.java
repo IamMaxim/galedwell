@@ -138,43 +138,43 @@ public class Compiler {
         // TODO: add type conversion
 
         if (exp.operator.type == TokenType.OPERATOR) {
-            if (exp.operator.equals(new Token("+"))) {
+            if (exp.operator.eq("+")) {
                 compileExpression(exp.right, depth + 1, true);
                 compileExpression(exp.left, depth + 1, true);
                 addOperation(new OperationAdd());
-            } else if (exp.operator.equals(new Token("-"))) {
+            } else if (exp.operator.eq("-")) {
                 compileExpression(exp.right, depth + 1, true);
                 compileExpression(exp.left, depth + 1, true);
                 addOperation(new OperationSub());
-            } else if (exp.operator.equals(new Token("*"))) {
+            } else if (exp.operator.eq("*")) {
                 compileExpression(exp.right, depth + 1, true);
                 compileExpression(exp.left, depth + 1, true);
                 addOperation(new OperationMul());
-            } else if (exp.operator.equals(new Token("/"))) {
+            } else if (exp.operator.eq("/")) {
                 compileExpression(exp.right, depth + 1, true);
                 compileExpression(exp.left, depth + 1, true);
                 addOperation(new OperationDiv());
-            } else if (exp.operator.equals(new Token("<"))) {
+            } else if (exp.operator.eq("<")) {
                 compileExpression(exp.right, depth + 1, true);
                 compileExpression(exp.left, depth + 1, true);
                 addOperation(new OperationLess());
-            } else if (exp.operator.equals(new Token("<="))) {
+            } else if (exp.operator.eq("<=")) {
                 compileExpression(exp.right, depth + 1, true);
                 compileExpression(exp.left, depth + 1, true);
                 addOperation(new OperationLessEquals());
-            } else if (exp.operator.equals(new Token("=="))) {
+            } else if (exp.operator.eq("==")) {
                 compileExpression(exp.right, depth + 1, true);
                 compileExpression(exp.left, depth + 1, true);
                 addOperation(new OperationEquals());
-            } else if (exp.operator.equals(new Token(">="))) {
+            } else if (exp.operator.eq(">=")) {
                 compileExpression(exp.right, depth + 1, true);
                 compileExpression(exp.left, depth + 1, true);
                 addOperation(new OperationMoreEquals());
-            } else if (exp.operator.equals(new Token(">"))) {
+            } else if (exp.operator.eq(">")) {
                 compileExpression(exp.right, depth + 1, true);
                 compileExpression(exp.left, depth + 1, true);
                 addOperation(new OperationMore());
-            } else if (exp.operator.equals(new Token("="))) {
+            } else if (exp.operator.eq("=")) {
                 compileExpression(exp.right, depth + 1, true);
                 compileExpression(exp.left, depth + 1, false);
                 //check if we assigning a reference: if so, replace it with value
@@ -192,7 +192,7 @@ public class Compiler {
                 addOperation(new OperationAssign());
                 if (depth == 0)
                     addOperation(new OperationPop()); // pop value if it won't be used
-            } else if (exp.operator.equals(new Token("++"))) {
+            } else if (exp.operator.eq("++")) {
                 //check if right side is not empty
                 if (!exp.right.toString().equals("null"))
                     throw new InvalidTokenException("The '++' operator shouldn't have right side, but got '" + exp.right.toString() + "'");
@@ -201,7 +201,7 @@ public class Compiler {
                 addOperation(new OperationIncrement());
                 if (!inTree)
                     addOperation(new OperationPop()); // pop value if it won't be used
-            } else if (exp.operator.equals(new Token("--"))) {
+            } else if (exp.operator.eq("--")) {
                 //check if right side is not empty
                 if (!exp.right.toString().equals("null"))
                     throw new InvalidTokenException("The '--' operator shouldn't have right side, but got '" + exp.right.toString() + "'");
@@ -210,7 +210,7 @@ public class Compiler {
                 addOperation(new OperationDecrement());
                 if (!inTree)
                     addOperation(new OperationPop()); // pop value if it won't be used
-            } else if (exp.operator.equals(new Token("-="))) {
+            } else if (exp.operator.eq("-=")) {
                 compileExpression(exp.right, depth + 1, true);
                 compileExpression(exp.left, depth + 1, true);
                 // check if left side is reference
@@ -223,7 +223,7 @@ public class Compiler {
                 addOperation(new OperationAssign());
                 if (!inTree)
                     addOperation(new OperationPop()); // pop value if it won't be used
-            } else if (exp.operator.equals(new Token("+="))) {
+            } else if (exp.operator.eq("+=")) {
                 compileExpression(exp.right, depth + 1, true);
                 compileExpression(exp.left, depth + 1, true);
                 // check if left side is reference
