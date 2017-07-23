@@ -1,16 +1,27 @@
 function main() {
-    func1(func2());
+    func1(getFunc2());
+    func1(null);
+    stoi("123");
 }
 
 function func1(f) {
     if (f == null) {
         print("ERROR! null passed");
-        return;
     } else {
         f();
     };
 }
 
+function getFunc2() {
+    return func2;
+}
+
 function func2() {
     print("func2()");
+}
+
+function stoi(str) {
+    for (i = str.length() - 1; i >= 0; i--) {
+
+    }
 }
