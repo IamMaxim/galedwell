@@ -43,10 +43,11 @@ public class MessageRecipe implements IMessage {
         buf.writeInt(id);
         ByteBufUtils.writeUTF8String(buf, type.toString());
         if (recipe == null)
-            buf.writeBoolean(true); //delete recipe
-        else
+            buf.writeBoolean(true); // delete recipe
+        else {
             buf.writeBoolean(false);
-        ByteBufUtils.writeTag(buf, recipe.writeToNBT());
+            ByteBufUtils.writeTag(buf, recipe.writeToNBT());
+        }
     }
 
     public static class ServerHandler implements IMessageHandler<MessageRecipe, IMessage> {
@@ -57,18 +58,22 @@ public class MessageRecipe implements IMessage {
             if (message.recipe == null) {
                 if (!CraftRecipes.remove(message.type, message.id))
                     Utils.showNotification(ctx.getServerHandler().playerEntity, "Couldn't delete recipe");
+                else
+                    Utils.showNotification(ctx.getServerHandler().playerEntity, "Recipe deleted successfully");
+                return null;
             } else {
                 CraftRecipes.addRecipe(message.type, message.id, message.recipe);
                 Utils.showNotification(ctx.getServerHandler().playerEntity, "Recipe saved successfully");
+                return new MessageRecipe(message.type, message.recipe.id, message.recipe);
             }
-            return new MessageRecipe(message.type, message.id, message.recipe);
         }
     }
 
     public static class ClientHandler implements IMessageHandler<MessageRecipe, IMessage> {
         @Override
         public IMessage onMessage(MessageRecipe message, MessageContext ctx) {
-            CraftRecipes.addRecipe(message.type, message.id, message.recipe);
+            CraftRecipes.addClientRecipe(message.type, message.id, message.recipe);
+            ScreenStack.processCallback("recipeListUpdated");
             ScreenStack.processCallback("recipeUpdated");
             return null;
         }

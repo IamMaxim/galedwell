@@ -1,6 +1,8 @@
 package ru.iammaxim.tesitems.GUI;
 
+import net.minecraft.item.ItemStack;
 import ru.iammaxim.tesitems.Craft.CraftRecipe;
+import ru.iammaxim.tesitems.Craft.CraftRecipes;
 import ru.iammaxim.tesitems.GUI.Elements.*;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.HeaderLayout;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.HorizontalLayout;
@@ -46,16 +48,20 @@ public class GuiCraftingRecipeEditor extends Screen implements IGuiUpdatable {
                             if (!updated())
                                 return;
 
+                            CraftRecipes.clientRecipes.get(type).remove(id);
                             TESItems.networkWrapper.sendToServer(new MessageRecipe(type, id, null));
+                            ScreenStack.processCallback("recipeListUpdated");
                             ScreenStack.forceClose();
                         }))
-                        .add(new Button("Save")).setOnClick(e -> {
+                        .add(new Button("Save").setOnClick(e -> {
                             if (!updated())
                                 return;
 
+                            recipe.input = input.getStacks().toArray(new ItemStack[input.size()]);
+                            recipe.output = output.getStacks().toArray(new ItemStack[output.size()]);
                             TESItems.networkWrapper.sendToServer(new MessageRecipe(type, id, recipe));
                             unupdate();
-                        }))
+                        })))
                 .setPadding(4)
         );
 

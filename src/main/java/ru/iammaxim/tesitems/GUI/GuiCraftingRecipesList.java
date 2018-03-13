@@ -26,10 +26,17 @@ public class GuiCraftingRecipesList extends Screen {
                                 new GuiCraftingRecipeEditor(type,
                                         new CraftRecipe(-1, "New recipe", new ItemStack[]{}, new ItemStack[]{}))))));
 
-        CraftRecipes.recipes.get(type).forEach((id, recipe) ->
-                list.add(new Text(recipe.name).setColor(ResManager.CLICKABLE_TEXT_COLOR).setOnClick(e ->
-                        ScreenStack.addScreen(new GuiCraftingRecipeEditor(type, recipe)))));
+        updateList();
 
         root.doLayout();
+
+        root.getScreen().addCallback("recipeListUpdated", this::updateList);
+    }
+
+    private void updateList() {
+        list.clear();
+        CraftRecipes.clientRecipes.get(type).forEach((id, recipe) ->
+                list.add(new Text(recipe.name).setColor(ResManager.CLICKABLE_TEXT_COLOR).setOnClick(e ->
+                        ScreenStack.addScreen(new GuiCraftingRecipeEditor(type, recipe)))));
     }
 }

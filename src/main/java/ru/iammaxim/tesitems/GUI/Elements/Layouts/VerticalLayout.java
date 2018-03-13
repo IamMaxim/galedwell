@@ -163,4 +163,9 @@ public class VerticalLayout extends LayoutBase implements LayoutWithList {
         this.center = center;
         return this;
     }
+
+    public VerticalLayout remove(int index) {
+        elements.remove(index);
+        return this;
+    }
 }

@@ -33,7 +33,7 @@ public class MessageRecipes implements IMessage {
     public static class ClientHandler implements IMessageHandler<MessageRecipes, IMessage> {
         @Override
         public IMessage onMessage(MessageRecipes message, MessageContext ctx) {
-            CraftRecipes.loadFromNBT(message.tag);
+            CraftRecipes.clientLoadFromNBT(message.tag);
             return null;
         }
     }

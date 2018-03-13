@@ -45,5 +45,6 @@ public class NetworkUtils {
         TESItems.networkWrapper.registerMessage(MessageRecipe.ClientHandler.class, MessageRecipe.class, 34, Side.CLIENT);
         TESItems.networkWrapper.registerMessage(MessageMagickaUpdate.ClientHandler.class, MessageMagickaUpdate.class, 35, Side.CLIENT);
         TESItems.networkWrapper.registerMessage(MessageOpenNPCInventory.ServerHandler.class, MessageOpenNPCInventory.class, 36, Side.SERVER);
+        TESItems.networkWrapper.registerMessage(MessageCraft.ServerHandler.class, MessageCraft.class, 37, Side.SERVER);
     }
 }

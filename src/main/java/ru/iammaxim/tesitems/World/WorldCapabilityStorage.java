@@ -5,6 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
+import ru.iammaxim.tesitems.Craft.CraftRecipes;
 import ru.iammaxim.tesitems.Factions.FactionManager;
 import ru.iammaxim.tesitems.Questing.QuestManager;
 
@@ -18,6 +19,7 @@ public class WorldCapabilityStorage implements Capability.IStorage<IWorldCapabil
         tag.setTag("factions", FactionManager.writeToNBT());
 //        tag.setTag("quests", QuestManager.writeToNBT());
         QuestManager.saveToFile();
+        CraftRecipes.saveToFile();
         return tag;
     }
 
@@ -26,5 +28,6 @@ public class WorldCapabilityStorage implements Capability.IStorage<IWorldCapabil
         FactionManager.readFromNBT((NBTTagList) ((NBTTagCompound) nbt).getTag("factions"));
 //        QuestManager.readFromNBT((NBTTagList) ((NBTTagCompound)nbt).getTag("quests"));
         QuestManager.loadFromFile();
+        CraftRecipes.loadFromFile();
     }
 }

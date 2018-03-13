@@ -7,8 +7,10 @@ import net.minecraft.nbt.NBTTagList;
 import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.Inventory.InventoryServer;
 import ru.iammaxim.tesitems.Utils.IDGen;
+import ru.iammaxim.tesitems.Utils.NBTFileStorage;
 import ru.iammaxim.tesitems.Utils.Utils;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 /**
@@ -16,6 +18,9 @@ import java.util.HashMap;
  */
 public class CraftRecipes {
     public static HashMap<CraftRecipe.Type, HashMap<Integer, CraftRecipe>> recipes = new HashMap<>();
+
+    // workaround to support singleplayer
+    public static HashMap<CraftRecipe.Type, HashMap<Integer, CraftRecipe>> clientRecipes = new HashMap<>();
     private static HashMap<CraftRecipe.Type, IDGen> idGens = new HashMap<>();
     private static boolean dirty = false;
 
@@ -24,6 +29,7 @@ public class CraftRecipes {
         for (CraftRecipe.Type type : CraftRecipe.Type.values()) {
             idGens.put(type, new IDGen());
             recipes.put(type, new HashMap<>());
+            clientRecipes.put(type, new HashMap<>());
         }
     }
 
@@ -36,7 +42,17 @@ public class CraftRecipes {
         if (id == -1) {
             id = idGens.get(type).genID();
         }
+        recipe.id = id;
         recipes.get(type).put(id, recipe);
+        dirty = true;
+    }
+
+    public static void addClientRecipe(CraftRecipe.Type type, int id, CraftRecipe recipe) {
+        if (id == -1) {
+            id = idGens.get(type).genID();
+        }
+        recipe.id = id;
+        clientRecipes.get(type).put(id, recipe);
         dirty = true;
     }
 
@@ -51,6 +67,7 @@ public class CraftRecipes {
         }
     }
 
+    // intended to work on server side
     public static void craft(CraftRecipe.Type type, int recipeIndex, EntityPlayer player) {
         Inventory inventory = Inventory.getInventory(player);
         CraftRecipe recipe = recipes.get(type).get(recipeIndex);
@@ -72,6 +89,7 @@ public class CraftRecipes {
         }
         if (okInput < recipe.input.length) {
             Utils.showNotification(player, "Not enough ingredients");
+            return;
         }
 
         //remove input items
@@ -93,11 +111,16 @@ public class CraftRecipes {
         for (ItemStack itemStack : recipe.output) {
             inventory.addItem(itemStack.copy());
         }
-
-        inventory.calculateCarryweight();
     }
 
     public static void loadFromNBT(NBTTagCompound tag) {
+        _loadFromNBT(recipes, tag);
+    }
+
+    private static void _loadFromNBT(HashMap<CraftRecipe.Type, HashMap<Integer, CraftRecipe>> recipes, NBTTagCompound tag) {
+        if (tag == null)
+            return;
+
         recipes.forEach((t, m) -> m.clear());
         NBTTagList list = (NBTTagList) tag.getTag("types");
         for (int i = 0; i < list.tagCount(); i++) {
@@ -113,6 +136,7 @@ public class CraftRecipes {
                 map.put(id, recipe);
             }
         }
+
     }
 
     public static NBTTagCompound writeToNBT() {
@@ -126,13 +150,16 @@ public class CraftRecipes {
                 NBTTagCompound recipeTag = new NBTTagCompound();
                 recipeTag.setInteger("id", id);
                 recipeTag.setTag("recipe", recipe.writeToNBT());
-                list.appendTag(recipeTag);
+                list1.appendTag(recipeTag);
             });
             tag1.setString("type", type.toString());
             tag1.setTag("recipes", list1);
             list.appendTag(tag1);
         });
         tag.setTag("types", list);
+
+//        System.out.println("saved recipes " + tag);
+
         return tag;
     }
 
@@ -141,14 +168,29 @@ public class CraftRecipes {
         return recipes.get(type).remove(id) != null;
     }
 
-    public void loadFromFile() {
-
+    public static void loadFromFile() {
+        try {
+            NBTTagCompound list = (NBTTagCompound) NBTFileStorage.loadFromFile("crafting/recipes.nbt").getTag("recipeList");
+            loadFromNBT(list);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void saveToFile() {
+    public static void saveToFile() {
         if (!dirty)
             return;
 
+        try {
+            NBTTagCompound tag = new NBTTagCompound();
+            tag.setTag("recipeList", writeToNBT());
+            NBTFileStorage.saveToFile("crafting/recipes.nbt", tag);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    public static void clientLoadFromNBT(NBTTagCompound tag) {
+        _loadFromNBT(clientRecipes, tag);
     }
 }
