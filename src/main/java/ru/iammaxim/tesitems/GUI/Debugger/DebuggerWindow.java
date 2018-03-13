@@ -107,13 +107,16 @@ public class DebuggerWindow {
                                     .add(opened)).selectFirst();
             return layout;
         } else {
-            return new Text(element.getName()) {
-                @Override
-                public void checkHover(int mouseX, int mouseY) {
-                    if (mouseX > left && mouseX < right && mouseY > top && mouseY < bottom)
-                        drawElementOverlay(element);
-                }
-            }.setColor(ResManager.BRIGHT_TEXT_COLOR);
+            if (element == null)
+                return new Text("ERROR! NULL POINTER EXCEPTION!");
+            else
+                return new Text(element.getName()) {
+                    @Override
+                    public void checkHover(int mouseX, int mouseY) {
+                        if (mouseX > left && mouseX < right && mouseY > top && mouseY < bottom)
+                            drawElementOverlay(element);
+                    }
+                }.setColor(ResManager.BRIGHT_TEXT_COLOR);
         }
     }
 }

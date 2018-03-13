@@ -10,6 +10,9 @@ import java.util.HashMap;
  */
 public class FactionManager {
     public static HashMap<Integer, Faction> factions = new HashMap<>();
+
+    // this is workaround to not lose factions in singleplayer when list of empty factions goes to client
+    public static HashMap<Integer, Faction> clientFactionList = new HashMap<>();
     public static IDGen idGen = new IDGen();
 
     public static void addFaction(Faction faction) {

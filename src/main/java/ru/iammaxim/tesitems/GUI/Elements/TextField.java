@@ -136,7 +136,8 @@ public class TextField extends ElementBase {
         else if (cursorPos > text.length()) cursorPos = text.length();
 
         if (active) {
-            System.out.println("typed key: " + typedChar + " " + key);
+//            System.out.println("typed key: " + typedChar + " " + key);
+
             //Left or right control + V
             if (key == 47 && (Keyboard.isKeyDown(29) || Keyboard.isKeyDown(157))) {
                 String toPaste = Sys.getClipboard();

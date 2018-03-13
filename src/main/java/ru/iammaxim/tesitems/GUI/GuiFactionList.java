@@ -39,7 +39,7 @@ public class GuiFactionList extends Screen {
             new GuiFactionEditor().show();
         }).setWidthOverride(ElementBase.FILL));
 
-        FactionManager.factions.forEach((id, f) -> factionsLayout.add(new Text(f.name).setColor(0xFF0066CC).setOnClick(e ->
+        FactionManager.clientFactionList.forEach((id, f) -> factionsLayout.add(new Text(f.name).setColor(0xFF0066CC).setOnClick(e ->
                 TESItems.networkWrapper.sendToServer(new MessageOpenEditFaction(id))
         )));
 

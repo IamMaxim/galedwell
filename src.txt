@@ -1,7 +1,7 @@
 function main() {
     func1(getFunc2());
     func1(null);
-    stoi("123");
+//    stoi("123");
 }
 
 function func1(f) {

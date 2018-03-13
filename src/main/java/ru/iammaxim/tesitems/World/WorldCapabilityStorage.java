@@ -23,7 +23,7 @@ public class WorldCapabilityStorage implements Capability.IStorage<IWorldCapabil
 
     @Override
     public void readNBT(Capability<IWorldCapability> capability, IWorldCapability instance, EnumFacing side, NBTBase nbt) {
-        FactionManager.readFromNBT((NBTTagList) ((NBTTagCompound)nbt).getTag("factions"));
+        FactionManager.readFromNBT((NBTTagList) ((NBTTagCompound) nbt).getTag("factions"));
 //        QuestManager.readFromNBT((NBTTagList) ((NBTTagCompound)nbt).getTag("quests"));
         QuestManager.loadFromFile();
     }

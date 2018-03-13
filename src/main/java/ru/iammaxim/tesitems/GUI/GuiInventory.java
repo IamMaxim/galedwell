@@ -3,6 +3,7 @@ package ru.iammaxim.tesitems.GUI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.input.Keyboard;
+import ru.iammaxim.tesitems.GUI.Elements.Button;
 import ru.iammaxim.tesitems.GUI.Elements.Image;
 import ru.iammaxim.tesitems.GUI.Elements.Layouts.*;
 import ru.iammaxim.tesitems.GUI.Elements.Text;
@@ -47,7 +48,13 @@ public class GuiInventory extends Screen implements IGuiUpdatable {
                         .add(new FrameLayout().setElement(carryweightText = new Text(getCarryweightText())).setPaddingTop(4))
                         .add(new VerticalDivider())
                         .add(new Image(ResManager.icon_value))
-                        .add(new FrameLayout().setElement(goldText = new Text(getGoldText())).setPaddingTop(4))).center(true).setPadding(4))
+                        .add(new FrameLayout().setElement(goldText = new Text(getGoldText())).setPaddingTop(4))
+                        .add(new VerticalDivider())
+                        .add(new Button("Show attributes").setOnClick(b -> {
+                            System.out.println("Trying to show attributes");
+                            new GuiAttributes().show();
+                        }))
+                ).center(true).setPadding(4))
                 .setElement(inventoryLayout = new InventoryPlayerLayout(player, inv)));
 
         //update inventory table

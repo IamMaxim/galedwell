@@ -18,7 +18,8 @@ import java.util.HashMap;
 public class MessageFactionList implements IMessage {
     public HashMap<Integer, String> factions;
 
-    public MessageFactionList() {}
+    public MessageFactionList() {
+    }
 
     @Override
     public void fromBytes(ByteBuf buf) {
@@ -43,11 +44,11 @@ public class MessageFactionList implements IMessage {
     public static class ClientHandler implements IMessageHandler<MessageFactionList, IMessage> {
         @Override
         public IMessage onMessage(MessageFactionList message, MessageContext ctx) {
-            FactionManager.factions.clear();
+            FactionManager.clientFactionList.clear();
             message.factions.forEach((id, name) -> {
                 Faction f = new Faction(name);
                 f.id = id;
-                FactionManager.addFaction(f);
+                FactionManager.clientFactionList.put(f.id, f);
             });
             return null;
         }

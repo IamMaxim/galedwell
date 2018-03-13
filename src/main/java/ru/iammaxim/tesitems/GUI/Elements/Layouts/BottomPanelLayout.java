@@ -48,4 +48,28 @@ public class BottomPanelLayout extends FrameLayout {
         super.draw(mouseX, mouseY);
         bottomPanel.draw(mouseX, mouseY);
     }
+
+    @Override
+    public void checkClick(int mouseX, int mouseY) {
+        super.checkClick(mouseX, mouseY);
+        bottomPanel.checkClick(mouseX, mouseY);
+    }
+
+    @Override
+    public void checkHover(int mouseX, int mouseY) {
+        super.checkHover(mouseX, mouseY);
+        bottomPanel.checkHover(mouseX, mouseY);
+    }
+
+    @Override
+    public void checkRightClick(int mouseX, int mouseY) {
+        super.checkRightClick(mouseX, mouseY);
+        bottomPanel.checkRightClick(mouseX, mouseY);
+    }
+
+    @Override
+    public void keyTyped(char c, int keyCode) {
+        super.keyTyped(c, keyCode);
+        bottomPanel.keyTyped(c, keyCode);
+    }
 }

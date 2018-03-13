@@ -179,4 +179,8 @@ public class Table extends LayoutBase implements LayoutWithList {
     public void setVerticalDividerWidth(int width) {
         this.verticalDividerWidth = width;
     }
+
+    public TableEntry getHeader() {
+        return header;
+    }
 }

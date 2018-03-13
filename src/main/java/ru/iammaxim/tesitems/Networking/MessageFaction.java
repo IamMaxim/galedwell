@@ -46,7 +46,7 @@ public class MessageFaction implements IMessage {
     public static class ServerHandler implements IMessageHandler<MessageFaction, IMessage> {
         @Override
         public IMessage onMessage(MessageFaction message, MessageContext ctx) {
-            System.out.println("Handling MessageFaction");
+            System.out.println("Handling MessageFaction on server side");
 
             if (message.faction == null) {
                 System.out.println("Error handling faction");
@@ -74,7 +74,7 @@ public class MessageFaction implements IMessage {
                 return null;
             }
 
-            System.out.println("Handling MessageFaction " + message.faction.writeToNBT().toString());
+            System.out.println("Handling MessageFaction on client side: " + message.faction.writeToNBT().toString());
 
             FactionManager.addFaction(message.faction);
             AdminTemporaryStorage.lastEditedFaction = message.faction;

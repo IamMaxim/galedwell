@@ -7,6 +7,7 @@ import net.minecraft.util.ResourceLocation;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
+import ru.iammaxim.tesitems.ConfigManager;
 import ru.iammaxim.tesitems.GUI.ResManager;
 
 import java.awt.*;
@@ -21,6 +22,7 @@ public class UnicodeFontRenderer extends FontRenderer {
     public static String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'\".,+-_!?@#$%*/\\|;:(){}=<>";
     private Minecraft mc = Minecraft.getMinecraft();
     private int topOffset = 0;
+    private float scaleFactor = 2;
 
     public void setTopOffset(int offset) {
         this.topOffset = offset;
@@ -30,7 +32,9 @@ public class UnicodeFontRenderer extends FontRenderer {
     public UnicodeFontRenderer(Font awtFont) {
         super(Minecraft.getMinecraft().gameSettings, new ResourceLocation("textures/font/ascii.png"), Minecraft.getMinecraft().getTextureManager(), false);
 
-        font = new UnicodeFont(awtFont);
+        scaleFactor = ConfigManager.getFloat("fontScaleFactor");
+
+        font = new UnicodeFont(awtFont, (int) (12 * scaleFactor), false, false);
         font.addAsciiGlyphs();
 
         //load cyrillic
@@ -89,7 +93,7 @@ public class UnicodeFontRenderer extends FontRenderer {
     }
 
     private int sizeStringToWidth(String str, int wrapWidth) {
-        wrapWidth *= 2; //because Minecraft scales GUI
+        wrapWidth *= scaleFactor; //because Minecraft scales GUI
 
         int len = str.length();
         int k = 0;
@@ -132,7 +136,7 @@ public class UnicodeFontRenderer extends FontRenderer {
         mc.getTextureManager().bindTexture(ResManager.fakeTexture);
 
         glPushMatrix();
-        glScaled(0.5, 0.5, 0.5);
+        glScaled(1 / scaleFactor, 1 / scaleFactor, 1 / scaleFactor);
 
         boolean blend = glIsEnabled(GL_BLEND);
         boolean lighting = glIsEnabled(GL_LIGHTING);
@@ -143,10 +147,10 @@ public class UnicodeFontRenderer extends FontRenderer {
             glDisable(GL_LIGHTING);
         if (texture)
             glDisable(GL_TEXTURE_2D);
-        x *= 2;
+        x *= scaleFactor;
         y += font.getPaddingTop();
-        y *= 2;
-        y -= 8;
+        y *= scaleFactor;
+        y -= 4 * scaleFactor;
         y += topOffset;
 
         font.drawString(x, y, text, new org.newdawn.slick.Color(color));
@@ -174,10 +178,10 @@ public class UnicodeFontRenderer extends FontRenderer {
 
     @Override
     public int getStringWidth(String string) {
-        return font.getWidth(string) / 2;
+        return (int) (font.getWidth(string) / scaleFactor);
     }
 
     public int getStringHeight(String string) {
-        return font.getHeight(string) / 2;
+        return (int) (font.getHeight(string) / scaleFactor);
     }
 }

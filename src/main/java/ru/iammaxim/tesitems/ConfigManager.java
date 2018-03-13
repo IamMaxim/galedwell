@@ -31,6 +31,7 @@ public class ConfigManager {
     private static void writeDefaultFile(File f) throws IOException {
         //set default values
         set("enableBlur", "false");
+        set("fontScaleFactor", "2.0");
 
         //write values to file
         FileWriter writer = new FileWriter(f);
