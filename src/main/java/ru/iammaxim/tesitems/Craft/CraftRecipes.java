@@ -99,6 +99,8 @@ public class CraftRecipes {
                 if (is.getItem() == invIS.getItem()) {
                     if (invIS.stackSize > is.stackSize) {
                         inventory.get(i).stackSize -= is.stackSize;
+                        // notify client about item update
+                        inventory.setItem(i, inventory.get(i));
                         break;
                     } else if (invIS.stackSize == is.stackSize) {
                         inventory.removeItem(i);
