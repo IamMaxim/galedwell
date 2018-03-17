@@ -51,7 +51,6 @@ public class GuiInventory extends Screen implements IGuiUpdatable {
                         .add(new FrameLayout().setElement(goldText = new Text(getGoldText())).setPaddingTop(4))
                         .add(new VerticalDivider())
                         .add(new Button("Show attributes").setOnClick(b -> {
-                            System.out.println("Trying to show attributes");
                             new GuiAttributes().show();
                         }))
                 ).center(true).setPadding(4))
@@ -60,13 +59,13 @@ public class GuiInventory extends Screen implements IGuiUpdatable {
         //update inventory table
         updateTable();
 
-        root.getScreen().addCallback("inventoryUpdated", () -> {
+        root.getScreen().addCallback("inventoryUpdated", o -> {
             updateTable();
             carryweightText.setText(getCarryweightText());
             update();
         });
 
-        root.getScreen().addCallback("goldUpdated", () -> {
+        root.getScreen().addCallback("goldUpdated", o -> {
             goldText.setText(getGoldText());
         });
 

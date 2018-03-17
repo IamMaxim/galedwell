@@ -51,7 +51,7 @@ public class GuiNPCDialog extends Screen implements IGuiUpdatable {
                         .setRightWidth(rightPaneWidth));
 
         cap.getLatestDialog().topics.forEach((name, topic) -> addTopic(topic));
-        root.getScreen().addCallback("dialogTopicsUpdated", () -> {
+        root.getScreen().addCallback("dialogTopicsUpdated", o -> {
             topics.clear();
             cap.getLatestDialog().topics.forEach((name, topic) -> addTopic(topic));
             update();

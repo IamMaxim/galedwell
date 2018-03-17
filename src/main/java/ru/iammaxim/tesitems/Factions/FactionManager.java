@@ -30,7 +30,7 @@ public class FactionManager {
     }
 
     public static void readFromNBT(NBTTagList tagList) {
-        System.out.println("loading factions: " + tagList.toString());
+//        System.out.println("loading factions: " + tagList.toString());
         for (int i = tagList.tagCount() - 1; i >= 0; i--) {
             Faction faction = Faction.loadFromNBT(tagList.getCompoundTagAt(i));
             factions.put(faction.id, faction);

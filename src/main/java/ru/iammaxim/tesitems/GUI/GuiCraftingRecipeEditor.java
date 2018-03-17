@@ -50,7 +50,7 @@ public class GuiCraftingRecipeEditor extends Screen implements IGuiUpdatable {
 
                             CraftRecipes.clientRecipes.get(type).remove(id);
                             TESItems.networkWrapper.sendToServer(new MessageRecipe(type, id, null));
-                            ScreenStack.processCallback("recipeListUpdated");
+                            ScreenStack.processCallback("recipeListUpdated", null);
                             ScreenStack.forceClose();
                         }))
                         .add(new Button("Save").setOnClick(e -> {
@@ -65,7 +65,7 @@ public class GuiCraftingRecipeEditor extends Screen implements IGuiUpdatable {
                 .setPadding(4)
         );
 
-        root.getScreen().addCallback("recipeUpdated", this::update);
+        root.getScreen().addCallback("recipeUpdated", o -> update());
 
         root.doLayout();
     }

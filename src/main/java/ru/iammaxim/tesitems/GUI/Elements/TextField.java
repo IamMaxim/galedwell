@@ -44,6 +44,9 @@ public class TextField extends ElementBase {
         if (line >= strs.size())
             line = strs.size() - 1;
 
+        if (line < 0)
+            return;
+
         cursorPos = 0;
         for (int i = 0; i < line; i++) {
             cursorPos += strs.get(i).length() + 1;

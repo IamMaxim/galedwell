@@ -82,7 +82,7 @@ public class HUD {
         EntityPlayer player = TESItems.getClientPlayer();
         IPlayerAttributesCapability cap = TESItems.getCapability(player);
         Tessellator tess = Tessellator.getInstance();
-        //draw healthbar
+        //draw health bar
         drawBar(tess, left, top, right, top + bar_height, player.getHealth() / player.getMaxHealth(), 0x99ff3300);
         //draw magicka bar
         drawBar(tess, left, top + bar_height + bar_spacing, right, top + 2 * bar_height + bar_spacing, cap.getMagicka() / cap.getMaxMagicka(), 0x993399ff);

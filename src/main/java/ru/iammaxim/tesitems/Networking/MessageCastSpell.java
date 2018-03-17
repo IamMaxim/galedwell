@@ -38,10 +38,15 @@ public class MessageCastSpell implements IMessage {
     public static class ServerHandler implements IMessageHandler<MessageCastSpell, IMessage> {
         @Override
         public IMessage onMessage(MessageCastSpell message, MessageContext ctx) {
+            System.out.println("casting spell " + message.spellIndex);
             EntityPlayer player = ctx.getServerHandler().playerEntity;
             List<SpellBase> spellbook = TESItems.getCapability(player).getSpellbook();
-            if (message.spellIndex < 0 || message.spellIndex >= spellbook.size()) return null;
+            if (message.spellIndex < 0 || message.spellIndex >= spellbook.size()) {
+                System.out.println("WARNING: " + message.spellIndex + " is out of range spell");
+                return null;
+            }
             SpellBase spell = spellbook.get(message.spellIndex);
+            System.out.println(spell.getClass().getName());
             spell.cast(player);
             return null;
         }

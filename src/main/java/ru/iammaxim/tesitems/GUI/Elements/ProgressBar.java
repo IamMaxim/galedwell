@@ -18,7 +18,7 @@ public class ProgressBar extends ElementBase {
     @Override
     public void draw(int mouseX, int mouseY) {
         drawColoredRect(Tessellator.getInstance(), left, top, right, bottom, 0x55555555);
-        drawColoredRect(Tessellator.getInstance(), left, top, (int) (left + (right - left) * progress), bottom, 0xffff5555);
+        drawColoredRect(Tessellator.getInstance(), left, top, (int) (left + (right - left) * progress), bottom, 0xffd12727);
     }
 
     @Override

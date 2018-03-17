@@ -73,8 +73,8 @@ public class MessageRecipe implements IMessage {
         @Override
         public IMessage onMessage(MessageRecipe message, MessageContext ctx) {
             CraftRecipes.addClientRecipe(message.type, message.id, message.recipe);
-            ScreenStack.processCallback("recipeListUpdated");
-            ScreenStack.processCallback("recipeUpdated");
+            ScreenStack.processCallback("recipeListUpdated", null);
+            ScreenStack.processCallback("recipeUpdated", null);
             return null;
         }
     }

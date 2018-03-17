@@ -130,6 +130,8 @@ public class CommonProxy {
 
         if (cap.getCarryWeight() > cap.getMaxCarryWeight())
             event.player.addPotionEffect(new PotionEffect(Potion.getPotionById(2), 5, 3));
+
+        cap.restoreMagicka();
     }
 
     @SubscribeEvent

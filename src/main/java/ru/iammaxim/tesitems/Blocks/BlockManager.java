@@ -75,6 +75,12 @@ public class BlockManager {
             Blocks.LEAVES2,
             Blocks.GRASS,
             Blocks.TALLGRASS,
+            Blocks.DEADBUSH,
+            Blocks.CACTUS,
+            Blocks.SAPLING,
+            Blocks.REEDS,
+            Blocks.WHEAT,
+            Blocks.VINE
     };
 
     public static boolean isMiningBlock(Block b) {

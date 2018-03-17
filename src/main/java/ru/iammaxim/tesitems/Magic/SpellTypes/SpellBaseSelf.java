@@ -19,6 +19,7 @@ public class SpellBaseSelf extends SpellBase {
 
     @Override
     public void cast(EntityPlayer caster) {
+        System.out.println("casting spell " + name);
         for (SpellEffect effect : effects) {
             effect.castSelf(caster);
         }

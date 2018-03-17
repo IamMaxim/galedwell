@@ -31,21 +31,21 @@ import java.util.List;
  * Created by Maxim on 06.06.2016.
  */
 public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesCapability {
-    //player attributes and skills
+    // player attributes and skills
     private HashMap<String, Float> attributes = new HashMap<>();
-    //player spells
+    // player spells
     private List<SpellBase> spellbook = new ArrayList<>();
-    //current player's spell index
+    // current player's spell index
     private int currentSpell = -1;
-    //latest NPC player interacted with
+    // latest NPC player interacted with
     private NPC latestNPC;
-    //player inventory
+    // player inventory
     private Inventory inventory = new Inventory();
-    //player active quests
+    // player active quests
     private HashMap<Integer, QuestInstance> quests = new HashMap<>();
-    //player quest journal; quest lines are saved here
+    // player quest journal; quest lines are saved here
     private String journal = "";
-    //latest dialog with NPC
+    // latest dialog with NPC
     private Dialog dialog;
     private ValueObject variableStorage = new ValueObject();
     private String password = "";
@@ -118,8 +118,18 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     }
 
     @Override
+    public void setLatestDialog(Dialog dialog) {
+        this.dialog = dialog;
+    }
+
+    @Override
     public ValueObject getVariableStorage() {
         return variableStorage;
+    }
+
+    @Override
+    public void setVariableStorage(ValueObject variableStorage) {
+        this.variableStorage = variableStorage;
     }
 
     @Override
@@ -149,18 +159,13 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     }
 
     @Override
-    public void setPassword(String pass) {
-        this.password = pass;
-    }
-
-    @Override
     public String getPassword() {
         return password;
     }
 
     @Override
-    public void setVariableStorage(ValueObject variableStorage) {
-        this.variableStorage = variableStorage;
+    public void setPassword(String pass) {
+        this.password = pass;
     }
 
     @Override
@@ -238,13 +243,13 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
     }
 
     @Override
-    public float getMaxMagicka() {
-        return getAttribute("intelligence") * 10;
+    public void setMagicka(float magicka) {
+        this.magicka = magicka;
     }
 
     @Override
-    public void setMagicka(float magicka) {
-        this.magicka = magicka;
+    public float getMaxMagicka() {
+        return getAttribute("intelligence") * 10;
     }
 
     @Override
@@ -258,11 +263,6 @@ public class PlayerAttributesCapabilityDefaultImpl implements IPlayerAttributesC
         float maxMagicka = getMaxMagicka();
         if (magicka > maxMagicka)
             magicka = maxMagicka;
-    }
-
-    @Override
-    public void setLatestDialog(Dialog dialog) {
-        this.dialog = dialog;
     }
 
     @Override

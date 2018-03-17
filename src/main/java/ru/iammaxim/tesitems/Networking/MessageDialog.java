@@ -51,7 +51,7 @@ public class MessageDialog implements IMessage {
                     gui.update();
                 });
             }*/
-            ScreenStack.processCallback("dialogTopicsUpdated");
+            ScreenStack.processCallback("dialogTopicsUpdated", null);
             return null;
         }
     }

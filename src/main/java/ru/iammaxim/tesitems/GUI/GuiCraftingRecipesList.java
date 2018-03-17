@@ -30,7 +30,7 @@ public class GuiCraftingRecipesList extends Screen {
 
         root.doLayout();
 
-        root.getScreen().addCallback("recipeListUpdated", this::updateList);
+        root.getScreen().addCallback("recipeListUpdated", o -> updateList());
     }
 
     private void updateList() {

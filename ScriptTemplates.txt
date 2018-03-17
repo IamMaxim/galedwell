@@ -1,18 +1,18 @@
-onTopicClick(npc, player, object, varStorage, questInst) {
+function onTopicClick(npc, player, object, varStorage, questInst) {
 
 }
 
 
-castTarget(object, caster, target, power, range) {
+function castTarget(object, caster, target, power, range) {
 
 }
 
 
-castTerrain(object, caster, power) {
+function castTerrain(object, caster, power) {
 
 }
 
 
-castSelf(object, caster, power) {
+function castSelf(object, caster, power) {
 
 }

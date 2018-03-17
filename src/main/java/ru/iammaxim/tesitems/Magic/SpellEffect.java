@@ -31,8 +31,8 @@ import ru.iammaxim.tesitems.TESItems;
  * Created by Maxim on 11.07.2016.
  */
 public class SpellEffect {
-    private String name;
     protected float power, range;
+    private String name;
     private ValueObject object;
     private Resource texture;
     private String script;
@@ -67,6 +67,11 @@ public class SpellEffect {
         return effect;
     }
 
+    @Override
+    public String toString() {
+        return "effect: " + name + " " + power + " " + range + " " + script.replace("\n", " ");
+    }
+
     protected Resource getTexture() {
         return texture;
     }
@@ -75,8 +80,16 @@ public class SpellEffect {
         return power;
     }
 
+    public void setPower(float power) {
+        this.power = power;
+    }
+
     public float getRange() {
         return range;
+    }
+
+    public void setRange(float range) {
+        this.range = range;
     }
 
     protected void applyEffect(EntityLivingBase entity, float rangeNormalized) {
@@ -85,7 +98,7 @@ public class SpellEffect {
         if (applyEffect != null)
             try {
                 applyEffect.call(ScriptEngine.runtime, object, new ValueEntity(entity), new ValueFloat(power), new ValueFloat(1.0f));
-            } catch (InvalidOperationException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
     }
@@ -96,9 +109,11 @@ public class SpellEffect {
         if (applyEffect != null)
             try {
                 applyEffect.call(ScriptEngine.runtime, object, new ValuePlayer(caster), new ValueFloat(power));
-            } catch (InvalidOperationException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
+        else
+            System.out.println("WARNING: no castSelf() found");
     }
 
     public void castTargetEntity(EntityPlayer caster, EntityLivingBase target, float rangeNormalized) {
@@ -107,7 +122,7 @@ public class SpellEffect {
         if (applyEffect != null)
             try {
                 applyEffect.call(ScriptEngine.runtime, object, new ValuePlayer(caster), new ValueEntity(target), new ValueFloat(power), new ValueFloat(rangeNormalized));
-            } catch (InvalidOperationException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
     }
@@ -118,10 +133,12 @@ public class SpellEffect {
         if (applyEffect != null)
             try {
                 applyEffect.call(ScriptEngine.runtime, object, new ValuePlayer(caster), new ValueFloat(power));
-            } catch (InvalidOperationException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
     }
+
+    ;
 
     public void renderInWorld(RenderManager renderManager, double x, double y, double z, float partialTicks) {
         renderFlatTextureModel(renderManager, x, y, z, partialTicks);
@@ -156,8 +173,6 @@ public class SpellEffect {
         GlStateManager.popMatrix();
     }
 
-    ;
-
     public NBTTagCompound writeToNBT(boolean writeScripts) {
         NBTTagCompound tag = new NBTTagCompound();
         if (writeScripts)
@@ -177,5 +192,13 @@ public class SpellEffect {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getScript() {
+        return script;
+    }
+
+    public void setScript(String script) {
+        this.script = script;
     }
 }

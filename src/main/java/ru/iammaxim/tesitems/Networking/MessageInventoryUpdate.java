@@ -115,7 +115,7 @@ public class MessageInventoryUpdate implements IMessage {
                     break;
             }
 
-            ScreenStack.processCallback("inventoryUpdated");
+            ScreenStack.processCallback("inventoryUpdated", null);
             return null;
         }
     }

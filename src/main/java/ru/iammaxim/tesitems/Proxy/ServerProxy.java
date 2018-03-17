@@ -14,9 +14,6 @@ public class ServerProxy extends CommonProxy {
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
         super.onPlayerTick(event);
         IPlayerAttributesCapability cap = TESItems.getCapability(event.player);
-        if (!cap.isAuthorized())
-            return;
-        cap.restoreMagicka();
         TESItems.networkWrapper.sendTo(new MessageMagickaUpdate(cap.getMagicka()), (EntityPlayerMP) event.player);
     }
 }

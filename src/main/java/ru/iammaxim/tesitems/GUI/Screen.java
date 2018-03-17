@@ -124,10 +124,10 @@ public class Screen {
         ScreenStack.addScreen(this);
     }
 
-    public void processCallback(String action) {
+    public void processCallback(String action, Object object) {
         for (String callbackAction : callbacks.keySet()) {
             if (callbackAction.equals(action))
-                callbacks.get(callbackAction).process();
+                callbacks.get(callbackAction).process(object);
         }
     }
 

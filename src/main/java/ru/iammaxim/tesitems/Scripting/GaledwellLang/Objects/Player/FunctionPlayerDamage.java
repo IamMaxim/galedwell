@@ -20,7 +20,8 @@ public class FunctionPlayerDamage extends ValueFunction {
     public void call(Runtime runtime, Value... args) throws InvalidOperationException {
         if (args[0] instanceof ValueInt)
             args[0] = new ValueFloat(((ValueInt) args[0]).value);
-        ((ValuePlayer)runtime.variableStorage.getField("player")).player.attackEntityFrom(DamageSource.generic, ((ValueFloat) args[0]).value);
+
+        ((ValuePlayer) runtime.variableStorage.getField("player")).player.attackEntityFrom(DamageSource.generic, ((ValueFloat) args[0]).value);
         runtime.stack.push(null);
     }
 }

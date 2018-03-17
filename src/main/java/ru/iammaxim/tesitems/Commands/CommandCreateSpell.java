@@ -29,7 +29,7 @@ public class CommandCreateSpell extends CommandBase {
         EntityPlayer player = (EntityPlayer) sender;
         IPlayerAttributesCapability cap = TESItems.getCapability(player);
 
-        TESItems.networkWrapper.sendTo(new MessageSpellbook(cap.saveSpellbook(true)), (EntityPlayerMP) player);
+//        TESItems.networkWrapper.sendTo(new MessageSpellbook(cap.saveSpellbook(true)), (EntityPlayerMP) player);
 
         player.openGui(TESItems.instance, TESItems.guiEditSpells, ((EntityPlayerMP) player).worldObj, (int) ((EntityPlayerMP) player).posX, (int) ((EntityPlayerMP) player).posY, (int) ((EntityPlayerMP) player).posZ);
 
