@@ -80,6 +80,7 @@ public class VerticalScrollbar extends LayoutBase {
 
     @Override
     public void draw(int mouseX, int mouseY) {
+        super.draw(mouseX, mouseY);
         arrowUp.draw(mouseX, mouseY);
         arrowDown.draw(mouseX, mouseY);
 

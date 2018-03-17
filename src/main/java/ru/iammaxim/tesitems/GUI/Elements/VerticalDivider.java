@@ -20,6 +20,7 @@ public class VerticalDivider extends ElementBase {
 
     @Override
     public void draw(int mouseX, int mouseY) {
+        super.draw(mouseX, mouseY);
         drawColoredRect(Tessellator.getInstance(), left, top, right, bottom, color);
     }
 

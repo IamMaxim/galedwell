@@ -75,6 +75,9 @@ public class GuiNPCEditor extends Screen {
     }
 
     private void addFaction(Faction f) {
+        if (f == null)
+            return;
+
         VerticalLayout fl = new VerticalLayout();
         Text factionName = new Text("Faction name will be here if all is right");
         if (!f.name.equals(""))

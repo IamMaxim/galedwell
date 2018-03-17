@@ -22,7 +22,7 @@ public class GuiWorkbench extends Screen {
 
     public GuiWorkbench() {
         contentLayout.setElement(new HorizontalLayout()
-                .add(new WrapFrameLayout().setElement(new ScrollableLayout().setElement(listLayout = new VerticalLayout())).setPadding(4).setHeightOverride(ElementBase.FILL))
+                .add(new WrapFrameLayout().setElement(new ScrollableLayout().setElement(listLayout = new VerticalLayout().setSpacing(0))).setPadding(4).setHeightOverride(ElementBase.FILL))
                 .add(new VerticalLayout()
                         .add(new HeaderLayout("Workbench").setPaddingBottom(4).setPaddingTop(4))
                         .add(recipeName = (Text) new Text("Select recipe").center(true).setWidthOverride(ElementBase.FILL))
@@ -69,12 +69,20 @@ public class GuiWorkbench extends Screen {
     }
 
     public ElementBase getElement(CraftRecipe recipe) {
-        return new Text(recipe.name).setOnClick(e -> {
+        FrameLayout fl = new FrameLayout();
+        Text text = new Text(recipe.name);
+        fl.setElement(text);
+        fl.setPaddingTop(2);
+        fl.setPaddingBottom(2);
+
+        fl.setWidthOverride(ElementBase.FILL);
+        fl.setOnClick(e -> {
             if (selected != null) {
                 selected.setBackground(null);
             }
 
-            e.setBackground(new Image(ResManager.inv_entry_bg_selected));
+            fl.setBackground(new Image(ResManager.inv_entry_bg_selected));
+            selected = fl;
             selectedRecipeID = recipe.id;
             currentRecipe = recipe;
 
@@ -83,5 +91,7 @@ public class GuiWorkbench extends Screen {
             updateCurrentRecipe();
             root.doLayout();
         });
+
+        return fl;
     }
 }

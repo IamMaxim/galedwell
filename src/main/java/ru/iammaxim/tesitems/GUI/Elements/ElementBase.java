@@ -18,77 +18,24 @@ import java.util.function.Consumer;
  * Created by maxim on 11/7/16 at 4:22 PM.
  */
 public abstract class ElementBase {
+    public static final int FILL = -2;
+    public Consumer<ElementBase> onClick, onRightClick;
     protected int left;
     protected int top;
     protected int right;
     protected int bottom;
     protected int width;
     protected int height;
-    public Consumer<ElementBase> onClick, onRightClick;
     protected ElementBase parent;
     protected int marginLeft = 0;
     protected int marginRight = 0;
     protected int marginTop = 0;
     protected int marginBottom = 0;
     protected boolean focused;
-    public static final int FILL = -2;
     protected int widthOverride = -1;
     protected int heightOverride = -1;
     protected ElementBase background;
     private Screen screen;
-
-    public ElementBase setScreen(Screen screen) {
-        this.screen = screen;
-        return this;
-    }
-
-    public Screen getScreen() {
-        return screen;
-    }
-
-    public ElementBase setBackground(ElementBase background) {
-        this.background = background;
-        return this;
-    }
-
-    public ElementBase setOnClick(Consumer<ElementBase> onClick) {
-        this.onClick = onClick;
-        return this;
-    }
-
-    public ElementBase setOnRightClick(Consumer<ElementBase> onRightClick) {
-        this.onRightClick = onRightClick;
-        return this;
-    }
-
-    public ElementBase setWidthOverride(int width) {
-        widthOverride = width;
-        return this;
-    }
-
-    public ElementBase setHeightOverride(int height) {
-        heightOverride = height;
-        return this;
-    }
-
-
-    public void setParent(ElementBase parent) {
-        this.parent = parent;
-    }
-
-    public int width() {
-        return width;
-    }
-
-    //force set this.width
-    public ElementBase _setwidth(int width) {
-        this.width = width;
-        return this;
-    }
-
-    public int height() {
-        return height;
-    }
 
     public ElementBase() {
     }
@@ -111,133 +58,6 @@ public abstract class ElementBase {
         tess.draw();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GlStateManager.disableBlend();
-    }
-
-    public void checkClick(int mouseX, int mouseY) {
-        if (mouseX > left && mouseX < right && mouseY > top && mouseY < bottom) {
-            click(mouseX - left, mouseY - top);
-        }
-    }
-
-    public void checkRightClick(int mouseX, int mouseY) {
-        if (mouseX > left && mouseX < right && mouseY > top && mouseY < bottom) {
-            rightClick(mouseX - left, mouseY - top);
-        }
-    }
-
-    public void checkHover(int mouseX, int mouseY) {
-        if (mouseX > left && mouseX < right && mouseY > top && mouseY < bottom) {
-            if (!focused)
-                onFocus();
-            focused = true;
-        } else {
-            if (focused)
-                onFocusLost();
-            focused = false;
-        }
-    }
-
-    public void onFocusLost() {
-    }
-
-    public void onFocus() {
-    }
-
-    public ElementBase getParent() {
-        return parent;
-    }
-
-    public ElementBase getRoot() {
-        if (parent == null) return this;
-        return parent.getRoot();
-    }
-
-    public int getLeftMargin() {
-        return marginLeft;
-    }
-
-    public int getRightMargin() {
-        return marginRight;
-    }
-
-    public ElementBase setLeftMargin(int margin) {
-        this.marginLeft = margin;
-        return this;
-    }
-
-    public ElementBase setRightMargin(int margin) {
-        this.marginRight = margin;
-        return this;
-    }
-
-    public int getTopMargin() {
-        return marginTop;
-    }
-
-    public int getBottomMargin() {
-        return marginBottom;
-    }
-
-    public ElementBase setVerticalMargin(int margin) {
-        this.marginTop = margin;
-        this.marginBottom = margin;
-        return this;
-    }
-
-    public ElementBase setTopMargin(int margin) {
-        this.marginTop = margin;
-        return this;
-    }
-
-    public ElementBase setBottomMargin(int margin) {
-        this.marginBottom = margin;
-        return this;
-    }
-
-    public int getWidth() {
-        return width + marginLeft + marginRight;
-    }
-
-    public int getWidthOverride() {
-        return widthOverride;
-    }
-
-    public int getHeight() {
-        return height + marginBottom + marginTop;
-    }
-
-    public int getHeightOverride() {
-        return heightOverride;
-    }
-
-    public ElementBase setBounds(int left, int top, int right, int bottom) {
-        this.left = left + marginLeft;
-        this.right = right - marginRight;
-        this.top = top + marginTop;
-        this.bottom = bottom - marginBottom;
-        this.width = this.right - this.left;
-        this.height = this.bottom - this.top;
-        if (background != null)
-            background.setBounds(left, top, right, bottom);
-//        System.out.println(getPath() + "\nset bounds: " + this.left + " " + this.top + " " + this.right + " " + this.bottom + " " + this.width + " " + this.height);
-        return this;
-    }
-
-    public abstract void draw(int mouseX, int mouseY);
-
-    public void keyTyped(char c, int keyCode) {
-    }
-
-    public void click(int relativeX, int relativeY) {
-        if (onClick != null)
-            onClick.accept(this);
-    }
-
-    public void rightClick(int relativeX, int relativeY) {
-        if (onRightClick == null) {
-            return;
-        }
-        onRightClick.accept(this);
     }
 
     public static void drawTexturedRect(Tessellator tess, int left, int top, int right, int bottom, ResourceLocation texture) {
@@ -286,6 +106,188 @@ public abstract class ElementBase {
         ResManager.gaussianBlurShader.loadShaderGroup(0);
         Minecraft.getMinecraft().getFramebuffer().bindFramebuffer(false);
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
+    }
+
+    public Screen getScreen() {
+        return screen;
+    }
+
+    public ElementBase setScreen(Screen screen) {
+        this.screen = screen;
+        return this;
+    }
+
+    public ElementBase setBackground(ElementBase background) {
+        this.background = background;
+        return this;
+    }
+
+    public ElementBase setOnClick(Consumer<ElementBase> onClick) {
+        this.onClick = onClick;
+        return this;
+    }
+
+    public ElementBase setOnRightClick(Consumer<ElementBase> onRightClick) {
+        this.onRightClick = onRightClick;
+        return this;
+    }
+
+    public int width() {
+        return width;
+    }
+
+    //force set this.width
+    public ElementBase _setwidth(int width) {
+        this.width = width;
+        return this;
+    }
+
+    public int height() {
+        return height;
+    }
+
+    public void checkClick(int mouseX, int mouseY) {
+        if (mouseX > left && mouseX < right && mouseY > top && mouseY < bottom) {
+            click(mouseX - left, mouseY - top);
+        }
+    }
+
+    public void checkRightClick(int mouseX, int mouseY) {
+        if (mouseX > left && mouseX < right && mouseY > top && mouseY < bottom) {
+            rightClick(mouseX - left, mouseY - top);
+        }
+    }
+
+    public void checkHover(int mouseX, int mouseY) {
+        if (mouseX > left && mouseX < right && mouseY > top && mouseY < bottom) {
+            if (!focused)
+                onFocus();
+            focused = true;
+        } else {
+            if (focused)
+                onFocusLost();
+            focused = false;
+        }
+    }
+
+    public void onFocusLost() {
+    }
+
+    public void onFocus() {
+    }
+
+    public ElementBase getParent() {
+        return parent;
+    }
+
+    public void setParent(ElementBase parent) {
+        this.parent = parent;
+    }
+
+    public ElementBase getRoot() {
+        if (parent == null) return this;
+        return parent.getRoot();
+    }
+
+    public int getLeftMargin() {
+        return marginLeft;
+    }
+
+    public ElementBase setLeftMargin(int margin) {
+        this.marginLeft = margin;
+        return this;
+    }
+
+    public int getRightMargin() {
+        return marginRight;
+    }
+
+    public ElementBase setRightMargin(int margin) {
+        this.marginRight = margin;
+        return this;
+    }
+
+    public int getTopMargin() {
+        return marginTop;
+    }
+
+    public ElementBase setTopMargin(int margin) {
+        this.marginTop = margin;
+        return this;
+    }
+
+    public int getBottomMargin() {
+        return marginBottom;
+    }
+
+    public ElementBase setBottomMargin(int margin) {
+        this.marginBottom = margin;
+        return this;
+    }
+
+    public ElementBase setVerticalMargin(int margin) {
+        this.marginTop = margin;
+        this.marginBottom = margin;
+        return this;
+    }
+
+    public int getWidth() {
+        return width + marginLeft + marginRight;
+    }
+
+    public int getWidthOverride() {
+        return widthOverride;
+    }
+
+    public ElementBase setWidthOverride(int width) {
+        widthOverride = width;
+        return this;
+    }
+
+    public int getHeight() {
+        return height + marginBottom + marginTop;
+    }
+
+    public int getHeightOverride() {
+        return heightOverride;
+    }
+
+    public ElementBase setHeightOverride(int height) {
+        heightOverride = height;
+        return this;
+    }
+
+    public ElementBase setBounds(int left, int top, int right, int bottom) {
+        this.left = left + marginLeft;
+        this.right = right - marginRight;
+        this.top = top + marginTop;
+        this.bottom = bottom - marginBottom;
+        this.width = this.right - this.left;
+        this.height = this.bottom - this.top;
+        if (background != null)
+            background.setBounds(left, top, right, bottom);
+//        System.out.println(getPath() + "\nset bounds: " + this.left + " " + this.top + " " + this.right + " " + this.bottom + " " + this.width + " " + this.height);
+        return this;
+    }
+
+    public void draw(int mouseX, int mouseY) {
+        if (background != null)
+            background.draw(mouseX, mouseY);
+    }
+
+    public void keyTyped(char c, int keyCode) {
+    }
+
+    public void click(int relativeX, int relativeY) {
+        if (onClick != null)
+            onClick.accept(this);
+    }
+
+    public void rightClick(int relativeX, int relativeY) {
+        if (onRightClick == null) {
+            return;
+        }
+        onRightClick.accept(this);
     }
 
     public void onResize() {

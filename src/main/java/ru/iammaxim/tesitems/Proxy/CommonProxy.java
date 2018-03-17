@@ -167,6 +167,8 @@ public class CommonProxy {
             } else {
                 //Player doesn't use breaking tool, get break speed by player skill
                 String blockType = null;
+                if (BlockManager.requiresNothing(b))
+                    blockType = "allowed";
                 if (BlockManager.isMiningBlock(b)) {
                     blockType = "mining";
                 } else if (BlockManager.isWoodcuttingBlock(b)) {
@@ -179,6 +181,10 @@ public class CommonProxy {
                     event.setNewSpeed(0);
                     return;
                 }
+
+                if (blockType.equals("allowed"))
+                    return;
+
                 speed *= p.getCapability(TESItems.playerAttributesCapability, null).getAttribute(blockType) / TESItems.maxSkillLevel;
             }
             event.setNewSpeed(speed);

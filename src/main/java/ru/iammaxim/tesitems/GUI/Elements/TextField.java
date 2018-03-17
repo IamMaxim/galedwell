@@ -265,6 +265,7 @@ public class TextField extends ElementBase {
             update();
             ((LayoutBase) getRoot()).doLayout();
         }
+        super.draw(mouseX, mouseY);
 
         //check if key is still down
         if (Keyboard.isKeyDown(lastKey)) {

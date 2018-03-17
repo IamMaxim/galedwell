@@ -122,6 +122,7 @@ public class HorizontalLayout extends LayoutBase implements LayoutWithList {
 
     @Override
     public void draw(int mouseX, int mouseY) {
+        super.draw(mouseX, mouseY);
         elements.forEach(e -> e.draw(mouseX, mouseY));
     }
 

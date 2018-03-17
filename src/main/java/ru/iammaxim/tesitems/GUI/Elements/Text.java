@@ -95,6 +95,7 @@ public class Text extends ElementBase {
         if (dirty) {
             update();
         }
+        super.draw(mouseX, mouseY);
 
         int x = left + leftPadding;
         int y = top;

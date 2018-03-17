@@ -77,6 +77,7 @@ public class FrameLayout extends LayoutBase {
 
     @Override
     public void draw(int mouseX, int mouseY) {
+        super.draw(mouseX, mouseY);
         if (element != null)
             element.draw(mouseX, mouseY);
         else

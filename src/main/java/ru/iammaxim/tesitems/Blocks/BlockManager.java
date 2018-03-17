@@ -37,6 +37,7 @@ public class BlockManager {
             Blocks.STONE_BUTTON,
             Blocks.STONE_PRESSURE_PLATE
     };
+
     public static final Block[] woodcuttingBlocks = {
             Blocks.PLANKS,
             Blocks.BOOKSHELF,
@@ -50,6 +51,7 @@ public class BlockManager {
             Blocks.WOODEN_BUTTON,
             Blocks.WOODEN_PRESSURE_PLATE
     };
+
     public static final Block[] diggingBlocks = {
             Blocks.CLAY,
             Blocks.DIRT,
@@ -63,8 +65,16 @@ public class BlockManager {
             Blocks.SOUL_SAND,
             Blocks.GRASS_PATH
     };
+
     public static final Block[] furnutureBlocks = {
 
+    };
+
+    public static final Block[] allowed = {
+            Blocks.LEAVES,
+            Blocks.LEAVES2,
+            Blocks.GRASS,
+            Blocks.TALLGRASS,
     };
 
     public static boolean isMiningBlock(Block b) {
@@ -81,6 +91,12 @@ public class BlockManager {
 
     public static boolean isDiggingBlock(Block b) {
         for (Block b1 : diggingBlocks)
+            if (b == b1) return true;
+        return false;
+    }
+
+    public static boolean requiresNothing(Block b) {
+        for (Block b1 : allowed)
             if (b == b1) return true;
         return false;
     }
