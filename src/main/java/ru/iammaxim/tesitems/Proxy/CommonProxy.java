@@ -86,15 +86,14 @@ public class CommonProxy {
     }
 
     public void postInit(FMLPostInitializationEvent event) {
-        for (Field o : Items.class.getFields()) {
+        for (Field o : Items.class.getFields())
             try {
                 Item i = (Item) o.get(null);
                 i.setMaxStackSize(1);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
-        }
-        for (Field o : Blocks.class.getFields()) {
+        for (Field o : Blocks.class.getFields())
             try {
                 Block b = (Block) o.get(null);
                 Item i = Item.getItemFromBlock(b);
@@ -103,7 +102,6 @@ public class CommonProxy {
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
-        }
 
         Item.getItemFromBlock(Blocks.PLANKS).setMaxStackSize(4);
         Items.STICK.setMaxStackSize(8);
@@ -163,11 +161,11 @@ public class CommonProxy {
         if (p instanceof EntityPlayer) {
             float speed = event.getOriginalSpeed();
 
-            //Check if player uses a breaking tool
+            // Check if player uses a breaking tool
             if ((((EntityPlayer) p).getHeldItemMainhand() != null && ((EntityPlayer) p).getHeldItemMainhand().getItem() == mItems.itemBreakingTool) || (((EntityPlayer) p).getHeldItemOffhand() != null && ((EntityPlayer) p).getHeldItemOffhand().getItem() == mItems.itemBreakingTool)) {
                 speed *= 2;
             } else {
-                //Player doesn't use breaking tool, get break speed by player skill
+                // Player doesn't use breaking tool, get break speed by player skill
                 String blockType = null;
                 if (BlockManager.requiresNothing(b))
                     blockType = "allowed";
@@ -215,6 +213,7 @@ public class CommonProxy {
         destCap.setAttributes(origCap.getAttributes());
         destCap.setSpellbook(origCap.getSpellbook());
         destCap.setInventory(origCap.getInventory());
+        destCap.setGold(origCap.getGold());
         if (origCap.isAuthorized())
             destCap.authorize((EntityPlayerMP) event.getEntityPlayer());
 
@@ -242,13 +241,12 @@ public class CommonProxy {
     @SubscribeEvent
     public void onItemUse(LivingEntityUseItemEvent.Finish event) {
         ItemStack is = event.getItem();
-        if (is.stackSize == 0) {
+        if (is.stackSize == 0)
             if (event.getEntityLiving() instanceof EntityPlayer) {
                 EntityPlayer player = (EntityPlayer) event.getEntityLiving();
                 IPlayerAttributesCapability cap = TESItems.getCapability(player);
                 cap.getInventory().removeItem(cap.getInventory().getItemStackIndex(is));
             }
-        }
     }
 
     public void serverStarting(FMLServerStartingEvent event) {
@@ -305,12 +303,12 @@ public class CommonProxy {
             held.damageItem(1, player);
             if (held.getItemDamage() >= held.getMaxDamage()) {
                 if (TESItems.getSide() == Side.SERVER) {
-                    //remove item from inventory
+                    // remove item from inventory
                     IPlayerAttributesCapability cap = TESItems.getCapability(player);
                     Inventory inv = cap.getInventory();
                     inv.removeItem(inv.getItemStackIndex(held));
                 }
-                //remove item from hand
+                // remove item from hand
                 player.setHeldItem(EnumHand.MAIN_HAND, null);
             }
         }

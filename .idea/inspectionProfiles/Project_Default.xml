@@ -1,0 +1,17 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="AssignmentToMethodParameter" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoreTransformationOfOriginalParameter" value="false" />
+    </inspection_tool>
+    <inspection_tool class="CollectionContainsUrl" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="EqualsHashCodeCalledOnUrl" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="ImplicitCallToSuper" enabled="false" level="WEAK WARNING" enabled_by_default="false">
+      <option name="m_ignoreForObjectSubclasses" value="false" />
+    </inspection_tool>
+    <inspection_tool class="SingleStatementInBlock" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="SizeReplaceableByIsEmpty" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="TailRecursion" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="UnnecessaryConstantArrayCreationExpression" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+  </profile>
+</component>
