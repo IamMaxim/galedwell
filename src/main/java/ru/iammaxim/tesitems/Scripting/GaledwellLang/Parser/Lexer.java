@@ -66,6 +66,23 @@ public class Lexer {
                 tokener1.tokens = assembleTokenScopes(tokener1.tokens);
 
                 tokener.add(i, new TokenScope(TokenScope.Type.PARENS, tokener1.tokens));
+            } else if (type == TokenType.BRACKET_OPEN) {
+                tokener.index = i;
+                Tokener tokener1 = tokener.readToSkippingScopes(new Token("]"));
+
+                try {
+                    //remove tokens and replace them with TokenScope
+                    for (int j = 0; j < tokener1.size() + 2 /* content + wrapping parens */; j++) {
+                        tokener.remove(i);
+                    }
+                } catch (IndexOutOfBoundsException e) {
+                    e.printStackTrace();
+                }
+
+                //recursively process nested scopes
+                tokener1.tokens = assembleTokenScopes(tokener1.tokens);
+
+                tokener.add(i, new TokenScope(TokenScope.Type.BRACKETS, tokener1.tokens));
             }
         }
 
@@ -84,7 +101,7 @@ public class Lexer {
             char c = chars[i];
 
             if (c == '/') { // comment
-                if (len - i >= 1 && chars[i + 1] == '/') { // singleline comment
+                if (len - i >= 1 && chars[i + 1] == '/') { // single-line comment
                     i = src.indexOf('\n', i) - 1; // go to next line and leave \n, so lexer will lex newline
                     continue;
                 }
@@ -158,7 +175,9 @@ public class Lexer {
             if (Token.is(TokenType.BRACE_OPEN, s)
                     || Token.is(TokenType.BRACE_CLOSE, s)
                     || Token.is(TokenType.PAREN_OPEN, s)
-                    || Token.is(TokenType.PAREN_CLOSE, s)) {
+                    || Token.is(TokenType.PAREN_CLOSE, s)
+                    || Token.is(TokenType.BRACKET_OPEN, s)
+                    || Token.is(TokenType.BRACKET_CLOSE, s)) {
                 cutOffToken();
                 tokens.add(new Token(s));
                 continue;

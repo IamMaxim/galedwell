@@ -70,6 +70,8 @@ public class Compiler {
             compileReturn((ExpressionReturn) exp, depth, inTree);
         } else if (exp instanceof ExpressionValue) {
             compileValue((ExpressionValue) exp, depth, inTree);
+        } else if (exp instanceof ExpressionValueAt) {
+            compileValueAt((ExpressionValueAt) exp, depth, inTree);
         } else if (exp instanceof ExpressionTree) {
             compileTree((ExpressionTree) exp, depth, inTree);
         } else if (exp instanceof ExpressionCondition) {
@@ -78,6 +80,17 @@ public class Compiler {
             compileForLoop((ExpressionForLoop) exp, depth, inTree);
         } else throw new InvalidExpressionException("Can't find compiler part for " + exp.getClass().getName());
         GaledwellLang.logger.decreaseIndent();
+    }
+
+    private void compileValueAt(ExpressionValueAt exp, int depth, boolean inTree) throws InvalidExpressionException, InvalidTokenException {
+        GaledwellLang.log(exp.key.toString());
+        GaledwellLang.log(exp.value);
+
+        compilePathToVar(exp.value);
+        compileExpression(exp.key, depth + 1, inTree);
+        addOperation(new OperationValueAt());
+        if (!inTree)
+            addOperation(new OperationPop()); // pop return value if it won't be used
     }
 
     private void convertLastReferenceToValue() {
@@ -229,7 +242,7 @@ public class Compiler {
                 // check if left side is reference
                 Operation leftOP;
                 if (!((leftOP = operations.get(operations.size() - 1)) instanceof OperationGetAndPush))
-                    throw new InvalidTokenException( "Left side of += should be reference");
+                    throw new InvalidTokenException("Left side of += should be reference");
                 addOperation(new OperationAdd());
                 addOperation(new OperationPushVariableStorage());
                 addOperation(new OperationPush(new ValueReference(((OperationGetAndPush) leftOP).id)));
@@ -250,17 +263,17 @@ public class Compiler {
             endIfLabel = new OperationLabel();
         }
 
-        compileExpression(exp.cond, depth + 1, false); //compile condition
+        compileExpression(exp.cond, depth + 1, false); // compile condition
         addOperation(new OperationIf(ifNotLabel));
 
         for (Expression expression : exp.body) {
             compileExpression(expression, 0, false);
         }
 
-        if (elseExists) //skip else block from if block
+        if (elseExists) // skip else block from if block
             addOperation(new OperationGoTo(endIfLabel));
 
-        addOperation(ifNotLabel); //add label after body
+        addOperation(ifNotLabel); // add label after body
 
         if (elseExists) {
             for (Expression expression : exp.elseBody) {

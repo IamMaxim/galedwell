@@ -30,6 +30,10 @@ public class Token {
                 return t.equals(")");
             case BRACE_CLOSE:
                 return t.equals("}");
+            case BRACKET_OPEN:
+                return t.equals("[");
+            case BRACKET_CLOSE:
+                return t.equals("]");
             case OPERATOR:
                 return t.equals("==") ||
                         t.equals("+") ||
@@ -72,6 +76,10 @@ public class Token {
             return TokenType.PAREN_OPEN;
         else if (is(TokenType.PAREN_CLOSE, token))
             return TokenType.PAREN_CLOSE;
+        else if (is(TokenType.BRACKET_OPEN, token))
+            return TokenType.BRACKET_OPEN;
+        else if (is(TokenType.BRACKET_CLOSE, token))
+            return TokenType.BRACKET_CLOSE;
         else if (is(TokenType.OPERATOR, token))
             return TokenType.OPERATOR;
         else if (is(TokenType.DELIMITER, token))

@@ -64,6 +64,10 @@ public abstract class Value {
         throw new InvalidOperationException("Not implemented");
     }
 
+    public Value operatorAt(Value key) throws InvalidOperationException {
+        throw new InvalidOperationException("Not implemented");
+    }
+
     public abstract NBTTagCompound writeToNBT();
 
     public static Value loadValueFromNBT(NBTTagCompound tag) {

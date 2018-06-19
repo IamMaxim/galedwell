@@ -188,9 +188,21 @@ public class Parser {
                             t,
                             indentAndParseExpressions(args));
                 }
+
+                if (t.type == TokenType.IDENTIFIER && tokener.peekNext().type == TokenType.SCOPE_BRACKETS) {
+                    GaledwellLang.log("parsing value at");
+//                    int index = tokener.index;
+                    Tokener argTokener = new Tokener(((TokenScope) tokener.peekNext()).tokens, tokener.prePeekedLineNumber);
+
+                    ArrayList<Tokener> list = new ArrayList<>();
+                    list.add(argTokener);
+                    return new ExpressionValueAt(t.token,
+                            (ExpressionValue) indentAndParseExpressions(list).get(0));
+                }
+
             }
 
-            if (tokener.size() == 0)
+            if (tokener.isEmpty())
                 return new ExpressionTree();
             return new ExpressionTree(tokener.tokens.get(0));
         }

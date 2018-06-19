@@ -1,7 +1,7 @@
 function main() {
     func1(getFunc2());
     func1(null);
-//    stoi("123");
+    stoi("123");
 }
 
 function func1(f) {
@@ -21,7 +21,10 @@ function func2() {
 }
 
 function stoi(str) {
+    res = 0;
+    print("Length of dat fucking string:", str.length());
     for (i = str.length() - 1; i >= 0; i--) {
-
+        res *= 10;
+        res += str[i].ord();
     }
 }

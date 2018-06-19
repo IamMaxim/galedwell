@@ -36,4 +36,14 @@ public class Stack {
     public String toString() {
         return "cursor: " + cursor + "; " + Arrays.toString(stack).replace("\n", " ");
     }
+
+    public void output() {
+        System.out.println(">>>   stack:  <<<");
+        for (Value v : stack) {
+            if (v == null)
+                break;
+            System.out.println(v);
+        }
+        System.out.println(">>> stack end <<<");
+    }
 }

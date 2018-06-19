@@ -10,9 +10,12 @@ public enum TokenType {
     BRACE_CLOSE, // }
     PAREN_OPEN, // (
     PAREN_CLOSE, // )
+    BRACKET_OPEN, // [
+    BRACKET_CLOSE, // ]
     OPERATOR, // +-*/= != < <= == >= >
     KEYWORD,
     SCOPE_PARENS, // multiple tokens in parens
     SCOPE_BRACES, // multiple tokens in braces
+    SCOPE_BRACKETS, // multiple tokens in brackets
     NEW_LINE
 }
