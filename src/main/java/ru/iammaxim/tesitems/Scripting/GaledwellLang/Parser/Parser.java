@@ -105,12 +105,12 @@ public class Parser {
                 //check situation when semicolon is not set after if(){}else{}
                 Tokener nextExpr = tokener.readTo(new Token(";"));
                 if (!nextExpr.isEmpty())
-                    throw new InvalidTokenException("Expected ';'");
+                    throw new InvalidTokenException("Expected ';' after 'if () {} else {}'");
             } else {
                 //check situation when semicolon is not set after if(){}
                 Tokener nextExpr = tokener.readTo(new Token(";"));
                 if (!nextExpr.isEmpty())
-                    throw new InvalidTokenException("Expected ';'");
+                    throw new InvalidTokenException("Expected ';' after 'if () {}'");
             }
 
             return new ExpressionCondition(
@@ -133,6 +133,11 @@ public class Parser {
             if (tokener.peek().type != TokenType.SCOPE_BRACES)
                 throw new InvalidTokenException("Expected braces scope");
             Tokener body = new Tokener(((TokenScope) tokener.eat()).tokens, tokener.preEatenLineNumber);
+
+            // check situation when semicolon is not set after for(){}
+            Tokener nextExpr = tokener.readTo(new Token(";"));
+            if (!nextExpr.isEmpty())
+                throw new InvalidTokenException("Expected ';' after 'for () {}'");
 
             return new ExpressionForLoop(
                     indentAndParseExpression(argTokens.get(0)),

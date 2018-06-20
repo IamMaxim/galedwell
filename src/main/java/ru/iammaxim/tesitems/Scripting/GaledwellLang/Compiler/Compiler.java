@@ -4,7 +4,6 @@ import ru.iammaxim.tesitems.Scripting.GaledwellLang.GaledwellLang;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Operations.*;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.Expression.*;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.InvalidTokenException;
-import ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.Token;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.TokenType;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.*;
 
@@ -108,20 +107,31 @@ public class Compiler {
     }
 
     private void compilePathToVar(String path) {
-        addOperation(new OperationPushVariableStorage());
         String[] tokens = path.split("\\.");
+        Value val = Value.get(tokens[0]);
+        boolean isFirstRef = val instanceof ValueReference;
+
+        // if first token is reference, push variable storage and then get value by reference, otherwise just push constant value
+        if (isFirstRef) {
+            addOperation(new OperationPushVariableStorage());
+        } else {
+            addOperation(new OperationPush(val));
+        }
+
         for (int i = 0; i < tokens.length; i++) {
             CompilerDebugRuntime.addName(tokens[i].hashCode(), tokens[i]);
 
-            if (i == tokens.length - 1) {
-                addOperation(new OperationPush(new ValueReference(tokens[i].hashCode())));
-            } else {
-                addOperation(new OperationGetAndPush(tokens[i].hashCode()));
-            }
+            if (i == 0 && isFirstRef || i > 0) // if we have reference in first token or current token is not first
+                if (i == tokens.length - 1) {
+                    addOperation(new OperationPush(new ValueReference(tokens[i].hashCode())));
+                } else {
+                    addOperation(new OperationGetAndPush(tokens[i].hashCode()));
+                }
         }
     }
 
-    private void compileFunctionCall(ExpressionFunctionCall exp, int depth, boolean inTree) throws InvalidTokenException, InvalidExpressionException {
+    private void compileFunctionCall(ExpressionFunctionCall exp, int depth, boolean inTree) throws
+            InvalidTokenException, InvalidExpressionException {
         for (int j = exp.args.size() - 1; j >= 0; j--) {
             Expression arg = exp.args.get(j);
             compileExpression(arg, depth + 1, true);
@@ -133,7 +143,8 @@ public class Compiler {
             addOperation(new OperationPop()); //pop return value of function if it won't be used
     }
 
-    private void compileReturn(ExpressionReturn exp, int depth, boolean inTree) throws InvalidTokenException, InvalidExpressionException {
+    private void compileReturn(ExpressionReturn exp, int depth, boolean inTree) throws
+            InvalidTokenException, InvalidExpressionException {
         compileExpression(exp.returnExp, depth + 1, true);
         addOperation(new OperationReturn());
     }
@@ -147,23 +158,36 @@ public class Compiler {
             addOperation(new OperationPush(exp.value)); //this is constant, just push it every time
     }
 
-    private void compileTree(ExpressionTree exp, int depth, boolean inTree) throws InvalidTokenException, InvalidExpressionException {
+    private void compileTree(ExpressionTree exp, int depth, boolean inTree) throws
+            InvalidTokenException, InvalidExpressionException {
         // TODO: add type conversion
 
         if (exp.operator.type == TokenType.OPERATOR) {
             if (exp.operator.eq("+")) {
+                if (exp.right instanceof ExpressionTree && ((ExpressionTree) exp.right).operator == null) {
+                    throw new InvalidExpressionException("Right side of " + exp.operator + " not found. This lang doesn't have " + exp.operator.token + "=, btw.");
+                }
                 compileExpression(exp.right, depth + 1, true);
                 compileExpression(exp.left, depth + 1, true);
                 addOperation(new OperationAdd());
             } else if (exp.operator.eq("-")) {
+                if (exp.right instanceof ExpressionTree && ((ExpressionTree) exp.right).operator == null) {
+                    throw new InvalidExpressionException("Right side of " + exp.operator + " not found. This lang doesn't have " + exp.operator.token + "=, btw.");
+                }
                 compileExpression(exp.right, depth + 1, true);
                 compileExpression(exp.left, depth + 1, true);
                 addOperation(new OperationSub());
             } else if (exp.operator.eq("*")) {
+                if (exp.right instanceof ExpressionTree && ((ExpressionTree) exp.right).operator == null) {
+                    throw new InvalidExpressionException("Right side of " + exp.operator + " not found. This lang doesn't have " + exp.operator.token + "=, btw.");
+                }
                 compileExpression(exp.right, depth + 1, true);
                 compileExpression(exp.left, depth + 1, true);
                 addOperation(new OperationMul());
             } else if (exp.operator.eq("/")) {
+                if (exp.right instanceof ExpressionTree && ((ExpressionTree) exp.right).operator == null) {
+                    throw new InvalidExpressionException("Right side of " + exp.operator + " not found. This lang doesn't have " + exp.operator.token + "=, btw.");
+                }
                 compileExpression(exp.right, depth + 1, true);
                 compileExpression(exp.left, depth + 1, true);
                 addOperation(new OperationDiv());
@@ -255,7 +279,8 @@ public class Compiler {
         }
     }
 
-    private void compileCondition(ExpressionCondition exp, int depth, boolean inTree) throws InvalidTokenException, InvalidExpressionException {
+    private void compileCondition(ExpressionCondition exp, int depth, boolean inTree) throws
+            InvalidTokenException, InvalidExpressionException {
         OperationLabel ifNotLabel = new OperationLabel(), endIfLabel = null;
         boolean elseExists = false; //true if else block exists
         if (!exp.elseBody.isEmpty()) {
@@ -283,7 +308,8 @@ public class Compiler {
         }
     }
 
-    private void compileForLoop(ExpressionForLoop exp, int depth, boolean inTree) throws InvalidTokenException, InvalidExpressionException {
+    private void compileForLoop(ExpressionForLoop exp, int depth, boolean inTree) throws
+            InvalidTokenException, InvalidExpressionException {
         OperationLabel begin = new OperationLabel();
         OperationLabel end = new OperationLabel();
 

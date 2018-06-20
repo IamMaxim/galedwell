@@ -16,7 +16,8 @@ public class ExpressionTree extends Expression {
         this.right = right;
     }
 
-    public ExpressionTree() {};
+    public ExpressionTree() {
+    }
 
     public ExpressionTree(Token operator) {
         this.operator = operator;

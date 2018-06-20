@@ -14,4 +14,9 @@ public class OperationValueAt extends Operation {
         ValueObject parent = (ValueObject) runtime.stack.pop();
         runtime.stack.push(parent.getField(((ValueReference) val).id).operatorAt(key));
     }
+
+    @Override
+    public String toString() {
+        return "valueAt";
+    }
 }

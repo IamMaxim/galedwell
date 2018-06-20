@@ -1,12 +1,13 @@
 function main() {
-    func1(getFunc2());
-    func1(null);
-    stoi("123");
+    exec(getFunc2());
+    exec(null);
+    print("Length of dat fucking string:", "123".length());
+    print(stoi("123"));
 }
 
-function func1(f) {
+function exec(f) {
     if (f == null) {
-        print("ERROR! null passed");
+        print("ERROR! null function passed");
     } else {
         f();
     };
@@ -17,16 +18,15 @@ function getFunc2() {
 }
 
 function func2() {
-    print("func2()");
+    print("executing func2()");
 }
 
 function stoi(str) {
     res = 0;
-    print("Length of dat fucking string:", str.length());
-    for (i = str.length() - 1; i >= 0; i--) {
-        res *= 10;
-        res += 1;
-        str[i].ord();
-    }
-    print(res);
+    for (i = 0; i < str.length(); i++) {
+        res = res * 10;
+        obj = str[i];
+        res = res + obj.ord() - "0".ord();
+    };
+    return res;
 }
