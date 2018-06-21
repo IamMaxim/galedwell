@@ -285,4 +285,8 @@ public class Tokener {
     public void add(int index, Token token) {
         tokens.add(index, token);
     }
+
+    public boolean hasNext() {
+        return left() > 0;
+    }
 }

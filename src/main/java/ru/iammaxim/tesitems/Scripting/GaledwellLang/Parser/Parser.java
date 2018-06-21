@@ -18,6 +18,16 @@ public class Parser {
         tokener = new Tokener(tokens);
     }
 
+    private void assertToken(Tokener tokener, Token token) throws InvalidTokenException {
+        if (!tokener.peek().eq(token))
+            throw new InvalidTokenException("Expected " + token.token);
+    }
+
+    private void assertType(Tokener tokener, TokenType type) throws InvalidTokenException {
+        if (tokener.peek().type != type)
+            throw new InvalidTokenException("Expected " + type);
+    }
+
     private Expression indentAndParseExpression(Tokener tokener) throws InvalidTokenException {
         GaledwellLang.logger.increateIndent();
         Expression exp = parseExpression(tokener);
@@ -57,23 +67,16 @@ public class Parser {
             GaledwellLang.log("parsing condition");
 
             tokener.eat(); // eat if
-            if (tokener.peek().type != TokenType.SCOPE_PARENS)
-                throw new InvalidTokenException("Expected parens scope as condition");
+//            if (tokener.peek().type != TokenType.SCOPE_PARENS)
+//                throw new InvalidTokenException("Expected parens scope as condition");
+            assertType(tokener, TokenType.SCOPE_PARENS);
             Tokener condition = new Tokener(((TokenScope) tokener.eat()).tokens, tokener.preEatenLineNumber);
 
             GaledwellLang.log("parsed condition: " + condition);
 
             Tokener body;
             ArrayList<Expression> bodyExps = new ArrayList<>();
-            ArrayList<Tokener> bodyTokeners;
-            if (tokener.peek().type != TokenType.SCOPE_BRACES) { // no braces; read 1 statement
-                body = tokener.readTo(new Token(";"));
-                bodyTokeners = new ArrayList<>();
-                bodyTokeners.add(body);
-            } else {
-                body = new Tokener(((TokenScope) tokener.eat()).tokens, tokener.preEatenLineNumber);
-                bodyTokeners = body.splitSkippingScopes(new Token(";"));
-            }
+            ArrayList<Tokener> bodyTokeners = readBody(tokener);
 
             GaledwellLang.log("parsed body: " + bodyTokeners);
 
@@ -85,16 +88,8 @@ public class Parser {
             if (tokener.left() >= 2 /* else, braces scope */ && tokener.peek().eq("else")) {
                 tokener.eat(); // eat else
 
-                Tokener elseBody;
                 ArrayList<Tokener> elseBodyTokeners;
-                if (tokener.peek().type != TokenType.SCOPE_BRACES) { // no braces; read 1 statement
-                    elseBody = tokener.readTo(new Token(";"));
-                    elseBodyTokeners = new ArrayList<>();
-                    elseBodyTokeners.add(elseBody);
-                } else {
-                    elseBody = new Tokener(((TokenScope) tokener.eat()).tokens, tokener.preEatenLineNumber);
-                    elseBodyTokeners = elseBody.splitSkippingScopes(new Token(";"));
-                }
+                elseBodyTokeners = readBody(tokener);
 
                 GaledwellLang.log("parsed elseBody: " + elseBodyTokeners);
 
@@ -123,16 +118,19 @@ public class Parser {
         if (tokener.left() > 0 && tokener.peek().eq("for")) {
             GaledwellLang.log("parsing for loop");
             tokener.eat(); //eat 'for'
-            if (tokener.peek().type != TokenType.SCOPE_PARENS)
-                throw new InvalidTokenException("Expected parens scope");
+//            if (tokener.peek().type != TokenType.SCOPE_PARENS)
+//                throw new InvalidTokenException("Expected parens scope");
+            assertType(tokener, TokenType.SCOPE_PARENS);
             Tokener args = new Tokener(((TokenScope) tokener.eat()).tokens, tokener.preEatenLineNumber);
             ArrayList<Tokener> argTokens = args.splitSkippingScopes(new Token(";"));
             GaledwellLang.log("for loop args: " + argTokens);
             if (argTokens.size() != 3)
                 throw new InvalidTokenException("Expected 3 args in 'for' construction, but got " + argTokens.size());
-            if (tokener.peek().type != TokenType.SCOPE_BRACES)
-                throw new InvalidTokenException("Expected braces scope");
-            Tokener body = new Tokener(((TokenScope) tokener.eat()).tokens, tokener.preEatenLineNumber);
+//            if (tokener.peek().type != TokenType.SCOPE_BRACES)
+//                throw new InvalidTokenException("Expected braces scope");
+//            assertType(tokener, TokenType.SCOPE_BRACES);
+//            Tokener body = new Tokener(((TokenScope) tokener.eat()).tokens, tokener.preEatenLineNumber);
+            ArrayList<Tokener> body = readBody(tokener);
 
             // check situation when semicolon is not set after for(){}
             Tokener nextExpr = tokener.readTo(new Token(";"));
@@ -143,7 +141,8 @@ public class Parser {
                     indentAndParseExpression(argTokens.get(0)),
                     indentAndParseExpression(argTokens.get(1)),
                     indentAndParseExpression(argTokens.get(2)),
-                    indentAndParseExpressions(body.splitSkippingScopes(new Token(";"))));
+//                    indentAndParseExpressions(body.splitSkippingScopes(new Token(";"))));
+                    indentAndParseExpressions(body));
         }
 
         int level = 0;
@@ -176,7 +175,7 @@ public class Parser {
             tokener.index = 0;
             while (tokener.left() > 0) {
                 t = tokener.eat();
-                if (t.type == TokenType.IDENTIFIER && tokener.peekNext().type == TokenType.SCOPE_PARENS) {
+                if (t.type == TokenType.IDENTIFIER && tokener.hasNext() && tokener.peekNext().type == TokenType.SCOPE_PARENS) {
                     GaledwellLang.log("parsing function call");
                     // check if this is function declaration
                     if (tokener.left() >= 2) {
@@ -194,7 +193,7 @@ public class Parser {
                             indentAndParseExpressions(args));
                 }
 
-                if (t.type == TokenType.IDENTIFIER && tokener.peekNext().type == TokenType.SCOPE_BRACKETS) {
+                if (t.type == TokenType.IDENTIFIER && tokener.hasNext() && tokener.peekNext().type == TokenType.SCOPE_BRACKETS) {
                     GaledwellLang.log("parsing value at");
 //                    int index = tokener.index;
                     Tokener argTokener = new Tokener(((TokenScope) tokener.peekNext()).tokens, tokener.prePeekedLineNumber);
@@ -204,7 +203,6 @@ public class Parser {
                     return new ExpressionValueAt(t.token,
                             (ExpressionValue) indentAndParseExpressions(list).get(0));
                 }
-
             }
 
             if (tokener.isEmpty())
@@ -215,6 +213,20 @@ public class Parser {
         return new ExpressionTree(highest,
                 indentAndParseExpression(tokener.subtokener(0, highestPriorityIndex)),
                 indentAndParseExpression(tokener.subtokener(highestPriorityIndex + 1, tokener.size())));
+    }
+
+    private ArrayList<Tokener> readBody(Tokener tokener) throws InvalidTokenException {
+        Tokener body;
+        ArrayList<Tokener> BodyTokeners;
+        if (tokener.peek().type != TokenType.SCOPE_BRACES) { // no braces; read 1 statement
+            body = tokener.readTo(new Token(";"));
+            BodyTokeners = new ArrayList<>();
+            BodyTokeners.add(body);
+        } else {
+            body = new Tokener(((TokenScope) tokener.eat()).tokens, tokener.preEatenLineNumber);
+            BodyTokeners = body.splitSkippingScopes(new Token(";"));
+        }
+        return BodyTokeners;
     }
 
     /**

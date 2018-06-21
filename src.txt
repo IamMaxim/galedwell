@@ -3,6 +3,9 @@ function main() {
     exec(null);
     print("Length of dat fucking string:", "123".length());
     print(stoi("123"));
+
+    for (i = 0; i < 2; i++)
+        print(i);
 }
 
 function exec(f) {
@@ -10,7 +13,7 @@ function exec(f) {
         print("ERROR! null function passed");
     } else {
         f();
-    };
+    }
 }
 
 function getFunc2() {
