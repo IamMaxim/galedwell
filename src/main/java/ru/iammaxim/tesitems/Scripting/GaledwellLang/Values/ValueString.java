@@ -1,7 +1,6 @@
 package ru.iammaxim.tesitems.Scripting.GaledwellLang.Values;
 
 import net.minecraft.nbt.NBTTagCompound;
-import ru.iammaxim.tesitems.Scripting.GaledwellLang.Operations.InvalidOperationException;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Runtime;
 
 /**
@@ -39,17 +38,17 @@ public class ValueString extends ValueObject {
     }
 
     @Override
-    public Value operatorEquals(Value right) throws InvalidOperationException {
+    public Value operatorEquals(Value right) {
         return new ValueBoolean(value.equals(((ValueString) right).value));
     }
 
     @Override
-    public Value operatorPlus(Value right) throws InvalidOperationException {
+    public Value operatorPlus(Value right) {
         return new ValueString(value + right.valueToString());
     }
 
     @Override
-    public Value operatorAt(Value key) throws InvalidOperationException {
+    public Value operatorAt(Value key) {
         return new ValueString(String.valueOf(value.charAt(((ValueInt) key).value)));
     }
 

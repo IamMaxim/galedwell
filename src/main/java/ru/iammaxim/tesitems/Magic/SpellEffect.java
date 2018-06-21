@@ -19,7 +19,6 @@ import ru.iammaxim.tesitems.Scripting.GaledwellLang.Compiler.InvalidExpressionEx
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.GaledwellLang;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Objects.Entity.ValueEntity;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Objects.Player.ValuePlayer;
-import ru.iammaxim.tesitems.Scripting.GaledwellLang.Operations.InvalidOperationException;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.InvalidTokenException;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.ValueFloat;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.ValueFunction;
@@ -137,8 +136,6 @@ public class SpellEffect {
                 e.printStackTrace();
             }
     }
-
-    ;
 
     public void renderInWorld(RenderManager renderManager, double x, double y, double z, float partialTicks) {
         renderFlatTextureModel(renderManager, x, y, z, partialTicks);

@@ -2,7 +2,6 @@ package ru.iammaxim.tesitems.Scripting.GaledwellLang.Values;
 
 
 import net.minecraft.nbt.NBTTagCompound;
-import ru.iammaxim.tesitems.Scripting.GaledwellLang.Operations.InvalidOperationException;
 
 /**
  * Created by maxim on 2/12/17 at 12:59 PM.
@@ -30,47 +29,47 @@ public class ValueInt extends Value {
     }
 
     @Override
-    public Value operatorPlus(Value right) throws InvalidOperationException {
+    public Value operatorPlus(Value right) {
         return new ValueInt(value + ((ValueInt) right).value);
     }
 
     @Override
-    public Value operatorSubtract(Value right) throws InvalidOperationException {
+    public Value operatorSubtract(Value right) {
         return new ValueInt(value - ((ValueInt) right).value);
     }
 
     @Override
-    public Value operatorMultiply(Value right) throws InvalidOperationException {
+    public Value operatorMultiply(Value right) {
         return new ValueInt(value * ((ValueInt) right).value);
     }
 
     @Override
-    public Value operatorDivide(Value right) throws InvalidOperationException {
+    public Value operatorDivide(Value right) {
         return new ValueInt(value / ((ValueInt) right).value);
     }
 
     @Override
-    public Value operatorLess(Value right) throws InvalidOperationException {
+    public Value operatorLess(Value right) {
         return new ValueBoolean(value < ((ValueInt) right).value);
     }
 
     @Override
-    public Value operatorLessEquals(Value right) throws InvalidOperationException {
+    public Value operatorLessEquals(Value right) {
         return new ValueBoolean(value <= ((ValueInt) right).value);
     }
 
     @Override
-    public Value operatorEquals(Value right) throws InvalidOperationException {
+    public Value operatorEquals(Value right) {
         return new ValueBoolean(value == ((ValueInt) right).value);
     }
 
     @Override
-    public Value operatorMoreEquals(Value right) throws InvalidOperationException {
+    public Value operatorMoreEquals(Value right) {
         return new ValueBoolean(value >= ((ValueInt) right).value);
     }
 
     @Override
-    public Value operatorMore(Value right) throws InvalidOperationException {
+    public Value operatorMore(Value right) {
         return new ValueBoolean(value > ((ValueInt) right).value);
     }
 
@@ -87,13 +86,13 @@ public class ValueInt extends Value {
     }
 
     @Override
-    public Value operatorIncrement() throws InvalidOperationException {
+    public Value operatorIncrement() {
         value++;
         return this;
     }
 
     @Override
-    public Value operatorDecrement() throws InvalidOperationException {
+    public Value operatorDecrement() {
         value--;
         return this;
     }

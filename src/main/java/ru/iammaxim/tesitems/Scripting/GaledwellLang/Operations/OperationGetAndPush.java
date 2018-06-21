@@ -15,7 +15,7 @@ public class OperationGetAndPush extends Operation {
     }
 
     @Override
-    public void run(Runtime runtime) throws InvalidOperationException {
+    public void run(Runtime runtime) {
         runtime.stack.push(((ValueObject) runtime.stack.pop()).getField(id));
     }
 

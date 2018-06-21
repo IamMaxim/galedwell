@@ -14,7 +14,8 @@ import ru.iammaxim.tesitems.TESItems;
 public class MessageJournal implements IMessage {
     public String s;
 
-    public MessageJournal() {};
+    public MessageJournal() {
+    }
 
     public MessageJournal(String s) {
         this.s = s;

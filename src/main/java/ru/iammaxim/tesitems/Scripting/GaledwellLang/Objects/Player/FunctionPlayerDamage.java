@@ -1,7 +1,6 @@
 package ru.iammaxim.tesitems.Scripting.GaledwellLang.Objects.Player;
 
 import net.minecraft.util.DamageSource;
-import ru.iammaxim.tesitems.Scripting.GaledwellLang.Operations.InvalidOperationException;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Runtime;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.Value;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.ValueFloat;
@@ -17,7 +16,7 @@ public class FunctionPlayerDamage extends ValueFunction {
     }
 
     @Override
-    public void call(Runtime runtime, Value... args) throws InvalidOperationException {
+    public void call(Runtime runtime, Value... args) {
         if (args[0] instanceof ValueInt)
             args[0] = new ValueFloat(((ValueInt) args[0]).value);
 

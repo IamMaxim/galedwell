@@ -2,7 +2,6 @@ package ru.iammaxim.tesitems.Scripting.GaledwellLang.Values;
 
 
 import net.minecraft.nbt.NBTTagCompound;
-import ru.iammaxim.tesitems.Scripting.GaledwellLang.Operations.InvalidOperationException;
 
 /**
  * Created by maxim on 2/17/17 at 10:16 PM.
@@ -25,7 +24,7 @@ public class ValueBoolean extends Value {
     }
 
     @Override
-    public Value operatorEquals(Value right) throws InvalidOperationException {
+    public Value operatorEquals(Value right) {
         if (!(right instanceof ValueBoolean))
             return new ValueBoolean(false);
         return new ValueBoolean(value == ((ValueBoolean)right).value);

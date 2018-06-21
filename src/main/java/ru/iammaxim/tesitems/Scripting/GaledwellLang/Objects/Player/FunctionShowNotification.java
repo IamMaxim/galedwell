@@ -2,7 +2,6 @@ package ru.iammaxim.tesitems.Scripting.GaledwellLang.Objects.Player;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import ru.iammaxim.tesitems.Networking.MessageShowNotification;
-import ru.iammaxim.tesitems.Scripting.GaledwellLang.Operations.InvalidOperationException;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Runtime;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.Value;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.ValueFunction;
@@ -17,7 +16,7 @@ public class FunctionShowNotification extends ValueFunction {
     }
 
     @Override
-    public void call(Runtime runtime, Value... args) throws InvalidOperationException {
+    public void call(Runtime runtime, Value... args) {
         TESItems.networkWrapper.sendTo(new MessageShowNotification(args[0].valueToString()), (EntityPlayerMP) ((ValuePlayer) runtime.variableStorage.getField("player")).player);
 
         runtime.stack.push(null);

@@ -62,7 +62,7 @@ public class CheckBox extends ElementBase {
     /**
      * Created by maxim on 11/9/16 at 6:49 PM.
      */
-    public static interface OnClick {
+    public interface OnClick {
         void click(CheckBox cb, boolean newState);
     }
 }

@@ -94,7 +94,7 @@ public abstract class RenderableBase {
         vb.pos(left, top, 0).tex(0, 0).endVertex();
         tess.draw();
         GlStateManager.disableBlend();
-        GL11.glDisable(GL11.GL_TEXTURE_2D);;
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
     }
 
     public void drawTexturedRect(int left, int top, int right, int bottom, float UVx, float UVy, ResourceLocation texture) {

@@ -68,7 +68,7 @@ public class Compiler {
         } else if (exp instanceof ExpressionReturn) {
             compileReturn((ExpressionReturn) exp, depth, inTree);
         } else if (exp instanceof ExpressionValue) {
-            compileValue((ExpressionValue) exp, depth, inTree);
+            compileValue((ExpressionValue) exp, inTree);
         } else if (exp instanceof ExpressionValueAt) {
             compileValueAt((ExpressionValueAt) exp, depth, inTree);
         } else if (exp instanceof ExpressionTree) {
@@ -149,7 +149,7 @@ public class Compiler {
         addOperation(new OperationReturn());
     }
 
-    private void compileValue(ExpressionValue exp, int depth, boolean inTree) throws InvalidTokenException {
+    private void compileValue(ExpressionValue exp, boolean inTree) {
         if (exp.value instanceof ValueReference) { //if this is reference, push parent and field index, so value can be got during execution
             compilePathToVar(((ValueReference) exp.value).path);
             if (inTree)

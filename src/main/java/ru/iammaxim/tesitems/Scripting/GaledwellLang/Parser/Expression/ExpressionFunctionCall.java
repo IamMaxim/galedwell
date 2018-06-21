@@ -1,7 +1,6 @@
 package ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.Expression;
 
 
-import ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.InvalidTokenException;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Parser.Token;
 
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ public class ExpressionFunctionCall extends Expression {
     public String functionName;
     public ArrayList<Expression> args;
 
-    public ExpressionFunctionCall(Token functionName, ArrayList<Expression> args) throws InvalidTokenException {
+    public ExpressionFunctionCall(Token functionName, ArrayList<Expression> args) {
         this.functionName = functionName.token;
         this.args = args;
     }

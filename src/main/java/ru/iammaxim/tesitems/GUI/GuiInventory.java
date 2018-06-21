@@ -113,9 +113,9 @@ public class GuiInventory extends Screen implements IGuiUpdatable {
     }
 
     public String getCarryweightText() {
-        return (inv.carryweight == (int) inv.carryweight ? (int) inv.carryweight : inv.carryweight) +
+        return (inv.carryweight) +
                 "/" +
-                (cap.getMaxCarryWeight() == (int) cap.getMaxCarryWeight() ? (int) cap.getMaxCarryWeight() : cap.getMaxCarryWeight());
+                (cap.getMaxCarryWeight());
     }
 
     public String getGoldText() {

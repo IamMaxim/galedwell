@@ -19,7 +19,7 @@ public class OperationIf extends Operation {
     }
 
     @Override
-    public void run(Runtime runtime) throws InvalidOperationException {
+    public void run(Runtime runtime) {
         if (!((ValueBoolean) runtime.stack.pop()).value)
             runtime.currentCursorPos = labelToGo.index - 1;
     }

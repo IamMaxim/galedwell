@@ -1,6 +1,5 @@
 package ru.iammaxim.tesitems.Scripting.GaledwellLang.Objects.Player;
 
-import ru.iammaxim.tesitems.Scripting.GaledwellLang.Operations.InvalidOperationException;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Runtime;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.Value;
 import ru.iammaxim.tesitems.Scripting.GaledwellLang.Values.ValueFunction;
@@ -16,7 +15,7 @@ public class FunctionPlayerAddGold extends ValueFunction {
     }
 
     @Override
-    public void call(Runtime runtime, Value... args) throws InvalidOperationException {
+    public void call(Runtime runtime, Value... args) {
         ((ValuePlayer) runtime.variableStorage.getField("player")).cap.addGold(((ValueInt) args[0]).value);
         runtime.stack.push(new ValueNull());
     }

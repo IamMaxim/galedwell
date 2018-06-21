@@ -7,7 +7,7 @@ import ru.iammaxim.tesitems.Scripting.GaledwellLang.Runtime;
  */
 public class OperationPushVariableStorage extends Operation {
     @Override
-    public void run(Runtime runtime) throws InvalidOperationException {
+    public void run(Runtime runtime) {
         runtime.stack.push(runtime.variableStorage);
     }
 
