@@ -80,7 +80,8 @@ public class BlockManager {
             Blocks.SAPLING,
             Blocks.REEDS,
             Blocks.WHEAT,
-            Blocks.VINE
+            Blocks.VINE,
+            Blocks.TORCH
     };
 
     public static boolean isMiningBlock(Block b) {
