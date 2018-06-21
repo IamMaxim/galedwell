@@ -46,14 +46,14 @@ public class Parser {
         GaledwellLang.log("parsing " + tokener + " with line number: " + tokener.currentLineNumber);
         tokener.trimParentheses();
 
-        //check if this is value
+        // check if this is value
         if (tokener.size() == 1) {
             GaledwellLang.log("parsing value");
             Value val = Value.get(tokener.eat().token);
             return new ExpressionValue(val);
         }
 
-        //check if this is return
+        // check if this is return
         if (tokener.size() >= 2) {
             if (tokener.peek().eq("return")) {
                 tokener.eat(); // eat return
@@ -62,19 +62,16 @@ public class Parser {
             }
         }
 
-        //check if this is condition
+        // check if this is condition
         if (tokener.left() > 0 && tokener.peek().eq("if")) {
             GaledwellLang.log("parsing condition");
 
             tokener.eat(); // eat if
-//            if (tokener.peek().type != TokenType.SCOPE_PARENS)
-//                throw new InvalidTokenException("Expected parens scope as condition");
             assertType(tokener, TokenType.SCOPE_PARENS);
             Tokener condition = new Tokener(((TokenScope) tokener.eat()).tokens, tokener.preEatenLineNumber);
 
             GaledwellLang.log("parsed condition: " + condition);
 
-            Tokener body;
             ArrayList<Expression> bodyExps = new ArrayList<>();
             ArrayList<Tokener> bodyTokeners = readBody(tokener);
 
@@ -97,12 +94,12 @@ public class Parser {
                     elseBodyExps.add(indentAndParseExpression(t));
                 }
 
-                //check situation when semicolon is not set after if(){}else{}
+                // check situation when semicolon is not set after if(){}else{}
                 Tokener nextExpr = tokener.readTo(new Token(";"));
                 if (!nextExpr.isEmpty())
                     throw new InvalidTokenException("Expected ';' after 'if () {} else {}'");
             } else {
-                //check situation when semicolon is not set after if(){}
+                // check situation when semicolon is not set after if(){}
                 Tokener nextExpr = tokener.readTo(new Token(";"));
                 if (!nextExpr.isEmpty())
                     throw new InvalidTokenException("Expected ';' after 'if () {}'");
@@ -114,22 +111,16 @@ public class Parser {
                     elseBodyExps);
         }
 
-        //check if this is for loop
+        // check if this is for loop
         if (tokener.left() > 0 && tokener.peek().eq("for")) {
             GaledwellLang.log("parsing for loop");
             tokener.eat(); //eat 'for'
-//            if (tokener.peek().type != TokenType.SCOPE_PARENS)
-//                throw new InvalidTokenException("Expected parens scope");
             assertType(tokener, TokenType.SCOPE_PARENS);
             Tokener args = new Tokener(((TokenScope) tokener.eat()).tokens, tokener.preEatenLineNumber);
             ArrayList<Tokener> argTokens = args.splitSkippingScopes(new Token(";"));
             GaledwellLang.log("for loop args: " + argTokens);
             if (argTokens.size() != 3)
                 throw new InvalidTokenException("Expected 3 args in 'for' construction, but got " + argTokens.size());
-//            if (tokener.peek().type != TokenType.SCOPE_BRACES)
-//                throw new InvalidTokenException("Expected braces scope");
-//            assertType(tokener, TokenType.SCOPE_BRACES);
-//            Tokener body = new Tokener(((TokenScope) tokener.eat()).tokens, tokener.preEatenLineNumber);
             ArrayList<Tokener> body = readBody(tokener);
 
             // check situation when semicolon is not set after for(){}
@@ -141,7 +132,6 @@ public class Parser {
                     indentAndParseExpression(argTokens.get(0)),
                     indentAndParseExpression(argTokens.get(1)),
                     indentAndParseExpression(argTokens.get(2)),
-//                    indentAndParseExpressions(body.splitSkippingScopes(new Token(";"))));
                     indentAndParseExpressions(body));
         }
 
@@ -195,7 +185,6 @@ public class Parser {
 
                 if (t.type == TokenType.IDENTIFIER && tokener.hasNext() && tokener.peekNext().type == TokenType.SCOPE_BRACKETS) {
                     GaledwellLang.log("parsing value at");
-//                    int index = tokener.index;
                     Tokener argTokener = new Tokener(((TokenScope) tokener.peekNext()).tokens, tokener.prePeekedLineNumber);
 
                     ArrayList<Tokener> list = new ArrayList<>();
@@ -274,27 +263,14 @@ public class Parser {
         return level;
     }
 
-/*    public int getLineNumber(ArrayList<Token> tokens) {
-        int line_number = 1;
-        for (Token token : tokens)
-            if (token.type == TokenType.NEW_LINE) {
-                line_number = Integer.parseInt(token.token.substring(6));
-                break;
-            }
-        return line_number;
-    }*/
-
     private Token eat() {
         return tokener.eat();
     }
 
     public ArrayList<ParsedFunction> parse() throws InvalidTokenException {
         ArrayList<ParsedFunction> functions = new ArrayList<>();
-//        System.out.println("\n\n\n>>>> Starting Parser.parse()");
         while (tokener.left() > 0) { // while there are tokens left
             Token token = eat();
-
-            // TODO: add modifiers support
 
             // check function declaration
             if (token.eq("function")) {
@@ -357,17 +333,7 @@ public class Parser {
             if (token.eq(";")) // skip processing of ";"
                 continue;
 
-
             throw new InvalidTokenException("Couldn't find parsing block for " + token);
-
-/*            // read function name
-            if (token.type != TokenType.IDENTIFIER)
-                if (!token.eq(";"))
-                    throw new InvalidTokenException("Line " + tokener.preEatenLineNumber + ": Expected identifier while parsing function name");
-                else
-                    continue;*/
-
-
         }
         return functions;
     }
