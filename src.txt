@@ -1,35 +1,11 @@
 function main() {
-    exec(getFunc2());
-    exec(null);
-    print("Length of dat fucking string:", "123".length());
-    print(stoi("123"));
+    i = 3;
 
-    for (i = 0; i < 2; i++)
-        print(i);
-}
-
-function exec(f) {
-    if (f == null) {
-        print("ERROR! null function passed");
-    } else {
-        f();
-    }
-}
-
-function getFunc2() {
-    return func2;
-}
-
-function func2() {
-    print("executing func2()");
-}
-
-function stoi(str) {
-    res = 0;
-    for (i = 0; i < str.length(); i++) {
-        res = res * 10;
-        obj = str[i];
-        res = res + obj.ord() - "0".ord();
+    if (i == 1) {
+        print("first");
+    } else if (i == 2) {
+        print("second");
+    } else if (i == 3) {
+        print("third");
     };
-    return res;
 }

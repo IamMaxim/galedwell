@@ -46,7 +46,7 @@ public class Parser {
         GaledwellLang.log("parsing " + tokener + " with line number: " + tokener.currentLineNumber);
         tokener.trimParentheses();
 
-        // check if this is value
+        // check if this is value (reference is value too)
         if (tokener.size() == 1) {
             GaledwellLang.log("parsing value");
             Value val = Value.get(tokener.eat().token);
@@ -63,9 +63,7 @@ public class Parser {
         }
 
         // check if this is condition
-        if (tokener.left() > 0 && tokener.peek().eq("if")) {
-            GaledwellLang.log("parsing condition");
-
+        if (tokener.hasNext() && tokener.peek().eq("if")) {
             tokener.eat(); // eat if
             assertType(tokener, TokenType.SCOPE_PARENS);
             Tokener condition = new Tokener(((TokenScope) tokener.eat()).tokens, tokener.preEatenLineNumber);
@@ -75,31 +73,28 @@ public class Parser {
             ArrayList<Expression> bodyExps = new ArrayList<>();
             ArrayList<Tokener> bodyTokeners = readBody(tokener);
 
-            GaledwellLang.log("parsed body: " + bodyTokeners);
-
-            for (Tokener t : bodyTokeners) {
+            for (Tokener t : bodyTokeners)
                 bodyExps.add(indentAndParseExpression(t));
-            }
+
+            GaledwellLang.log("parsed body: " + bodyExps);
 
             ArrayList<Expression> elseBodyExps = new ArrayList<>();
-            if (tokener.left() >= 2 /* else, braces scope */ && tokener.peek().eq("else")) {
+            if (tokener.left() >= 2 /* else, braces scope/single statement */ && tokener.peek().eq("else")) {
                 tokener.eat(); // eat else
 
-                ArrayList<Tokener> elseBodyTokeners;
-                elseBodyTokeners = readBody(tokener);
+                ArrayList<Tokener> elseBodyTokeners = readBody(tokener);
 
                 GaledwellLang.log("parsed elseBody: " + elseBodyTokeners);
 
-                for (Tokener t : elseBodyTokeners) {
+                for (Tokener t : elseBodyTokeners)
                     elseBodyExps.add(indentAndParseExpression(t));
-                }
 
-                // check situation when semicolon is not set after if(){}else{}
+                // check situation when semicolon is not set after if () {} else {}
                 Tokener nextExpr = tokener.readTo(new Token(";"));
                 if (!nextExpr.isEmpty())
                     throw new InvalidTokenException("Expected ';' after 'if () {} else {}'");
             } else {
-                // check situation when semicolon is not set after if(){}
+                // check situation when semicolon is not set after if () {}
                 Tokener nextExpr = tokener.readTo(new Token(";"));
                 if (!nextExpr.isEmpty())
                     throw new InvalidTokenException("Expected ';' after 'if () {}'");
