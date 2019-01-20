@@ -25,7 +25,30 @@ public class mBlocks {
             wood_block_4,
             ayleid_block_1,
             block_workbench,
-            block_chair_01;
+            block_chair_01,
+
+    mill_side,
+            beige_clay,
+            big_bricks,
+            brick_wall,
+            brige_stone,
+            dark_gray_stone,
+            gravel_block,
+            gray_clay,
+            hard_marble,
+            hay,
+            light_brige_stone,
+            log_wall_1,
+            log_wall_2,
+            marble,
+            red_clay,
+            red_wall,
+            simple_box,
+            stone_wall,
+            test_3,
+            tine_stone_wall,
+            wood_1,
+            wood_2;
 
     public static BlockChest block_chest_01;
 
@@ -40,6 +63,30 @@ public class mBlocks {
         wood_block_3 = registerBlock("wood_block_3", Material.WOOD, 1, MapColor.WOOD, side);
         wood_block_4 = registerBlock("wood_block_4", Material.WOOD, 1, MapColor.WOOD, side);
         ayleid_block_1 = registerBlock("ayleid_block_1", Material.ROCK, 5, MapColor.STONE, side);
+
+        // TODO: change this
+        mill_side = registerBlock("mill_side", Material.ROCK, 5, MapColor.STONE, side);
+        beige_clay = registerBlock("beige_clay", Material.ROCK, 5, MapColor.STONE, side);
+        big_bricks = registerBlock("big_bricks", Material.ROCK, 5, MapColor.STONE, side);
+        brick_wall = registerBlock("brick_wall", Material.ROCK, 5, MapColor.STONE, side);
+        brige_stone = registerBlock("brige_stone", Material.ROCK, 5, MapColor.STONE, side);
+        dark_gray_stone = registerBlock("dark_gray_stone", Material.ROCK, 5, MapColor.STONE, side);
+        gravel_block = registerBlock("gravel_block", Material.ROCK, 5, MapColor.STONE, side);
+        gray_clay = registerBlock("gray_clay", Material.ROCK, 5, MapColor.STONE, side);
+        hard_marble = registerBlock("hard_marble", Material.ROCK, 5, MapColor.STONE, side);
+        hay = registerBlock("hay", Material.ROCK, 5, MapColor.STONE, side);
+        light_brige_stone = registerBlock("light_brige_stone", Material.ROCK, 5, MapColor.STONE, side);
+        log_wall_1 = registerBlock("log_wall_1", Material.ROCK, 5, MapColor.STONE, side);
+        log_wall_2 = registerBlock("log_wall_2", Material.ROCK, 5, MapColor.STONE, side);
+        marble = registerBlock("marble", Material.ROCK, 5, MapColor.STONE, side);
+        red_clay = registerBlock("red_clay", Material.ROCK, 5, MapColor.STONE, side);
+        red_wall = registerBlock("red_wall", Material.ROCK, 5, MapColor.STONE, side);
+        simple_box = registerBlock("simple_box", Material.ROCK, 5, MapColor.STONE, side);
+        stone_wall = registerBlock("stone_wall", Material.ROCK, 5, MapColor.STONE, side);
+        test_3 = registerBlock("test_3", Material.ROCK, 5, MapColor.STONE, side);
+        tine_stone_wall = registerBlock("tine_stone_wall", Material.ROCK, 5, MapColor.STONE, side);
+        wood_1 = registerBlock("wood_1", Material.ROCK, 5, MapColor.STONE, side);
+        wood_2 = registerBlock("wood_2", Material.ROCK, 5, MapColor.STONE, side);
     }
 
     @SideOnly(Side.CLIENT)

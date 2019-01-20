@@ -39,7 +39,9 @@ public class CommandCha extends CommandBase {
         IPlayerAttributesCapability cap = TESItems.getCapability(player);
         float attr = cap.getAttribute("charisma");
         int value = (int) Math.round((attr + Math.random() * (200 - attr)) / 10);
-        String message = TextFormatting.LIGHT_PURPLE + "*" + player.getName() + " " + String.join(" ", args) + ": " + TextFormatting.YELLOW + value + " (charisma)" + TextFormatting.LIGHT_PURPLE + "*";
+        String message = TextFormatting.LIGHT_PURPLE + "*" + player.getName() + " "
+                + String.join(" ", args) + ": " + TextFormatting.YELLOW + value + " (charisma)"
+                + TextFormatting.LIGHT_PURPLE + "*";
         Utils.sendChatMessage(players, player, message, TESItems.actionDistance);
     }
 }

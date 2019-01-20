@@ -22,16 +22,16 @@ public class Dialog {
         cap.getQuests().forEach((id, quest) -> {
             ArrayList<DialogTopic> topics = quest.getCurrentStage().topics;
             topics.forEach(t -> {
-                t = t.copy(); //don't change original topic
-                t.script = ""; //don't send script to client
+                t = t.copy(); // don't change original topic
+                t.script = ""; // don't send script to client
                 t.attachTo(quest.quest);
                 if (t.npcName.equals(npc.name)) dialog.addTopic(t.name, t);
             });
         });
         npc.getFactions().forEach(f ->
                 f.topics.forEach(t -> {
-                    t = t.copy(); //don't change original topic
-                    t.script = ""; //don't send script to client
+                    t = t.copy(); // don't change original topic
+                    t.script = ""; // don't send script to client
                     dialog.addTopic(t.name, t);
                 }));
         cap.setLatestDialog(dialog);

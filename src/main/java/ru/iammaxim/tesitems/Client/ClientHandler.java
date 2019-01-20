@@ -53,7 +53,7 @@ public class ClientHandler {
         }
 
         if (event.getType() != RenderGameOverlayEvent.ElementType.HOTBAR) return;
-        event.setCanceled(true); //hotbar will be replaced
+        event.setCanceled(true); // hotbar will be replaced
         HUD.drawHUD();
     }
 }

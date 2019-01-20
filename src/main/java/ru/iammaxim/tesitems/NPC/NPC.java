@@ -19,9 +19,9 @@ import java.util.List;
  * Created by maxim on 1/17/17 at 3:46 PM.
  */
 public class NPC {
-    //NPC's attributes and skills
+    // NPC's attributes and skills
     private HashMap<String, Float> attributes = new HashMap<>();
-    //player spells
+    // player spells
     private List<SpellBase> spellbook = new ArrayList<>();
     public int id = -1;
     public String name = "NPC";
