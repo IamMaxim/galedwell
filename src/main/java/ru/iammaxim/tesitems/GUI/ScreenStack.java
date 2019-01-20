@@ -53,7 +53,7 @@ public class ScreenStack extends GuiScreen {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         //check shaders
-        if (Minecraft.isFancyGraphicsEnabled()) {
+        if (ResManager.enableBlur && Minecraft.isFancyGraphicsEnabled()) {
             if (ResManager.gaussianBlurShader == null)
                 ResManager.loadShaders();
 

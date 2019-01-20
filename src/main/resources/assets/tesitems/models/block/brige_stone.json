@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+        "all": "tesitems:blocks/brige_stone"
+    }
+}

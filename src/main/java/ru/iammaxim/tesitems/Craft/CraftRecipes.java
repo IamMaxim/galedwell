@@ -76,7 +76,7 @@ public class CraftRecipes {
             return;
         }
 
-        //check if player has enough items
+        // check if player has enough items
         int okInput = 0;
         for (ItemStack is : recipe.input) {
             for (int i = 0; i < inventory.size(); i++) {
@@ -92,7 +92,7 @@ public class CraftRecipes {
             return;
         }
 
-        //remove input items
+        // remove input items
         for (ItemStack is : recipe.input) {
             for (int i = 0; i < inventory.size(); i++) {
                 ItemStack invIS = inventory.get(i);
