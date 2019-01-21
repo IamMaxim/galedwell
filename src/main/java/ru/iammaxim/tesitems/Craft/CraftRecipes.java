@@ -138,7 +138,6 @@ public class CraftRecipes {
                 map.put(id, recipe);
             }
         }
-
     }
 
     public static NBTTagCompound writeToNBT() {

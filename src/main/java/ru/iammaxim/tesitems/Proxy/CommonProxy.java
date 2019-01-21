@@ -89,7 +89,7 @@ public class CommonProxy {
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
-        
+
         for (Field o : Blocks.class.getFields())
             try {
                 Block b = (Block) o.get(null);
@@ -120,8 +120,12 @@ public class CommonProxy {
 //        }
 
         // Slow down player if he carries more that he can handle
-        if (cap.getCarryWeight() > cap.getMaxCarryWeight())
-            event.player.addPotionEffect(new PotionEffect(Potion.getPotionById(2), 5, 3));
+        if (cap.getCarryWeight() > cap.getMaxCarryWeight() * 0.7)
+            if (cap.getCarryWeight() > cap.getMaxCarryWeight())
+                event.player.addPotionEffect(new PotionEffect(Potion.getPotionById(2), 5, 10));
+            else
+                event.player.addPotionEffect(new PotionEffect(Potion.getPotionById(2), 5, 3));
+
 
         // Process magicka restoration
         cap.restoreMagicka();
