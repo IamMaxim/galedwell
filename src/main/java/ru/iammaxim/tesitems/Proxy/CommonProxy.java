@@ -36,7 +36,6 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import ru.iammaxim.tesitems.AuthEventListener;
-import ru.iammaxim.tesitems.Blocks.BlockManager;
 import ru.iammaxim.tesitems.Blocks.mBlocks;
 import ru.iammaxim.tesitems.Commands.*;
 import ru.iammaxim.tesitems.ConfigManager;
@@ -45,7 +44,7 @@ import ru.iammaxim.tesitems.Inventory.Inventory;
 import ru.iammaxim.tesitems.Items.*;
 import ru.iammaxim.tesitems.Magic.EntityFlyingSpell;
 import ru.iammaxim.tesitems.Magic.EntityRangedSpellEffect;
-import ru.iammaxim.tesitems.NPC.*;
+import ru.iammaxim.tesitems.NPC.EntityNPC;
 import ru.iammaxim.tesitems.Networking.NetworkUtils;
 import ru.iammaxim.tesitems.Player.IPlayerAttributesCapability;
 import ru.iammaxim.tesitems.Player.PlayerAttributesCapabilityDefaultImpl;
@@ -60,9 +59,6 @@ import ru.iammaxim.tesitems.World.WorldCapabilityStorage;
 import java.io.IOException;
 import java.lang.reflect.Field;
 
-/**
- * Created by maxim on 3/3/17 at 7:01 PM.
- */
 public class CommonProxy {
     public void preInit(FMLPreInitializationEvent event) throws IOException {
         //load config values
@@ -93,6 +89,7 @@ public class CommonProxy {
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
+        
         for (Field o : Blocks.class.getFields())
             try {
                 Block b = (Block) o.get(null);
@@ -103,11 +100,6 @@ public class CommonProxy {
                 e.printStackTrace();
             }
 
-        Item.getItemFromBlock(Blocks.PLANKS).setMaxStackSize(4);
-        Items.STICK.setMaxStackSize(8);
-        Item.getItemFromBlock(Blocks.TORCH).setMaxStackSize(8);
-        Items.IRON_INGOT.setMaxStackSize(2);
-        Items.GOLD_INGOT.setMaxStackSize(2);
         ItemWeightManager.init();
         ItemValueManager.init();
     }
@@ -117,21 +109,27 @@ public class CommonProxy {
         EntityPlayer player = event.player;
         IPlayerAttributesCapability cap = TESItems.getCapability(player);
 
-        //reset to first slot
+        // reset to first slot
         if (player.inventory.currentItem != 0)
             player.inventory.currentItem = 0;
 
-        if (!cap.isAuthorized() && cap.getLoginY() != 0) {
-            player.setPositionAndUpdate(cap.getLoginX(), cap.getLoginY(), cap.getLoginZ());
-            return;
-        }
+        // Auth is disabled
+//        if (!cap.isAuthorized() && cap.getLoginY() != 0) {
+//            player.setPositionAndUpdate(cap.getLoginX(), cap.getLoginY(), cap.getLoginZ());
+//            return;
+//        }
 
+        // Slow down player if he carries more that he can handle
         if (cap.getCarryWeight() > cap.getMaxCarryWeight())
             event.player.addPotionEffect(new PotionEffect(Potion.getPotionById(2), 5, 3));
 
+        // Process magicka restoration
         cap.restoreMagicka();
     }
 
+    /**
+     * Decrement player's block count by one on block place
+     */
     @SubscribeEvent
     public void onBlockPlace(BlockEvent.PlaceEvent event) {
         if (event.getItemInHand() != null) {
@@ -162,30 +160,32 @@ public class CommonProxy {
             float speed = event.getOriginalSpeed();
 
             // Check if player uses a breaking tool
-            if ((((EntityPlayer) p).getHeldItemMainhand() != null && ((EntityPlayer) p).getHeldItemMainhand().getItem() == mItems.itemBreakingTool) || (((EntityPlayer) p).getHeldItemOffhand() != null && ((EntityPlayer) p).getHeldItemOffhand().getItem() == mItems.itemBreakingTool)) {
+            if ((((EntityPlayer) p).getHeldItemMainhand() != null && ((EntityPlayer) p).getHeldItemMainhand().getItem() == mItems.itemBreakingTool) ||
+                    (((EntityPlayer) p).getHeldItemOffhand() != null && ((EntityPlayer) p).getHeldItemOffhand().getItem() == mItems.itemBreakingTool)) {
                 speed *= 2;
             } else {
                 // Player doesn't use breaking tool, get break speed by player skill
                 String blockType = null;
-                if (BlockManager.requiresNothing(b))
-                    blockType = "allowed";
-                if (BlockManager.isMiningBlock(b)) {
-                    blockType = "mining";
-                } else if (BlockManager.isWoodcuttingBlock(b)) {
-                    blockType = "woodcutting";
-                } else if (BlockManager.isDiggingBlock(b)) {
-                    blockType = "digging";
-                }
+                // TODO: enable block breaking if needed
+//                if (BlockManager.requiresNothing(b))
+//                    blockType = "allowed";
+//                if (BlockManager.isMiningBlock(b)) {
+//                    blockType = "mining";
+//                } else if (BlockManager.isWoodcuttingBlock(b)) {
+//                    blockType = "woodcutting";
+//                } else if (BlockManager.isDiggingBlock(b)) {
+//                    blockType = "digging";
+//                }
 
-                if (blockType == null) {
-                    event.setNewSpeed(0);
-                    return;
-                }
+//                if (blockType == null) {
+                event.setNewSpeed(0);
+                return;
+//                }
 
-                if (blockType.equals("allowed"))
-                    return;
+//                if (blockType.equals("allowed"))
+//                    return;
 
-                speed *= p.getCapability(TESItems.playerAttributesCapability, null).getAttribute(blockType) / TESItems.maxSkillLevel;
+//                speed *= p.getCapability(TESItems.playerAttributesCapability, null).getAttribute(blockType) / TESItems.maxSkillLevel;
             }
             event.setNewSpeed(speed);
         }
@@ -197,9 +197,10 @@ public class CommonProxy {
             EntityPlayer player = (EntityPlayer) event.getEntity();
             //clear vanilla inventory
             player.inventory.clear();
+
             IPlayerAttributesCapability cap = TESItems.getCapability(player);
-            if (cap.getAttribute("strength") == 0)
-                cap.setAttribute("strength", 10);
+            if (cap.getAttribute("carryweight") == 0)
+                cap.setAttribute("carryweight", 100);
             cap.createInventory(player, cap.getInventory());
             cap.getInventory().calculateCarryweight();
         }
@@ -214,6 +215,7 @@ public class CommonProxy {
         destCap.setSpellbook(origCap.getSpellbook());
         destCap.setInventory(origCap.getInventory());
         destCap.setGold(origCap.getGold());
+
         if (origCap.isAuthorized())
             destCap.authorize((EntityPlayerMP) event.getEntityPlayer());
 
@@ -233,9 +235,6 @@ public class CommonProxy {
     @SubscribeEvent
     public void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
         IPlayerAttributesCapability cap = event.player.getCapability(TESItems.playerAttributesCapability, null);
-        for (String s : TESItems.ATTRIBUTES) {
-            System.out.println(s + " = " + cap.getAttribute(s));
-        }
     }
 
     @SubscribeEvent
@@ -282,24 +281,22 @@ public class CommonProxy {
         EntityPlayer player = event.getEntityPlayer();
         ItemStack held = player.getHeldItemMainhand();
         event.setCanceled(true);
+
         if (held == null) return;
+
         Item item = held.getItem();
+
         if (item instanceof Weapon) {
             if (!player.worldObj.isRemote) {
                 IPlayerAttributesCapability cap = TESItems.getCapability(player);
-                float multiplier = 0;
-                if (((Weapon) item).getWeaponType() == WeaponType.BLADES) {
-                    float skill = cap.getAttribute("blades");
-                    multiplier = skill / TESItems.maxSkillLevel;
-                    cap.increaseAttribute("blades", TESItems.instance.getSkillIncreaseValue(skill));
-                } else if (((Weapon) item).getWeaponType() == WeaponType.BLUNT) {
-                    float skill = cap.getAttribute("blunt");
-                    multiplier = skill / TESItems.maxSkillLevel;
-                    cap.increaseAttribute("blunt", TESItems.instance.getSkillIncreaseValue(skill));
-                }
+                // calculate damage multiplier based on player's 'warrior' skill level
+                float multiplier = cap.getAttribute("warrior") / 3;
+//
                 if (multiplier >= 0)
                     event.getTarget().attackEntityFrom(DamageSource.causePlayerDamage(player), multiplier * ((ItemSword) item).getDamageVsEntity());
             }
+
+            // damage item on attack
             held.damageItem(1, player);
             if (held.getItemDamage() >= held.getMaxDamage()) {
                 if (TESItems.getSide() == Side.SERVER) {
@@ -308,6 +305,7 @@ public class CommonProxy {
                     Inventory inv = cap.getInventory();
                     inv.removeItem(inv.getItemStackIndex(held));
                 }
+
                 // remove item from hand
                 player.setHeldItem(EnumHand.MAIN_HAND, null);
             }
@@ -327,7 +325,6 @@ public class CommonProxy {
 
     @SubscribeEvent
     public void chatEvent(ServerChatEvent event) {
-        System.out.println("chatEvent()");
         event.setCanceled(true);
         EntityPlayer player = event.getPlayer();
 

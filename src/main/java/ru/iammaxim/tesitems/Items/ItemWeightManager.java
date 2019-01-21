@@ -15,18 +15,18 @@ public class ItemWeightManager {
 
     }
 
+    /**
+     * Returns weight of ItemStack based on initialized item weights.
+     * If weight for given item is not initialized
+     *
+     * @param is ItemStack to get weight for
+     * @return weight of ItemStack
+     */
     public static float getWeight(ItemStack is) {
-        Float w;
+        Float weight;
         if (is == null) return 1;
-        if ((w = weights.get(is.getItem())) != null)
-            return w * is.stackSize;
+        if ((weight = weights.get(is.getItem())) != null)
+            return weight * is.stackSize;
         else return 1 * is.stackSize;
-    }
-
-    public static String getWeightString(ItemStack is) {
-        float w = getWeight(is);
-        if (w == (int)w)
-            return String.valueOf((int)w);
-        else return String.valueOf(w);
     }
 }

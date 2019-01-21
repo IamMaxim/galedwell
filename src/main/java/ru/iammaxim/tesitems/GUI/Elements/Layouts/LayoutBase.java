@@ -10,7 +10,8 @@ import java.util.List;
 public abstract class LayoutBase extends ElementBase {
     protected int paddingLeft = 0, paddingRight = 0, paddingTop = 0, paddingBottom = 0;
 
-    public LayoutBase() {}
+    public LayoutBase() {
+    }
 
     public abstract void doLayout();
 
@@ -23,21 +24,13 @@ public abstract class LayoutBase extends ElementBase {
         return paddingLeft;
     }
 
-    public int getPaddingRight() {
-        return paddingRight;
-    }
-
-    public int getPaddingTop() {
-        return paddingTop;
-    }
-
-    public int getPaddingBottom() {
-        return paddingBottom;
-    }
-
     public LayoutBase setPaddingLeft(int padding) {
         this.paddingLeft = padding;
         return this;
+    }
+
+    public int getPaddingRight() {
+        return paddingRight;
     }
 
     public LayoutBase setPaddingRight(int padding) {
@@ -45,13 +38,30 @@ public abstract class LayoutBase extends ElementBase {
         return this;
     }
 
+    public int getPaddingTop() {
+        return paddingTop;
+    }
+
     public LayoutBase setPaddingTop(int padding) {
         this.paddingTop = padding;
         return this;
     }
 
+    public int getPaddingBottom() {
+        return paddingBottom;
+    }
+
     public LayoutBase setPaddingBottom(int padding) {
         this.paddingBottom = padding;
+        return this;
+    }
+
+    public LayoutBase setPadding(int top, int left, int bottom, int right) {
+        setPaddingTop(top);
+        setPaddingLeft(left);
+        setPaddingBottom(bottom);
+        setPaddingRight(right);
+
         return this;
     }
 

@@ -23,33 +23,77 @@ import java.util.Random;
 
 @Mod(modid = TESItems.MODID, name = TESItems.MODNAME, version = TESItems.VERSION)
 public class TESItems {
+    // Some mod information
     public static final String MODID = "tesitems";
     public static final String MODNAME = "Galedwell";
     public static final String VERSION = "PREVIEW";
-
-    public static final Random RANDOM = new Random();
-
     public static final String attributesTagName = "tesitems:playerAttributes";
     public static final String worldTagName = "tesitems:world";
 
-    public static final String[] ATTRIBUTES = {
-            "strength",
-            "intelligence",
-            "willpower",
-            "agility",
-            "speed",
-            "endurance",
-            "charisma",
-            "luck",
+    public static final Random RANDOM = new Random();
 
-            "mining",
-            "woodcutting",
-            "digging",
-            "blades",
-            "blunt"
+
+    public static final String[] ATTRIBUTES = {
+            // Cooking
+            "baker",
+            "cook",
+            "confectioner",
+            "butcher",
+            "miller",
+            "winemaker",
+            "brewer",
+            "mead_brewer",
+
+            // Ground workers
+            "plowman",
+            "gardener",
+
+            // Gathering
+            "fisherman",
+            "herbalist",
+            "hunter",
+            "picker",
+
+            // Craft
+            "smelter",
+            "tanner",
+            "armorer",
+            "gunsmith",
+            "weaver",
+            "tailor",
+            "shoemaker",
+            "jeweler",
+            "potter",
+            "miner",
+            "alchemist",
+            "healer",
+
+            // Battle
+            "warrior",
+            "archer",
+            "crossbowman",
+
+            // Misc
+            "book_keeper",
+
+            // Attributes
+            "carryweight"
     };
-    public static final float maxSkillLevel = 100;
-    public static final int guiSpellSelect = 0,
+
+    /**
+     * Maximum possible skill level.
+     * After reaching this value, skill stops to increase automatically.
+     *
+     * However, you can manually increase level beyond this border using
+     * some other methods, for example, /setAttribute command.
+     */
+    public static final float maxSkillLevel = 4;
+
+    /**
+     * IDs of various GUI screens
+     */
+    public static final int
+            guiSpellSelect = 0,
             guiNpcDialog = 1,
             guiInventory = 2,
             guiNPCEditor = 3,
@@ -62,35 +106,68 @@ public class TESItems {
             guiContainer = 10,
             guiWorkbench = 11,
             guiCraftingRecipeTypesList = 12;
-    @Mod.Instance
-    public static TESItems instance;
-    @SidedProxy(clientSide = "ru.iammaxim.tesitems.Proxy.ClientProxy", serverSide = "ru.iammaxim.tesitems.Proxy.ServerProxy")
-    public static CommonProxy proxy;
-    @CapabilityInject(IPlayerAttributesCapability.class)
-    public static Capability<IPlayerAttributesCapability> playerAttributesCapability;
-    @CapabilityInject(IWorldCapability.class)
-    public static Capability<IWorldCapability> worldCapability;
 
-    public static SimpleNetworkWrapper networkWrapper;
+    /**
+     * Distances for different chat modes
+     */
     public static final int whisperDistance = 2,
             talkDistance = 10,
             actionDistance = 20,
             shoutDistance = 40;
 
+    /**
+     * Instance of this mod
+     */
+    @Mod.Instance
+    public static TESItems instance;
+    @SidedProxy(
+            clientSide = "ru.iammaxim.tesitems.Proxy.ClientProxy",
+            serverSide = "ru.iammaxim.tesitems.Proxy.ServerProxy"
+    )
+    public static CommonProxy proxy;
+
+    /**
+     * Declaration of player capability for this mod
+     */
+    @CapabilityInject(IPlayerAttributesCapability.class)
+    public static Capability<IPlayerAttributesCapability> playerAttributesCapability;
+
+    /**
+     * Declaration of world capability for this mod
+     */
+    @CapabilityInject(IWorldCapability.class)
+    public static Capability<IWorldCapability> worldCapability;
+
+    /**
+     * Simple wrapper for Netty. We don't need to use full power of Netty, so we use this
+     */
+    public static SimpleNetworkWrapper networkWrapper;
+
     public static IPlayerAttributesCapability getCapability(EntityPlayer player) {
         return player.getCapability(TESItems.playerAttributesCapability, null);
     }
 
+    /**
+     * @return a player entity of current player.
+     * Works only on client side
+     */
     @SideOnly(Side.CLIENT)
     public static EntityPlayer getClientPlayer() {
         return Minecraft.getMinecraft().thePlayer;
     }
 
+    /**
+     * @return a Minecraft instance.
+     * Works only on client side
+     */
     @SideOnly(Side.CLIENT)
     public static Minecraft getMinecraft() {
         return Minecraft.getMinecraft();
     }
 
+    /**
+     * @return a side (server or client) of caller
+     */
     public static Side getSide() {
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER || Thread.currentThread().getName().startsWith("Netty Epoll Server IO"))
             return Side.SERVER;
