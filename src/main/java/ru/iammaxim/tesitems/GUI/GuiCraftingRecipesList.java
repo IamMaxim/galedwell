@@ -24,7 +24,7 @@ public class GuiCraftingRecipesList extends Screen {
                 .add(new Button("Add new recipe").setOnClick(e ->
                         ScreenStack.addScreen(
                                 new GuiCraftingRecipeEditor(type,
-                                        new CraftRecipe(-1, "New recipe", new ItemStack[]{}, new ItemStack[]{}))))));
+                                        new CraftRecipe(-1, "New recipe", new ItemStack[]{}, new ItemStack[]{}, 0))))));
 
         updateList();
 

@@ -14,12 +14,14 @@ public class CraftRecipe {
     public String name;
     public ItemStack[] input;
     public ItemStack[] output;
+    public float experience;
 
-    public CraftRecipe(int id, String name, ItemStack[] input, ItemStack[] output) {
+    public CraftRecipe(int id, String name, ItemStack[] input, ItemStack[] output, float experience) {
         this.id = id;
         this.input = input;
         this.output = output;
         this.name = name;
+        this.experience = experience;
     }
 
     public static CraftRecipe loadFromNBT(NBTTagCompound tag) {
@@ -38,7 +40,9 @@ public class CraftRecipe {
             output[i] = ItemStack.loadItemStackFromNBT(outputList.getCompoundTagAt(i));
         }
 
-        return new CraftRecipe(id, name, input, output);
+        float experience = tag.getFloat("experience");
+
+        return new CraftRecipe(id, name, input, output, experience);
     }
 
     public NBTTagCompound writeToNBT() {
@@ -56,12 +60,15 @@ public class CraftRecipe {
         for (ItemStack is : output) {
             outputList.appendTag(is.serializeNBT());
         }
+
+        tag.setFloat("experience", experience);
+
         tag.setTag("output", outputList);
         return tag;
     }
 
     public CraftRecipe copy() {
-        return new CraftRecipe(id, name, Arrays.copyOf(input, input.length), Arrays.copyOf(output, output.length));
+        return new CraftRecipe(id, name, Arrays.copyOf(input, input.length), Arrays.copyOf(output, output.length), experience);
     }
 
     public enum Type {
